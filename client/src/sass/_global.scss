@@ -1,0 +1,66 @@
+@use '../sass/media.scss' as *;
+
+html  {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    @include mq(xl) {
+        font-size: 60%;
+    }
+    @include mq(lg){
+        font-size: 58%;
+    }
+    @include mq(md) {
+        font-size: 56%;
+    }
+    @include mq(sm) {
+        font-size: 54%;
+    }
+}
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+p {
+    margin:0;
+}
+
+body {
+    font-family: var(--main-font);
+    font-size: 1.6rem;
+    line-height: 1.6;
+}
+
+.container {
+    max-width:80%;
+    margin:0 auto;
+    @include mq(xl){
+        max-width: 90% !important;
+    }
+    @include mq(md) {
+        max-width: 98% !important;
+        margin:0 !important;
+        height: 100%;
+    }
+}
+
+// customize carousel
+.control-dots {
+    .dot {
+        width: 2rem !important;
+        height: 2rem !important;
+        background-color: var(--light-color) !important;
+        @include mq(xs){
+            width:1.5rem !important;
+            height: 1.5rem !important;
+            margin:0 5px !important;
+        }
+    }
+    .selected {
+        background-color: var(--main-color) !important;
+    }
+}

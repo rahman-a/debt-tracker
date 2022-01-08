@@ -1,0 +1,50 @@
+@use '../../sass/variables.scss' as var;
+@use '../../sass/media' as media;
+
+.carousel {
+    margin-top:-5.5rem;
+    height: 100vh;
+    position: relative;
+    
+    &__slide {
+        img {
+            height: 100vh;
+            object-fit: cover;
+        }
+    }
+    &__desc {
+        position: absolute;
+        top: 50%;
+        margin-left: 5rem;
+        width: 50%;
+        color: var.$white-color;
+        text-align: left;
+        padding: 5rem;
+        background-color: rgba(var.$main-color, 65%);
+        border-radius: 2rem;
+        
+        @include media.mq(md){
+            width: 65%;
+        }
+        
+        @include media.mq(sm) {
+            top:50%;
+            width:90%;
+            margin-left: 1rem;
+            padding:2rem;
+        }
+        h2 {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 3rem;
+            @include media.mq(sm) {
+                font-size:2rem
+            }
+        }
+        p{
+            @include media.mq(sm) {
+                font-size: 1.4rem;
+            }
+        }
+    }
+}

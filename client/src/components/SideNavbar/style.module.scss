@@ -1,0 +1,81 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.navbar {
+    &__menu {
+        position: fixed;
+        background-color: var.$main-color;
+        color:var.$white-color;
+        height: 100vh;
+        top:5.6rem;
+        left:-18rem;
+        z-index:999;
+        transition: all 0.3s ease-in-out;
+        width:25rem;
+    
+        @include media.mq(md){
+          top:6.6rem;
+        }
+    
+        &_list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+    
+        &_item {
+          padding: 3.5rem 3.5rem 3rem 1rem;
+          border-bottom: 1px solid var.$full-light-color;
+          display: flex;
+          align-items: center;
+          position: relative;
+          cursor: pointer;
+          &:hover {
+            background-color: rgba(var.$full-light-color, 0.2);
+          }
+          &:hover span {
+            color:var.$white-color;
+          }
+          &_logout {
+            svg {
+              transform:rotate(180deg)
+            }
+          }
+    
+          &_loading {
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height: 100%;
+            background-color: rgba(0,0,0, 0.4);
+            margin:0 !important;
+          }
+    
+          &_flag {
+            cursor: pointer;
+            img {
+              width:3rem;
+            }
+          }
+    
+          span {
+            font-size: 1.6rem;
+            color:var.$full-light-color;
+          }
+    
+          svg {
+            width:2.5rem;
+            height: 2.5rem;
+            margin:0 2rem;
+          }
+    
+          &_lang {
+            display: none;
+            @include media.mq(md){
+              display: block;
+            }
+          }
+        }
+      }
+}

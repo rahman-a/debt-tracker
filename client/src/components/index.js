@@ -1,0 +1,8 @@
+export {default as Header} from './Header/Header'
+export {default as Footer} from './Footer/Footer' 
+export {default as Carousel} from './Carousel/Carousel'
+export {default as Loader} from './Loader/Loader'
+export {default as About } from './About/About' 
+export {default as Contact} from './Contact/Contact'
+export {default as SideNavbar} from './SideNavbar/SideNavbar'
+export {default as NotificationContainer} from './NotifyContainer/NotifyContainer'
