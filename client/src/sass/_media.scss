@@ -1,12 +1,13 @@
 @use 'sass:map';
     
 $breakpoint: (
-    xs:35.99em, //575.98px,
-    sm:47.99em, //767.98px,
-    md:61.99em, //991.98px,
-    lg:74.99em, //1199.98px,
-    xl:87.49em, //1399.98px,
-    xxl:93.75em //1499.98px
+    xxs:24.99em,   // 399 px,
+    xs:35.99em,   //575.98px,
+    sm:47.99em,   //767.98px,
+    md:61.99em,   //991.98px,
+    lg:74.99em,   //1199.98px,
+    xl:87.49em,   //1399.98px,
+    xxl:93.75em   //1499.98px
 );
 
 @mixin mq($bp) {

@@ -9,7 +9,7 @@ const NotifyContainer = ({title, data}) => {
                 {
                     data.map(notify => {
                         return <li key={notify.id} className={style.notify__item}>
-                            <h3>{notify.text}</h3>
+                            <h3>{notify.title}</h3>
                             <p>{notify.content.substr(0,45) + '....'}</p>
                         </li>
                     })

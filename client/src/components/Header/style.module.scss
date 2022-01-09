@@ -2,12 +2,11 @@
 @use '../../sass/media' as media;
 
 .header {
-  position: fixed;
   top:0;
   left:0;
-  width:100vw;
   z-index:999;
-  
+  width:100%;
+  transition: all 0.3s ease;
   &__wrapper {
     display: flex;
     align-items: center;
@@ -40,11 +39,11 @@
       cursor: pointer;
     }
     svg {
-      width:4rem;
-      height:4rem;
+      width:3rem;
+      height:3rem;
       @include media.mq(sm) {
-        width: 3rem;
-        height: 3rem;
+        width: 2.5rem;
+        height: 2.5rem;
       }
     }
   }
@@ -126,11 +125,11 @@
   }
 
   &__credential {
-    button {
+    a {
       all:unset;
       cursor: pointer;
     }
-    button:first-child {
+    a:first-child {
         margin-right: 2rem;
         color:var.$white-color;
         font-weight: 400;
@@ -142,7 +141,7 @@
           font-size:1.4rem;
         }
     }
-    button:last-child {
+    a:last-child {
         background-color: var.$full-light-color;
         padding:0.5rem 2rem;
         border-radius: 2rem;

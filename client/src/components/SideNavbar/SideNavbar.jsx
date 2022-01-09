@@ -1,5 +1,6 @@
 import React from 'react'
 import style from './style.module.scss'
+import { useNavigate } from 'react-router-dom'
 import {Loader} from '../../components'
 import {
     Cogs, 
@@ -11,19 +12,22 @@ import {
 
 
 const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler}) => {
+    const navigate = useNavigate()
     return (
         <div className={style.navbar__menu}
         style={{left: showSideMenu ? '0' : '-30rem'}}>
             <ul className={style.navbar__menu_list}>
-                <li className={style.navbar__menu_item}>
+                <li className={style.navbar__menu_item}
+                onClick={() => navigate('/operation')}>
                     <span>
                         <Cogs/>
                     </span>
                     <span>
-                        Reports
+                        Operation
                     </span>
                 </li>
-                <li className={style.navbar__menu_item}>
+                <li className={style.navbar__menu_item}
+                onClick={() => navigate('/reports')}>
                     <span>
                         <File/>
                     </span>
@@ -31,7 +35,8 @@ const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler}
                         Reports
                     </span>
                 </li>
-                <li className={style.navbar__menu_item}>
+                <li className={style.navbar__menu_item}
+                onClick={() => navigate('/profile')}>
                     <span>
                         <AddressCard/>
                     </span>

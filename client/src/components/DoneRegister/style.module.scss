@@ -1,0 +1,36 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.done {
+    padding:6rem;
+    margin-top:2rem;
+    color:var.$white-color;
+    text-align: center;
+    @include media.mq(sm){
+        padding:0;
+    }
+    &__icon {
+        font-weight: 600;
+        font-size: 1.4rem !important;
+        color: var.$full-light-color !important;
+        right: -2rem !important;
+        transform: translateY(-20%) !important;
+    }
+    &__emailSent {
+        background-color: rgba(var.$full-light-color, 0.1);
+        padding: 2rem;
+        border-radius: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    &__sentAgain {
+        all:unset;
+        margin-top:2rem;
+        color:var.$full-light-color;
+        border-bottom: 1px solid transparent;
+        font-weight: 300;
+        &:hover {
+            border-bottom: 1px solid var.$white-color;
+        }
+    }
+}

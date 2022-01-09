@@ -1,40 +1,41 @@
 import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
+import {v4 as uuidv4} from 'uuid'
+import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
 import { Loader,SideNavbar, NotificationContainer } from '../../components'
-import {v4 as uuidv4} from 'uuid'
 
 const notifyData = [
     {
         id:uuidv4(),
-        text:'Lorem ipsum dolor sit amet',
+        title:'Lorem ipsum dolor sit amet',
         content:'labore et dolore magna aliquyam erat, sed diam voluptua',
     },
     {
         id:uuidv4(),
-        text:'Lorem ipsum dolor sit amet',
+        title:'Lorem ipsum dolor sit amet',
         content:'labore et dolore magna aliquyam erat, sed diam voluptua',
     },
     {
         id:uuidv4(),
-        text:'Lorem ipsum dolor sit amet',
+        title:'Lorem ipsum dolor sit amet',
         content:'labore et dolore magna aliquyam erat, sed diam voluptua',
     },
     {
         id:uuidv4(),
-        text:'Lorem ipsum dolor sit amet',
+        title:'Lorem ipsum dolor sit amet',
         content:'labore et dolore magna aliquyam erat, sed diam voluptua',
     },
     {
         id:uuidv4(),
-        text:'Lorem ipsum dolor sit amet',
+        title:'Lorem ipsum dolor sit amet',
         content:'labore et dolore magna aliquyam erat, sed diam voluptua',
     }
 ]
 
 
 const Header = () => {
-    const isAuth = true // for test
+    const isAuth = false // for test
     const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
@@ -42,17 +43,11 @@ const Header = () => {
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
     const [toggleMessages, setToggleMessages] = useState(false)
+    const [isNavFixed, setIsNavFixed] = useState(false)
+    const navigate = useNavigate()
+    const page = useLocation().pathname
     
-    const createAccountHandler = _ => {
-        console.log('create account');
-    }
-    
-    const loginHandler = _ => {
-        console.log('login');
-    }
-
-    const toggleNotifyData = type => {
-        
+    const toggleNotifyData = type => {    
         if(type === 'notification'){
             setToggleMessages(false)
             setToggleNotification(prev => !prev)
@@ -89,48 +84,60 @@ const Header = () => {
 
     window.onscroll = () => {
         if(window.scrollY > 110) {
-            isAuth 
-            ?  setNavbarColor('#1A374D') 
-            :  setNavbarColor('rgba(26, 55, 77, 0.9)')
+            setIsNavFixed(true)
+            page === '/' 
+            ?  setNavbarColor('rgba(26, 55, 77, 0.9)')
+            :  setNavbarColor('#1A374D') 
         }else {
-            isAuth 
-            ? setNavbarColor('#1A374D') 
-            : setNavbarColor('rgba(26, 55, 77, 0.7)')
+            setIsNavFixed(false)
+            page === '/' 
+            ? setNavbarColor('rgba(26, 55, 77, 0.7)')
+            : setNavbarColor('#1A374D') 
             
         }
     }
 
     useEffect(() => {
-        isAuth && setNavbarColor('#1A374D') 
-    },[])
+        page === '/' 
+        ? setNavbarColor('rgba(26, 55, 77, 0.7)')
+        : setNavbarColor('#1A374D')
+    },[page])
+
     return (
         <>
             <div className={style.header__bg}
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
             
             <div className={style.header}
-            style={{backgroundColor:navbarColor}}>
+            style={{
+                backgroundColor:navbarColor,
+                position: isNavFixed ? 'fixed' : 'relative',
+                display: (page === '/login' || page === '/register') ?'none' :'block'
+                }}>
                
                 <div className="container">
                     <div className={style.header__wrapper}>
                         
                         {/* display the main icon */}
                         <div className={style.header__icon}>
-                            <span>
+                            <span onClick={() => navigate('/')}>
                                 <HandDollar/>
                             </span>
+                            
+                            {isAuth && 
                             <span className={style.header__bars}
                             onClick={toggleSideMenuHandler}>
                                 <MenuBars/>
-                            </span>
+                            </span>}
                         </div>
                         
                         {/* display side menu */}
+                        {isAuth && 
                         <SideNavbar 
                         language={language}
                         changeLanguageHandler={changeLanguageHandler}
                         loadingState={loadingState}
-                        showSideMenu={showSideMenu}/>
+                        showSideMenu={showSideMenu}/>}
                         
                         {/* display the actions buttons */}
                         <div className={style.header__actions}>
@@ -163,14 +170,9 @@ const Header = () => {
                             </div>
                             </div>
                             
-                            {/* display the credential buttons [login - sign up] */}
-                            {/* <div className={style.header__credential}>
-                                <button onClick={createAccountHandler}>Sign up</button>
-                                <button onClick={loginHandler}>Login</button>
-                            </div> */}
                             
-
-                            {/* display the messages and notifications  */}
+                            {isAuth 
+                            ? //   display the messages and notifications  
                             <div className={style.header__notify}>
 
                                 <div className={style.header__notify_list}></div>
@@ -185,13 +187,19 @@ const Header = () => {
                                 <span>
                                     <img src="images/photos/photo-1.png" alt="personal avatar" />
                                 </span>
+                                {/* Notification List */}
+                                {toggleNotification && <NotificationContainer title='Notification' data={notifyData}/>}
+                                
+                                {/* Messages List */}
+                                {toggleMessages && <NotificationContainer title='Messages' data={notifyData}/>}
                             </div>
                             
-                            {/* Notification List */}
-                            {toggleNotification && <NotificationContainer title='Notification' data={notifyData}/>}
-                            
-                            {/* Messages List */}
-                            {toggleMessages && <NotificationContainer title='Messages' data={notifyData}/>}
+                            :// display the credential buttons [login - sign up] 
+                            <div className={style.header__credential}>
+                                <Link to='register'>Sign up</Link>
+                                <Link to='login'>Login</Link>
+                            </div>
+                            }
                         </div>
                     </div>
                 </div>
