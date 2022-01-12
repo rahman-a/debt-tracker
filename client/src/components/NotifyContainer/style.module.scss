@@ -6,8 +6,8 @@
      &__container {
          background-color: var.$white-color;
          position: absolute;
-         top:5.6rem;
-         right:15rem;
+         top:5rem;
+         right:5rem;
          width:30rem;
  
          @include media.mq(md){

@@ -64,3 +64,9 @@ body {
         background-color: var(--main-color) !important;
     }
 }
+
+@media (min-width:576px) {
+    .modal-dialog {
+        min-width:65rem;
+    }
+}

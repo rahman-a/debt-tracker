@@ -1,0 +1,107 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+    &__group,
+    &__reset_input {
+        position: relative;
+        margin-bottom: 2rem;
+        width:60%;
+        @include media.mq(md){
+            width:85%;
+        }
+        span {
+            display: inline-block;
+            text-align: center;
+            width:15%;
+            background-color:var.$white-color;
+            color:var.$full-light-color;
+            padding:1.5rem;
+            box-shadow: inset 1px 1px 3px 3px rgb(0 0 0 / 20%);
+        }
+        input {
+            border: 0;
+            outline: none;
+            width: 85%;
+            padding: 1.5rem;
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            &::placeholder {
+                color:var.$full-light-color;
+                font-size: 1.2rem;
+                font-style: italic;
+                font-weight: 400;
+            }
+        }
+    }
+
+    &__submit,
+    &__reset_btn {
+        all: unset;
+        background-color: var.$white-color;
+        color:var.$main-color;
+        width: 25%;
+        text-align: center;
+        padding: 0.8rem;
+        border-radius: 3rem;
+        cursor: pointer;
+        transition: all 0.3s ease-in;
+        @include media.mq(md){
+            width:35%;
+        }
+        &:hover {
+            transform: scale(1.02)
+        }
+        &:active {
+            transform:scale(0.92)
+        }
+    }
+
+    &__forget {
+        all: unset;
+        margin-top: 2rem;
+        color: var.$white-color;
+        font-size: 1.4rem;
+        font-weight: 300;
+        border-bottom: 1px dashed;
+        cursor: pointer;
+        &:hover {
+            border-bottom-style: solid;
+        }
+    }
+
+    &__reset {
+        &_input {
+            input {
+                padding:1rem;
+                border: 1px solid var.$full-light-color;
+            }
+            span {
+                padding:1rem;
+                box-shadow:1px 1px 3px 3px rgb(0 0 0 / 20%);;
+            }
+        }
+        &_btn {
+            width:30%;
+            padding:0.6rem;
+            border:1px solid var.$main-color;
+            &:hover {
+                transform: unset;
+            }
+        }
+        &_header {
+            font-weight: 400;
+        }
+        &_msg {
+            margin: 0.5rem 0;
+            background: #d0f8eb;
+            padding: 0.3rem;
+            color: #025902;
+            text-align: center;
+        }
+    }
+}

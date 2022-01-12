@@ -12,7 +12,7 @@ const Credential = ({setStep}) => {
         setTimeout(() => {
             setLoading(false)
             setStep(2)
-        },5000)
+        },1000)
     }
 
     const addMoreEmailHandler = _ => {

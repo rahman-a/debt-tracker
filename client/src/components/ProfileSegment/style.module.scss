@@ -1,0 +1,50 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.segment {
+    margin-top:3rem;
+    h3 {
+        color:var.$main-color;
+        font-weight: 400;
+        text-transform: capitalize;
+        span {
+            margin-left:0.5rem;
+            cursor: pointer;
+        }
+    }
+    p {
+        margin-left: 3rem;
+        color:var.$full-light-color;
+        text-transform: capitalize;
+    }
+
+    &__edit {
+        margin-left:2rem;
+        display: flex;
+        input {
+            border: 0;
+            outline: none;
+            box-shadow: 1px 2px 2px 1px rgb(0 0 0 / 30%);
+            border-radius: 3rem;
+            padding: 0.3rem 1rem;
+            margin-right: 1rem;
+            &::placeholder {
+                font-size: 1.2rem;
+                color:var.$full-light-color;
+            }
+        }
+
+        button {
+            all:unset;
+            color:var.$main-color;
+            cursor: pointer;
+        }
+
+        span {
+            font-size: 1.3rem;
+            width: 15rem;
+            margin-left: 1rem;
+        }
+
+    }
+}

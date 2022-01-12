@@ -25,7 +25,7 @@ const Loader = ({size, text, center, custom, options}) => {
     }
     return (
         <div style={getStyle()}>
-           <Spinner {...options}/>
+           <Spinner {...options} style={{width:'100%', height:'100%'}}/>
            {text ? <p>{text}</p> : ''}
         </div>
     )

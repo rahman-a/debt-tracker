@@ -1,0 +1,120 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.loginCode {
+    width:60%;
+    @include media.mq(lg){
+        width:70%;
+    }
+    @include media.mq(md){
+        width:85%;
+    }
+    @include media.mq(xs){
+        width:100%;
+    }
+    p {
+        color: var.$white-color;
+        font-size: 1.8rem;
+        text-align: center;
+        letter-spacing: 1px;
+        &:last-of-type {
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        &_input {
+            position: relative;
+            width:100%;
+            display: flex;
+            span {
+                display: inline-block;
+                text-align: center;
+                width: 20%;
+                background-color: var.$white-color;
+                color: var.$full-light-color;
+                padding: 1.5rem 2rem 1.5rem 1rem;
+                border-top-left-radius: 1.2rem;
+                border-bottom-left-radius: 1.2rem;
+                font-weight: 900;
+            }
+            input {
+                border: 0;
+                outline: none;
+                width: 85%;
+                padding: 1.5rem;
+                border-top-right-radius: 1.2rem;
+                border-bottom-right-radius: 1.2rem;
+                &::placeholder {
+                    color:var.$full-light-color;
+                    font-size: 1.2rem;
+                    font-style: italic;
+                    font-weight: 400;
+                    @include media.mq(xs){
+                        font-size:1rem;
+                    }
+                }
+            }
+        }
+
+        button {
+            all:unset;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding:1.6rem;
+            border-radius: 1.2rem;
+            margin-left: 1.6rem;
+            background-color: var.$white-color;
+            color:var.$full-light-color;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+    }
+
+    &__remember {
+        display: flex;
+        align-items: center;
+        transform: translateX(0.8rem);
+        label {
+            margin-left:0.5rem;
+            color:var.$white-color;
+        }
+
+        &_panel {
+            margin-top: 5rem;
+            text-align: center;
+            background-color: rgba(var.$full-light-color, 0.05);
+            padding: 1rem;
+            border-radius: 1rem;
+            p {
+                font-size: 1.4rem;
+                font-weight: 400;
+            }
+            &_period {
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+
+                button {
+                    all:unset;
+                    padding:0.3rem 1rem;
+                    border:1px dashed var.$white-color;
+                    color:var.$white-color;
+                    cursor: pointer;
+                    &:hover {
+                        border-style:solid;
+                    }
+                }
+
+                &_select {
+                    background: var.$white-color !important;
+                    color: var.$main-color !important;
+                    border: 1px solid #8bc34a !important;
+                }
+            }
+        }
+    }
+}

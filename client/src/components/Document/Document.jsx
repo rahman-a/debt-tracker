@@ -37,6 +37,7 @@ const Documents = ({setStep}) => {
             custom={{marginBottom:'3rem'}}
         />
         <hr style={{marginTop:'-2rem', backgroundColor:'#fff'}}/>
+        
         {/* UPLOAD IDENTITY DOCUMENT */}
         <div className={style.document}>
             <Input
@@ -101,7 +102,7 @@ const Documents = ({setStep}) => {
             <hr/>
         </div>
 
-        <Button value='submit' handler={moveNextHandler}/> 
+        <Button value='next' handler={moveNextHandler}/> 
 
         </>
     )

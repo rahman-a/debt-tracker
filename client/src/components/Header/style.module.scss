@@ -50,7 +50,6 @@
 
   &__bars {
     margin-left: 1.6rem;
-    // display: none;
     @include media.mq(sm) {
       display: inline;
     }

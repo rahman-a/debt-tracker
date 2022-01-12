@@ -35,7 +35,7 @@ const notifyData = [
 
 
 const Header = () => {
-    const isAuth = false // for test
+    const isAuth = true // for test
     const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
@@ -187,11 +187,22 @@ const Header = () => {
                                 <span>
                                     <img src="images/photos/photo-1.png" alt="personal avatar" />
                                 </span>
+                                
                                 {/* Notification List */}
-                                {toggleNotification && <NotificationContainer title='Notification' data={notifyData}/>}
+                                {toggleNotification 
+                                && <NotificationContainer 
+                                setToggleNotification={setToggleNotification}
+                                setToggleMessages={setToggleMessages}
+                                title='Notification' 
+                                data={notifyData}/>}
                                 
                                 {/* Messages List */}
-                                {toggleMessages && <NotificationContainer title='Messages' data={notifyData}/>}
+                                {toggleMessages 
+                                && <NotificationContainer 
+                                setToggleNotification={setToggleNotification}
+                                setToggleMessages={setToggleMessages}
+                                title='Messages' 
+                                data={notifyData}/>}
                             </div>
                             
                             :// display the credential buttons [login - sign up] 

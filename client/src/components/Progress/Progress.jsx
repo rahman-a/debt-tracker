@@ -4,7 +4,7 @@ import style from './style.module.scss'
 const ProgressBar = ({step}) => {
     
     const progressWidth = _ => {
-        return (step -1 ) / 4 * 100 + '%'
+        return (step -1 ) / 5 * 100 + '%'
     }
     
     return (
@@ -30,6 +30,10 @@ const ProgressBar = ({step}) => {
                 <li className={`${style.progress__item} ${step >= 5 ? style.progress__active :''}`}>
                     <span>5</span>
                     <p>Verification Documents</p>
+                </li>
+                <li className={`${style.progress__item} ${step >= 6 ? style.progress__active :''}`}>
+                    <span>6</span>
+                    <p>Snapshot</p>
                 </li>
             </ul>
         </div>

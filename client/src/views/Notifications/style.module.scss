@@ -1,0 +1,45 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.notifications {
+    background-color: #f1f1f1;
+    min-height: 100vh;
+    
+    @include media.mq(xxs){
+        padding-top:2rem;
+    }
+    
+    &__wrapper {
+        padding:4rem;
+        width:75%;
+        @include media.mq(md) {
+            width:85%;
+        }
+        @include media.mq(md) {
+            width:100%;
+        }
+        @include media.mq(xs) {
+            padding:2rem;
+        }
+        @include media.mq(xxs) {
+            padding:0;
+        }
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__dropdown {
+        display: flex;
+        align-items: center;
+         
+
+         &_menu {
+             width:15rem;
+         }
+    }
+}
+

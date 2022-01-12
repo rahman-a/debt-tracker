@@ -47,4 +47,24 @@
             margin-top:3rem;
         }
     }
+
+    &__back {
+        all: unset;
+        position: absolute;
+        left: 2rem;
+        top: 2rem;
+        color: var.$white-color;
+        cursor: pointer;
+        border-bottom: 1px solid transparent;
+        &:hover {
+            border-bottom: 1px solid var.$white-color;
+        }
+        span {
+            margin-right: 1rem;
+            svg {
+                transform:rotate(180deg)
+            }
+        }
+
+    }
 }
