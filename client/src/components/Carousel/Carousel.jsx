@@ -31,10 +31,9 @@ const Carousel = () => {
     
     return (
         <Slider 
-        autoPlay={true}
+        autoPlay
         infiniteLoop={true}
         swipeable={true}
-        showArrow={true}
         showStatus={false}
         showThumbs={false}
         className={style.carousel}>

@@ -3,12 +3,12 @@
 
 .carousel {
     margin-top:-5.5rem;
-    height: 100vh;
+    max-height: 100vh;
     position: relative;
-    
+    margin-bottom: 1.6rem;
     &__slide {
         img {
-            height: 100vh;
+            max-height: 100%;
             object-fit: cover;
         }
     }
