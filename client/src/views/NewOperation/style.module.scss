@@ -1,0 +1,20 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.operation {
+    background-color: #F5F5F5;
+    min-height: 100vh;
+    h2 {
+        padding: 5rem 0 3rem;
+        text-align: center;
+        font-size: 4rem;
+        font-weight: 300;
+    }
+    &__wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      
+
+    }
+}

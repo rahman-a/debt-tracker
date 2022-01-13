@@ -29,3 +29,8 @@ export {default as OperationDecision} from './OperationDecision/OperationDecisio
 export {default as Currency} from './Currency/Currency'
 export {default as Pagination} from './Pagination/Pagination'
 export {default as DropdownMenu} from './DropdownMenu/DropdownMenu'
+export {default as Table} from './Table/Table'
+export {default as Row} from './Row/Row'
+export {default as PeerSearch} from './PeerSearch/PeerSearch'
+export {default as OperationCreation} from './OperationCreation/OperationCreation'
+export {default as Filter} from './Filter/Filter'

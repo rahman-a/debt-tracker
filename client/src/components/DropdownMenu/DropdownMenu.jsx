@@ -2,8 +2,9 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import {ChevronDown} from '../../icons'
 import {v4 as uuidv4} from 'uuid'
+
 const DropdownMenu = ({data, onSelectHandler, disabled}) => {
-    // data = {label, icon, items:[{icon:'', item:''}]}
+    // data = {label, icon, items:[{icon:'', text:'', value:''}]}
     const [isMenuToggle, setIsToggleMenu] = useState(false)
     const [labelName, setLabelName] = useState(data.label)
     
@@ -40,7 +41,7 @@ const DropdownMenu = ({data, onSelectHandler, disabled}) => {
                     data.items.map(item => {
                         return <li key={uuidv4()} onClick={() => toggleMenuItemHandler(item.text, item.value)}>
                             {item.icon && <span> {item.icon} </span> }
-                            <p>{item.text}</p>  
+                            <div>{item.text}</div>  
                         </li>
                     })
                 }

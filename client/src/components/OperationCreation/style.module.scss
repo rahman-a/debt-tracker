@@ -1,0 +1,89 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.details {
+
+    &__peer {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: 4rem;
+        img {
+            width:12rem;
+            clip-path: circle();
+        }
+        h2 {
+            padding:1rem 0 !important;
+            font-size: 3.2rem !important;
+        }
+    }
+    &__data {
+        width:35vw;
+        padding-bottom:5rem;
+        display: flex;
+        flex-direction: column;
+
+        @include media.mq(md){
+            width:50vw
+        }
+        @include media.mq(sm){
+            width:70vw
+        }
+        @include media.mq(xs){
+            width:90vw;
+        }
+        & > div {
+            margin-bottom: 3rem;
+            li {
+                padding: 2rem !important;
+            }
+        }
+
+        &_value {
+            input {
+                padding:2rem 2rem 2rem 5.5rem !important;
+                border-radius: 0 !important;
+            }
+            span {
+                top:53% !important;
+                svg {
+                    @include media.mq(sm) {
+                        width: 2.5rem !important;
+                        height: 2.5rem !important;
+                    }
+                }
+            }
+            label {
+                color:var.$main-color !important;
+            }
+        }
+
+        &_label {
+            margin-bottom: 0.5rem;
+            margin-left:1.6rem;
+            font-style: italic;
+        }
+
+        &_action {
+            all:unset;
+            position: relative;
+            align-self: flex-end;
+            background-color: var.$white-color;
+            padding:1.6rem 5rem;
+            color:var.$main-color;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in;
+            box-shadow: inset -1px 0px 5px 1px rgb(0 0 0 / 30%);
+            &:active {
+                box-shadow: -1px 0px 5px 1px rgb(0 0 0 / 30%); 
+            }
+            span {
+                position: absolute;
+                top:50%;
+                left:50%;
+                transform:translate(-50%, -50%)
+            }
+        }
+    }
+}

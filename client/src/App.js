@@ -10,7 +10,8 @@ import {
   Reports, 
   Profile, 
   Notifications, 
-  Messages
+  Messages,
+  NewOperation
 } from './views'
 
 function App() {
@@ -21,7 +22,10 @@ function App() {
             <Route path='/' element={<Home/>}/> 
             <Route path='/register' element={<Register/>}/>
             <Route path='/login' element={<Login/>} />  
-            <Route path='/operation' element={<Operation/>}/>
+            <Route path='/operation'>
+                <Route index element={<Operation/>}/>
+                <Route path='new' element={<NewOperation/>}/>
+            </Route>
             <Route path='/reports' element={<Reports/>}/>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/notifications' element={<Notifications/>}/>

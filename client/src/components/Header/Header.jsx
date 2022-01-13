@@ -185,7 +185,7 @@ const Header = () => {
                                     <Envelope/>
                                 </span>
                                 <span>
-                                    <img src="images/photos/photo-1.png" alt="personal avatar" />
+                                    <img src="/images/photos/photo-1.png" alt="personal avatar" />
                                 </span>
                                 
                                 {/* Notification List */}

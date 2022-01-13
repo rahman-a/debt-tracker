@@ -10,6 +10,9 @@
         margin-right:2.5rem;
         border:0;
         outline: none;
+        @include media.mq(xs) {
+            margin-right: 2rem;
+        }
     }
     &__page {
         background-color: var.$white-color;

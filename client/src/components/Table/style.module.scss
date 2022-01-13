@@ -1,0 +1,26 @@
+@use '../../sass/variables' as var;
+
+.records {
+    width:100%;
+    overflow: auto;
+    table {
+        text-align: center;
+        tr {
+            display: inline-block;
+        }
+        th {
+            width: 15rem;
+            height: 8rem;
+            font-size: 1.4rem;
+            text-align: center;
+            background-color: var.$white-color;
+            color:var.$main-color;
+            border-right: 1px solid var.$full-light-color;
+            border-left: 1px solid var.$full-light-color;
+            border-bottom: 2px solid var.$full-light-color; 
+            padding: 2.5rem 0;
+            display: inline-block;
+            font-weight: 400;
+        }
+    }
+}

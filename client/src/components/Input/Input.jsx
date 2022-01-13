@@ -10,6 +10,7 @@ const Input = ({
     error, 
     onChange,
     direction,
+    className,
     custom
 }) => {
  
@@ -18,6 +19,7 @@ const Input = ({
         ${style.input} 
         ${direction === 'right' ? style.input__right :''}
         ${type === 'file' ? style.input__upload :''}
+        ${className}
         `} style={{...custom}}>
            
            {!(type === 'date') && <span  className={style.input__icon}>
