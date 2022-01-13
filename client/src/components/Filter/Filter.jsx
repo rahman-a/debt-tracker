@@ -64,6 +64,7 @@ const Filter = ({hidden}) => {
 
             <div className={style.filter__input}>
                 <DropdownMenu
+                className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({currency:value})}
                 data={{
                     label:'Currency',
@@ -77,6 +78,7 @@ const Filter = ({hidden}) => {
 
             <div className={style.filter__input}>
                 <DropdownMenu
+                className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({state:value})}
                 data={{
                     label:'state',
@@ -90,6 +92,7 @@ const Filter = ({hidden}) => {
 
             <div className={style.filter__input}>
                 <DropdownMenu
+                className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({date:value})}
                 data={{
                     label:'due date',

@@ -51,6 +51,18 @@
             input {
                 padding:0.2rem !important;
                 border-radius: 0.5rem !important;
+                @include media.mq(sm){
+                    padding: 1rem !important;
+                    border-radius: 0 !important;
+                }
+            }
+        }
+
+        &_dropdown {
+            & > div {
+                @include media.mq(sm){
+                    padding:1rem !important;
+                }
             }
         }
     }

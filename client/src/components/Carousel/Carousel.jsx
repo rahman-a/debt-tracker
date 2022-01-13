@@ -32,7 +32,6 @@ const Carousel = () => {
     return (
         <Slider 
         autoPlay={true}
-        emulateTouch={true}
         infiniteLoop={true}
         swipeable={true}
         showArrow={true}

@@ -31,21 +31,25 @@
             }
         }
         &_photo {
-            width:10rem;
             position: relative;
+            width:8rem;
+            height: 8rem;
+            margin-bottom: 1.6rem;
             span {
                 position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
+                top: -10px;
+                left: -11px;
+                width: 10rem;
+                height: 10rem;
                 z-index: 1;
+                clip-path: circle();
             }
             img {
                 position: relative;
-                width:100%;
-                z-index:2
+                width: 95%;
+                height: 95%;
+                z-index: 2;
+                clip-path: circle();
             }
         }
         p {

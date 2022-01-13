@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import {ChevronDown} from '../../icons'
 import {v4 as uuidv4} from 'uuid'
 
-const DropdownMenu = ({data, onSelectHandler, disabled}) => {
+const DropdownMenu = ({data, onSelectHandler, disabled, className}) => {
     // data = {label, icon, items:[{icon:'', text:'', value:''}]}
     const [isMenuToggle, setIsToggleMenu] = useState(false)
     const [labelName, setLabelName] = useState(data.label)
@@ -21,7 +21,10 @@ const DropdownMenu = ({data, onSelectHandler, disabled}) => {
     }
 
     return (
-        <div className={`${style.dropdown} ${disabled ? style.dropdown__disabled :''}`}>
+        <div className={`
+        ${style.dropdown} 
+        ${disabled ? style.dropdown__disabled :''}
+        ${className ? className : ''}`}>
             <div className={style.dropdown__actions}
             style={{padding: data.icon ? "2rem 0" : '0.5rem 1rem'}}
             onClick={toggleMenuHandler}>

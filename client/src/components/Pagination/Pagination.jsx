@@ -1,10 +1,33 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 
 const Pagination = ({count}) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pages, setPages] = useState([1,2,3,4,5])
+    const [isNextOff, setIsNextOff] = useState(false)
+    const [isPrevOff, setIsPrevOff] = useState(true)
+
+    const currentPageHandler = page => {
+        setCurrentPage(page)
+    }
+    
+    const toggleButton = _ => {
+        if(currentPage > 1) {
+            setIsPrevOff(false)
+        }else {
+            setIsPrevOff(true)
+        }
+        if(currentPage === count) {
+            setIsNextOff(true)
+        }else {
+            setIsNextOff(false)
+        }
+    }
+
+    useEffect(() => {
+        toggleButton()
+    },[currentPage])
     
     const changeCurrentPage = type => {
         if(type === 'next') {
@@ -27,24 +50,37 @@ const Pagination = ({count}) => {
             if (currentPage > 1) {
                 setCurrentPage(prev => prev - 1)
             }
+
         }
     }
     
     return (
         <div className={style.pagination}>
-            <button onClick={() => changeCurrentPage('prev')}>Prev</button>
+            <button 
+            style={{backgroundColor:'unset'}}
+            disabled={isPrevOff}
+            className={isPrevOff ? style.pagination__off :''}
+            onClick={() => changeCurrentPage('prev')}>
+                Prev
+            </button>
             {
                 pages.map(page => {
                     return <button 
                     key={uuidv4()} 
                     className={`${style.pagination__page} 
                     ${currentPage === page && style.pagination__page_active}`}
-                    onClick={() => setCurrentPage(page)}>
+                    onClick={() => currentPageHandler(page)}>
                         {page}
                     </button>
                 })
             }
-            <button onClick={() => changeCurrentPage('next')}>Next</button>
+            <button 
+            style={{backgroundColor:'unset'}}
+            disabled={isNextOff}
+            className={isNextOff ? style.pagination__off :''}
+            onClick={() => changeCurrentPage('next')}>
+                Next
+            </button>
         </div>
     )
 }

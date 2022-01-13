@@ -17,7 +17,7 @@ const OperationDecision = ({show, onHide}) => {
                     <div className={style.decision__peer}>
                         <div className={style.decision__peer_photo}>
                             <span style={{backgroundColor:'#037A12'}}></span>
-                            <img src="/images/photos/photo-1.png" alt="peer"/>
+                            <img src="/images/photos/photo-1.jpg" alt="peer"/>
                         </div>
                         <h3>Samantha Abraham John Jackson</h3>
                          <p>
@@ -28,7 +28,7 @@ const OperationDecision = ({show, onHide}) => {
                     <div className={style.decision__peer}>
                         <div className={style.decision__peer_photo}>
                             <span style={{backgroundColor:'#C7E81D'}}></span>
-                            <img src="/images/photos/photo-1.png" alt="peer"/>
+                            <img src="/images/photos/photo-2.jpg" alt="peer"/>
                         </div>
                         <h3>Samantha Abraham John Jackson</h3>
                         <p>
@@ -42,7 +42,7 @@ const OperationDecision = ({show, onHide}) => {
                         <span>Operation Value:</span> <span>5243</span>
                     </li>
                     <li>
-                        <span>Value Currency:</span> <Currency/>
+                        <span>Value Currency:</span> <Currency currency='USD'/>
                     </li>
                     <li>
                         <span>Due Date:</span> <span>05/03/2022</span>
