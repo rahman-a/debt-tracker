@@ -67,9 +67,8 @@ const Details = ({peerInfo}) => {
                 placeholder='Select Operation Due Date'
                 type='text'
                 name='due_date'
-                custom={{padding:'2rem 0'}}
                 onChange={(e) => setDueDate(e.target.value)}
-                className={style.details__data_value}
+                className={style.details__data_date}
                 />
 
                 <button 
