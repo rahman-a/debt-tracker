@@ -9,9 +9,9 @@
          top:5rem;
          right:5rem;
          width:30rem;
- 
+         box-shadow: -1px 0px 8px 2px rgb(0 0 0 / 30%);
          @include media.mq(md){
-           top:6.6rem;
+           top:5.6rem;
            right:3rem;
          }
  

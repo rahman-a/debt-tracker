@@ -60,13 +60,14 @@ const Details = ({peerInfo}) => {
                         {text:<Currency currency='EURO' inline/>, value:'EURO'}
                     ]
                 }}/>
-
+                
+                <p className={style.details__data_label}>Operation Due Date</p>
                 <Input
                 icon={<Calendar/>}
                 placeholder='Select Operation Due Date'
                 type='date'
-                label='Operation Due Date'
                 name='due_date'
+                custom={{padding:'2rem 0'}}
                 onChange={(e) => setDueDate(e.target.value)}
                 className={style.details__data_value}
                 />

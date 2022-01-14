@@ -83,7 +83,7 @@ const Header = () => {
     })
 
     window.onscroll = () => {
-        if(window.scrollY > 110) {
+        if(window.scrollY > 200) {
             setIsNavFixed(true)
             page === '/' 
             ?  setNavbarColor('rgba(26, 55, 77, 0.9)')
