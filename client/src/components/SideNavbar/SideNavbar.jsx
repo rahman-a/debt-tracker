@@ -13,6 +13,12 @@ import {
 
 const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler, setIsAuth}) => {
     const navigate = useNavigate()
+    
+    const logoutHandler = _ => {
+        setIsAuth(false)
+        navigate('/')
+    }
+    
     return (
         <div className={style.navbar__menu}
         style={{left: showSideMenu ? '0' : '-30rem'}}>
@@ -45,7 +51,7 @@ const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler,
                     </span>
                 </li>
                 <li className={style.navbar__menu_item}
-                onClick={() => setIsAuth(false)}>
+                onClick={logoutHandler}>
                     <span className={style.navbar__menu_item_logout}>
                         <Logout/>
                     </span>
