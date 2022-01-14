@@ -10,7 +10,7 @@ const Footer = () => {
         style={{
             display: (page === '/login' || page === '/register') ? 'none' : 'block'
         }}>
-            
+            <h2>Copyright &copy; Reserved {new Date().getFullYear()}</h2>
         </div>
     )
 }

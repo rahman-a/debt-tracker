@@ -1,4 +1,7 @@
+@use '../../sass/variables' as var;
+
 .footer {
-    height: 5rem;
-    background-color: rgb(231, 242, 255);
+    padding:1rem 0;
+    background-color:var.$main-color;
+    text-align: center;
 }
