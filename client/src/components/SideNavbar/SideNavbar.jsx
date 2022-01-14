@@ -11,7 +11,7 @@ import {
 } from '../../icons'
 
 
-const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler}) => {
+const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler, setIsAuth}) => {
     const navigate = useNavigate()
     return (
         <div className={style.navbar__menu}
@@ -44,7 +44,8 @@ const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler}
                         Profile
                     </span>
                 </li>
-                <li className={style.navbar__menu_item}>
+                <li className={style.navbar__menu_item}
+                onClick={() => setIsAuth(false)}>
                     <span className={style.navbar__menu_item_logout}>
                         <Logout/>
                     </span>

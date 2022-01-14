@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Routes, Route} from 'react-router-dom'
@@ -15,13 +16,15 @@ import {
 } from './views'
 
 function App() {
+  const [isAuth, setIsAuth] = useState(false)
+
   return (
     <div className="App">
-        <Header/>
+        <Header isAuth={isAuth} setIsAuth={setIsAuth}/>
           <Routes>
             <Route path='/' element={<Home/>}/> 
             <Route path='/register' element={<Register/>}/>
-            <Route path='/login' element={<Login/>} />  
+            <Route path='/login' element={<Login setIsAuth={setIsAuth}/>} />  
             <Route path='/operation'>
                 <Route index element={<Operation/>}/>
                 <Route path='new' element={<NewOperation/>}/>

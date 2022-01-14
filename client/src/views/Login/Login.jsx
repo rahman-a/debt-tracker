@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import {LoginForm, LoginCode} from '../../components'
 import {ArrowRight} from '../../icons'
 
-const Login = () => {
+const Login = ({setIsAuth}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const navigate = useNavigate()
     return (
@@ -18,8 +18,8 @@ const Login = () => {
            <div className={style.login__wrapper}>
                 {
                 isAuthenticated 
-                ? <LoginCode/>
-                : <LoginForm setIsAuthenticated={setIsAuthenticated}/>
+                ? <LoginCode setIsAuth={setIsAuth}/>
+                : <LoginForm setIsAuthenticated={setIsAuthenticated} />
                 }
            </div>
         </div>

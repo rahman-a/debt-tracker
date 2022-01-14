@@ -1,10 +1,11 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
+import { useNavigate } from 'react-router-dom'
 
-const LoginCode = () => {
+const LoginCode = ({setIsAuth}) => {
     const [isRememberOn, setIsRememberOn] = useState(false)
     const [rememberDays, setRememberDays] = useState(1)
-    
+    const navigate = useNavigate()
     const defineRememberDays = days => {
         setRememberDays(days)
     }
@@ -12,6 +13,11 @@ const LoginCode = () => {
     const rememberPanelHandler = e => {
         if(isRememberOn) setRememberDays(1)
         setIsRememberOn(prev => !prev)
+    }
+
+    const loginHandler = _ => {
+        setIsAuth(true)
+        navigate('/')
     }
     return (
         <div className={style.loginCode}>
@@ -24,7 +30,7 @@ const LoginCode = () => {
                     </span>
                     <input type="text" placeholder='enter the code sent to your E-mail'/>
                 </div>
-                <button>login</button>
+                <button onClick={loginHandler}>login</button>
             </div>
             <div className={style.loginCode__remember}>
                 <input 

@@ -34,8 +34,7 @@ const notifyData = [
 ]
 
 
-const Header = () => {
-    const isAuth = true // for test
+const Header = ({isAuth, setIsAuth}) => {
     const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
@@ -137,7 +136,8 @@ const Header = () => {
                         language={language}
                         changeLanguageHandler={changeLanguageHandler}
                         loadingState={loadingState}
-                        showSideMenu={showSideMenu}/>}
+                        showSideMenu={showSideMenu}
+                        setIsAuth={setIsAuth}/>}
                         
                         {/* display the actions buttons */}
                         <div className={style.header__actions}>
