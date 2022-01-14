@@ -4,4 +4,9 @@
     padding:1rem 0;
     background-color:var.$main-color;
     text-align: center;
+    h2 {
+        font-size: 1.4rem;
+        color:var.$white-color;
+        font-weight: 400;
+    }
 }
