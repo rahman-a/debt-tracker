@@ -65,7 +65,7 @@ const Details = ({peerInfo}) => {
                 <Input
                 icon={<Calendar/>}
                 placeholder='Select Operation Due Date'
-                type='date'
+                type='text'
                 name='due_date'
                 custom={{padding:'2rem 0'}}
                 onChange={(e) => setDueDate(e.target.value)}

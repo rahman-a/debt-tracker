@@ -52,7 +52,7 @@ const Documents = ({setStep}) => {
                 name='identityExpire'
                 placeholder='mm/dd/yyyy'
                 label='Date of Expiry'
-                type='date'
+                type='text'
                 icon={<Calendar/>}
                 custom={{marginLeft:'5rem'}}
             />
@@ -73,7 +73,7 @@ const Documents = ({setStep}) => {
                 name='passportExpire'
                 placeholder='mm/dd/yyyy'
                 label='Date of Expiry'
-                type='date'
+                type='text'
                 icon={<Calendar/>}
                 custom={{marginLeft:'5rem'}}
             />
@@ -95,7 +95,7 @@ const Documents = ({setStep}) => {
                 name='residentialExpire'
                 placeholder='mm/dd/yyyy'
                 label='Date of Expiry'
-                type='date'
+                type='text'
                 icon={<Calendar/>}
                 custom={{marginLeft:'5rem'}}
             />
