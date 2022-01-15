@@ -4,8 +4,8 @@
 .operation {
     background-color: #F5F5F5;
     min-height: 100vh;
-    h2 {
-        padding: 5rem 0 3rem;
+    &__header {
+        padding: 10rem 0 4rem 0;
         text-align: center;
         font-size: 4rem;
         font-weight: 300;

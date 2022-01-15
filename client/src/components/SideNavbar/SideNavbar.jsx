@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useRef} from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import {Loader} from '../../components'
@@ -7,79 +7,136 @@ import {
     File, 
     Logout, 
     AddressCard, 
-    Globe
+    Globe,
+    CashRegister,
+    HandshakeSlash
 } from '../../icons'
 
 
-const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler, setIsAuth}) => {
+const SideNavbar = ({
+    showSideMenu, 
+    loadingState,
+    language, 
+    changeLanguageHandler, 
+    setIsAuth
+    }) => {
     const navigate = useNavigate()
-    
+    const [isReportMenu, setIsReportMenu] = useState(false)
+    const reportRef = useRef(null)
+
     const logoutHandler = _ => {
         setIsAuth(false)
         navigate('/')
     }
     
+    const showReportsMenu = e => {
+        e.stopPropagation()
+        if(!isReportMenu) {
+            const menuHeight = reportRef.current.getBoundingClientRect().height 
+            console.log('menu height', menuHeight);
+            reportRef.current.parentNode.style.height = `${menuHeight}px`
+            setIsReportMenu(true) 
+        }else {
+            reportRef.current.parentNode.style.height = 0 
+            setIsReportMenu(false)
+        }
+    }
+
     return (
         <div className={style.navbar__menu}
         style={{left: showSideMenu ? '0' : '-30rem'}}>
             <ul className={style.navbar__menu_list}>
                 <li className={style.navbar__menu_item}
-                onClick={() => navigate('/operation')}>
-                    <span>
-                        <Cogs/>
-                    </span>
-                    <span>
-                        Operation
-                    </span>
+                >
+                    <div onClick={() => navigate('/operation')}>
+                        <span>
+                            <Cogs/>
+                        </span>
+                        <span>
+                            Operation
+                        </span>
+                    </div>
                 </li>
                 <li className={style.navbar__menu_item}
-                onClick={() => navigate('/reports')}>
-                    <span>
-                        <File/>
-                    </span>
-                    <span>
-                        Reports
-                    </span>
+                >
+                    <div onClick={showReportsMenu}>
+                        <span>
+                            <File/>
+                        </span>
+                        <span>
+                            Reports
+                        </span>
+                    </div>
+                    {/* ///////////////////////////////////// */}
+                    <ul className={style.navbar__menu_reports}>
+                        <div ref={reportRef}>
+                            <li className={style.navbar__menu_reports_item}
+                            onClick={() => navigate('/reports/active')}>
+                                <span>
+                                    <CashRegister/>
+                                </span>
+                                <span>
+                                    Active Reports
+                                </span>
+                            </li>
+                            <li className={style.navbar__menu_reports_item}
+                            onClick={() => navigate('/reports/closed')}>
+                                <span>
+                                    <HandshakeSlash/>
+                                </span>
+                                <span>
+                                    closed Reports
+                                </span>
+                            </li>
+                        </div>
+                    </ul>
+                    {/* ///////////////////////////////////// */}
                 </li>
                 <li className={style.navbar__menu_item}
-                onClick={() => navigate('/profile')}>
-                    <span>
-                        <AddressCard/>
-                    </span>
-                    <span>
-                        Profile
-                    </span>
+                >
+                   <div onClick={() => navigate('/profile')}>
+                        <span>
+                            <AddressCard/>
+                        </span>
+                        <span>
+                            Profile
+                        </span>
+                   </div>
                 </li>
                 <li className={style.navbar__menu_item}
-                onClick={logoutHandler}>
-                    <span className={style.navbar__menu_item_logout}>
-                        <Logout/>
-                    </span>
-                    <span>
-                        Logout
-                    </span>
+                >
+                    <div onClick={logoutHandler}>
+                        <span className={style.navbar__menu_item_logout}>
+                            <Logout/>
+                        </span>
+                        <span>
+                            Logout
+                        </span>
+                    </div>
                 </li>
                 <li className={`
                 ${style.navbar__menu_item} 
                 ${style.navbar__menu_item_lang}
                 `}>
-                    {loadingState && <span className={style.navbar__menu_item_loading}>
-                        <Loader center size='5' options={{animation:'border'}}/>
-                    </span>}
-                    <span>
-                        <Globe/>
-                    </span>
-                    <span className={style.navbar__menu_item_flag}>
-                    {language === 'ar' 
-                        ? <img 
-                        onClick={(e) => changeLanguageHandler(e, 'en')} 
-                        src="/images/usa-flag.jpg" 
-                        alt="usa flag" />
-                        :<img 
-                        onClick={(e) => changeLanguageHandler(e, 'ar')} 
-                        src="/images/uae-flag.png" 
-                        alt="uae flag" />}     
-                    </span>
+                    <div>
+                        {loadingState && <span className={style.navbar__menu_item_loading}>
+                            <Loader center size='5' options={{animation:'border'}}/>
+                        </span>}
+                        <span>
+                            <Globe/>
+                        </span>
+                        <span className={style.navbar__menu_item_flag}>
+                        {language === 'ar' 
+                            ? <img 
+                            onClick={(e) => changeLanguageHandler(e, 'en')} 
+                            src="/images/usa-flag.jpg" 
+                            alt="usa flag" />
+                            :<img 
+                            onClick={(e) => changeLanguageHandler(e, 'ar')} 
+                            src="/images/uae-flag.png" 
+                            alt="uae flag" />}     
+                        </span>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -87,3 +144,7 @@ const SideNavbar = ({showSideMenu, loadingState,language, changeLanguageHandler,
 }
 
 export default SideNavbar
+
+/**
+ * 
+ */

@@ -1,4 +1,4 @@
-const operations = [
+const reports = [
     {
         _id:'61abb6ef141f48d63e4a6be3',
         name:'Samantha Abraham',
@@ -6,10 +6,9 @@ const operations = [
         description:`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-        credit:'0.00',
-        debt:1254,
+        credit:1236,
+        debt:'0.00',
         currency:'USD',
-        state:'pending',
         due_date:'05/03/2022'
     },
     {
@@ -20,9 +19,8 @@ const operations = [
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
         credit:'0.00',
-        debt:1254,
+        debt:1456,
         currency:'AED',
-        state:'declined',
         due_date:'05/03/2022'
     },
     {
@@ -32,10 +30,9 @@ const operations = [
         description:`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-        credit:1254,
+        credit:4587,
         debt:'0.00',
         currency:'USD',
-        state:'pending',
         due_date:'05/03/2022'
     },
     {
@@ -45,10 +42,10 @@ const operations = [
         description:`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-        credit:'0.00',
-        debt:1254,
+        credit:1487,
+        debt:'0.00',
         currency:'AED',
-        state:'declined',
+        due_date:'05/03/2022'
     },
     {
         _id:'61410b65a4d34dc5d1fb2870',
@@ -58,11 +55,10 @@ const operations = [
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
         credit:'0.00',
-        debt:2457,
+        debt: 5147,
         currency:'EURO',
-        state:'pending',
         due_date:'05/03/2022'
     },
 ]
 
-export default operations
+export default reports

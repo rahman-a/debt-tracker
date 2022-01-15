@@ -8,7 +8,7 @@ const OperationInit = () => {
     return (
         <div className={style.operation}>
             <div className="container">
-                <h2>
+                <h2 className={style.operation__header}>
                     {peerInfo 
                     ?'Operation Creation Process'
                     :'Search for the second peer'}

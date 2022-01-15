@@ -7,7 +7,7 @@
     overflow: hidden;
     h1 {
         text-align: center;
-        margin: 3rem 0;
+        margin: 10rem 0 4rem 0;
         font-size: 5rem;
         font-weight: 200;
 
@@ -19,7 +19,7 @@
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding:0 5rem;
+        padding:0;
         @include media.mq(xs) {
             padding: 0 1rem;
         }
@@ -30,8 +30,12 @@
         display: flex;
         align-items:center;
         justify-content: space-between;
-        margin: 2rem 0;
+        margin: 2rem 5rem;
         width:100%;
+        @include media.mq(sm) {
+            margin:2rem !important;
+            width:95% !important;
+        }
         button {
             all: unset;
             color: var.$main-color;
@@ -50,7 +54,7 @@
         }
 
         button:first-child {
-            width: 25rem;
+             width: 25rem;
              padding: 1.5rem 2.5rem;
             @include media.mq(sm){
                 width:15rem;

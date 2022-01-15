@@ -1,0 +1,102 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.reports {
+    background-color: #F5F5F5;
+    min-height: 100vh;
+    overflow: hidden;
+    h1 {
+        text-align: center;
+        margin: 10rem 0;
+        font-size: 5rem;
+        font-weight: 200;
+
+        @include media.mq(xxs) {
+            font-size: 4rem;
+        }
+    }
+    &__wrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding:0 5rem;
+        @include media.mq(xs) {
+            padding: 0 1rem;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        button {
+            all: unset;
+            text-align: center;
+            background-color: var.$white-color;
+            padding: 2rem 8rem;
+            border-radius: 1rem;
+            color:var.$main-color;
+            margin: 0 3rem 5rem 0;
+            box-shadow: 1px 2px 3px 0px rgb(0 0 0 / 30%);
+            cursor: pointer;
+            
+            @include media.mq(sm) {
+                padding: 2rem;
+                font-size: 1.4rem;
+            }
+            @include media.mq(xs){
+                padding:1rem;
+                font-size: 1.4rem;
+            }
+            @include media.mq(xxs) {
+                margin:0 1rem 5rem 0;
+                font-size: 1.2rem;
+            }
+        }
+        &_active {
+            background-color: var.$main-color !important;
+            color:var.$white-color !important;
+        }
+    }
+
+    &__filter {
+        all: unset;
+        display: none !important;
+        color: var.$main-color;
+        box-shadow: inset 0px -1px 2px 0px rgb(0 0 0 / 30%);
+        background-color: var.$white-color;
+        border-radius: 1.6rem;
+        text-align: center;
+        transition: all 0.3s ease-in;
+        align-items:center;
+        justify-content: center;
+        width: 15rem;
+        padding: 0.5rem 2rem;
+        cursor: pointer;
+        span {
+            margin-right:1rem;
+        }
+        &:hover {
+        transform: scale(1.02);
+        }
+        &:active {
+            transform:scale(0.95)
+        }
+        @include media.mq(sm){
+            display: flex !important;
+        }
+    }
+    &__close {
+        position: absolute;
+        top:2rem;
+        right:2rem;
+        box-shadow: 2px 4px 6px rgb(0 0 0 / 30%);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color:var.$main-color;
+        padding:0.5rem;
+        z-index:9999;
+        cursor: pointer;
+    }
+
+}

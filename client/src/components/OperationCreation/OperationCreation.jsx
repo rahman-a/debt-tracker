@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu, Currency, Loader} from '../../components'
-import {Info, Coins, Calendar, FunnelDollar, HandDollar, HandPlus} from '../../icons'
+import {Info, Coins, Calendar, FunnelDollar, HandDollar, HandPlus, Note} from '../../icons'
 
 
 const Details = ({peerInfo}) => {
@@ -70,6 +70,12 @@ const Details = ({peerInfo}) => {
                 onChange={(e) => setDueDate(e.target.value)}
                 className={style.details__data_date}
                 />
+
+               <div className={style.details__note}>
+                   <span> <Note/> </span>
+                   <label htmlFor="note">Operation Note</label>
+                   <textarea name="note" id="note"></textarea>
+               </div>
 
                 <button 
                 className={style.details__data_action}

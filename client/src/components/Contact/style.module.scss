@@ -130,24 +130,4 @@
         }
     }
 
-    &__social {
-        margin-top:15rem;
-        @include media.mq(sm){
-            position: absolute;
-            bottom:-2rem;
-            left:25%;   
-        }
-        span {
-            margin-right:3rem;
-            cursor: pointer;
-            svg {
-                width: 3.5rem;
-                height: 3.5rem;
-                transition: all 0.3s ease;
-                &:hover {
-                    transform:translateY(-5px)
-                }
-            }
-        }
-    }
 }

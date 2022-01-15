@@ -1,6 +1,6 @@
 import React from 'react'
 import style from './style.module.scss'
-import {Facebook, Linkedin, Whatsapp} from '../../icons'
+import {Social} from '../../components'
 
 const Contact = () => {
     
@@ -10,6 +10,7 @@ const Contact = () => {
     
     return (
         <div className={style.contact}>
+            <Social/>
             <div className={style.contact__bg}></div>
             <div className="container">
                 <div className={style.contact__wrapper}>
@@ -21,17 +22,6 @@ const Contact = () => {
                                 voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
                                 clita kasd gubergren.
                             </p>
-                        </div>
-                        <div className={style.contact__social}>
-                            <span>
-                                <Facebook/>
-                            </span>
-                            <span>
-                                <Linkedin/>
-                            </span>
-                            <span>
-                                <Whatsapp/>
-                            </span>
                         </div>
                     </div>
                     <div className={style.contact__form}>
@@ -46,7 +36,6 @@ const Contact = () => {
                             cols="30" 
                             rows="10"
                             placeholder='Enter Your Message'>
-
                             </textarea>
                             <button>submit</button>
                         </form>

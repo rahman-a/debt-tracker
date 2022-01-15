@@ -14,7 +14,8 @@
         }
         h2 {
             padding:1rem 0 !important;
-            font-size: 3.2rem !important;
+            font-size: 3rem !important;
+            font-weight: 300 !important;
         }
     }
     &__data {
@@ -89,6 +90,33 @@
                 top:50%;
                 left:50%;
                 transform:translate(-50%, -50%)
+            }
+        }
+    }
+
+    &__note {
+        position: relative;
+        textarea {
+            width: 100%;
+            outline: none;
+            border: 0;
+            box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
+            padding: 5rem 1rem 1rem 5rem;
+        }
+        label {
+            margin-bottom: 0.5rem;
+            margin-left:1.6rem;
+            font-style: italic;
+        }
+        span {
+            position: absolute;
+            top: 50%;
+            left: 2rem;
+            color:var.$full-light-color;
+            margin-right:1.6rem;
+            svg {
+                width:2.5rem;
+                height: 2.5rem;
             }
         }
     }

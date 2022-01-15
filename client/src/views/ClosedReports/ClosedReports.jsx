@@ -5,6 +5,10 @@ import {Pagination, Table, Filter} from '../../components'
 import {FilterSearch, Times} from '../../icons'
 import reports from './data'
 
+/**
+ * NOTE ==> show only closed operation and sort them according to date of payment
+ */
+
 const Reports = () => {
     const [isFilter, setIsFilter] = useState(false)
     const [isDueDate, setIsDueDate] = useState(true)
@@ -19,17 +23,9 @@ const Reports = () => {
             <Filter/>
         </Modal>
         <div className={style.reports}>
-            <h1>Reports Records</h1>
+            <h1>Closed Reports Records</h1>
             <div className={style.reports__wrapper}>
                 <div className={style.reports__actions}>
-                    <button className={isDueDate ? style.reports__actions_active :''}
-                    onClick={() => setIsDueDate(true)}>
-                        Reports with Due Date
-                    </button>
-                    <button className={!isDueDate ? style.reports__actions_active :''}
-                    onClick={() => setIsDueDate(false)}>
-                        Reports without Due Date
-                    </button>
                     <button className={style.reports__filter}
                     onClick={() => setIsFilter(true)}>
                         <span> <FilterSearch/> </span>
@@ -37,7 +33,7 @@ const Reports = () => {
                     </button>
                 </div>
                 <Filter hidden/>
-                <Table records={reports} due={isDueDate}/>
+                <Table records={reports} closed={true}/>
                 <Pagination count={15}/>
             </div>
         </div>

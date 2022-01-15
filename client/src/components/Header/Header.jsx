@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
@@ -43,6 +43,8 @@ const Header = ({isAuth, setIsAuth}) => {
     const [toggleNotification, setToggleNotification] = useState(false)
     const [toggleMessages, setToggleMessages] = useState(false)
     const [isNavFixed, setIsNavFixed] = useState(false)
+    const headerBgRef = useRef(null)
+    const sideMenuRef = useRef(null)
     const navigate = useNavigate()
     const page = useLocation().pathname
     
@@ -68,7 +70,15 @@ const Header = ({isAuth, setIsAuth}) => {
 
     const toggleSideMenuHandler = e => {
         e.stopPropagation()
-        setSideMenu(prev => !prev)
+        if(!showSideMenu) {
+            document.body.style.height = '100%'
+            document.body.style.overflow = 'hidden'
+            setSideMenu(true)
+        } else {
+            document.body.style.height = 'unset'
+            document.body.style.overflow = 'unset'
+            setSideMenu(false)
+        }
     }
 
     const showLanguageHandler = e => {
@@ -79,9 +89,15 @@ const Header = ({isAuth, setIsAuth}) => {
     window.addEventListener('click', () => {
         setLangDropDown(false)
         setSideMenu(false)
+        document.body.style.height = 'unset'
+        document.body.style.overflow = 'unset'
     })
 
     window.onscroll = () => {
+        if(window.scrollY > 120) {
+            headerBgRef.current.style.marginTop = 0
+        }
+        
         if(window.scrollY > 200) {
             setIsNavFixed(true)
             page === '/' 
@@ -105,12 +121,13 @@ const Header = ({isAuth, setIsAuth}) => {
     return (
         <>
             <div className={style.header__bg}
+            ref={headerBgRef}
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
             
             <div className={style.header}
             style={{
                 backgroundColor:navbarColor,
-                position: isNavFixed ? 'fixed' : 'relative',
+                position: isNavFixed ? 'fixed' : 'absolute',
                 display: (page === '/login' || page === '/register') ?'none' :'block'
                 }}>
                
@@ -137,6 +154,7 @@ const Header = ({isAuth, setIsAuth}) => {
                         changeLanguageHandler={changeLanguageHandler}
                         loadingState={loadingState}
                         showSideMenu={showSideMenu}
+                        sideMenuRef={sideMenuRef}
                         setIsAuth={setIsAuth}/>}
                         
                         {/* display the actions buttons */}

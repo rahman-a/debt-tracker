@@ -7,15 +7,15 @@
     &__wrapper {
         display: flex;
         flex-wrap: wrap;
-        padding: 5rem;
+        padding: 8rem 5rem;
         @include media.mq(xxl){
-            padding:3rem;
+            padding:8rem 1rem;
         }
         @include media.mq(lg){
             justify-content: center;
         }
         @include media.mq(sm){
-            padding:0;
+            padding:8rem 0;
         }
     }
     &__personal {
@@ -60,6 +60,10 @@
     &__social {
         width:50rem;
         margin:0 3rem 4rem 0;
+        @include media.mq(xxl) {
+            width: 50rem !important;
+        }
+        
         @include media.mq(xl){
             width:60rem;
         }

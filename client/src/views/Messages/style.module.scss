@@ -10,7 +10,7 @@
     }
     
     &__wrapper {
-        padding:4rem;
+        padding:8rem 4rem;
         width:75%;
         @include media.mq(md) {
             width:85%;

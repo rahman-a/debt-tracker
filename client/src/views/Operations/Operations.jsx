@@ -34,7 +34,7 @@ const Operation = () => {
                     </button>
                 </div>
                 <Filter hidden/>
-                <Table records={operations} due/>
+                <Table records={operations} due op/>
                 <Pagination count={10}/>
             </div>
         </div>

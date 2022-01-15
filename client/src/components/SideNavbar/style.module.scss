@@ -24,17 +24,20 @@
         }
     
         &_item {
-          padding: 3.5rem 3.5rem 3rem 1rem;
-          border-bottom: 1px solid var.$full-light-color;
-          display: flex;
-          align-items: center;
           position: relative;
-          cursor: pointer;
-          &:hover {
-            background-color: rgba(var.$full-light-color, 0.2);
-          }
-          &:hover span {
-            color:var.$white-color;
+          & > div {
+            padding: 3.5rem 3.5rem 3rem 1rem;
+            border-bottom: 1px solid var.$full-light-color;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+              background-color: rgba(var.$full-light-color, 0.2);
+            }
+
+            &:hover span {
+              color:var.$white-color;
+            }
           }
           &_logout {
             svg {
@@ -74,6 +77,28 @@
             display: none;
             @include media.mq(md){
               display: block;
+            }
+          }
+        }
+
+        &_reports {
+          list-style: none;
+          background-color: lighten(var.$main-color, 5);
+          padding:0;
+          margin:0;
+          height: 0;
+          overflow: hidden;
+          transition: all 0.3s ease-in;
+          &_item {
+            padding:2rem;
+            cursor: pointer;
+            border-bottom:1px dashed rgb(150 150 150 / 30%);
+            box-shadow: 1px 0px 0px 1px rgb(0 0 0 / 30%);
+            &:hover {
+              background-color: rgba(var.$full-light-color, 0.2);
+            }
+            &:hover span {
+              color:var.$white-color;
             }
           }
         }

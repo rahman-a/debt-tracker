@@ -2,11 +2,13 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {Currency} from '../../components'
-import {Copy, Check} from '../../icons'
+import {Copy, Check, Reader} from '../../icons'
+import Description from './Description';
 
-const Row = ({record, idx, due}) => {
+const Row = ({record, idx, due, op, closed}) => {
     const [isCopied, setIsCopied] = useState(false)
-    
+    const [isDescribeOn, setIsDescribeOn] = useState(false)
+
     const copyIdHandler = _ => {
         setIsCopied(true)
         setTimeout(() => {
@@ -26,6 +28,13 @@ const Row = ({record, idx, due}) => {
     }
     
     return (
+        
+        <>
+        <Description 
+        isDescribeOn={isDescribeOn} 
+        setIsDescribeOn={setIsDescribeOn}
+        />
+        
         <tr className={style.row}>
             <td>{idx + 1}</td>
                                     
@@ -50,11 +59,21 @@ const Row = ({record, idx, due}) => {
                 className={style.row__photo}/> 
             </td>
             
-            {/* Operation Second Peer Type [creditor, debtor]*/}
-            <td style={{textTransform:'capitalize'}}>{record.type}</td>
+            {/* Operation Description */}
+            <td style={{padding: record.description ? '0' :'2.5rem 0'}}>
+                {record.description 
+                ? <p className={style.row__desc}> 
+                    <span onClick={() => setIsDescribeOn(true)}><Reader/></span> 
+                    <i>{record.description.substring(0, 35) + '...' }</i> 
+                  </p>  
+                : 'N/A'}
+            </td>
+
+            {/* Creditor amount value*/}
+            <td style={{textTransform:'capitalize'}}>{record.credit}</td>
             
-            {/* Operation Value */}
-            <td>{record.value}</td>
+            {/* Debtor amount value*/}
+            <td>{record.debt}</td>
             
             {/* Operation Currency [usd, euro, aed]*/}
             <td style={{textAlign:'start', paddingLeft:'1rem'}}>
@@ -62,18 +81,27 @@ const Row = ({record, idx, due}) => {
             </td>
             
             {/* Operation State [pending, approved, declined]*/}
-            <td style={{
+           { op && <td style={{
                 backgroundColor:getStateColor(record.state),
                 textTransform:'uppercase'
                 }}>
                 {record.state}
-            </td>
+            </td> }
             
             {/* Operation Due Date */}
-           {due 
-           && <td> {record.due_date ? record.due_date : 'N/A'} </td>
+           {(due || closed) 
+           && <td
+           style={{backgroundColor: record.payment_date ? '#FCD4DB' :'#ff'}}> 
+            {
+            record.due_date 
+            ? record.due_date
+            : record.payment_date
+            ? record.payment_date
+            : 'N/A'} 
+            </td>
            } 
         </tr>
+        </>
     )
 }
 

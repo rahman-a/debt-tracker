@@ -22,7 +22,7 @@ const Carousel = () => {
         },
         {
             id:uuidv4(),
-            src:'images/carousel/slide-3.png',
+            src:'images/carousel/slide-3.jpg',
             title:'Lorem ipsum dolor sit amet',
             description:`Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
             tempor invidunt ut labore et dolore magna aliquyam erat.`

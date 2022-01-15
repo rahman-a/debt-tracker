@@ -8,15 +8,16 @@ import {
   Register, 
   Login, 
   Operation,
-  Reports, 
   Profile, 
   Notifications, 
   Messages,
-  NewOperation
+  NewOperation,
+  ActiveReports,
+  ClosedReports
 } from './views'
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(true)
 
   return (
     <div className="App">
@@ -29,7 +30,10 @@ function App() {
                 <Route index element={<Operation/>}/>
                 <Route path='new' element={<NewOperation/>}/>
             </Route>
-            <Route path='/reports' element={<Reports/>}/>
+            <Route path='/reports'>
+              <Route path='active' element={<ActiveReports/>}/>
+              <Route path='closed' element={<ClosedReports/>}/>
+            </Route>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/notifications' element={<Notifications/>}/>
             <Route path='/messages' element={<Messages/>}/>
