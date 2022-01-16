@@ -16,6 +16,10 @@
         @include media.mq(md){
           top:6.6rem;
         }
+
+        @include media.mq(xs) {
+          top:5.6rem;
+        }
     
         &_list {
           list-style: none;

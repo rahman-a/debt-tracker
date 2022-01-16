@@ -32,7 +32,7 @@ const Reports = () => {
                         <span> Filter </span>
                     </button>
                 </div>
-                <Filter hidden/>
+                <Filter hidden closed/>
                 <Table records={reports} closed={true}/>
                 <Pagination count={15}/>
             </div>

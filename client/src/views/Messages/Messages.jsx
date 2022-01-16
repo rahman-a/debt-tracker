@@ -1,11 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import style from './style.module.scss'
 import {Message} from '../../components'
 import messages from './data'
-import {Pagination, DropdownMenu} from '../../components'
+import {Pagination} from '../../components'
 
 const Messages = () => {
-    const [toggleDropdown, setToggleDropdown] = useState(false)
     return (
         <div className={style.messages}>
             <div className="container">

@@ -6,7 +6,7 @@
     min-height: 100vh;
     
     @include media.mq(xxs){
-        padding-top:2rem;
+        padding-top:8rem;
     }
     
     &__wrapper {
@@ -19,7 +19,7 @@
             width:100%;
         }
         @include media.mq(xs) {
-            padding:2rem;
+            padding:8rem 2rem;
         }
         @include media.mq(xxs) {
             padding:0;

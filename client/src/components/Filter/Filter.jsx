@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu} from '../../components'
 
-const Filter = ({hidden}) => {
+const Filter = ({hidden, op, closed}) => {
     const [searchFilter, setSearchFilter] = useState({
         code:'',
         name:'',
@@ -69,14 +69,15 @@ const Filter = ({hidden}) => {
                 data={{
                     label:'Currency',
                     items:[
-                        {text:'USD', value:'USD'},
-                        {text:'AED', value:'AED'}, 
-                        {text:'EURO', value:'EURO'}]
+                    {text:'USD', value:'USD'},
+                    {text:'AED', value:'AED'}, 
+                    {text:'EURO', value:'EURO'}
+                ]
                 }}
                 />
             </div>
 
-            <div className={style.filter__input}>
+           { op && <div className={style.filter__input}>
                 <DropdownMenu
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({state:value})}
@@ -84,18 +85,17 @@ const Filter = ({hidden}) => {
                     label:'state',
                     items:[
                         {text:'Pending', value:'pending'},
-                        {text:'Approved', value:'approved'}, 
                         {text:'Declined', value:'declined'}]
                 }}
                 />
-            </div>
+            </div> }
 
             <div className={style.filter__input}>
                 <DropdownMenu
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({date:value})}
                 data={{
-                    label:'due date',
+                    label: closed ? 'payment date' :'due date',
                     items:[
                         {text:'Ascending', value:'ascending'},
                         {text:'Descending', value:'descending'}, 

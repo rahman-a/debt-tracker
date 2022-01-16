@@ -36,7 +36,7 @@ const Reports = () => {
                         <span> Filter </span>
                     </button>
                 </div>
-                <Filter hidden/>
+                <Filter hidden />
                 <Table records={reports} due={isDueDate}/>
                 <Pagination count={15}/>
             </div>
