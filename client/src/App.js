@@ -17,7 +17,7 @@ import {
 } from './views'
 
 function App() {
-  const [isAuth, setIsAuth] = useState(true)
+  const [isAuth, setIsAuth] = useState(false)
 
   return (
     <div className="App">

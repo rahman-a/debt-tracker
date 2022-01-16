@@ -1,7 +1,7 @@
 import React, {useState, useCallback, useRef, useEffect} from 'react'
 import style from './style.module.scss'
 import Webcam from 'react-webcam'
-
+import {v4 as uuidv4} from 'uuid'
 const VerificationSnapshot = ({setStep}) => {
     const [devices, setDevices] = useState([])
     const [imgSrc, setImgSrc] = useState('')
@@ -20,7 +20,8 @@ const VerificationSnapshot = ({setStep}) => {
     }, [setDevices])
 
     useEffect(() => {
-        navigator.mediaDevices.enumerateDevices().then(handleDevices);
+        navigator.mediaDevices.enumerateDevices 
+        && navigator.mediaDevices.enumerateDevices().then(handleDevices);
     },[handleDevices])
 
     const takeVerificationPhotoHandler = useCallback(
@@ -35,6 +36,7 @@ const VerificationSnapshot = ({setStep}) => {
     )
 
     const mediaErrorHandler = error => {
+        console.log('media error =>',error.message);
         setMediaError(error.message)
     }
 
@@ -57,23 +59,25 @@ const VerificationSnapshot = ({setStep}) => {
                 <p>Click to open the camera</p>
             </button> */}
             <div className={style.snapshot__photo}>
-                {
-                    devices.map(device => (
-                        <Webcam
-                            audio={false}
-                            screenshotFormat='image/png'
-                            videoConstraints={() => getVideoConstraints({ deviceId: device.deviceId })}
-                            ref={webcamRef}
-                            imageSmoothing={true}
-                            minScreenshotHeight={300}
-                            minScreenshotWidth={415}
-                            onUserMediaError={(error) => mediaErrorHandler(error)}
-                        />
-                    ))
-                }
-                {mediaError 
-                && <><h3>{mediaError}</h3> <h3>Please Enable Access to your Webcam</h3> </>}
-                <button disabled={mediaError} onClick={takeVerificationPhotoHandler}> {isTaken ? 'take photo again':'take photo'}</button>
+                <Webcam
+                    key={uuidv4()}
+                    audio={false}
+                    screenshotFormat='image/png'
+                    videoConstraints={() => getVideoConstraints({})}
+                    ref={webcamRef}
+                    imageSmoothing={true}
+                    minScreenshotHeight={300}
+                    minScreenshotWidth={415}
+                    onUserMediaError={(error) => mediaErrorHandler(error)}
+                />
+                {mediaError &&
+                <>
+                    <h3>{mediaError}</h3> 
+                    <h3>Please Enable Access to your Webcam</h3> 
+                </>}
+                <button disabled={mediaError} onClick={takeVerificationPhotoHandler}> 
+                    {isTaken ? 'take photo again':'take photo'}
+                </button>
                 {imgSrc && <img src={imgSrc} alt="verification" />}
                 <button disabled={!isTaken} onClick={() => setStep(7)}>Done</button>
             </div>
