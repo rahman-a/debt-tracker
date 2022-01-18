@@ -2,26 +2,40 @@ import mongoose from 'mongoose'
 
 const operationSchema = new mongoose.Schema({
     initiator: {
-        type:String,
-        required:true,
+        user:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        },
+        type:{
+            type:String
+        },
         value:Number
     },
     peer: {
-        type:String,
-        required:true,
-        value:Number
+       user:{
+           type:mongoose.Schema.Types.ObjectId,
+           ref:'User'
+       },
+       type:{
+           type:String 
+       },
+       value:Number
     },
+    
     note:String,
+    
     currency:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'Currency'
     },
+    
     state:{
         type:String,
         default:'pending',
         required:true
     },
+    
     dueDate:Date
 },{timestamps:true})
 

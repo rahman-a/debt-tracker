@@ -3,7 +3,7 @@ import chalk from 'chalk'
 
 const databaseConnection = async _ => {
     try {
-        const conn = mongoose.connect(process.env.MONGODB_URI, {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser:true,
             useUnifiedTopology:true
         })

@@ -1,1 +1,4 @@
 manager - hr - cs
+before release 
+change the auth link from localhost to real website
+change the phone code to emirate number code
