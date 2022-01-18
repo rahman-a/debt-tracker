@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
     code: {
         type:String,
         trim:true,
-        required:true
     },
     username : {
         type:String,
@@ -15,17 +14,11 @@ const userSchema = new mongoose.Schema({
         trim:true,
         lowercase:true
     },
-    fullNameInEnglish: {
-        type:String,
-        required:true,
-    },
-    fullNameInArabic: {
-        type:String,
-        required:true,
-    },
+    fullNameInEnglish:String,
+    fullNameInArabic:String,
     emails:[
         {
-            type:String,
+            isPrimary:Boolean,
             email:{
                 type:String,
                 required:true,
@@ -38,65 +31,44 @@ const userSchema = new mongoose.Schema({
         required:true,
         minlength:[8, 'Password must be at least 8 character'],
     },
+    
     company: String,
-    insideAddress : {
-        type:String,
-        required:true
-    },
+    
+    insideAddress : String,
     outsideAddress:String,
+    
     insidePhones:[
         {
-            type:String,
-            phone:{
-                type:String,
-                required:true,
-            }
+            isPrimary:Boolean,
+            phone:String
         }
     ],
-    outsidePhones:[
-        {
-            type:String,
-            phone:{
-                type:String,
-                required:true,
-            }
-        }
-    ],
-    avatar : {
-        type:String,
-        required:true
-    },
-    identity:{
-        image:{
-            type:String,
-            required:true
-        },
-        expireAt :{
-            type:Date,
-            required:true
-        }
-    },
-    passport: {
-        image:{
-            type:String,
-        },
-        expireAt :{
-            type:Date,
-        }
-    },
-    residential: {
-        image:{
-            type:String,
-        },
-        expireAt :{
-            type:Date,
-        }
-    },
-    verificationImage: {
+    
+    outsidePhones:[{
         type: String,
-        required:true,
+    }],
+    
+    avatar : String,
+    
+    identity:{
+        image:String,
+        expireAt:Date,
     },
+    
+    passport: {
+        image:String,
+        expireAt :Date
+    },
+    
+    residential: {
+        image: String,
+        expireAt: Date,
+    },
+    
+    verificationImage:String,
+    
     roles:Array,
+    
     colorCode:{
         code:{
             type:String,
@@ -120,9 +92,12 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    phoneCode:String,
+    emailCode:String,
+    authString:String
 }, {timestamps:true})
 
-userSchema.statics.toJSON = () => {
+userSchema.methods.toJSON = function(){
     const user = this.toObject()
     delete user.password
     delete user.isPhoneConfirmed
@@ -131,6 +106,9 @@ userSchema.statics.toJSON = () => {
     delete user.isProvider
     delete user.roles
     delete user.verificationImage
+    delete user.phoneCode
+    delete user.emailCode
+    delete user.authString
 
     return user
 }
@@ -161,8 +139,8 @@ userSchema.statics.AuthUser = async function (email, password, res) {
     return user
 }
 
-userSchema.methods.generateToken = function (days = '1 days') {
-    const token = jwt.sign({_id:this._id.toString(),}, process.env.JWT_SECRET, {expiresIn:days})
+userSchema.methods.generateToken = function (days = '1d') {
+    const token = jwt.sign({_id:this._id.toString(),}, process.env.JWT_TOKEN, {expiresIn:days})
     return token 
 }
 

@@ -1,11 +1,15 @@
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import path from 'path'
 import {fileURLToPath} from 'url'
 import databaseConnection from './server/database.connection.js'
 import {notFound, errorHandler} from './server/src/middlewares/errorhandler.js'
+import {verifyAPIKey} from './server/src/middlewares/auth.js' 
+import userRouter from './server/src/routers/users.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
 dotenv.config()
@@ -17,8 +21,10 @@ const app = express()
 databaseConnection()
 
 // middlewares
+app.use(express.json())
 app.use(cors())
 app.use(helmet())
+app.use(cookieParser())
 app.use(morgan('dev'))
 
 if(process.env.NODE_ENV === 'production') {
@@ -28,6 +34,8 @@ if(process.env.NODE_ENV === 'production') {
     })
 }
 
+app.use(verifyAPIKey)
+app.use('/api/users', userRouter)
 
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
 app.use(notFound)
