@@ -2,25 +2,32 @@ import React from 'react'
 import style from './style.module.scss'
 import {ProfileContainer, ProfileSegment} from '../../components'
 
-const Phone = () => {
+const Phone = ({data}) => {
     return (
         <div className={style.profile__phones}>
             <ProfileContainer title='Phones'>
                     <ProfileSegment
-                        title='Phone inside UAE'
-                        text='01254879362'
+                        title='Phones inside UAE'
+                        type='phones'
+                        text={data.insidePhones}
                     />
-
-                    <ProfileSegment
-                        title='Phone outside UAE'
-                        text='01254879362'
-                    />
-
-                    <ProfileSegment
-                        title='Phone outside UAE'
-                        type='text'
+                    {
+                        data.outsidePhones.length > 0
+                        ? <ProfileSegment
+                        title='Phones outside UAE'
+                        type='outPhones'
+                        placeholder='Enter your outside phone'
+                        text={data.outsidePhones}
+                        />
+                        : <ProfileSegment
+                        title='Phones outside UAE'
+                        type='outPhones'
                         placeholder='Enter your outside phone'
                     />
+                    }
+                    
+
+                   
             </ProfileContainer>
         </div>
     )

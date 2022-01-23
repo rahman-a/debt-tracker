@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema({
     },
     
     company: String,
+
+    country: {
+        name:String,
+        abbr:String,
+        image:String
+    },
     
     insideAddress : String,
     outsideAddress:String,
@@ -114,7 +120,7 @@ userSchema.methods.toJSON = function(){
 }
 
 userSchema.statics.AuthUser = async function (email, password, res) {
-    const user = await User.findOne({email})
+    const user = await User.findOne({"emails.email":email})
     if(!user) {
         res.status(401)
         throw new Error('Wrong Email or Password')
@@ -124,18 +130,17 @@ userSchema.statics.AuthUser = async function (email, password, res) {
         res.status(401)
         throw new Error('Wrong Email or Password')
     }
+    
     if(!(user.isPhoneConfirmed)) {
         res.status(401)
-        throw new Error('Please Confirm Your Phone First')
+        throw new Error('phone not confirmed')
     }
-    if(!(user.isEmailConfirmed)) {
-        res.status(401)
-        throw new Error('Please Confirm Your E-mail First')
-    }
+
     if(!(user.isAccountConfirmed)) {
         res.status(401)
         throw new Error('The Account has not been approved yet')
     }
+    
     return user
 }
 

@@ -34,8 +34,7 @@ if(process.env.NODE_ENV === 'production') {
     })
 }
 
-app.use(verifyAPIKey)
-app.use('/api/users', userRouter)
+app.use('/api/users',verifyAPIKey, userRouter)
 
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
 app.use(notFound)

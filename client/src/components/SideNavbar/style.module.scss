@@ -107,4 +107,17 @@
           }
         }
       }
+
+      &__logout {
+        &_alert {
+          position: absolute;
+          left: -25rem;
+          top: 5rem;
+          background-color: #fde1e1;
+          color: #ac0000;
+          border-radius: 1rem;
+          padding: 1rem;
+          transition: all 0.3s ease;
+        }
+      }
 }

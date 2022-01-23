@@ -4,7 +4,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {ProfileContainer, ProfileSegment} from '../../components'
 import {Copy, Check} from '../../icons'
 
-const Personal = () => {
+const Personal = ({data}) => {
     const [isCopied, setIsCopied] = useState(false)
 
     const copyIdHandler = _ => {
@@ -15,25 +15,29 @@ const Personal = () => {
     }
     return (
         <div className={style.profile__personal}>
-            <ProfileContainer title='personal info' ribbon='#037A12'>
+            <ProfileContainer title='personal info' 
+            ribbon={{color:data.color.code, states:data.color.state}}>
                     <div className={style.profile__personal_info}>
-                        <img src="images/photos/photo-1.png" alt="" />
-                        <h2>Samantha Abraham John Jackson</h2>
+                        <img src={
+                            `api/files/${data.avatar}`
+                        } alt="" />
+                        <h2>{data.fullName}</h2>
                         <p>
-                            <span>username</span>: <span>samaj-50</span>
+                            <span>username</span>: <span>{data.username}</span>
                         </p>
                         <p>
-                            <span>Id</span>: <span>61abb6ef141f48d63e4a6be3</span> 
+                            <span>Id</span>: <span>{data.code}</span> 
                             &nbsp;
-                            <CopyToClipboard text='61abb6ef141f48d63e4a6be3' onCopy={copyIdHandler}>
+                            <CopyToClipboard text={data.code} onCopy={copyIdHandler}>
                                 <span> {isCopied ? <Check/> : <Copy/>} </span> 
                             </CopyToClipboard>
                         </p>
                     </div>
                    
                    <ProfileSegment 
-                   title='e-mail address' 
-                   text='sam.2010@test.com'/>
+                   title='e-mail address'
+                   type='email'
+                   text={data.emails}/>
                    
                    <ProfileSegment 
                    title='password' 

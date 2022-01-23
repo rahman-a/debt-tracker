@@ -1,26 +1,42 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import style from './style.module.scss'
-import {Input, Button} from '../../components'
-import {Calendar, AddressCard} from '../../icons'
+import {Input, Button, DateInput} from '../../components'
+import {AddressCard} from '../../icons'
 
-const Documents = ({setStep}) => {
-    const [document, setDocuments] = useState({
+const Documents = ({setStep, setDocuments}) => {
+ 
+    const [images, setImages] = useState({
+        avatar:null,
+        identity:null,
+        passport:null,
+        residential:null
+    })
+    
+    const [files, setFiles] = useState({
         avatar:'Personal Photo',
         identity:'Identity Document',
         passport:'Passport Document',
         residential:'Residential Document'
     })
     
+    const [expireAt, setExpiryAt] = useState({})
+
     const uploadFileHandler = e => {        
         let fileName = e.target.files[0].name
         if(fileName.length > 20) {
             fileName = fileName.substr(0,20) + '...'
         }
-        setDocuments({...document, [e.target.name]: fileName})
+        setFiles({...files, [e.target.name]: fileName})
+        setImages({...images, [e.target.name]: e.target.files[0]})
+    }
+
+    const getExpiryDate = (name, value) => {
+        setExpiryAt({...expireAt, [name]: value})
     }
 
     const moveNextHandler = _ => {
-        setStep(6)
+       setDocuments({...images, expireAt})
+       setStep(6)
     }
     
     
@@ -29,7 +45,7 @@ const Documents = ({setStep}) => {
         {/* UPLOAD PERSONAL PHOTO */}
           <Input
             name='avatar'
-            label={document.avatar}
+            label={files.avatar}
             placeholder='Personal Photo'
             type='file'
             icon={<AddressCard/>}
@@ -42,20 +58,15 @@ const Documents = ({setStep}) => {
         <div className={style.document}>
             <Input
                 name='identity'
-                label={document.identity}
+                label={files.identity}
                 placeholder='Identity Document'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
             />
-            <Input
-                name='identityExpire'
-                placeholder='mm/dd/yyyy'
-                label='Date of Expiry'
-                type='text'
-                icon={<Calendar/>}
-                custom={{marginLeft:'5rem'}}
-            />
+            <DateInput 
+            getExpiryDate={(value) => getExpiryDate('identity', value)}
+            name='identity'/>
             <hr/>
         </div>
 
@@ -63,20 +74,15 @@ const Documents = ({setStep}) => {
         <div className={style.document}>
             <Input
                 name='passport'
-                label={document.passport}
+                label={files.passport}
                 placeholder='Passport Document'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
             />
-            <Input
-                name='passportExpire'
-                placeholder='mm/dd/yyyy'
-                label='Date of Expiry'
-                type='text'
-                icon={<Calendar/>}
-                custom={{marginLeft:'5rem'}}
-            />
+            <DateInput
+            getExpiryDate={(value) => getExpiryDate('passport', value)}
+            name='passport'/>
 
             <hr/>
         </div>
@@ -85,20 +91,15 @@ const Documents = ({setStep}) => {
         <div className={style.document}>
             <Input
                 name='residential'
-                label={document.residential}
+                label={files.residential}
                 placeholder='Residential Document'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
             />
-            <Input
-                name='residentialExpire'
-                placeholder='mm/dd/yyyy'
-                label='Date of Expiry'
-                type='text'
-                icon={<Calendar/>}
-                custom={{marginLeft:'5rem'}}
-            />
+            <DateInput
+            getExpiryDate={(value) => getExpiryDate('residential', value)}
+            name='residential'/>
             <hr/>
         </div>
 

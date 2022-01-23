@@ -1,0 +1,8 @@
+@use '../../sass/variables' as var;
+
+.reset {
+    min-height: 95vh;
+    padding:15rem 0;
+    background-color: #192126;
+    color:var.$white-color
+}

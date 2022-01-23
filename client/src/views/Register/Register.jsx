@@ -16,15 +16,17 @@ import {ArrowRight} from '../../icons'
 
 const Register = () => {
     const [step, setStep] = useState(1)
+    const [info, setInfo] = useState({})
+    const [documents, setDocuments] = useState({})
     const navigate = useNavigate()
     
     const Component = {
         1: <Credential setStep={setStep}/>,
-        2: <Personal setStep={setStep}/>,
-        3: <Address setStep={setStep}/>,
-        4: <Phones setStep={setStep}/>,
-        5: <Documents setStep={setStep}/>,
-        6: <Snapshot setStep={setStep}/>,
+        2: <Personal setStep={setStep} setInfo={setInfo} info={info}/>,
+        3: <Address setStep={setStep} setInfo={setInfo} info={info}/>,
+        4: <Phones setStep={setStep} info={info}/>,
+        5: <Documents setStep={setStep} setDocuments={setDocuments}/>,
+        6: <Snapshot setStep={setStep} documents={documents}/>,
         7: <Done setStep={setStep}/>
     }
 
