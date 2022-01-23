@@ -7,11 +7,16 @@ const Input = ({
     type, 
     placeholder, 
     name, 
+    id,
     error, 
+    value,
+    inputRef,
+    defaultValue,
     onChange,
     direction,
     className,
-    custom
+    custom,
+    disabled
 }) => {
  
     return (
@@ -22,19 +27,23 @@ const Input = ({
         ${className}
         `} style={{...custom}}>
            
-           {!(type === 'date') && <span  className={style.input__icon}>
+           {!(type === 'date') && 
+           <span  className={`${style.input__icon} ${disabled ? style.input__icon_disabled : ''}`}>
                {icon}
            </span>}
            
            {type === 'file' && <p className={style.input__upload_label}>{placeholder}</p>}
-           <label htmlFor={name}>{label}</label>
+           <label htmlFor={id ||name}>{label}</label>
            
            <input 
                 placeholder={placeholder}
                 name={name}
                 type={type}
-                id={name}
+                id={id || name}
+                defaultValue={defaultValue}
                 onChange={onChange}
+                ref={inputRef}
+                disabled={disabled}
                 className={error ? style.input__error : ''}
                 style={{
                     border: type === 'file' ? '2px dashed #fff' :'',

@@ -12,7 +12,10 @@ import {
     verifyAuthLink,
     login,
     verifyLoginCodeHandler,
-    sendUserData
+    sendUserData,
+    sendLoginCodeHandler,
+    logoutHandler,
+    updateUserPassword
 } from '../controllers/users.controller.js'
 
 import {
@@ -32,12 +35,16 @@ const imagesFields = [
 router.post('/register', register)
 router.patch('/register/:id', completeRegistration)
 router.patch('/register/documents/:id', uploadHandler.fields(imagesFields) ,registerDocument)
-router.get('/phone/:id', sendConfirmCodeToPhoneHandler)
+router.get('/phone/:id?', sendConfirmCodeToPhoneHandler)
 router.get('/email/:id', sendEmailVerificationLink)
-router.patch('/phone/verify/:id', verifyConfirmPhoneCodeHandler )
+router.patch('/phone/verify/:id?', verifyConfirmPhoneCodeHandler )
 router.patch('/verify', verifyAuthLink)
 router.post('/login', login)
-router.get('/login/code/:id', verifyLoginCodeHandler)
+router.get('/login/code/new/:id', sendLoginCodeHandler)
+router.patch('/login/code/verify/:id', verifyLoginCodeHandler)
 router.get('/password/reset', sendPasswordResetLink)
 router.get('/me', isAuth, sendUserData)
+router.post('/logout', isAuth, logoutHandler)
+router.patch('/password/update',isAuth,  updateUserPassword)
+
 export default router

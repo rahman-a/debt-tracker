@@ -2,7 +2,9 @@
 @use '../../sass/media' as media;
 
 .loginCode {
+    position: relative;
     width:60%;
+    color:var.$white-color;
     @include media.mq(lg){
         width:70%;
     }

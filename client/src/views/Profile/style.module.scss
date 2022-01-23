@@ -21,6 +21,7 @@
     &__personal {
         &_info {
             display: grid;
+            display: -ms-grid;
             place-items: center;
             padding:2rem 6rem;
             margin-top:2.5rem;
@@ -87,7 +88,7 @@
           box-shadow: inset 0px 1px 6px 3px rgb(0 0 0 / 30%);
           background-color: #fffdfd;
           width: 25rem;
-          padding: 1rem 4rem;
+          padding: 0 4rem;
           margin-bottom: 1rem;
           p {
               color:var.$main-color;

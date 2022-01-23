@@ -32,6 +32,10 @@
                 height: 2rem;
             }
         }
+
+        &_disabled {
+            color:#d2d2d2;
+        }
     }
     input {
         all: unset;
@@ -49,6 +53,14 @@
             color:var.$full-light-color;
             @include media.mq(sm) {
                 font-size: 1.3rem;
+            }
+        }
+
+        &:disabled {
+            background-color: #ececec !important;
+            color:#868686  !important;
+            &::placeholder {
+                color:#868686  !important;
             }
         }
     }

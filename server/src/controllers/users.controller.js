@@ -41,7 +41,7 @@ export const completeRegistration = async (req, res, next) => {
     const userData = req.body 
     try {
         const allowedKeys = ['fullNameInEnglish', 'fullNameInArabic', 'company',
-        'insideAddress','outsideAddress', 'insidePhones','outsidePhones']
+        'insideAddress','outsideAddress', 'insidePhones','outsidePhones', 'country']
 
         if(Object.keys(userData).length === 0) {
             res.status(400)
@@ -60,7 +60,7 @@ export const completeRegistration = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            user:user._id
+            isDone:true
         })
     } catch (error) {
         next(error)
@@ -73,9 +73,10 @@ export const registerDocument = async (req, res, next) => {
     const {id} = req.params 
 
     try {
-
-        const expireAt = JSON.parse(req.body.expiryAt);
+        const expireAt = JSON.parse(req.body.expireAt);
         const user = await User.findById(id) 
+        let docObject;
+        let fileType;
         for(let key in req.files){
             if(key === 'avatar' || key === 'verificationImage') {
                 user[key] = req.files[key][0].filename
@@ -84,15 +85,23 @@ export const registerDocument = async (req, res, next) => {
                     image:req.files[key][0].filename, 
                     expireAt: expireAt[key]
                 }
+                fileType = key;
+                docObject = {
+                    image:req.files[key][0].filename, 
+                    expireAt: expireAt[key]
+                }
             }
         }
         await user.save()
-        await sendConfirmCodeToPhone(user._id)
+       
+        // TO DO ==>  UN COMMIT WHEN DONE
+        // await sendConfirmCodeToPhone(user._id) 
         res.send({
             success:true,
+            doc:docObject,
+            type:fileType,
             code:200,
-            message:'A code has been sent to your phone',
-            user:user._id
+            isDone:true
         })
     } catch (error) {
         next(error)
@@ -102,8 +111,14 @@ export const registerDocument = async (req, res, next) => {
 // sent the code to user phone to verify the phone
 export const sendConfirmCodeToPhoneHandler = async (req, res, next) => {
     const {id} = req.params
+    const {email} = req.query
+    
     try {
-        await sendConfirmCodeToPhone(id)
+        if(!id && email) {
+            await sendConfirmCodeToPhone(undefined, email)
+        }else {
+            await sendConfirmCodeToPhone(id)
+        }
         res.send({
             success:true,
             code:200,
@@ -117,16 +132,21 @@ export const sendConfirmCodeToPhoneHandler = async (req, res, next) => {
 // verify the user phone
 export const verifyConfirmPhoneCodeHandler = async (req, res, next) => {
     const {id} = req.params 
-    const {code} = req.query
+    const {code, email} = req.query
     try {
-        const user  = await User.findById(id) 
+        let user;
+        if(!id && email) {
+            user = await User.findOne({"emails.email":email})
+        }else {
+            user  = await User.findById(id) 
+        }
         if(user.phoneCode !== code) {
             res.status(400)
             throw new Error('Code isn\'t valid please type a valid one or click sent code again')
         }
         user.isPhoneConfirmed = true 
         await user.save()
-        await sendConfirmLinkToEmail(id, req)
+        id && !email && await sendConfirmLinkToEmail(id, req)
         res.send({
             success:true,
             code:200,
@@ -160,7 +180,6 @@ export const login = async (req, res, next) => {
     const {email, password} = req.body 
     try {
       const user = await User.AuthUser(email, password, res) 
-      await sendLoginCodeToEmail(user._id)
       res.send({
           success:true,
           code:200,
@@ -172,6 +191,18 @@ export const login = async (req, res, next) => {
     }
 }
 
+// logout handler
+export const logoutHandler = async (req, res, next) => {
+    try {
+        res.clearCookie('token')
+        res.send({
+            success:true,
+            code:200
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 
 // send Password Reset Link to user Email
 export const sendPasswordResetLink = async (req, res, next) => {
@@ -188,6 +219,22 @@ export const sendPasswordResetLink = async (req, res, next) => {
         next(error)
     }
 } 
+
+// send login code 
+export const sendLoginCodeHandler = async (req, res, next) => {
+    const {id} = req.params 
+    try {
+    await sendLoginCodeToEmail(id)
+      res.send({
+          success:true,
+          code:200,
+          message:'A code has been sent to your E-mail'
+      })
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 export const verifyAuthLink = async (req, res, next) => {
     const {token, type, password} = req.body 
@@ -246,6 +293,10 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
             res.status(400)
             throw new Error('The Code isn\'t valid, please type the right code or send it again')
         }
+        if(!(user.isEmailConfirmed)) {
+            user.isEmailConfirmed = true 
+            await user.save()
+        }
         const tokenExpiry = rememberDays ? `${rememberDays} days` : '1d'
         const token = user.generateToken(tokenExpiry)
         res.cookie('token', token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * (rememberDays || 1)})
@@ -254,7 +305,6 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
             code:200,
             user: user,
             expiryAt: expireAt(rememberDays || 1),
-            token //test
         })
     } catch (error) {
         next(error)
@@ -274,6 +324,21 @@ export const sendUserData = async (req, res, next) => {
     }
 }
 
+export const updateUserPassword = async (req, res, next) => {
+    const {password} = req.body 
+    try {
+        req.user.password = password 
+        await req.user.save()
+        res.send({
+            success:true,
+            code:200,
+            message:'Password has been updated'
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 /*******************************************************************/
 /******************** HELPER FUNCTION 
@@ -283,9 +348,14 @@ export const sendUserData = async (req, res, next) => {
 ///////////////////////////////////////////
 /////////// PHONE VERIFICATION PROCESS
 ///////////////////////////////////////////
-async function sendConfirmCodeToPhone(id) {
-    try {    
-        const user = await User.findById(id)
+async function sendConfirmCodeToPhone(id, email) {
+    try {   
+        let user;
+        if(!id && email) {
+            user = await User.findOne({'emails.email': email})
+        }else {
+            user = await User.findById(id)
+        }
         if(!user) {
             res.status(404)
             throw new Error('No User Found')
@@ -293,7 +363,7 @@ async function sendConfirmCodeToPhone(id) {
         const phone = user.insidePhones.find(phone => phone.isPrimary === true).phone
         const code = generateRandomCode(6)
         user.phoneCode = code 
-        await user.save()    
+        await user.save()
         sendSMS(phone,code)
     } catch (error) {
         throw new Error(error)
@@ -324,12 +394,15 @@ async function sendLoginCodeToEmail(id) {
         const code = generateRandomCode(7, 'string')
         user.emailCode = code 
         await user.save()
-        const info = {
-            code:code,
-            name:user.fullNameInEnglish,
-            email:user.emails.find(email => email.isPrimary === true).email
-        }
-        await sendEmail(info, 'code')
+
+        // TODO => UN COMMIT UNTIL FINISH
+        // const info = {
+        //     code:code,
+        //     name:user.fullNameInEnglish,
+        //     email:user.emails.find(email => email.isPrimary === true).email
+        // }
+        // await sendEmail(info, 'code')
+
     } catch (error) {
         throw new Error(error)
     }

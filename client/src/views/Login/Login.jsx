@@ -1,12 +1,16 @@
-import React, {useState} from 'react'
+import React from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import {LoginForm, LoginCode} from '../../components'
 import {ArrowRight} from '../../icons'
 
-const Login = ({setIsAuth}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+const Login = () => {
+    const {userId} = useSelector(state => state.loginInit)
+
     const navigate = useNavigate()
+    
+
     return (
         <div className={style.login}>
             <button className={style.login__back} onClick={() => navigate('/')}>
@@ -17,9 +21,9 @@ const Login = ({setIsAuth}) => {
             </button>
            <div className={style.login__wrapper}>
                 {
-                isAuthenticated 
-                ? <LoginCode setIsAuth={setIsAuth}/>
-                : <LoginForm setIsAuthenticated={setIsAuthenticated} />
+                userId 
+                ? <LoginCode userId={userId}/>
+                : <LoginForm/>
                 }
            </div>
         </div>

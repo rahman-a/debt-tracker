@@ -4,6 +4,7 @@
 .button {
     &__side {
         all: unset;
+        position: relative;
         background-color: var.$white-color;
         width: 100%;
         border: 2px solid transparent;

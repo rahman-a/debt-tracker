@@ -13,19 +13,20 @@ import {
   Messages,
   NewOperation,
   ActiveReports,
-  ClosedReports
+  ClosedReports,
+  EmailActivation,
+  ResetPassword
 } from './views'
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false)
 
   return (
     <div className="App">
-        <Header isAuth={isAuth} setIsAuth={setIsAuth}/>
+        <Header />
           <Routes>
             <Route path='/' element={<Home/>}/> 
             <Route path='/register' element={<Register/>}/>
-            <Route path='/login' element={<Login setIsAuth={setIsAuth}/>} />  
+            <Route path='/login' element={<Login/>} />  
             <Route path='/operation'>
                 <Route index element={<Operation/>}/>
                 <Route path='new' element={<NewOperation/>}/>
@@ -37,6 +38,8 @@ function App() {
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/notifications' element={<Notifications/>}/>
             <Route path='/messages' element={<Messages/>}/>
+            <Route path='/activate' element={<EmailActivation/>}/>
+            <Route path='/reset' element={<ResetPassword/>}/>
           </Routes>
         <Footer/>
     </div>

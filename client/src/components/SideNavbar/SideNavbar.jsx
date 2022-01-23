@@ -1,6 +1,8 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import {useSelector, useDispatch} from 'react-redux'
+import actions from '../../actions'
 import {Loader} from '../../components'
 import {
     Cogs, 
@@ -17,23 +19,34 @@ const SideNavbar = ({
     showSideMenu, 
     loadingState,
     language, 
-    changeLanguageHandler, 
-    setIsAuth
+    changeLanguageHandler,
+    setSideMenu 
     }) => {
     const navigate = useNavigate()
     const [isReportMenu, setIsReportMenu] = useState(false)
     const reportRef = useRef(null)
+    const {loading, error, isLogout}  = useSelector(state => state.logout)
+    const dispatch = useDispatch()
 
-    const logoutHandler = _ => {
-        setIsAuth(false)
-        navigate('/')
+
+    const logoutHandler = e => {
+        e.stopPropagation()
+        if(!loading) {
+            dispatch(actions.users.logout())
+        }
     }
     
+    useEffect(() => {
+        if(isLogout) {
+            setSideMenu(false)
+            navigate('/')
+        } 
+    },[isLogout])
+
     const showReportsMenu = e => {
         e.stopPropagation()
         if(!isReportMenu) {
             const menuHeight = reportRef.current.getBoundingClientRect().height 
-            console.log('menu height', menuHeight);
             reportRef.current.parentNode.style.height = `${menuHeight}px`
             setIsReportMenu(true) 
         }else {
@@ -43,6 +56,13 @@ const SideNavbar = ({
     }
 
     return (
+        <>
+        {error 
+        && <div className={style.navbar__logout_alert}
+        style={{left:error ?'1rem':'-25rem'}}>
+            <p>This is Error From Server</p>
+        </div> }
+
         <div className={style.navbar__menu}
         style={{left: showSideMenu ? '0' : '-30rem'}}>
             <ul className={style.navbar__menu_list}>
@@ -106,6 +126,9 @@ const SideNavbar = ({
                 <li className={style.navbar__menu_item}
                 >
                     <div onClick={logoutHandler}>
+                       {loading && <span className={style.navbar__menu_item_loading}>
+                            <Loader center size='5' options={{animation:'border'}}/>
+                        </span>} 
                         <span className={style.navbar__menu_item_logout}>
                             <Logout/>
                         </span>
@@ -140,6 +163,7 @@ const SideNavbar = ({
                 </li>
             </ul>
         </div>
+        </>
     )
 }
 

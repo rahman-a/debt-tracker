@@ -13,14 +13,38 @@
         }
     }
     p {
+        display: flex;
+        flex-direction: column;
         margin-left: 3rem;
         color:var.$full-light-color;
         text-transform: capitalize;
+        span {
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                left: -12px;
+                width: 1px;
+                height: 100%;
+                background-color: var.$main-color;
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                left: -11px;
+                top: 12px;
+                width: 5px;
+                height: 2px;
+                background-color: var.$main-color;
+            }
+        }
     }
 
     &__edit {
         margin-left:2rem;
         display: flex;
+        align-items: center;
         input {
             border: 0;
             outline: none;
@@ -44,6 +68,8 @@
             font-size: 1.3rem;
             width: 15rem;
             margin-left: 1rem;
+            width:fit-content;
+            width:-moz-fit-content;
         }
 
     }
