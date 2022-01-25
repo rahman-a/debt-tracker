@@ -36,6 +36,9 @@ const OTPCode = () => {
     useEffect(() => {
         message && setCompleteCreation(true)
         error && window.scrollTo(0,0)
+        return () => {
+            dispatch({type:constants.users.VERIFY_PHONE_CODE_RESET})
+        }
     },[message, error])
     return (
         <div className={style.done}>

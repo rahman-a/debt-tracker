@@ -31,7 +31,10 @@ const isUserAuth = () => {
 
 const initState = {
     registerCredential:{userId},
-    login:{isAuth:isUserAuth()}
+    login:{
+        user,
+        isAuth:isUserAuth()
+    }
 }
 
 const store = createStore(

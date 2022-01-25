@@ -2,14 +2,31 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 
-const Pagination = ({count}) => {
+
+let pageValue = 1
+
+const Pagination = ({count, filterOperationHandler}) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [pages, setPages] = useState([1,2,3,4,5])
+    const [pages, setPages] = useState([])
     const [isNextOff, setIsNextOff] = useState(false)
     const [isPrevOff, setIsPrevOff] = useState(true)
-
+    
     const currentPageHandler = page => {
         setCurrentPage(page)
+        pageValue = page
+    }
+
+    const paginateHandler = info => {
+        if(typeof info === 'string') {
+           info === 'next'
+            ? pageValue = pageValue + 1
+            : pageValue = pageValue - 1
+            changeCurrentPage(info)
+        }else {
+            currentPageHandler(info)
+        }
+        const skip = (pageValue + 0) * 5 - 5
+        filterOperationHandler({skip})
     }
     
     const toggleButton = _ => {
@@ -24,7 +41,18 @@ const Pagination = ({count}) => {
             setIsNextOff(false)
         }
     }
-
+    useEffect(() => {
+        if(count <= 5) {
+            setPages([...Array(count)].map((_, idx) => idx + 1))
+        }else {
+            setPages([1,2,3,4,5])
+        }
+    },[])
+    
+    useEffect(() => {
+        setCurrentPage(pageValue)
+    },[])
+    
     useEffect(() => {
         toggleButton()
     },[currentPage])
@@ -60,7 +88,7 @@ const Pagination = ({count}) => {
             style={{backgroundColor:'unset'}}
             disabled={isPrevOff}
             className={isPrevOff ? style.pagination__off :''}
-            onClick={() => changeCurrentPage('prev')}>
+            onClick={() => paginateHandler('prev')}>
                 Prev
             </button>
             {
@@ -68,8 +96,8 @@ const Pagination = ({count}) => {
                     return <button 
                     key={uuidv4()} 
                     className={`${style.pagination__page} 
-                    ${currentPage === page && style.pagination__page_active}`}
-                    onClick={() => currentPageHandler(page)}>
+                    ${page === pageValue && style.pagination__page_active}`}
+                    onClick={() => paginateHandler(page)}>
                         {page}
                     </button>
                 })
@@ -78,7 +106,7 @@ const Pagination = ({count}) => {
             style={{backgroundColor:'unset'}}
             disabled={isNextOff}
             className={isNextOff ? style.pagination__off :''}
-            onClick={() => changeCurrentPage('next')}>
+            onClick={() => paginateHandler('next')}>
                 Next
             </button>
         </div>

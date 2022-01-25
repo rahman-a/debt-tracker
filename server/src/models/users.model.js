@@ -123,12 +123,12 @@ userSchema.statics.AuthUser = async function (email, password, res) {
     const user = await User.findOne({"emails.email":email})
     if(!user) {
         res.status(401)
-        throw new Error('Wrong Email or Password')
+        throw new Error('invalid login or password')
     }
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch) {
         res.status(401)
-        throw new Error('Wrong Email or Password')
+        throw new Error('invalid login or password')
     }
     
     if(!(user.isPhoneConfirmed)) {
@@ -138,7 +138,7 @@ userSchema.statics.AuthUser = async function (email, password, res) {
 
     if(!(user.isAccountConfirmed)) {
         res.status(401)
-        throw new Error('The Account has not been approved yet')
+        throw new Error('please wait, until you account approved by adminstration')
     }
     
     return user

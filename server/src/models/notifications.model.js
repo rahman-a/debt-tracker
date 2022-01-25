@@ -13,7 +13,7 @@ const notificationSchema = new mongoose.Schema({
     },
     title:{
         type:String,
-        required:true 
+        default:'Initiate a New Operation',
     },
     body:{
         type:String,

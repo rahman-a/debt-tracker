@@ -22,8 +22,8 @@ export const uploadHandler = multer({
         fileSize:5000000
     },
     fileFilter(req, file, cb){
-        if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG)$/)) {
-            cb(new Error('please upload image with following formats [png, jpg, jpeg]'))
+        if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|svg|SVG)$/)) {
+            cb(new Error('please upload image with following formats [png, jpg, jpeg, svg]'))
         }
         cb(undefined, true)
     }

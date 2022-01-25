@@ -41,6 +41,7 @@ const Input = ({
                 type={type}
                 id={id || name}
                 defaultValue={defaultValue}
+                value={value || ''}
                 onChange={onChange}
                 ref={inputRef}
                 disabled={disabled}

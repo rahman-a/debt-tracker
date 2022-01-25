@@ -2,14 +2,21 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu} from '../../components'
 
-const Filter = ({hidden, op, closed}) => {
+const Filter = ({
+    hidden, 
+    op, 
+    closed, 
+    filterOperationHandler,
+    resetFilterOperations
+}) => {
     const [searchFilter, setSearchFilter] = useState({
-        code:'',
-        name:'',
-        type:'',
-        currency:'',
-        due:'',
-        state:''
+        code:null,
+        type:null,
+        name:null,
+        currency:null,
+        dueDate:null,
+        paymentDate:null,
+        state:null, 
     })
 
     const searchFilterHandler = e => {
@@ -18,22 +25,46 @@ const Filter = ({hidden, op, closed}) => {
     }
 
     const selectSearchFilterHandler = filter => {
-        if(filter.value !== 'custom') {
-            setSearchFilter({...searchFilter, ...filter})
-        }
-    }
-    
-    const searchHandler = _ => {
-        console.log(searchFilter);
+        setSearchFilter({...searchFilter, ...filter})
     }
 
+    const initiateFilteredSearch = _ => {
+        filterOperationHandler(searchFilter)
+        const resetFilterObject = {
+            code:null,
+            type:null,
+            name:null,
+            currency:null,
+            dueDate:null,
+            paymentDate:null,
+            state:null, 
+        }
+        setSearchFilter(resetFilterObject)
+    }
+
+    const resetFilterHandler = _ => {
+        const resetFilterObject = {
+            code:null,
+            type:null,
+            name:null,
+            currency:null,
+            dueDate:null,
+            paymentDate:null,
+            state:null, 
+        }
+        setSearchFilter(resetFilterObject)
+        resetFilterOperations()
+    }
+    
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}>
+            
             <div className={style.filter__input}>
                 <Input
                 name='code'
                 type='text'
                 placeholder='code'
+                value={searchFilter.code}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
                 />
@@ -44,6 +75,7 @@ const Filter = ({hidden, op, closed}) => {
                 name='name'
                 type='text'
                 placeholder='name'
+                value={searchFilter.name}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
                 />
@@ -55,8 +87,8 @@ const Filter = ({hidden, op, closed}) => {
                 data={{
                     label:'type',
                     items:[
-                        {text:'Creditor', value:'creditor'},
-                        {text:'Debtor', value:'debtor'}
+                        {text:'Credit', value:'credit'},
+                        {text:'Debt', value:'debt'}
                     ]
                 }}
                 />
@@ -67,7 +99,7 @@ const Filter = ({hidden, op, closed}) => {
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({currency:value})}
                 data={{
-                    label:'Currency',
+                    label:'currency',
                     items:[
                     {text:'USD', value:'USD'},
                     {text:'AED', value:'AED'}, 
@@ -85,7 +117,7 @@ const Filter = ({hidden, op, closed}) => {
                     label:'state',
                     items:[
                         {text:'Pending', value:'pending'},
-                        {text:'Declined', value:'declined'}]
+                        {text:'Decline', value:'decline'}]
                 }}
                 />
             </div> }
@@ -93,13 +125,14 @@ const Filter = ({hidden, op, closed}) => {
             <div className={style.filter__input}>
                 <DropdownMenu
                 className={style.filter__input_dropdown}
-                onSelectHandler={(value) => selectSearchFilterHandler({date:value})}
+                onSelectHandler={(value) => selectSearchFilterHandler(
+                    closed ? {paymentDate:value} : {dueDate:value}
+                    )}
                 data={{
-                    label: closed ? 'payment date' :'due date',
+                    label: closed ? 'payment date' : 'due date',
                     items:[
-                        {text:'Ascending', value:'ascending'},
-                        {text:'Descending', value:'descending'}, 
-                        {text:'custom...', value:'custom'}
+                        {text:'Ascending', value:-1},
+                        {text:'Descending', value:1}, 
                     ]
                 }}
                 />
@@ -107,10 +140,15 @@ const Filter = ({hidden, op, closed}) => {
 
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
-                    onClick={searchHandler}>
+                    onClick={initiateFilteredSearch}>
                         SEARCH
                 </button>
+                <button className={style.filter__btn}
+                    onClick={resetFilterHandler}>
+                        RESET
+                </button>
             </div>
+            
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {useSelector}  from 'react-redux'
 import {Currency} from '../../components'
 import {Copy, Check, Reader} from '../../icons'
 import Description from './Description';
@@ -8,7 +9,8 @@ import Description from './Description';
 const Row = ({record, idx, due, op, closed}) => {
     const [isCopied, setIsCopied] = useState(false)
     const [isDescribeOn, setIsDescribeOn] = useState(false)
-
+    const {user} = useSelector(state => state.login)
+    
     const copyIdHandler = _ => {
         setIsCopied(true)
         setTimeout(() => {
@@ -20,7 +22,7 @@ const Row = ({record, idx, due, op, closed}) => {
         const states = {
             pending:'#FBFCD4',
             approved:'#C7FFCE',
-            declined:'#FCD4DB',
+            decline:'#FCD4DB',
             active:'#C7FFCE',
             closed:'#FCD4DB'
         }
@@ -49,31 +51,49 @@ const Row = ({record, idx, due, op, closed}) => {
             </td>
             
             {/* Operation Second Peer Name */}
-            <td style={{textTransform:'capitalize'}}>{record.name}</td>
+            <td style={{textTransform:'capitalize'}}>
+                { record.peer.user._id === user._id
+                ? record.initiator.user.fullNameInEnglish
+                : record.peer.user.fullNameInEnglish
+                }
+            </td>
             
             {/* Operation Second Peer Photo */}
             <td style={{padding:'1rem 0'}}>
                 <img 
-                src={record.image} 
+                src={
+                    record.peer.user._id === user._id
+                    ?`/api/files/${record.initiator.user.avatar}`
+                    :`/api/files/${record.peer.user.avatar}`
+                } 
                 alt="second peer" 
                 className={style.row__photo}/> 
             </td>
             
             {/* Operation Description */}
-            <td style={{padding: record.description ? '0' :'2.5rem 0'}}>
-                {record.description 
+            <td style={{padding: record.note ? '0' :'2.5rem 0'}}>
+                {record.note 
                 ? <p className={style.row__desc}> 
                     <span onClick={() => setIsDescribeOn(true)}><Reader/></span> 
-                    <i>{record.description.substring(0, 35) + '...' }</i> 
+                    <i>{record.note.substring(0, 35) + '...' }</i> 
                   </p>  
                 : 'N/A'}
             </td>
 
             {/* Creditor amount value*/}
-            <td style={{textTransform:'capitalize'}}>{record.credit}</td>
+            <td style={{textTransform:'capitalize'}}>{
+            record.initiator.type === 'credit' 
+            ? record.initiator.value === 0 ? '0.0' : record.initiator.value
+            : record.peer.value === 0 ? '0.0' : record.peer.value
+            }
+            </td>
             
             {/* Debtor amount value*/}
-            <td>{record.debt}</td>
+            <td>{
+                record.peer.type === 'debt' 
+                ? record.peer.value === 0 ? '0.0' : record.peer.value
+                : record.initiator.value === 0 ? '0.0' : record.initiator.value   
+            }</td>
             
             {/* Operation Currency [usd, euro, aed]*/}
             <td style={{textAlign:'start', paddingLeft:'1rem'}}>
@@ -93,10 +113,10 @@ const Row = ({record, idx, due, op, closed}) => {
            && <td
            style={{backgroundColor: record.payment_date ? '#FCD4DB' :'#ff'}}> 
             {
-            record.due_date 
-            ? record.due_date
-            : record.payment_date
-            ? record.payment_date
+            record.dueDate
+            ? new Date(record.dueDate).toLocaleDateString()
+            : record.paymentDate
+            ? new Date(record.paymentDate).toLocaleDateString()
             : 'N/A'} 
             </td>
            } 

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {Alert} from 'react-bootstrap'
 import flags from 'country-flag-emoji-json'
 import {Input, Button, DropdownMenu} from '../../components'
-import {Map} from '../../icons'
+import {Map, Globe} from '../../icons'
 
 
 const Address = ({setStep, setInfo, info}) => {
@@ -90,8 +90,10 @@ const Address = ({setStep, setInfo, info}) => {
             countries
             data={{
                 label:'Choose Your Country',
+                icon:<Globe/>,
                 items:countries()
             }}
+            custom={{marginBottom:'3rem', textAlign:'start'}}
             onSelectHandler={(country) => setCountry(country)}
         />
 

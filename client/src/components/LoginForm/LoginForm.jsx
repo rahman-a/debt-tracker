@@ -196,10 +196,11 @@ const LoginForm = () => {
             </Alert>
            :error 
            && !phone_message  
-           && <Alert 
-            variant='danger' 
-            onClose={clearAlert}
-            dismissible>{error}</Alert> 
+           && <p 
+           className={style.loginForm__verify_alert}
+           style={{color:'#610202', backgroundColor:'#ffe1e1'}}>
+               {error}
+           </p>
             }
 
             <div className={style.loginForm}

@@ -55,7 +55,9 @@ export const completeRegistration = async (req, res, next) => {
             }
             user[key] = userData[key]
         }
-       
+
+        const code = createUserCode(user.fullNameInEnglish, user.country.name)
+        user.code = code
         await user.save()
         res.send({
             success:true,
@@ -95,7 +97,7 @@ export const registerDocument = async (req, res, next) => {
         await user.save()
        
         // TO DO ==>  UN COMMIT WHEN DONE
-        // await sendConfirmCodeToPhone(user._id) 
+        await sendConfirmCodeToPhone(user._id) 
         res.send({
             success:true,
             doc:docObject,
@@ -461,6 +463,23 @@ const generateRandomCode = (count, type) => {
     }
 
     return randomArray.join('')
+}
+
+
+
+// CREATE USER UNIQUE CODE
+const createUserCode = (name, country) => {
+    const randomNumbers = [0,1,2,3,4,5,6,7,8,9]
+    const splittedName = name.split(' ')
+    const firstNameLetter = splittedName[0][0]
+    const lastNameLetter = splittedName[splittedName.length - 1][0] 
+    const countryFirstLetter = country[0]
+    let codeNumber = '';    
+    for(let i = 0; i < 6; i++) {
+       const num = randomNumbers[Math.floor(Math.random() * randomNumbers.length)]
+       codeNumber += num
+    }
+    return firstNameLetter + lastNameLetter + countryFirstLetter + codeNumber
 }
 
 

@@ -1,10 +1,11 @@
 import React, {useState, useRef} from 'react'
 import style from './style.module.scss'
+import {Alert} from 'react-bootstrap'
 import {Input, Button, DateInput} from '../../components'
 import {AddressCard} from '../../icons'
 
 const Documents = ({setStep, setDocuments}) => {
- 
+    const [errors, setErrors] = useState(null)
     const [images, setImages] = useState({
         avatar:null,
         identity:null,
@@ -34,7 +35,40 @@ const Documents = ({setStep, setDocuments}) => {
         setExpiryAt({...expireAt, [name]: value})
     }
 
+    // TO DO ==> FORM VALIDATION 
+    /**
+     * force to choose avatar
+     * force to choose identity and expiry date
+     * if user choose passport or residential, force to choose expiry date 
+     */
+
     const moveNextHandler = _ => {
+      if(!images.avatar) {
+          setErrors('Please upload Your Personal Image')
+          return
+      }
+      if(!images.identity) {
+          setErrors('Please upload Your Identity')
+          return
+      }
+      if(images.identity) {
+        if(!expireAt.identity) {
+            setErrors('Please choose your identity expiry date')
+            return
+        }
+      }
+      if(images.passport) {
+        if(!expireAt.passport) {
+            setErrors('Please choose your passport expiry date')
+            return
+        }
+      }
+      if(images.residential) {
+        if(!expireAt.residential) {
+            setErrors('Please choose your residential expiry date')
+            return
+        }
+      }
        setDocuments({...images, expireAt})
        setStep(6)
     }
@@ -42,6 +76,11 @@ const Documents = ({setStep, setDocuments}) => {
     
     return (
         <>
+        {errors && <Alert 
+        variant='danger' onClose={() => setErrors(null)} dismissible>
+            {errors}
+        </Alert> }
+
         {/* UPLOAD PERSONAL PHOTO */}
           <Input
             name='avatar'
