@@ -10,6 +10,9 @@ import databaseConnection from './server/database.connection.js'
 import {notFound, errorHandler} from './server/src/middlewares/errorhandler.js'
 import {verifyAPIKey} from './server/src/middlewares/auth.js' 
 import userRouter from './server/src/routers/users.router.js'
+import operationRouter from './server/src/routers/operations.router.js'
+import currenciesRouter from './server/src/routers/currencies.router.js'
+import notificationsRouter from './server/src/routers/notifications.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
 dotenv.config()
@@ -35,6 +38,9 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 app.use('/api/users',verifyAPIKey, userRouter)
+app.use('/api/operations',verifyAPIKey, operationRouter)
+app.use('/api/currencies',verifyAPIKey, currenciesRouter)
+app.use('/api/notifications',verifyAPIKey, notificationsRouter)
 
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
 app.use(notFound)

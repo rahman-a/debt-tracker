@@ -46,6 +46,9 @@ const Header = () => {
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
     const {isAuth} = useSelector(state => state.login)
+    const avatar = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user')).avatar 
+    : null
     const navigate = useNavigate()
     const page = useLocation().pathname
     
@@ -186,7 +189,11 @@ const Header = () => {
                                     <Envelope/>
                                 </span>
                                 <span>
-                                    <img src="/images/photos/photo-1.png" alt="personal avatar" />
+                                    <img src={
+                                        avatar 
+                                        ? `/api/files/${avatar}`
+                                        :"/images/photos/photo-1.png"
+                                    } alt="personal avatar" />
                                 </span>
                                 
                                 {/* Notification List */}

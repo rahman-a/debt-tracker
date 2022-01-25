@@ -31,6 +31,7 @@
         @include media.mq(sm){
             width:50%;
             margin-bottom: 2rem;
+            justify-content: space-around;
         }
         @include media.mq(xs){
             width:70%;
