@@ -15,7 +15,8 @@ import {
     sendUserData,
     sendLoginCodeHandler,
     logoutHandler,
-    updateUserPassword
+    updateUserPassword,
+    findUserHandler
 } from '../controllers/users.controller.js'
 
 import {
@@ -46,5 +47,6 @@ router.get('/password/reset', sendPasswordResetLink)
 router.get('/me', isAuth, sendUserData)
 router.post('/logout', isAuth, logoutHandler)
 router.patch('/password/update',isAuth,  updateUserPassword)
+router.get('/search',isAuth,  findUserHandler)
 
 export default router

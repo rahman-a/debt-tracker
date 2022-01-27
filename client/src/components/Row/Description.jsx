@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, Button} from 'react-bootstrap'
 
-const Description = ({isDescribeOn, setIsDescribeOn}) => {
+const Description = ({isDescribeOn, setIsDescribeOn, note}) => {
     return (
         <Modal
             show={isDescribeOn}
@@ -16,9 +16,7 @@ const Description = ({isDescribeOn, setIsDescribeOn}) => {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                    consectetur ac, vestibulum at eros.
+                   {note}
                 </p>
             </Modal.Body>
             <Modal.Footer>

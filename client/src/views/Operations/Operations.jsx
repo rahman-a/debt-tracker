@@ -13,8 +13,8 @@ const Operation = () => {
     const dispatch = useDispatch()
     const {loading, error, count, operations} = useSelector(state => state.listOperations)
 
-    const filterOperationHandler = (query) => {
-        dispatch(actions.operations.listAllOperations(query))
+    const filterOperationHandler = (skip) => {
+        dispatch(actions.operations.listAllOperations(skip))
     }
 
     const resetFilterOperations = _ => {
@@ -22,7 +22,7 @@ const Operation = () => {
     }
 
     useEffect(() => {
-        !operations && dispatch(actions.operations.listAllOperations())
+       dispatch(actions.operations.listAllOperations())
     },[])
     
     return (
@@ -64,7 +64,7 @@ const Operation = () => {
                 
                 <Pagination 
                 count={Math.ceil(count / 5)} 
-                filterOperationHandler={filterOperationHandler}/>
+                moveToPageHandler={(skip) => filterOperationHandler(skip)}/>
                     </> }
             </div>
         </div>

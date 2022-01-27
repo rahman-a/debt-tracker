@@ -215,6 +215,19 @@ const getUserProfile = () => async (dispatch) => {
     }
 }
 
+const SearchForUsers = (query) => async (dispatch) => {
+    dispatch({type:constants.users.USERS_SEARCH_REQUEST}) 
+    try {
+        const {data} = await api.users.search(query)
+        dispatch({type: constants.users.USERS_SEARCH_SUCCESS, payload: data.users})
+    } catch (error) {
+        dispatch({
+            type:constants.users.USERS_SEARCH_FAIL, 
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
 const actions = {
     registerCredential,
     registerInfo,
@@ -230,7 +243,8 @@ const actions = {
     updatePassword,
     updateDocuments,
     login,
-    logout
+    logout,
+    SearchForUsers
 }
 
 export default actions

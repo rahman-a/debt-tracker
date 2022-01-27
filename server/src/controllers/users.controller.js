@@ -238,6 +238,53 @@ export const sendLoginCodeHandler = async (req, res, next) => {
 }
 
 
+// SEARCH FOR USERS BY [CODE - PHONE - USERNAME]
+
+export const findUserHandler = async (req, res, next) => {
+    const {code, phone, username} = req.query
+
+    try {
+        let users;
+        
+        if(phone) {
+            users = await User.find({"insidePhones.phone": phone})
+            if(users.length === 0) {
+                res.status(401)
+                throw new Error('no users found, search again')
+            }
+        }else {
+            let searchFilter = {}
+    
+            if(code) {
+                searchFilter = {code}
+            }
+            if(username) {
+                searchFilter = {username}
+            }
+            
+            users = await User.find({...searchFilter})
+            if(users.length === 0) {
+                res.status(401)
+                throw new Error('no users found, search again')
+            }  
+        }
+        const allUsers = users.map(user => (
+            {
+                _id:user._id,
+                name:user.fullNameInEnglish,
+                image:user.avatar
+            }
+        ))
+        res.send({
+            success:true,
+            code:200,
+            users:allUsers
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const verifyAuthLink = async (req, res, next) => {
     const {token, type, password} = req.body 
 

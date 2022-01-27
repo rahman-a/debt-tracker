@@ -6,7 +6,7 @@
      &__container {
          background-color: var.$white-color;
          position: absolute;
-         top:5rem;
+         top:5.4rem;
          right:5rem;
          width:30rem;
          box-shadow: -1px 0px 8px 2px rgb(0 0 0 / 30%);
@@ -39,6 +39,7 @@
      }
  
      &__list {
+       position: relative;
        list-style: none;
        padding:0;
        margin:0;

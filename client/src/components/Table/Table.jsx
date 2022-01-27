@@ -12,7 +12,7 @@ const Table = ({records, due, op, closed}) => {
                         <th>Operation code</th>
                         <th>Second peer name</th>
                         <th>Second peer photo</th>
-                        <th>Description</th>
+                        <th>Note</th>
                         <th>Credit</th>
                         <th>Debt</th> 
                         <th>Operation currency</th>

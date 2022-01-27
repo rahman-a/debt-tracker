@@ -1,5 +1,5 @@
 import Operation from '../models/operations.model.js'
-
+import Notification from '../models/notifications.model.js'
 
 
 
@@ -25,7 +25,20 @@ export const findMutualOperations = async (req, res, next) => {
 export const createOperation = async (req, res, next) => {
     const newOperation = new Operation(req.body) 
     try {
-        const operation = await newOperation.save()
+        let operation = await newOperation.save()
+        operation = await operation.populate('currency', 'name')
+        
+        const notification = {
+            user:operation.peer.user,
+            operation:operation._id,
+            title:'New Operation new Agent Number 0:0',
+            body:`you have been set as (${operation.peer.type}) 
+            and the value is (${operation.peer.value}) in (${operation.currency.name}) currency`
+        }
+
+        const pushNotification = new Notification(notification)
+        await pushNotification.save()
+
         res.status(201).send({
             success:true,
             code:201,
@@ -214,7 +227,7 @@ export const listAllOperations = async (req, res, next) => {
                 }
             },
         ]
-        console.log('User Id', req.user._id);
+        
         const operations = await Operation.aggregate([
             ...aggregateOptions,
             {$sort:dueDateFilter},
