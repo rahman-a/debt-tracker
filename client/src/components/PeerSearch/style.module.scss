@@ -18,7 +18,7 @@
         text-align: center;
         font-size: 1.4rem;
         background-color: var.$white-color;
-        padding:2rem;
+        padding:1.9rem;
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
         color:var.$main-color;
@@ -89,6 +89,7 @@
         }
 
         ul {
+            max-height:30rem;
             position: absolute;
             list-style: none;
             background-color: var.$white-color;

@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid'
 
 let pageValue = 1
 
-const Pagination = ({count, filterOperationHandler}) => {
+const Pagination = ({count,moveToPageHandler}) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pages, setPages] = useState([])
     const [isNextOff, setIsNextOff] = useState(false)
@@ -26,7 +26,7 @@ const Pagination = ({count, filterOperationHandler}) => {
             currentPageHandler(info)
         }
         const skip = (pageValue + 0) * 5 - 5
-        filterOperationHandler({skip})
+        moveToPageHandler({skip})
     }
     
     const toggleButton = _ => {

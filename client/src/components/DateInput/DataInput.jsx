@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import DatePicker from 'react-date-picker'
 
 
-const Input = ({name, getExpiryDate, disabled}) => {
+const Input = ({name, getExpiryDate, disabled, custom}) => {
   const [date, setDate] = useState(new Date())
   const [zIndex, setZIndex] = useState(1)
   const getDateHandler = value => {
@@ -11,7 +11,9 @@ const Input = ({name, getExpiryDate, disabled}) => {
     getExpiryDate(value)
   }
   return (
-      <div className={style.date} style={{zIndex}}>
+      <div 
+      className={style.date} 
+      style={{zIndex, ...custom}}>
           <DatePicker
           value={date}
           onChange={(value) => getDateHandler(value)}

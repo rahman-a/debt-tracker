@@ -9,9 +9,9 @@ const Notification = ({data}) => {
         const color = 
         data.state === 'pending'
         ? '#FBFCD4'
-        : data.state === 'approved'
+        : data.state === 'active'
         ? '#C7FFCE'
-        : data.state === 'declined'
+        : data.state === 'decline'
         && '#FCD4DB'
 
         return color

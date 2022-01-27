@@ -252,17 +252,31 @@ const userProfile = (state, action) => {
 const updatePassword = (state, action) => {
     const cases = {
         
-        [constants.users.PASSWORD_UPDATE_REQUEST]
-        : {loading:true, error:null},
+        [constants.users.PASSWORD_UPDATE_REQUEST]:
+        {
+            loading:true, 
+            error:null
+        },
 
-        [constants.users.PASSWORD_UPDATE_SUCCESS]
-        : {loading:false, error:null, message:action.payload},
+        [constants.users.PASSWORD_UPDATE_SUCCESS]: 
+        {
+            loading:false, 
+            error:null, 
+            message:action.payload
+        },
 
-        [constants.users.PASSWORD_UPDATE_FAIL]
-        : {loading:false, error:action.payload},
+        [constants.users.PASSWORD_UPDATE_FAIL]: 
+        {
+            loading:false, 
+            error:action.payload
+        },
 
-        [constants.users.PASSWORD_UPDATE_RESET] 
-        : {loading:false, error:null, message:null}
+        [constants.users.PASSWORD_UPDATE_RESET] : 
+        {
+            loading:false, 
+            error:null, 
+            message:null
+        }
     }
 
     return cases[action.type] || {...state}
@@ -271,17 +285,63 @@ const updatePassword = (state, action) => {
 
 const logout = (state, action) => {
     const cases = {
-        [constants.users.USER_LOGOUT_REQUEST]
-        : {loading:true, error:null},
+        [constants.users.USER_LOGOUT_REQUEST]: 
+        {
+            loading:true, 
+            error:null
+        },
 
-        [constants.users.USER_LOGOUT_SUCCESS] 
-        :{loading:false, error:null, isLogout:true},
+        [constants.users.USER_LOGOUT_SUCCESS] :
+        {
+            loading:false, 
+            error:null, 
+            isLogout:true
+        },
 
-        [constants.users.USER_LOGOUT_FAIL] 
-        : {loading:false, error:action.payload},
+        [constants.users.USER_LOGOUT_FAIL] : 
+        {
+            loading:false, 
+            error:action.payload
+        },
 
-        [constants.users.USER_LOGOUT_RESET]
-        :{loading:false, error:null, isLogout:false}
+        [constants.users.USER_LOGOUT_RESET]:
+        {
+            loading:false, 
+            error:null, 
+            isLogout:false
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const searchUsers = (state, action) => {
+    const cases = {
+        [constants.users.USERS_SEARCH_REQUEST]:
+        {
+            loading:true, 
+            error:null
+        },
+
+        [constants.users.USERS_SEARCH_SUCCESS]:
+        {
+            loading:false, 
+            error:null, 
+            users:action.payload
+        },
+
+        [constants.users.USERS_SEARCH_FAIL]: 
+        {
+            loading:false, 
+            error:action.payload
+        },
+
+        [constants.users.USERS_SEARCH_RESET]:
+        {
+            loading:false, 
+            error:null, 
+            users:false
+        }
     }
 
     return cases[action.type] || {...state}
@@ -302,7 +362,8 @@ const reducers = {
     updatePassword,
     updateDocuments,
     login,
-    logout
+    logout,
+    searchUsers
 }
 
 export default reducers

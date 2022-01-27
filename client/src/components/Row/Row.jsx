@@ -32,7 +32,8 @@ const Row = ({record, idx, due, op, closed}) => {
     return (
         
         <>
-        <Description 
+        <Description
+        note={record.note}
         isDescribeOn={isDescribeOn} 
         setIsDescribeOn={setIsDescribeOn}
         />
@@ -75,7 +76,9 @@ const Row = ({record, idx, due, op, closed}) => {
                 {record.note 
                 ? <p className={style.row__desc}> 
                     <span onClick={() => setIsDescribeOn(true)}><Reader/></span> 
-                    <i>{record.note.substring(0, 35) + '...' }</i> 
+                    <i style={{lineBreak:'anywhere', padding:'0 0.8rem'}}>
+                        {record.note.substring(0, 35) + '...' }
+                    </i> 
                   </p>  
                 : 'N/A'}
             </td>

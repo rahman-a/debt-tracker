@@ -48,6 +48,10 @@ const userAPI = {
     },
     logout() {
         return service().post('users/logout')
+    },
+    search(query) {
+        const queryString = new URLSearchParams(query).toString()
+        return service().get(`users/search?${queryString}`)
     }
 }
 

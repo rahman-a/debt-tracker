@@ -2,37 +2,10 @@ import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
-import { Loader,SideNavbar, NotificationContainer } from '../../components'
-
-const notifyData = [
-    {
-        id:uuidv4(),
-        title:'Lorem ipsum dolor sit amet',
-        content:'labore et dolore magna aliquyam erat, sed diam voluptua',
-    },
-    {
-        id:uuidv4(),
-        title:'Lorem ipsum dolor sit amet',
-        content:'labore et dolore magna aliquyam erat, sed diam voluptua',
-    },
-    {
-        id:uuidv4(),
-        title:'Lorem ipsum dolor sit amet',
-        content:'labore et dolore magna aliquyam erat, sed diam voluptua',
-    },
-    {
-        id:uuidv4(),
-        title:'Lorem ipsum dolor sit amet',
-        content:'labore et dolore magna aliquyam erat, sed diam voluptua',
-    },
-    {
-        id:uuidv4(),
-        title:'Lorem ipsum dolor sit amet',
-        content:'labore et dolore magna aliquyam erat, sed diam voluptua',
-    }
-]
+import { Loader,SideNavbar, NotificationContainer, PushNotification } from '../../components'
+import actions from '../../actions'
 
 
 const Header = () => {
@@ -45,7 +18,16 @@ const Header = () => {
     const [toggleMessages, setToggleMessages] = useState(false)
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
+    const dispatch = useDispatch()
     const {isAuth} = useSelector(state => state.login)
+    const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
+    const {count, notifications:listNotifications} = useSelector(state => state.listNotifications)
+
+    const {
+        loading:notify_loading, 
+        error:notify_error, 
+        notifications
+    } = useSelector(state => state.listNotifications)
     const avatar = localStorage.getItem('user')
     ? JSON.parse(localStorage.getItem('user')).avatar 
     : null
@@ -56,6 +38,8 @@ const Header = () => {
         if(type === 'notification'){
             setToggleMessages(false)
             setToggleNotification(prev => !prev)
+            !toggleNotification && 
+            dispatch(actions.notifications.listNotification())
         }else {
             setToggleNotification(false)
             setToggleMessages(prev => !prev)
@@ -97,15 +81,43 @@ const Header = () => {
         document.body.style.overflow = 'unset'
     })
 
+    
 
     useEffect(() => {
+        let intervalNotificationsRequest;
+        if(pushNotifications) {
+            intervalNotificationsRequest = setTimeout(() => {
+              dispatch(actions.notifications.pushNotification())
+             },1000 * 30)
+        }
+        return () => clearTimeout(intervalNotificationsRequest)
+    },[pushNotifications])
+
+    useEffect(() => {
+        
+        const initNotifications = setTimeout(() => {
+            dispatch(actions.notifications.pushNotification())      
+        }, 5000);
+        
+        !count && dispatch(actions.notifications.listNotification())
+        
         page === '/' 
         ? setNavbarColor('rgba(26, 55, 77, 0.7)')
         : setNavbarColor('#1A374D')
+        
+        return () => clearTimeout(initNotifications)
     },[page, isAuth])
 
     return (
         <>
+            
+        {
+            pushNotifications && pushNotifications.length > 0 &&
+            pushNotifications.map(
+            (notification, idx) => <PushNotification key={idx} idx={idx} data={notification}/>
+            )
+        }
+            
             <div className={style.header__bg}
             ref={headerBgRef}
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
@@ -181,13 +193,23 @@ const Header = () => {
 
                                 <div className={style.header__notify_list}></div>
                                 <span onClick={() => toggleNotifyData('notification')}>
-                                    <span className={style.header__notify_num}>10</span>
+                                   {count && count > 0 
+                                   && <span className={style.header__notify_num}>
+                                        {count}
+                                    </span> }
                                     <Bell/>
                                 </span>
-                                <span onClick={() => toggleNotifyData('messages')}>
-                                    <span className={style.header__notify_num}>4</span>
+                                {/* <span onClick={() => toggleNotifyData('messages')}>
+                                    <span className={style.header__notify_num}>''</span>
+                                    <Envelope/>
+                                </span> */}
+                                
+                                {/* FOR TEST */}
+                                <span>
                                     <Envelope/>
                                 </span>
+                                {/* FOR TEST */}
+
                                 <span>
                                     <img src={
                                         avatar 
@@ -202,15 +224,17 @@ const Header = () => {
                                 setToggleNotification={setToggleNotification}
                                 setToggleMessages={setToggleMessages}
                                 title='Notification' 
-                                data={notifyData}/>}
+                                loading={notify_loading}
+                                error={notify_error}
+                                data={notifications}/>}
                                 
                                 {/* Messages List */}
-                                {toggleMessages 
+                                {/* {toggleMessages 
                                 && <NotificationContainer 
                                 setToggleNotification={setToggleNotification}
                                 setToggleMessages={setToggleMessages}
-                                title='Messages' 
-                                data={notifyData}/>}
+                                title='Messages'
+                                data={notifyData}/>} */}
                             </div>
                             
                             :// display the credential buttons [login - sign up] 

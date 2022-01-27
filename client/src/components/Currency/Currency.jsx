@@ -9,8 +9,16 @@ const Currency = ({currency, inline}) => {
                 width:'2.2rem',
                 marginRight:'0.5rem'
             }} />
-            <span style={{fontSize:'1.2rem'}}>{currency.name} - </span>
-            <span style={{fontSize:'0.9rem'}}>{currency.abbr}</span>
+            <span style={{
+                fontSize:inline ? '1.5rem' : '1.2rem'
+            }}>
+                {currency.name} - 
+            </span>
+            <span style={{
+                fontSize:inline ? '1rem' : '0.9rem'
+            }}>
+                {currency.abbr}
+            </span>
         </div>
     )
 }

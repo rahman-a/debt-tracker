@@ -25,15 +25,79 @@ export const createNewNotification = async (req, res, next) => {
 }
 
 export const listAllUserNotifications = async (req, res, next) => {
+    const {skip, state} = req.query
+    let searchFilter = {'user._id':req.user._id}
+    if(state) {
+        searchFilter = {...searchFilter, 'operation.state': state}
+    }
     try {
-        const notifications = await Notification.find({user:req.user._id})
+        
+        const aggregateOptions = [
+            {
+                $lookup: {
+                    from:'users',
+                    let:{userId: '$user'},
+                    pipeline:[
+                        {$match : {$expr : {$eq: ['$_id', '$$userId' ]}} },
+                        {
+                            $project: {avatar:1}
+                        }
+                    ],
+                    as: 'user'
+                }
+            },
+
+            {
+                $lookup: {
+                    from:'operations',
+                    let:{operationId: '$operation'},
+                    pipeline:[
+                        {$match : {$expr : {$eq: ['$_id', '$$operationId' ]}} },
+                        {
+                            $project: {state:1}
+                        }
+                    ],
+                    as: 'operation'
+                }
+            },
+            {
+                $unwind:'$user'
+            },
+
+            {
+                $unwind:"$operation"
+            }, 
+            {
+                $match:{...searchFilter}
+            }
+        ]
+        const notifications = await Notification.aggregate([
+            ...aggregateOptions,
+            {$sort:{createdAt:-1}},
+            {$skip: parseInt(skip) || 0 },
+            {$limit: 5}
+        ])
+        const documentCount = await Notification.aggregate([
+            ...aggregateOptions,
+            {$count:"document_count"}
+         ])
+         
+         let count = 0;
+ 
+         if(documentCount[0]) {
+             count =  documentCount[0]['document_count']
+         }
+ 
+    
         if(notifications.length === 0){
             res.status(401)
             throw new Error('No Notifications Found')
         }
+        
         res.send({
             success:true,
             code:200,
+            count,
             notifications
         })
     } catch (error) {
@@ -67,6 +131,29 @@ export const updateNotificationReadState = async (req, res, next) => {
             message
         })
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const pushNotificationToClient = async (req, res, next) => {
+    try {
+        const notifications = await Notification.find({user:req.user._id, isSent:false})
+        .populate('user', 'avatar')
+        .sort({createdAt:-1})
+        
+        if(notifications.length) {
+            for(let notification of notifications) {
+                notification.isSent = true 
+                await notification.save()
+            }
+        }
+
+        res.send({
+            success:true,
+            code:200,
+            notifications
+        })
     } catch (error) {
         next(error)
     }

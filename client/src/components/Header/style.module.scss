@@ -173,7 +173,7 @@
 
    }
    img {
-     width:5rem;
+     width:4rem;
     clip-path: circle();
      @include media.mq(xs){
        width:4rem;

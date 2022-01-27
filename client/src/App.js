@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Routes, Route} from 'react-router-dom'
 import {Header, Footer} from './components'
+
 import {
   Home, 
   Register, 
@@ -19,7 +20,7 @@ import {
 } from './views'
 
 function App() {
-
+ 
   return (
     <div className="App">
         <Header />
