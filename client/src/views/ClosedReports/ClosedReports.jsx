@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import style from './style.module.scss'
-import Modal from 'react-bootstrap/Modal'
-import {Pagination, Table, Filter} from '../../components'
+import {Modal} from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import {Pagination, Table, Filter, Loader, HeaderAlert} from '../../components'
 import {FilterSearch, Times} from '../../icons'
-import reports from './data'
+import actions from '../../actions'
+import constants from '../../constants'
 
 /**
  * NOTE ==> show only closed operation and sort them according to date of payment
@@ -11,8 +13,37 @@ import reports from './data'
 
 const Reports = () => {
     const [isFilter, setIsFilter] = useState(false)
-    const [isDueDate, setIsDueDate] = useState(true)
+    const [searchFilter, setSearchFilter] = useState({
+        code:null,
+        type:null,
+        name:null,
+        currency:null,
+        dueDate:null,
+        paymentDate:null,
+        state:null,
+        isActive:false 
+    })
+    const dispatch = useDispatch()
     
+    const {loading, error, count, reports} = useSelector(state => state.listAllReports)
+
+
+    const filterOperationHandler = (skip) => {
+        let query = {...searchFilter} 
+        if(skip) query.skip = skip.skip
+        dispatch(actions.reports.listAllReports(query))
+    }
+
+    const resetFilterOperations = _ => {
+        dispatch(actions.reports.listAllReports({isActive:false}))
+    }
+
+    useEffect(() => {
+        dispatch(actions.reports.listAllReports({isActive:false}))
+        return () => dispatch({type:constants.reports.REPORTS_ALL_RESET})
+     },[])
+
+
     return (
         <>
         <Modal show={isFilter} onHide={() => setIsFilter(false)}>
@@ -32,9 +63,27 @@ const Reports = () => {
                         <span> Filter </span>
                     </button>
                 </div>
-                <Filter hidden closed/>
-                <Table records={reports} closed={true}/>
-                <Pagination count={15}/>
+                
+                <Filter hidden closed 
+                    setSearchFilter={setSearchFilter} 
+                    searchFilter={searchFilter}
+                    filterOperationHandler={filterOperationHandler}
+                    resetFilterOperations={resetFilterOperations}
+                />                
+                
+                {loading && <Loader size='8' options={{animation:'border'}}/>} 
+                {error && <HeaderAlert size='2' text={error} type='danger'/>} 
+
+                {
+                    reports && 
+                    <>
+                        <Table records={reports} closed={true}/>
+                        <Pagination 
+                        count={Math.ceil(count / 5)} 
+                        moveToPageHandler={(skip) => filterOperationHandler(skip)}/>
+                    </>
+                }
+                
             </div>
         </div>
         </>

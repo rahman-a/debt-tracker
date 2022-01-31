@@ -9,6 +9,8 @@ const Notifications = () => {
    const [filter, setFilter] = useState(null)
     const dispatch = useDispatch()
     const {loading, error, count, notifications} = useSelector(state => state.listNotifications)
+    const {isUpdated} = useSelector(state => state.updateNotification)
+    const {message} = useSelector(state => state.updateOperationState)
 
     
     const selectItemHandler = state => {
@@ -33,8 +35,11 @@ const Notifications = () => {
     }
 
     useEffect(() => {
-        dispatch(actions.notifications.listNotification())
-    },[])
+        !message && isUpdated && dispatch(actions.notifications.listNotification())
+        message && setTimeout(() => {
+            dispatch(actions.notifications.listNotification())
+        },2000);
+    },[message, isUpdated])
 
     return (
         <div className={style.notifications}>
@@ -48,7 +53,7 @@ const Notifications = () => {
                             <DropdownMenu
                                 data={dropdownData}
                                 onSelectHandler={(value) => selectItemHandler(value)}
-                                disabled={loading || error}
+                                disabled={loading}
                             />
                         </div>
                       </div>
@@ -57,27 +62,34 @@ const Notifications = () => {
                         {
                             loading 
                             ?   <Loader size='15' center options={{animation:'border'}}/>
-                            : error
+                            : error || notifications?.length < 1
                             ?   <HeaderAlert size='2'
                                 type='danger' 
-                                text={error}/>
+                                text={error || 'No Notifications Found'}/>
                             : notifications && notifications.length > 0 &&
                                 notifications.map(notification => (
                                     <Notification key={notification._id} data={{
+                                    id:notification._id,
+                                    isRead:notification.isRead,
                                     image:notification.user.avatar 
                                     ? `/api/files/${notification.user.avatar}`
                                     :'/images/photos/photo-1.png',
                                     title:notification.title,
                                     message:notification.body,
+                                    operation:notification.operation?._id 
+                                    ? notification.operation?._id 
+                                    :null,
                                     date:new Date(notification.createdAt).toLocaleDateString(),
-                                    state:notification.operation.state
+                                    state:notification.operation?.state
+                                    ? notification.operation?.state
+                                    : null
                                     }}/>
                                 ))
                         }
 
                     </div>
                    {
-                   notifications?.length > 0 
+                   notifications?.length > 1
                    && <Pagination 
                    count={Math.ceil(count/5)}
                    moveToPageHandler={(skip) => paginateHandler(skip)}/> }

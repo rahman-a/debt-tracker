@@ -25,7 +25,8 @@ const reportSchema = new mongoose.Schema({
         required:true,
         ref:'Currency'
     },
-    dueDate:Date
+    dueDate:Date,
+    paymentDate:Date
 },{timestamps:true})
 
 export default mongoose.model('Report', reportSchema)

@@ -2,19 +2,31 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
+import {Modal} from 'react-bootstrap'
 import {Pagination, Table, Filter, Loader, HeaderAlert} from '../../components'
 import {FilterSearch, Times} from '../../icons'
-import Modal from 'react-bootstrap/Modal'
 import actions from '../../actions'
+import constants from '../../constants'
 
 const Operation = () => {
     const [isFilter, setIsFilter] = useState(false)
+    const [searchFilter, setSearchFilter] = useState({
+        code:null,
+        type:null,
+        name:null,
+        currency:null,
+        dueDate:null,
+        paymentDate:null,
+        state:null, 
+    })
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {loading, error, count, operations} = useSelector(state => state.listOperations)
 
     const filterOperationHandler = (skip) => {
-        dispatch(actions.operations.listAllOperations(skip))
+        let query = {...searchFilter} 
+        if(skip) query.skip = skip.skip 
+        dispatch(actions.operations.listAllOperations(query))
     }
 
     const resetFilterOperations = _ => {
@@ -23,6 +35,7 @@ const Operation = () => {
 
     useEffect(() => {
        dispatch(actions.operations.listAllOperations())
+       return () => dispatch({type:constants.operations.LIST_OPERATIONS_RESET})
     },[])
     
     return (
@@ -52,7 +65,9 @@ const Operation = () => {
                 <Filter 
                 hidden op 
                 filterOperationHandler={filterOperationHandler}
-                resetFilterOperations={resetFilterOperations}/>
+                resetFilterOperations={resetFilterOperations}
+                searchFilter={searchFilter}
+                setSearchFilter={setSearchFilter}/>
 
                 {loading && <Loader size='8' options={{animation:'border'}}/>} 
                 {error && <HeaderAlert size='2' text={error} type='danger'/>} 
@@ -65,7 +80,7 @@ const Operation = () => {
                 <Pagination 
                 count={Math.ceil(count / 5)} 
                 moveToPageHandler={(skip) => filterOperationHandler(skip)}/>
-                    </> }
+                </> }
             </div>
         </div>
         </>

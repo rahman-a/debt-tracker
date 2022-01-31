@@ -71,12 +71,41 @@ export const listAllUserNotifications = async (req, res, next) => {
                 $match:{...searchFilter}
             }
         ]
-        const notifications = await Notification.aggregate([
+        
+        let notifications = await Notification.aggregate([
             ...aggregateOptions,
             {$sort:{createdAt:-1}},
+            {$sort:{isRead:1}},
             {$skip: parseInt(skip) || 0 },
             {$limit: 5}
         ])
+
+        if(!state) {
+            let notificationsWithoutOperation = await Notification.find({
+                user:req.user._id,
+                operation: {$exists:false}
+            })
+            .skip(parseInt(skip) || 0)
+            .limit(5)
+            .sort({createdAt:-1})
+
+            notifications = notificationsWithoutOperation.length
+            ? [...notificationsWithoutOperation, ...notifications]
+            : notifications
+        }
+
+        if(notifications.length > 0) {
+
+            for(const notification of notifications) {
+                if(!notification.isSent) {
+                    const targetedNotification = await Notification.findById(notification._id) 
+                    targetedNotification.isSent = true 
+                    await targetedNotification.save()
+                }
+            }
+        }
+
+
         const documentCount = await Notification.aggregate([
             ...aggregateOptions,
             {$count:"document_count"}
@@ -87,6 +116,16 @@ export const listAllUserNotifications = async (req, res, next) => {
          if(documentCount[0]) {
              count =  documentCount[0]['document_count']
          }
+        if(!state) {
+            const countWithoutOperation = await Notification.count({
+                user:req.user._id,
+                operation: {$exists:false}
+            })
+    
+            count += countWithoutOperation
+        }
+
+        const countNonRead = await Notification.count({user:req.user._id, isRead:false})
  
     
         if(notifications.length === 0){
@@ -98,6 +137,7 @@ export const listAllUserNotifications = async (req, res, next) => {
             success:true,
             code:200,
             count,
+            countNonRead,
             notifications
         })
     } catch (error) {

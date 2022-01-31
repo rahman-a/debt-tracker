@@ -12,7 +12,8 @@ const listNotifications = (state, action) => {
             loading:false, 
             error:null,
             notifications:action.notifications,
-            count:action.count 
+            count:action.count,
+            nonRead:action.nonRead
         },
         [constants.notifications.LIST_NOTIFICATIONS_FAIL]: 
         {
@@ -62,24 +63,24 @@ const newNotification = (state, action) => {
 
 const updateNotification = (state, action) => {
     const cases = {
-        [constants.notifications.UPDATE_NOTIFICATIONS_REQUEST]: 
+        [constants.notifications.UPDATE_NOTIFICATION_REQUEST]: 
         {
             loading:true,
             error:null 
         },
-        [constants.notifications.UPDATE_NOTIFICATIONS_SUCCESS]: 
+        [constants.notifications.UPDATE_NOTIFICATION_SUCCESS]: 
         {
             loading:false, 
             error:null,
             isUpdated:true,
             message:action.payload 
         },
-        [constants.notifications.UPDATE_NOTIFICATIONS_FAIL]: 
+        [constants.notifications.UPDATE_NOTIFICATION_FAIL]: 
         {
             loading:false,
             error:action.payload,
         },
-        [constants.notifications.UPDATE_NOTIFICATIONS_RESET]: 
+        [constants.notifications.UPDATE_NOTIFICATION_RESET]: 
         {
             loading:false,
             error:null,

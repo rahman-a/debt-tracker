@@ -2,7 +2,7 @@ import service from './service'
 
 const operationAPI = {
     index(query){
-        const queryObj = {}
+        let queryObj = {}
         for(let key in query) {
             if(query[key]) {
                 queryObj[key] = query[key]
@@ -20,8 +20,8 @@ const operationAPI = {
     getOne(id){
         return service().get(`operations/${id}`)
     },
-    updateState(id, state){
-        return service().patch(`operations/${id}?state=${state}`)
+    updateState(id, notification, state){
+        return service().patch(`operations/${id}/${notification}?state=${state}`)
     }
 }
 

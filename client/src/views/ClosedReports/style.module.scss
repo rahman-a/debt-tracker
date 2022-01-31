@@ -16,6 +16,7 @@
         }
     }
     &__wrapper {
+        position: relative;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -91,6 +92,7 @@
         box-shadow: 2px 4px 6px rgb(0 0 0 / 30%);
         border-radius: 50%;
         display: grid;
+        display: -ms-grid;
         place-items: center;
         color:var.$main-color;
         padding:0.5rem;

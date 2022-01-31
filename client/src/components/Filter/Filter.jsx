@@ -1,23 +1,18 @@
-import React, {useState} from 'react'
+import React from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu} from '../../components'
 
 const Filter = ({
     hidden, 
     op, 
-    closed, 
+    closed,
+    isDueDate, 
     filterOperationHandler,
-    resetFilterOperations
+    resetFilterOperations,
+    searchFilter,
+    setSearchFilter
 }) => {
-    const [searchFilter, setSearchFilter] = useState({
-        code:null,
-        type:null,
-        name:null,
-        currency:null,
-        dueDate:null,
-        paymentDate:null,
-        state:null, 
-    })
+    
 
     const searchFilterHandler = e => {
         const value = {[e.target.name]: e.target.value}
@@ -26,20 +21,6 @@ const Filter = ({
 
     const selectSearchFilterHandler = filter => {
         setSearchFilter({...searchFilter, ...filter})
-    }
-
-    const initiateFilteredSearch = _ => {
-        filterOperationHandler(searchFilter)
-        const resetFilterObject = {
-            code:null,
-            type:null,
-            name:null,
-            currency:null,
-            dueDate:null,
-            paymentDate:null,
-            state:null, 
-        }
-        setSearchFilter(resetFilterObject)
     }
 
     const resetFilterHandler = _ => {
@@ -57,7 +38,8 @@ const Filter = ({
     }
     
     return (
-        <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}>
+        <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
+        style={{justifyContent:isDueDate ? 'center' :'unset'}}>
             
             <div className={style.filter__input}>
                 <Input
@@ -122,7 +104,7 @@ const Filter = ({
                 />
             </div> }
 
-            <div className={style.filter__input}>
+         { !isDueDate && <div className={style.filter__input}>
                 <DropdownMenu
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler(
@@ -136,11 +118,11 @@ const Filter = ({
                     ]
                 }}
                 />
-            </div>
+            </div> }
 
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
-                    onClick={initiateFilteredSearch}>
+                    onClick={filterOperationHandler}>
                         SEARCH
                 </button>
                 <button className={style.filter__btn}

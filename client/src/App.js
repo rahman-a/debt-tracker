@@ -1,7 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
-import { Routes, Route} from 'react-router-dom'
+import {useSelector} from 'react-redux'
+import { Routes, Route, Navigate} from 'react-router-dom'
 import {Header, Footer} from './components'
 
 import {
@@ -21,6 +22,8 @@ import {
 
 function App() {
  
+  const {isAuth} = useSelector(state => state.login)
+
   return (
     <div className="App">
         <Header />
@@ -29,16 +32,16 @@ function App() {
             <Route path='/register' element={<Register/>}/>
             <Route path='/login' element={<Login/>} />  
             <Route path='/operation'>
-                <Route index element={<Operation/>}/>
-                <Route path='new' element={<NewOperation/>}/>
+                <Route index element={isAuth ? <Operation/> : <Navigate to='/login'/>}/>
+                <Route path='new' element={isAuth ? <NewOperation/> : <Navigate to='/login'/>}/>
             </Route>
             <Route path='/reports'>
-              <Route path='active' element={<ActiveReports/>}/>
-              <Route path='closed' element={<ClosedReports/>}/>
+              <Route path='active' element={isAuth ? <ActiveReports/> : <Navigate to='/login'/>}/>
+              <Route path='closed' element={isAuth ? <ClosedReports/> : <Navigate to='/login'/>}/>
             </Route>
-            <Route path='/profile' element={<Profile/>}/>
-            <Route path='/notifications' element={<Notifications/>}/>
-            <Route path='/messages' element={<Messages/>}/>
+            <Route path='/profile' element={isAuth ? <Profile/> : <Navigate to='/login'/>}/>
+            <Route path='/notifications' element={isAuth ? <Notifications/> : <Navigate to='/login'/>}/>
+            <Route path='/messages' element={isAuth ? <Messages/> : <Navigate to='/login'/>}/>
             <Route path='/activate' element={<EmailActivation/>}/>
             <Route path='/reset' element={<ResetPassword/>}/>
           </Routes>

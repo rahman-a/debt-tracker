@@ -13,7 +13,8 @@ const Documents = ({data}) => {
            ? allDocuments.push(
                 <DocumentSegment 
                 key={uuidv4()} 
-                img={`api/files/${data[d].image}`} 
+                img={`api/files/${data[d].image}`}
+                isExpired={data[d].isExpired ? data[d].isExpired :''}
                 document={d}/>
             )
            : allDocuments.push(
@@ -29,6 +30,7 @@ const Documents = ({data}) => {
 
     useEffect(() => {
       createDocuments()
+      console.log('Document Data', data);
     },[data])
     
     return (
