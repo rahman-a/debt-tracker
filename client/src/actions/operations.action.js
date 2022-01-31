@@ -19,6 +19,19 @@ const listAllOperations = (query) => async (dispatch) => {
     }
 }
 
+const getOperation = (id) => async (dispatch) => {
+    dispatch({type:constants.operations.GET_OPERATION_REQUEST}) 
+    try {
+        const {data} = await api.operations.getOne(id)
+        dispatch({type: constants.operations.GET_OPERATION_SUCCESS, payload:data.operation})
+    } catch (error) {
+        dispatch({
+            type:constants.operations.GET_OPERATION_FAIL, 
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
 const findMutualOperation = (initiator, peer) => async (dispatch) => {
     dispatch({type: constants.operations.FIND_MUTUAL_REQUEST}) 
     try {
@@ -53,10 +66,10 @@ const createOperation = (info) => async (dispatch) => {
     }
 }
 
-const updateOperationState = (id, state) => async (dispatch) => {
+const updateOperationState = (id,notification ,state) => async (dispatch) => {
     dispatch({type: constants.operations.UPDATE_OPERATION_STATE_REQUEST}) 
     try {
-        const {data} = await api.operations.updateState(id, state)
+        const {data} = await api.operations.updateState(id, notification, state)
         dispatch({
             type: constants.operations.UPDATE_OPERATION_STATE_SUCCESS, payload:data.message})
     } catch (error) {
@@ -71,6 +84,7 @@ const actions = {
     listAllOperations,
     createOperation,
     updateOperationState,
+    getOperation,
     findMutualOperation
 }
 

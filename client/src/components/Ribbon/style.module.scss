@@ -22,8 +22,14 @@
     &__states {
         padding: 3rem;
         li {
-            color:var.$main-color;
+            color:var.$code-red-color;
             margin:0.5rem;
         }
+    }
+
+    &__report {
+        background-color: #1f1e1e;
+        padding:0.3rem;
+        border-radius: 0.5rem;
     }
 }

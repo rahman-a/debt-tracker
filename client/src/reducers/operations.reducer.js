@@ -41,6 +41,43 @@ const listOperations = (state, action) => {
 }
 
 /////////////////////////////////////////////////
+/////////// GET OPERATION REDUCER
+//////////////////////////////////////////////// 
+const getOperation = (state, action) => {
+    const cases = {
+        
+        [constants.operations.GET_OPERATION_REQUEST] : 
+        {
+            loading:true, 
+            error:null
+        }, 
+
+        [constants.operations.GET_OPERATION_SUCCESS] : 
+        {
+            loading:false, 
+            error:null, 
+            operation:action.payload,
+        }, 
+
+        [constants.operations.GET_OPERATION_FAIL] : 
+        {
+            loading:false, 
+            error:action.payload
+        },
+        
+        [constants.operations.GET_OPERATION_RESET] : 
+        {
+            loading:false, 
+            error:null, 
+            operations:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
+/////////////////////////////////////////////////
 /////////// FIND ALL MUTUAL OPERATIONS REDUCER
 //////////////////////////////////////////////// 
 
@@ -157,6 +194,7 @@ const updateOperationState = (state, action) => {
 const reducers = {
     listOperations,
     createOperation,
+    getOperation,
     findMutualOperations,
     updateOperationState
 }

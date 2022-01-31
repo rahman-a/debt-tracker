@@ -12,17 +12,24 @@ const sendEmail = async (info, type) => {
  const data = {
     from: 'noreplay@debttracker.com',
     to: info.email,
+    
     subject: type === 'activate' 
     ?'Email Verification'
     :type === 'reset' 
     ?'Reset Account Password'
-    :type === 'code' && 'Login Code',
+    :type === 'code' 
+    ? 'Login Code'
+    :type === 'notice'
+    && 'Important Message from Debt Tracker Panel',
+    
     html: type === 'activate' 
     ? template.activate(info) 
     : type === 'reset' 
     ? template.reset(info)
     : type === 'code' 
-    && template.code(info)
+    ? template.code(info)
+    : type === 'notice'
+    && template.notice(info)
   };
   mg.messages().send(data, function (error, body) {
     if(error){

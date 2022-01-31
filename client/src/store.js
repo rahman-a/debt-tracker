@@ -5,7 +5,15 @@ import {globalReducer} from './reducers'
 
 const middlewares = [thunk]
 
-const reducer = combineReducers(globalReducer)
+const mainReducer = combineReducers(globalReducer)
+
+const rootReducer = (state, action) =>{
+    if(action.type === 'USER_LOGOUT_SUCCESS') {
+        state = undefined
+    }
+    
+    return mainReducer(state, action)
+}
 
 const userId = localStorage.getItem('uid')
 ? localStorage.getItem('uid')
@@ -37,8 +45,8 @@ const initState = {
     }
 }
 
-const store = createStore(
-    reducer,
+const store = createStore (
+    rootReducer,
     initState,
     composeWithDevTools(applyMiddleware(...middlewares))
 )

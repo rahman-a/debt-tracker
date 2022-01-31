@@ -80,8 +80,19 @@ code(info) {
             </span> 
         </h3>
     </div>
-    
-    
+    `
+},
+notice(info) {
+    return `
+    <div style='
+        color:#2b2c33; 
+        padding:2rem;'>
+        <h1>Debt Tracker</h1>
+        <p>Hello ${info.label}</p>
+        <p style='text-transform: uppercase; font-style: italic;'>
+            ${info.message}
+        </p>
+    </div>
     `
 }
 }

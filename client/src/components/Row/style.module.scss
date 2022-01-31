@@ -74,4 +74,14 @@
             display: -ms-grid;
         }
     }
+
+    &__label {
+        position: absolute;
+        top: 2px;
+        right: 1rem;
+        font-size: 1rem;
+        color:var.$white-color;
+        border-radius: 0.5rem;
+        padding: 0 2px;
+    }
 }

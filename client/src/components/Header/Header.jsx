@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
-import {v4 as uuidv4} from 'uuid'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
@@ -15,13 +14,12 @@ const Header = () => {
     const [navbarColor, setNavbarColor] = useState('rgba(26, 55, 77, 0.7)')
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
-    const [toggleMessages, setToggleMessages] = useState(false)
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
     const dispatch = useDispatch()
     const {isAuth} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
-    const {count, notifications:listNotifications} = useSelector(state => state.listNotifications)
+    const {nonRead} = useSelector(state => state.listNotifications)
 
     const {
         loading:notify_loading, 
@@ -36,13 +34,11 @@ const Header = () => {
     
     const toggleNotifyData = type => {    
         if(type === 'notification'){
-            setToggleMessages(false)
             setToggleNotification(prev => !prev)
             !toggleNotification && 
             dispatch(actions.notifications.listNotification())
         }else {
             setToggleNotification(false)
-            setToggleMessages(prev => !prev)
         }
     }
 
@@ -95,17 +91,19 @@ const Header = () => {
 
     useEffect(() => {
         
-        const initNotifications = setTimeout(() => {
-            dispatch(actions.notifications.pushNotification())      
-        }, 5000);
+        // const initNotifications = setTimeout(() => {
+        //     dispatch(actions.notifications.pushNotification())      
+        // }, 5000);
         
-        !count && dispatch(actions.notifications.listNotification())
+        !nonRead && dispatch(actions.notifications.listNotification())
         
         page === '/' 
         ? setNavbarColor('rgba(26, 55, 77, 0.7)')
         : setNavbarColor('#1A374D')
+
+        page === '/login' && setSideMenu(false)
         
-        return () => clearTimeout(initNotifications)
+        // return () => clearTimeout(initNotifications)
     },[page, isAuth])
 
     return (
@@ -193,9 +191,9 @@ const Header = () => {
 
                                 <div className={style.header__notify_list}></div>
                                 <span onClick={() => toggleNotifyData('notification')}>
-                                   {count && count > 0 
+                                   {nonRead > 0
                                    && <span className={style.header__notify_num}>
-                                        {count}
+                                        {nonRead}
                                     </span> }
                                     <Bell/>
                                 </span>
@@ -222,7 +220,6 @@ const Header = () => {
                                 {toggleNotification 
                                 && <NotificationContainer 
                                 setToggleNotification={setToggleNotification}
-                                setToggleMessages={setToggleMessages}
                                 title='Notification' 
                                 loading={notify_loading}
                                 error={notify_error}

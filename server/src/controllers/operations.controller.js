@@ -1,12 +1,13 @@
 import Operation from '../models/operations.model.js'
+import Report from '../models/reports.model.js'
 import Notification from '../models/notifications.model.js'
+import User from '../models/users.model.js'
 
 
 
 export const findMutualOperations = async (req, res, next) => {
     const {initiator, peer} = req.params
     try {
-        console.log(initiator, peer);
         const operations = await Operation.find({
             "initiator.user":initiator, 
             "peer.user":peer, 
@@ -95,7 +96,12 @@ export const listAllOperations = async (req, res, next) => {
 
             return 
         }
+        
         let searchFilter = {
+            $or: [
+                {'initiator.user._id': req.user._id},
+                {'peer.user._id': req.user._id}
+            ],
             state:{$ne:'active'}
         };
 
@@ -104,7 +110,19 @@ export const listAllOperations = async (req, res, next) => {
         if(type) {
             searchFilter = {
                 ...searchFilter,
-                'peer.type':type
+                $or: [
+                    {
+                        "peer.type": type,
+                        "peer.user._id":{$ne: req.user._id},
+                        "initiator.user._id":req.user._id
+                    },
+                    {
+                        "initiator.type": type,
+                        "initiator.user._id":{$ne: req.user._id},
+                        "peer.user._id":req.user._id
+                    }
+                ]
+                
             }
         }
         if(state) {
@@ -218,13 +236,7 @@ export const listAllOperations = async (req, res, next) => {
                 $unwind:"$peer.user"
             },
             {
-                $match:{
-                    $or: [
-                        {'initiator.user._id': req.user._id},
-                        {'peer.user._id': req.user._id}
-                    ],
-                    ...searchFilter
-                }
+                $match:{ ...searchFilter}
             },
         ]
         
@@ -265,7 +277,21 @@ export const listAllOperations = async (req, res, next) => {
 export const getOneOperation = async (req, res, next) => {
     const {id} = req.params 
     try {
-        const operation = await Operation.findById(id) 
+        const operation = await Operation.findById(id)
+        .populate({
+            path:'initiator',
+            populate:{
+                path:'user',
+                select:'fullNameInEnglish avatar colorCode'
+            }
+        }).populate({
+            path:'peer',
+            populate:{
+                path:'user',
+                select:'fullNameInEnglish avatar colorCode'
+            }
+        }).populate('currency', 'name image abbr')
+        
         if(!operation) {
             res.status(401) 
             throw new Error('No Operation Found')
@@ -282,19 +308,66 @@ export const getOneOperation = async (req, res, next) => {
 
 export const updateOperationState = async (req, res, next) => {
     const {state} = req.query 
-    const {id} = req.params 
+    const {id, notification} = req.params 
     try {
+        console.log({id, notification});
         const operation = await Operation.findById(id) 
         if(!operation) {
             res.status(401)
             throw new Error('No Operation Found')
         }
+        console.log('operation id', operation._id);
+        const initiator = await User.findById(operation.initiator.user)
+        const peer = await User.findById(operation.peer.user)
+
         operation.state = state 
         await operation.save() 
+        
+        const targetedNotification = await Notification.findById(notification)
+        console.log('notification id', targetedNotification._id);
+        targetedNotification.isRead = true 
+        await targetedNotification.save()
+
+        if(state === 'active') {
+            console.log({state});
+            const reportData = {
+                operation:operation._id,
+                credit: operation.initiator.type === 'credit'
+                ? operation.initiator.value
+                : operation.peer.value,
+                debt: operation.initiator.type === 'debt'
+                ? operation.initiator.value
+                : operation.peer.value,
+                currency:operation.currency
+            }
+
+            if(operation.dueDate) {
+                reportData.dueDate = operation.dueDate
+            }
+
+            const newReport = new Report(reportData) 
+            await newReport.save()
+        }
+
+        const notificationData = {
+            user:initiator._id,
+            operation:operation._id,
+            title:state === 'decline' 
+            ? 'Operation has been declined' 
+            : 'Operation is Active and Running',
+            body:`Operation with ${peer.fullNameInEnglish} 
+            ${state === 'decline' 
+            ? 'has been declined and closed' 
+            : 'is Active and moved to Reports Documents'}`
+        }
+
+        const pushNotification = new Notification(notificationData)
+        await pushNotification.save()
+
         res.send({
             success:true,
             code:200,
-            message:`operation state has updated to ${state}`
+            message:`operation has been set as ${state}`
         })
     } catch (error) {
         next(error)

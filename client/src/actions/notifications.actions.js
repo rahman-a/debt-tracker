@@ -9,7 +9,8 @@ const listNotification = (query) => async (dispatch) => {
         dispatch({
             type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
             notifications: data.notifications,
-            count:data.count
+            count:data.count,
+            nonRead:data.countNonRead
         })
     } catch (error) {
         dispatch({
@@ -60,13 +61,19 @@ const pushNotification = () => async (dispatch, getState) => {
         const {data} = await api.notifications.push()
         
         let {notifications} = getState().listNotifications
-        let {count} = getState().listNotifications
+        let {nonRead} = getState().listNotifications
         if(notifications) {
             notifications = [...data.notifications, ...notifications]
             dispatch({
                 type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
                 notifications,
-                count: count + data.notifications.length
+                nonRead: nonRead + data.notifications.length
+            })
+        }else {
+            dispatch({
+                type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
+                notifications:data.notifications,
+                nonRead: data.notifications.length
             })
         }
 

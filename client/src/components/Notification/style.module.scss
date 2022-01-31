@@ -67,6 +67,7 @@
 
     &__state {
         display: grid;
+        display: -ms-grid;
         place-items: center;
         position: absolute;
         right:0;
@@ -82,7 +83,6 @@
         }
         p {
             text-transform: uppercase;
-            color:var.$second-color;
             @include media.mq(md){
                font-size: 1.4rem;
             }
@@ -90,5 +90,11 @@
                 font-size: 1.2rem;
             }
         }
+    }
+
+    &__report {
+        background-color: #1f1e1e;
+        padding:0.3rem;
+        border-radius: 0.5rem;
     }
 }

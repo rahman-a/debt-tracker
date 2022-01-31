@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux'
 import { Plus} from '../../icons'
 import {UpdateDocument, Loader} from '../../components'
 
-const DocumentSegment = ({ img, document }) => {
+const DocumentSegment = ({ img, document, isExpired }) => {
   const [isEdit, setIsEdit] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
   const {isDone} = useSelector(state => state.updateDocuments)
@@ -22,7 +22,7 @@ const DocumentSegment = ({ img, document }) => {
       document={document}/>
 
       <div className={style.segment}>
-        {img ? (
+        {img && !isExpired ? (
           <div className={style.segment__doc}>
             <img src={img} alt={document} />
             <p>{document} document</p>

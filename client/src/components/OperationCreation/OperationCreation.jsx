@@ -45,7 +45,20 @@ const Details = ({peerInfo}) => {
         return []
     }
 
-    
+    // const data = {
+    //     initiator:{   
+    //         user:user._id,
+    //         type: peerType === 'credit' ? 'debt': 'credit', 
+    //         value:peerType === 'debt' ? 0 : parseInt(value)
+    //     },
+    //     peer:{
+    //         user:peerInfo._id,
+    //         type:peerType, 
+    //         value:peerType === 'credit' ? 0 : parseInt(value) 
+    //     },
+    //     note,
+    //     currency
+    // }
     
     const CreateOperationHandler = _ => {
         const data = {

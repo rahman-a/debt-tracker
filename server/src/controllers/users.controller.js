@@ -4,6 +4,7 @@ import sendEmail from '../emails/email.js'
 import randomstring from 'randomstring'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import {DateTime} from 'luxon'
 
 // create user document using email and password
 export const register = async (req, res, next) => {
@@ -211,6 +212,10 @@ export const sendPasswordResetLink = async (req, res, next) => {
     const {email} = req.query 
     try {
         const user = await User.findOne({"emails.email": email})
+        if(!user) {
+            res.status(401)
+            throw new Error('This E-mail isn\'t connected with any account')
+        }
         await sendAuthLink(user, req, 'reset')
         res.send({
             success:true,
@@ -362,11 +367,50 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
 
 // Send the user data
 export const sendUserData = async (req, res, next) => {
+    
     try {
+        const user ={...req.user._doc} 
+        
+
+        if(user.identity){
+            const now = DateTime.now().ts
+            const date = new Date(user.identity.expireAt)
+            const expiry = DateTime.fromJSDate(date).ts
+            
+            const identity = {
+                image:user.identity.image,
+                isExpired: now > expiry
+            }
+            user.identity = identity
+        }
+        
+        if(user.passport){
+            const now = DateTime.now().ts
+            const date = new Date(user.passport.expireAt)
+            const expiry = DateTime.fromJSDate(date).ts
+            const passport = {
+                image:user.passport.image,
+                isExpired: now > expiry
+            }
+            user.passport = passport
+        }
+        
+        if(user.residential) {
+            const now = DateTime.now().ts
+            const date = new Date(user.residential.expireAt)
+            const expiry = DateTime.fromJSDate(date).ts
+            
+            const residential = {
+                image:user.residential.image,
+                isExpired: now > expiry
+            }
+            user.residential = residential
+        }
+        
         res.send({
             success:true,
             code:200,
-            user:req.user
+            user
         })
     } catch (error) {
         next(error)

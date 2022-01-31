@@ -8,7 +8,6 @@ const notificationSchema = new mongoose.Schema({
     },
     operation: {
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
         ref:'Operation'
     },
     title:{

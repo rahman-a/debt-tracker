@@ -80,7 +80,19 @@ const userSchema = new mongoose.Schema({
             type:String,
             default:'#037A12'
         },
-        state:Array
+        state:[
+            {
+                message: {
+                    en:String,
+                    ar:String
+                },
+                label:String,
+                report: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref:'Report'
+                }
+            }
+        ]
     },
     isPhoneConfirmed:{
         type:Boolean,
