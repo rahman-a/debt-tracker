@@ -14,7 +14,7 @@ export const createCurrency = async(req, res, next) => {
         const isFound = await Currency.findOne({name:newCurrency.name})
         if(isFound) {
             fs.unlinkSync(path.resolve(__dirname, `../../uploads/${req.file.filename}`))
-            res.status(401)
+            res.status(400)
             throw new Error('The Currency Already Exist')
         }
 
@@ -34,7 +34,7 @@ export const listAllCurrency = async (req, res, next) => {
     try {
         const currencies = await Currency.find({})
         if(currencies.length === 0) {
-            res.status(401)
+            res.status(404)
             throw new Error('No Currencies Found')
         }
         res.send({
@@ -52,7 +52,7 @@ export const deleteCurrency = async (req, res, next) => {
     try {
         const currency = await Currency.findById(id) 
         if(!currency) {
-            res.status(401)
+            res.status(404)
             throw new Error('No Currency Found')
         }
         await currency.remove()

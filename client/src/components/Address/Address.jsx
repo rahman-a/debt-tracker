@@ -72,6 +72,7 @@ const Address = ({setStep, setInfo, info}) => {
           label='Address inside UAE'
           type='text'
           icon={<Map/>}
+          value={insideAddress}
           onChange={(e) => setInsideAddress(e.target.value)}
           custom={{marginBottom:'3rem'}}
           />
@@ -82,6 +83,7 @@ const Address = ({setStep, setInfo, info}) => {
           label='Address outside UAE'
           type='text'
           icon={<Map/>}
+          value={outsideAddress}
           onChange={(e) => setOutsideAddress(e.target.value)}
           custom={{marginBottom:'3rem'}}
           /> 

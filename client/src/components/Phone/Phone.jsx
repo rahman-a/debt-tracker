@@ -25,6 +25,13 @@ const Phones = ({setStep, info}) => {
         if(!(insidePhones.length)) {
             setErrors('Please Provide at least one phone inside UAE')
             return false
+        }else {
+            for(let phone of insidePhones) {
+                if(phone === '' || phone === ' ') {
+                    setErrors('Please Provide at least one phone inside UAE')
+                    return false
+                }
+            }
         }
 
         const insidePhonesCollection = insidePhones.map((phone, idx) => {
@@ -114,7 +121,7 @@ const Phones = ({setStep, info}) => {
                             label='Phone inside UAE'
                             type='text'
                             icon={<Phone/>}
-                            defaultValue={insidePhones[idx] ? insidePhones[idx] : ''}
+                            value={insidePhones[idx] ? insidePhones[idx] : ''}
                             onChange={(e) => setInsidePhoneHandler(e, idx)}
                             inputRef={insideRef}
                             disabled={moreInsidePhone > idx + 1}
@@ -142,7 +149,7 @@ const Phones = ({setStep, info}) => {
                         label='Phone outside UAE'
                         type='text'
                         icon={<Phone/>}
-                        defaultValue={outsidePhones[idx] ? outsidePhones[idx] : ''}
+                        value={outsidePhones[idx] ? outsidePhones[idx] : ''}
                         onChange={(e) => setOutsidePhonesHandler(e, idx)}
                         inputRef={outsideRef}
                         disabled={moreOutsidePhone > idx + 1}

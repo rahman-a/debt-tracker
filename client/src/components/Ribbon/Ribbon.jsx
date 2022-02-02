@@ -15,7 +15,7 @@ const Ribbon = ({color, states}) => {
                 <ul className={style.ribbon__states}>
                     {
                         states.length > 0
-                        ? states.map(state => <li key={uuidv4()}>
+                        ? states.reverse().map(state => <li key={uuidv4()}>
                             {renderStateMessage(state.message['en'], style.ribbon__report)}
                         </li>)
                         : <HeaderAlert size='2' text='Every things is OK'/>

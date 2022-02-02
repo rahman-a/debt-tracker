@@ -1,10 +1,19 @@
-import User from '../models/users.model.js'
-import sendSMS from '../sms/send.js'
-import sendEmail from '../emails/email.js'
+import fs from 'fs'
+import path from 'path'
 import randomstring from 'randomstring'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import {DateTime} from 'luxon'
+import cron from 'node-cron'
+import {fileURLToPath} from 'url'
+import User from '../models/users.model.js'
+import Operation from '../models/operations.model.js'
+import Notification from '../models/notifications.model.js'
+import sendSMS from '../sms/send.js'
+import sendEmail from '../emails/email.js'
+import { takeAction } from '../config/takeAction.js'
+import {labels} from '../config/labels.js'
+const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
 // create user document using email and password
 export const register = async (req, res, next) => {
@@ -14,13 +23,13 @@ export const register = async (req, res, next) => {
     try {
         const isUsernameFound = await User.findOne({username})
         if(isUsernameFound) {
-            res.status(404)
+            res.status(400)
             throw new Error('username already found, please choose another username')
         }
         for(const email of emails) {
             const isFound = await User.findOne({"emails.email":email.email})
             if(isFound) {
-                res.status(404)
+                res.status(400)
                 throw new Error(`${email.email} already exist please choose another email`)
             }
         }
@@ -51,7 +60,7 @@ export const completeRegistration = async (req, res, next) => {
         const user  = await User.findById(id)
         for(let key in userData) {
             if(!(allowedKeys.includes(key))) {
-                res.status(404)
+                res.status(400)
                 throw new Error(`${key} is not recognized`)
             }
             user[key] = userData[key]
@@ -77,27 +86,63 @@ export const registerDocument = async (req, res, next) => {
 
     try {
         const expireAt = JSON.parse(req.body.expireAt);
+        // console.log('Expire',expireAt);
+        // console.log('Files',req.files);
         const user = await User.findById(id) 
         let docObject;
         let fileType;
         for(let key in req.files){
+            
+
+            if(user[key] && user[key]?.image) {
+                fs.unlinkSync(
+                    path.join(__dirname, 'server', '../../../uploads', user[key].image)
+                )
+            }
+
             if(key === 'avatar' || key === 'verificationImage') {
+                
                 user[key] = req.files[key][0].filename
-            }else {
+            } else {
+                
                 user[key] = {
                     image:req.files[key][0].filename, 
                     expireAt: expireAt[key]
                 }
+
+                let documentState = null
+                
+                if(key === 'identity') {
+                    documentState = user.colorCode.state.filter(
+                        st => st.label['en'] !== labels['idExpired']['en']
+                              && st.label['en'] !== labels['idUpload']['en']
+                    )
+                }else if (key === 'passport') {
+                    documentState = user.colorCode.state.filter(
+                        st => st.label['en'] !== labels['passExpired']['en']
+                              && st.label['en'] !== labels['passUpload']['en']
+                    )
+                }else if (key === 'residential') {
+                    documentState = user.colorCode.state.filter(
+                        st => st.label['en'] !== labels['resiExpired']['en']
+                             && st.label['en'] !== labels['resiUpload']['en']
+                    )
+                }
+
+                user.colorCode.state =  documentState 
+                              
+                
                 fileType = key;
                 docObject = {
                     image:req.files[key][0].filename, 
                     expireAt: expireAt[key]
                 }
             }
-        }
+        } 
         await user.save()
-       
-        // TO DO ==>  UN COMMIT WHEN DONE
+        
+        await takeAction(user._id, 'green')  
+
         await sendConfirmCodeToPhone(user._id) 
         res.send({
             success:true,
@@ -213,7 +258,7 @@ export const sendPasswordResetLink = async (req, res, next) => {
     try {
         const user = await User.findOne({"emails.email": email})
         if(!user) {
-            res.status(401)
+            res.status(404)
             throw new Error('This E-mail isn\'t connected with any account')
         }
         await sendAuthLink(user, req, 'reset')
@@ -254,7 +299,7 @@ export const findUserHandler = async (req, res, next) => {
         if(phone) {
             users = await User.find({"insidePhones.phone": phone})
             if(users.length === 0) {
-                res.status(401)
+                res.status(404)
                 throw new Error('no users found, search again')
             }
         }else {
@@ -269,7 +314,7 @@ export const findUserHandler = async (req, res, next) => {
             
             users = await User.find({...searchFilter})
             if(users.length === 0) {
-                res.status(401)
+                res.status(404)
                 throw new Error('no users found, search again')
             }  
         }
@@ -488,13 +533,13 @@ async function sendLoginCodeToEmail(id) {
         user.emailCode = code 
         await user.save()
 
-        // TODO => UN COMMIT UNTIL FINISH
-        // const info = {
-        //     code:code,
-        //     name:user.fullNameInEnglish,
-        //     email:user.emails.find(email => email.isPrimary === true).email
-        // }
-        // await sendEmail(info, 'code')
+        
+        const info = {
+            code:code,
+            name:user.fullNameInEnglish,
+            email:user.emails.find(email => email.isPrimary === true).email
+        }
+        await sendEmail(info, 'code')
 
     } catch (error) {
         throw new Error(error)
@@ -574,8 +619,163 @@ const createUserCode = (name, country) => {
 }
 
 
+const scanUserDocuments = async () => {
+    let date = DateTime.now().setZone('Africa/Cairo').toLocaleString(DateTime.DATETIME_MED)
+    console.log(`Start Users Scanning.... at ${date}`);
+    try {
+      
+        const users = await User.find({})
+        
+        if(users.length) {
+            
+            for(const user of users) {
+                
+                if(user.identity && user.identity.expireAt) {
+                   await documentExpiredHandler(user._id, 'identity', 'idExpired')
+                }
+                
+                if(user.passport &&  user.passport.expireAt) {
+                    await documentExpiredHandler(user._id, 'passport', 'passExpired')
+                } else {
+                    await documentMissingHandler(user._id, 'passport', 'passUpload')
+                }
+                
+                if(user.residential && user.residential.expireAt) {
+                    await documentExpiredHandler(user._id, 'residential', 'resiExpired')
+                } else {
+                    await documentMissingHandler(user._id, 'residential', 'resiUpload')
+                }
+            }
+        }
+
+    date = DateTime.now().setZone('Africa/Cairo').toLocaleString(DateTime.DATETIME_MED)
+    console.log(`Done Users Scanning!!!! at ${date}`);
+    
+    } catch (error) {
+        date = DateTime.now().setZone('Africa/Cairo').toLocaleString(DateTime.DATETIME_MED)
+        console.error("\x1b[31m", `Done Users Scanning!!!! at ${date} with ERROR: ${error.message}`);
+        console.log(error);
+    }
+}
+
+const documentExpiredHandler  = async (id, document, action) => {
+    
+    const user = await User.findById(id)
+    
+    const now = DateTime.now().setZone('Asia/Dubai').ts 
+    
+    const expiryDateObject = new Date(user[document].expireAt) 
+    const expiryDate = DateTime.fromJSDate(expiryDateObject).setZone('Asia/Dubai').ts 
+    
+    if (now > expiryDate) {
+       await takeAction(user._id, 'yellow', action)
+    } else {
+        
+        const now = DateTime.now().setZone('Asia/Dubai')
+        
+        const expiryDateObject = new Date(user[document].expireAt) 
+        const expiryDate = DateTime.fromJSDate(expiryDateObject).setZone('Asia/Dubai')
+        
+        const weekDiff = expiryDate.diff(now, ['days','hours'])
+        const weekDiffInDays = weekDiff.values.days 
+        if(weekDiffInDays < 8 && weekDiffInDays > 6) {
+            const newNotification = {
+                user:user._id, 
+                title:`Your ${capitalize(document)} About to Expire`,
+                body:`We Remind you to upload your new ${document} because you only have less than a week
+                before your ${document} EXPIRE`
+            }
+            // sent notification to user
+            const notification = new Notification(newNotification)
+            await notification.save()
+
+            const info = {
+                name:user.fullNameInEnglish,
+                email:user.emails.find(email => email.isPrimary === true).email,
+                message:`We Remind you to upload your new ${document} because you only have less than a week
+                before your ${document} EXPIRE`,
+                label:`Your ${capitalize(document)} About to Expire`
+            }
+
+            // send email to inform the user
+            await sendEmail(info, 'notice')
+        }
+    }
+}
+
+
+const documentMissingHandler = async (id, document, action) => {
+    
+    const user = await User.findById(id)
+    
+    const now = DateTime.now().setZone('Asia/Dubai')
+    const registrationDateObject = new Date(user.createdAt) 
+    const registrationDate = DateTime.fromJSDate(registrationDateObject).setZone('Asia/Dubai')
+    
+    const diff = now.diff(registrationDate, ['days', 'hours'])
+    const sinceRegistrationInDays = diff.values.days 
+    
+    if(sinceRegistrationInDays > 29 && sinceRegistrationInDays < 31) {
+        await takeAction(user._id, 'yellow', action)
+    }else if(sinceRegistrationInDays < 30){
+        const operationCount = await Operation.count({
+            $or:[
+                {"initiator.user": user._id},
+                {"peer.user":user._id}
+            ]
+        })
+        if(operationCount >= 5) {
+            if(user.lastEmailSend) {
+            
+                const now = DateTime.now().setZone('Asia/Dubai')
+                
+                const lastEmailSendDateObject = new Date(user.lastEmailSend) 
+                const lastEmailSendDate = DateTime.fromJSDate(lastEmailSendDateObject).setZone('Asia/Dubai')
+                
+                const diff = now.diff(lastEmailSendDate, ['days', 'hours'])
+                const lastEmailSendInDays = diff.values.days  
+                
+                if(lastEmailSendInDays > 2 && lastEmailSendInDays < 4) {
+                    const info = {
+                        name:user.fullNameInEnglish,
+                        email:user.emails.find(email => email.isPrimary === true).email,
+                        message:`This is a reminder E-mail to upload your ${document} because we notice you start create
+                        operations and engage with other clients`,
+                        label:`Reminder to upload Your ${capitalize(document)}`
+                    }
+
+                    // send email to inform the user
+                    await sendEmail(info, 'notice')
+                }
+            }else {
+                const info = {
+                    name:user.fullNameInEnglish,
+                    email:user.emails.find(email => email.isPrimary === true).email,
+                    message:`This is a reminder E-mail to upload your ${document} because we notice you start create
+                    operations and engage with other clients`,
+                    label:`Reminder to upload Your ${capitalize(document)}`
+                }
+
+                // send email to inform the user
+                await sendEmail(info, 'notice')
+
+                user.lastEmailSend = new Date()
+                await user.save()
+            }
+        }
+    }
+}
+
+function capitalize(string){
+    return string.charAt(0).toLocaleUpperCase() + string.slice(1)
+} 
+
 function expireAt(day) { 
     const today = new Date()
     const expiry = new Date(today)
     return expiry.setDate(today.getDate() + day)
 }
+
+cron.schedule('* 6 * * *', scanUserDocuments, {
+    timezone:'Asia/Dubai'
+})

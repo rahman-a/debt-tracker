@@ -4,10 +4,11 @@ import {v4 as uuidv4} from 'uuid'
 
 
 let pageValue = 1
+let pagesSerial = [1,2,3,4,5]
 
-const Pagination = ({count,moveToPageHandler}) => {
-    const [currentPage, setCurrentPage] = useState(1)
-    const [pages, setPages] = useState([])
+const Pagination = ({count,moveToPageHandler, resetPagination}) => {
+    const [currentPage, setCurrentPage] = useState(pageValue)
+    const [pages, setPages] = useState(pagesSerial)
     const [isNextOff, setIsNextOff] = useState(false)
     const [isPrevOff, setIsPrevOff] = useState(true)
     
@@ -41,20 +42,27 @@ const Pagination = ({count,moveToPageHandler}) => {
             setIsNextOff(false)
         }
     }
-    useEffect(() => {
-        if(count <= 5) {
-            setPages([...Array(count)].map((_, idx) => idx + 1))
-        }else {
-            setPages([1,2,3,4,5])
-        }
-    },[])
-    
+
     useEffect(() => {
         setCurrentPage(pageValue)
+        if(count <= 5) {
+            setPages([...Array(count)].map((_, idx) => idx + 1))
+        }
     },[])
-    
+
+    useEffect(() => {
+        if(resetPagination){
+            pageValue = 1 
+            pagesSerial=[1,2,3,4,5]
+            setCurrentPage(1)
+            setPages([1,2,3,4,5])
+        }
+    },[resetPagination])
+
     useEffect(() => {
         toggleButton()
+        console.log('PageValue =>', pageValue);
+        console.log('current page =>', currentPage);
     },[currentPage])
     
     const changeCurrentPage = type => {
@@ -63,17 +71,17 @@ const Pagination = ({count,moveToPageHandler}) => {
                 const pagesArray = pages.slice(1, pages.length)
                 pagesArray.push(pagesArray[pagesArray.length - 1] + 1)
                 if(pagesArray[pagesArray.length - 1] <= count) {
-                    setPages(pagesArray)
+                    pagesSerial = pagesArray
                 }
             }
             if (currentPage < count) {
                 setCurrentPage(prev => prev + 1)
             }
-        }else if ('prev') {
+        }else if (type === 'prev') {
             if(pages[0] === currentPage && currentPage > 1) {
                 let pagesArray = pages.slice(0, pages.length - 1)
                 pagesArray = [pages[0] - 1].concat(pagesArray)
-                setPages(pagesArray)
+                pagesSerial = pagesArray
             }
             if (currentPage > 1) {
                 setCurrentPage(prev => prev - 1)

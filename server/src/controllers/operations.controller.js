@@ -83,7 +83,7 @@ export const listAllOperations = async (req, res, next) => {
             }).populate('currency', 'name abbr image')
 
             if(!operation) {
-                res.status(401)
+                res.status(404)
                 throw new Error('No Operations Found')
             }
 
@@ -259,7 +259,7 @@ export const listAllOperations = async (req, res, next) => {
         }
 
         if(operations.length === 0) {
-            res.status(401)
+            res.status(404)
             throw new Error('No Operations Found')
         }
 
@@ -293,7 +293,7 @@ export const getOneOperation = async (req, res, next) => {
         }).populate('currency', 'name image abbr')
         
         if(!operation) {
-            res.status(401) 
+            res.status(404) 
             throw new Error('No Operation Found')
         }
         res.send({
@@ -310,13 +310,11 @@ export const updateOperationState = async (req, res, next) => {
     const {state} = req.query 
     const {id, notification} = req.params 
     try {
-        console.log({id, notification});
         const operation = await Operation.findById(id) 
         if(!operation) {
-            res.status(401)
+            res.status(404)
             throw new Error('No Operation Found')
         }
-        console.log('operation id', operation._id);
         const initiator = await User.findById(operation.initiator.user)
         const peer = await User.findById(operation.peer.user)
 
@@ -324,7 +322,6 @@ export const updateOperationState = async (req, res, next) => {
         await operation.save() 
         
         const targetedNotification = await Notification.findById(notification)
-        console.log('notification id', targetedNotification._id);
         targetedNotification.isRead = true 
         await targetedNotification.save()
 

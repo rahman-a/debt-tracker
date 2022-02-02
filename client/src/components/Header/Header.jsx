@@ -20,6 +20,8 @@ const Header = () => {
     const {isAuth} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
+    const navigate = useNavigate()
+    const page = useLocation().pathname
 
     const {
         loading:notify_loading, 
@@ -29,14 +31,15 @@ const Header = () => {
     const avatar = localStorage.getItem('user')
     ? JSON.parse(localStorage.getItem('user')).avatar 
     : null
-    const navigate = useNavigate()
-    const page = useLocation().pathname
+   
     
     const toggleNotifyData = type => {    
         if(type === 'notification'){
-            setToggleNotification(prev => !prev)
-            !toggleNotification && 
-            dispatch(actions.notifications.listNotification())
+            if(page !== '/notifications') {
+                setToggleNotification(prev => !prev)
+                !toggleNotification && 
+                dispatch(actions.notifications.listNotification())
+            }
         }else {
             setToggleNotification(false)
         }
@@ -77,8 +80,6 @@ const Header = () => {
         document.body.style.overflow = 'unset'
     })
 
-    
-
     useEffect(() => {
         let intervalNotificationsRequest;
         if(pushNotifications) {
@@ -91,9 +92,9 @@ const Header = () => {
 
     useEffect(() => {
         
-        // const initNotifications = setTimeout(() => {
-        //     dispatch(actions.notifications.pushNotification())      
-        // }, 5000);
+        const initNotifications = setTimeout(() => {
+            dispatch(actions.notifications.pushNotification())      
+        }, 5000);
         
         !nonRead && dispatch(actions.notifications.listNotification())
         
@@ -103,7 +104,7 @@ const Header = () => {
 
         page === '/login' && setSideMenu(false)
         
-        // return () => clearTimeout(initNotifications)
+        return () => clearTimeout(initNotifications)
     },[page, isAuth])
 
     return (

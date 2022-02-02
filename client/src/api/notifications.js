@@ -2,7 +2,14 @@ import service from './service'
 
 const notificationsAPI = {
     index(query) {
-        const queryString = new URLSearchParams(query).toString()
+        let queryObj = {}
+        for(let key in query) {
+            if(query[key]) {
+                queryObj[key] = query[key]
+            }
+        }
+        const queryString = new URLSearchParams(queryObj).toString()
+        console.log(`notifications?${queryString}`);
         return service().get(`notifications?${queryString}`)
     },
     new(data){
