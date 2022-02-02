@@ -30,7 +30,6 @@ const Documents = ({data}) => {
 
     useEffect(() => {
       createDocuments()
-      console.log('Document Data', data);
     },[data])
     
     return (

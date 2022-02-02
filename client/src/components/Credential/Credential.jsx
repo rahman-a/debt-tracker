@@ -154,7 +154,7 @@ const Credential = ({setStep}) => {
                             type='email'
                             icon={<EnvelopOpen/>}
                             custom={{marginBottom:'3rem'}}
-                            defaultValue={emails[idx] ? emails[idx]: ''}
+                            value={emails[idx] ? emails[idx]: ''}
                             inputRef={inputRef}
                             disabled={moreEmail > idx + 1}
                             onChange={(e) => setEmailsHandler(e, idx)}
@@ -180,6 +180,7 @@ const Credential = ({setStep}) => {
                 label='Password'
                 type='password'
                 icon={<Key/>}
+                value={password}
                 custom={{marginBottom:'3rem'}}
                 onChange={(e) => setPassword(e.target.value)}
             />
@@ -190,6 +191,7 @@ const Credential = ({setStep}) => {
                 label='Confirm Password'
                 type='password'
                 icon={<Key/>}
+                value={confirmPassword}
                 custom={{marginBottom:'3rem'}}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />

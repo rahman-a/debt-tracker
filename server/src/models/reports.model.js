@@ -25,6 +25,7 @@ const reportSchema = new mongoose.Schema({
         required:true,
         ref:'Currency'
     },
+    waitingForClear:Date,
     dueDate:Date,
     paymentDate:Date
 },{timestamps:true})

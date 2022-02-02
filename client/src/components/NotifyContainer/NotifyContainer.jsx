@@ -1,6 +1,5 @@
 import React from 'react'
 import style from './style.module.scss'
-import {useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {Loader} from '../../components'
 
@@ -31,7 +30,7 @@ const NotifyContainer = ({
         <div className={style.notify__container}>
             <h4>{title}</h4>
             <ul className={style.notify__list}
-            style={{height:(loading || error) ? '15rem' : 'auto'}}>
+            style={{height:(loading || error) && '15rem'}}>
                 {
                    data 
                    ? data.map(notify => {

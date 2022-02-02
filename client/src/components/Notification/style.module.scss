@@ -39,6 +39,7 @@
     &__content {
         margin-left:2rem;
         margin-right:auto;
+        width:42rem;
         h3 {
             font-size: 1.4rem;
             color:var.$main-color;
@@ -66,8 +67,8 @@
     }
 
     &__state {
-        display: grid;
         display: -ms-grid;
+        display: grid;
         place-items: center;
         position: absolute;
         right:0;

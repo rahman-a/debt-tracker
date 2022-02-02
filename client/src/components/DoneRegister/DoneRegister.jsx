@@ -69,6 +69,7 @@ const OTPCode = () => {
                         name='otp'
                         placeholder='type the code sent to your phone'
                         onChange={(e) => setPhoneCode(e.target.value)}
+                        value={phoneCode}
                         icon={<strong className={style.done__icon}>OTP</strong>}
                     />
                     <SideButton 

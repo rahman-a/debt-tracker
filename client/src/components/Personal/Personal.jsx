@@ -62,6 +62,7 @@ const Personal = ({setStep, setInfo, info}) => {
             name='fullNameInEnglish'
             label='Full Name in English'
             icon={<User/>}
+            value={englishName}
             onChange={(e) => setEnglishName(e.target.value)}
             custom={{marginBottom:'3rem'}}
             />
@@ -72,6 +73,7 @@ const Personal = ({setStep, setInfo, info}) => {
             name='fullNameInArabic'
             label='الإسم كاملاً بالعربى'
             icon={<User/>}
+            value={arabicName}
             onChange={(e) => setArabicName(e.target.value)}
             direction='right'
             custom={{marginBottom:'3rem', fontFamily:'Cairo'}}
@@ -83,6 +85,7 @@ const Personal = ({setStep, setInfo, info}) => {
             name='Company'
             label='Company You Worked for'
             icon={<Building/>}
+            value={company}
             onChange={(e) => setCompany(e.target.value)}
             custom={{marginBottom:'3rem'}}
             />

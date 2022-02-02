@@ -86,7 +86,10 @@ const userSchema = new mongoose.Schema({
                     en:String,
                     ar:String
                 },
-                label:String,
+                label:{
+                    en:String,
+                    ar:String
+                },
                 report: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref:'Report'
@@ -112,7 +115,8 @@ const userSchema = new mongoose.Schema({
     },
     phoneCode:String,
     emailCode:String,
-    authString:String
+    authString:String,
+    lastEmailSend:Date
 }, {timestamps:true})
 
 userSchema.methods.toJSON = function(){

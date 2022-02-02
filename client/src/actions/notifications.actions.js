@@ -64,15 +64,18 @@ const pushNotification = () => async (dispatch, getState) => {
         let {nonRead} = getState().listNotifications
         if(notifications) {
             notifications = [...data.notifications, ...notifications]
+            const {count} = getState().listNotifications
             dispatch({
                 type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
                 notifications,
+                count,
                 nonRead: nonRead + data.notifications.length
             })
         }else {
             dispatch({
                 type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
                 notifications:data.notifications,
+                count:data.notifications.length,
                 nonRead: data.notifications.length
             })
         }

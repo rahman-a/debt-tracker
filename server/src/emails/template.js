@@ -87,8 +87,8 @@ notice(info) {
     <div style='
         color:#2b2c33; 
         padding:2rem;'>
-        <h1>Debt Tracker</h1>
-        <p>Hello ${info.label}</p>
+        <h1>Debt Tracker ${info.label}</h1>
+        <p>Hello ${info.name}</p>
         <p style='text-transform: uppercase; font-style: italic;'>
             ${info.message}
         </p>

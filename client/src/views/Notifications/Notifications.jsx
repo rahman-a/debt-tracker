@@ -6,7 +6,9 @@ import {Spinner, CheckDouble, Times, Redo} from '../../icons'
 import actions from '../../actions'
 
 const Notifications = () => {
-   const [filter, setFilter] = useState(null)
+    const [filter, setFilter] = useState(null)
+    const [skip, setSkip] = useState(1)
+    const [resetPagination, setResetPagination] = useState(false)
     const dispatch = useDispatch()
     const {loading, error, count, notifications} = useSelector(state => state.listNotifications)
     const {isUpdated} = useSelector(state => state.updateNotification)
@@ -14,11 +16,13 @@ const Notifications = () => {
 
     
     const selectItemHandler = state => {
+        !state && setResetPagination(true)
         setFilter({state})
         dispatch(actions.notifications.listNotification({state}))
     }
 
     const paginateHandler = skip => {
+        setSkip(skip.skip)
         filter 
         ? dispatch(actions.notifications.listNotification({...skip, ...filter}))
         :dispatch(actions.notifications.listNotification(skip))
@@ -35,7 +39,11 @@ const Notifications = () => {
     }
 
     useEffect(() => {
-        !message && isUpdated && dispatch(actions.notifications.listNotification())
+    notifications && setResetPagination(false)
+    },[notifications])
+
+    useEffect(() => {
+        !message && isUpdated && dispatch(actions.notifications.listNotification({skip}))
         message && setTimeout(() => {
             dispatch(actions.notifications.listNotification())
         },2000);
@@ -58,17 +66,19 @@ const Notifications = () => {
                         </div>
                       </div>
                     </div>
-                    <div className={style.notifications__list}>
-                        {
-                            loading 
-                            ?   <Loader size='15' center options={{animation:'border'}}/>
-                            : error || notifications?.length < 1
-                            ?   <HeaderAlert size='2'
+                        <div className={style.notifications__list}
+                        style={{height:loading ? '75vh' :'unset'}}>
+                            {loading && <Loader size='15' center options={{animation:'border'}}/>}
+                            { (error || notifications?.length < 1)
+                            &&  <HeaderAlert size='2'
                                 type='danger' 
-                                text={error || 'No Notifications Found'}/>
-                            : notifications && notifications.length > 0 &&
+                                text={error || 'No Notifications Found'}/> 
+                            }
+                            {
+                               notifications && notifications.length > 0 &&
                                 notifications.map(notification => (
-                                    <Notification key={notification._id} data={{
+                                    <Notification key={notification._id}
+                                    data={{
                                     id:notification._id,
                                     isRead:notification.isRead,
                                     image:notification.user.avatar 
@@ -85,14 +95,14 @@ const Notifications = () => {
                                     : null
                                     }}/>
                                 ))
-                        }
-
-                    </div>
-                   {
-                   notifications?.length > 1
-                   && <Pagination 
-                   count={Math.ceil(count/5)}
-                   moveToPageHandler={(skip) => paginateHandler(skip)}/> }
+                            }
+                        </div>
+                   
+                  { !loading && !error && <Pagination 
+                    count={Math.ceil(count/5)}
+                    resetPagination={resetPagination}
+                    moveToPageHandler={(skip) => paginateHandler(skip)}/>
+                  }
                 </div>
             </div>
         </div>
@@ -100,12 +110,3 @@ const Notifications = () => {
 }
 
 export default Notifications
-/**
- * <Notification data={{
-                            image:'/images/photos/photo-1.png',
-                            title:'Operation Initiate',
-                            message:'You been selected as second peer (creditor) in an operation',
-                            date:'12/01/2022',
-                            state:'pending'
-                        }}/>
- */
