@@ -15,7 +15,7 @@ import {
 import {ArrowRight} from '../../icons'
 
 const Register = () => {
-    const [step, setStep] = useState(6)
+    const [step, setStep] = useState(1)
     const [info, setInfo] = useState({})
     const navigate = useNavigate()
     
