@@ -500,9 +500,10 @@ async function sendConfirmCodeToPhone(id, email) {
         }
         const phone = user.insidePhones.find(phone => phone.isPrimary === true).phone
         const code = generateRandomCode(6)
+        const country = user.country.name
         user.phoneCode = code 
         await user.save()
-        sendSMS(phone,code)
+        sendSMS(phone,code,country)
     } catch (error) {
         throw new Error(error)
     }  
