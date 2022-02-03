@@ -1,10 +1,13 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {Alert} from 'react-bootstrap'
+import { useSelector, useDispatch } from 'react-redux'
+import actions from '../../actions'
+import constants from '../../constants'
 import {Input, Button, DateInput} from '../../components'
 import {AddressCard} from '../../icons'
 
-const Documents = ({setStep, setDocuments}) => {
+const Documents = ({setStep}) => {
     const [errors, setErrors] = useState(null)
     const [images, setImages] = useState({
         avatar:null,
@@ -20,6 +23,10 @@ const Documents = ({setStep, setDocuments}) => {
         residential:'Residential Document'
     })
     
+    const dispatch = useDispatch()
+    const {loading, error, isDone} = useSelector(state => state.registerDocuments)
+    const {userId} = useSelector(state => state.registerCredential)
+
     const [expireAt, setExpiryAt] = useState({})
 
     const uploadFileHandler = e => {        
@@ -34,13 +41,6 @@ const Documents = ({setStep, setDocuments}) => {
     const getExpiryDate = (name, value) => {
         setExpiryAt({...expireAt, [name]: value})
     }
-
-    // TO DO ==> FORM VALIDATION 
-    /**
-     * force to choose avatar
-     * force to choose identity and expiry date
-     * if user choose passport or residential, force to choose expiry date 
-     */
 
     const moveNextHandler = _ => {
       if(!images.avatar) {
@@ -69,10 +69,30 @@ const Documents = ({setStep, setDocuments}) => {
             return
         }
       }
-       setDocuments({...images, expireAt})
-       setStep(6)
+      const allDocuments = {...images, expireAt}
+       const data = new FormData()
+        for(let doc in allDocuments) {
+            if(doc === 'expireAt') {
+                const expiry = JSON.stringify(allDocuments[doc])
+                data.append('expireAt', expiry)
+            }else {
+                data.append(doc, allDocuments[doc])
+            }
+        }
+        dispatch(actions.users.registerDocuments(userId, data, 'not_taken'))
     }
     
+    useEffect(() => {
+     error && setErrors(error)
+    },[error])
+
+    useEffect(() => {
+        errors && window.scrollTo(0,0)
+        if(isDone) {
+            dispatch({type:constants.users.REGISTER_DOCUMENTS_RESET})
+            setStep(6)
+        } 
+    },[errors, isDone])
     
     return (
         <>
@@ -142,7 +162,7 @@ const Documents = ({setStep, setDocuments}) => {
             <hr/>
         </div>
 
-        <Button value='next' handler={moveNextHandler}/> 
+        <Button value='next' handler={moveNextHandler} loading={loading && loading}/> 
 
         </>
     )

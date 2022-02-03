@@ -7,6 +7,7 @@
     button {
         all:unset;
         position: relative;
+        display: -ms-grid;
         display: grid;
         place-items: center;
         background-color: var.$white-color;
@@ -69,6 +70,15 @@
                 color:#c0c1c2;
                 cursor:not-allowed;
             }
+        }
+    }
+
+    &__skip {
+        display: inline-block;
+        padding: 0.5rem 0;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
         }
     }
 }

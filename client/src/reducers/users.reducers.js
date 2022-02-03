@@ -51,7 +51,7 @@ const registerDocuments = (state, action) => {
         : {loading:false, error:action.payload},
 
         [constants.users.REGISTER_DOCUMENTS_RESET]
-        : {loading:false, error:null, isDone:null}
+        : {loading:false, error:null, isDone:false}
     }
 
     return cases[action.type] || {...state}

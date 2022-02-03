@@ -7,7 +7,7 @@ import {Alert} from 'react-bootstrap'
 import actions from '../../actions'
 import {Loader} from '../../components'
 
-const VerificationSnapshot = ({setStep, documents}) => {
+const VerificationSnapshot = ({setStep}) => {
     const [imgSrc, setImgSrc] = useState('')
     const [isTaken, setIsTaken] = useState(false)
     const [snapshot, setSnapshot] =useState(null)
@@ -35,16 +35,8 @@ const VerificationSnapshot = ({setStep, documents}) => {
     )
 
     const uploadDocumentsHandler = _ => {
-        const allDocuments = {...documents,verificationImage:snapshot}
         const data = new FormData()
-        for(let doc in allDocuments) {
-            if(doc === 'expireAt') {
-                const expiry = JSON.stringify(allDocuments[doc])
-                data.append('expireAt', expiry)
-            }else {
-                data.append(doc, allDocuments[doc])
-            }
-        }
+        data.append('verificationImage', snapshot)
         dispatch(actions.users.registerDocuments(userId, data))
     }
     
@@ -60,7 +52,7 @@ const VerificationSnapshot = ({setStep, documents}) => {
             ...constraints
           };
     }
-    
+
     useEffect(() => {
         error && window.scrollTo(0,0)
         isDone && setStep(7)
@@ -76,6 +68,10 @@ const VerificationSnapshot = ({setStep, documents}) => {
                 <p>Click to open the camera</p>
             </button> */}
             <div className={style.snapshot__photo}>
+            <span className={style.snapshot__skip}
+            onClick={() => setStep(7)}>
+                skip this step
+            </span>
                 <Webcam
                     key={uuidv4()}
                     audio={false}

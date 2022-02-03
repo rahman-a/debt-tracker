@@ -92,7 +92,7 @@ const Header = () => {
 
     useEffect(() => {
         
-        const initNotifications = setTimeout(() => {
+        const initNotifications = isAuth && setTimeout(() => {
             dispatch(actions.notifications.pushNotification())      
         }, 5000);
         

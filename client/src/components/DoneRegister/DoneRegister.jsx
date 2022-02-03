@@ -34,11 +34,12 @@ const OTPCode = () => {
     }
     
     useEffect(() => {
-        message && setCompleteCreation(true)
-        error && window.scrollTo(0,0)
-        return () => {
+        if(message){
             dispatch({type:constants.users.VERIFY_PHONE_CODE_RESET})
+            setCompleteCreation(true)
         }
+        error && window.scrollTo(0,0)
+        error && console.log('Error Phone', error)
     },[message, error])
     return (
         <div className={style.done}>
@@ -75,7 +76,7 @@ const OTPCode = () => {
                     <SideButton 
                     noIcon 
                     text={!loading && <Verify/>} 
-                    loading={loading ? true : false}
+                    loading={loading}
                     handler={verifyPhoneCodeHandler}/>
                 </div>
                 <button 

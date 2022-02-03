@@ -29,10 +29,10 @@ const registerInfo = (id, info) => async (dispatch) => {
     }
 }
 
-const registerDocuments = (id, info) => async (dispatch) => {
+const registerDocuments = (id, info, snapshot) => async (dispatch) => {
     dispatch({type:constants.users.REGISTER_DOCUMENTS_REQUEST}) 
     try {
-        const {data} = await api.users.registerDocuments(id, info)
+        const {data} = await api.users.registerDocuments(id, info, snapshot)
         dispatch({type: constants.users.REGISTER_DOCUMENTS_SUCCESS, payload: data.isDone})
     } catch (error) {
         dispatch({

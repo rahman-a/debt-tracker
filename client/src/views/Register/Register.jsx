@@ -15,9 +15,8 @@ import {
 import {ArrowRight} from '../../icons'
 
 const Register = () => {
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(6)
     const [info, setInfo] = useState({})
-    const [documents, setDocuments] = useState({})
     const navigate = useNavigate()
     
     const Component = {
@@ -25,8 +24,8 @@ const Register = () => {
         2: <Personal setStep={setStep} setInfo={setInfo} info={info}/>,
         3: <Address setStep={setStep} setInfo={setInfo} info={info}/>,
         4: <Phones setStep={setStep} info={info}/>,
-        5: <Documents setStep={setStep} setDocuments={setDocuments}/>,
-        6: <Snapshot setStep={setStep} documents={documents}/>,
+        5: <Documents setStep={setStep}/>,
+        6: <Snapshot setStep={setStep}/>,
         7: <Done setStep={setStep}/>
     }
 

@@ -83,11 +83,12 @@ export const completeRegistration = async (req, res, next) => {
 // [personal image, verification image, identity, passport, residential]
 export const registerDocument = async (req, res, next) => {
     const {id} = req.params 
-
+    const {snapshot} = req.query
     try {
-        const expireAt = JSON.parse(req.body.expireAt);
-        // console.log('Expire',expireAt);
-        // console.log('Files',req.files);
+        let expireAt = null
+        if(snapshot === 'not_taken') {
+            expireAt = JSON.parse(req.body.expireAt);
+        }
         const user = await User.findById(id) 
         let docObject;
         let fileType;
@@ -142,8 +143,9 @@ export const registerDocument = async (req, res, next) => {
         await user.save()
         
         await takeAction(user._id, 'green')  
-
-        await sendConfirmCodeToPhone(user._id) 
+        if(snapshot === 'not_taken') {
+            await sendConfirmCodeToPhone(user._id) 
+        }
         res.send({
             success:true,
             doc:docObject,

@@ -7,8 +7,8 @@ const userAPI = {
     registerInfo(id, data) {
         return service().patch(`users/register/${id}`, data)
     },
-    registerDocuments(id, data) {
-        return service().patch(`users/register/documents/${id}`, data)
+    registerDocuments(id, data, snapshot) {
+        return service().patch(`users/register/documents/${id}?snapshot=${snapshot}`, data)
     },
     sendVerifyCodeToPhone(id, email) {
         const url = !id && email 
