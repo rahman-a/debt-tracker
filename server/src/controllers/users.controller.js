@@ -570,8 +570,8 @@ async function sendAuthLink (user, req, type) {
         await user.save()
         
         // compose the url
-        // const resetUrl = `${req.protocol}://${req.hostname}/${type}?TOKEN=${token}`
-        const resetUrl = `${req.protocol}://localhost:3000/${type}?TOKEN=${token}`
+        const resetUrl = `${req.protocol}://${req.hostname}/#/${type}?TOKEN=${token}`
+        // const resetUrl = `${req.protocol}://localhost:3000/${type}?TOKEN=${token}`
         const info = {
             link:resetUrl,
             name:user.fullNameInEnglish,

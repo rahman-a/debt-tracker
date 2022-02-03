@@ -27,7 +27,7 @@ databaseConnection()
 // middlewares
 app.use(express.json())
 app.use(cors())
-app.use(helmet())
+// app.use(helmet())
 app.use(cookieParser())
 app.use(morgan('dev'))
 
