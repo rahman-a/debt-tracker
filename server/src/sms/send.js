@@ -11,7 +11,7 @@ const sendSMS = (phone, code, country) => {
    client.messages.create({
         body: template.verification(code),
         from:'+19402863101',
-        to:`${country === 'Egypt' ? '+2' : '+971'}${phone}`
+        to:`+971${phone}`
     })
     .then(message => console.log(`message sent to ${phone} with sid ${message.sid}`))
     .catch(error => {

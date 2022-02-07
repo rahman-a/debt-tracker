@@ -228,6 +228,7 @@ export const sendEmailVerificationLink = async (req, res, next) => {
 // User Authentication using email and password
 export const login = async (req, res, next) => {
     const {email, password} = req.body 
+    
     try {
       const user = await User.AuthUser(email, password, res) 
       res.send({

@@ -20,6 +20,11 @@ import {
 } from '../controllers/users.controller.js'
 
 import {
+    login as staffLogin,
+    logoutHandler as staffLogout
+} from '../controllers/admin.controllers.js'
+
+import {
     isAuth
 } from '../middlewares/auth.js'
 
@@ -48,5 +53,8 @@ router.get('/me', isAuth, sendUserData)
 router.post('/logout', isAuth, logoutHandler)
 router.patch('/password/update',isAuth,  updateUserPassword)
 router.get('/search',isAuth,  findUserHandler)
+
+router.post('/staff/login', staffLogin)
+router.post('/staff/logout', staffLogout)
 
 export default router

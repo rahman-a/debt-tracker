@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken'
 
 export const isAuth = async (req, res, next) => {
     try {
-        if(req.cookies['token']) {
-            const token = req.cookies['token'] 
+        if(req.cookies['token'] || req.cookies['tkid']) {
+            const token = req.cookies['token'] || req.cookies['tkid']
             const decode = jwt.verify(token, process.env.JWT_TOKEN, (error, decode) => {
                 if(error) throw new Error('Please Login First') 
                 return decode

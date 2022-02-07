@@ -326,7 +326,6 @@ export const updateOperationState = async (req, res, next) => {
         await targetedNotification.save()
 
         if(state === 'active') {
-            console.log({state});
             const reportData = {
                 operation:operation._id,
                 credit: operation.initiator.type === 'credit'

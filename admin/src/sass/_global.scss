@@ -1,0 +1,104 @@
+@use '../sass/media.scss' as *;
+@use '../sass/variables.scss' as var;
+
+html  {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    @include mq(xl) {
+        font-size: 60%;
+    }
+    @include mq(lg){
+        font-size: 58%;
+    }
+    @include mq(md) {
+        font-size: 56%;
+    }
+    @include mq(sm) {
+        font-size: 54%;
+    }
+}
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+}
+
+p {
+    margin:0;
+}
+
+body {
+    font-family: var(--main-font);
+    font-size: 1.6rem;
+    line-height: 1.6;
+}
+
+.container {
+    max-width:80%;
+    margin:0 auto;
+    @include mq(xl){
+        max-width: 90% !important;
+    }
+    @include mq(md) {
+        max-width: 98% !important;
+        margin:0 !important;
+        height: 100%;
+    }
+}
+
+// customize carousel
+.control-dots {
+    .dot {
+        width: 2rem !important;
+        height: 2rem !important;
+        background-color: var(--light-color) !important;
+        z-index:9999;
+        @include mq(xs){
+            width:1.5rem !important;
+            height: 1.5rem !important;
+            margin:0 5px !important;
+        }
+    }
+    .selected {
+        background-color: var(--main-color) !important;
+    }
+}
+
+//  React Data-Picker
+.react-date-picker {
+    width: 100%;
+    &__wrapper {
+        border-radius: 2rem;
+        overflow: hidden;
+        background-color: #fff;
+        button {
+            svg {
+                rect {
+                    stroke:var.$full-light-color !important;
+                }
+                line {
+                    stroke:var.$full-light-color !important;
+                }
+            }
+        }
+    }
+    &__inputGroup {
+        padding:1.2rem 2rem !important;
+        width:100%;
+        &__input {
+            padding:0 !important;
+        }
+    }
+    
+}
+
+
+
+@media (min-width:576px) {
+    .modal-dialog {
+        min-width:65rem;
+    }
+}
