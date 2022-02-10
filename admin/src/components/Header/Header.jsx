@@ -11,13 +11,12 @@ const Header = () => {
     const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
-    const [navbarColor, setNavbarColor] = useState('rgba(26, 55, 77, 0.7)')
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
     const dispatch = useDispatch()
-    const {isAuth} = useSelector(state => state.login)
+    const {isAuth, staff} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
     const navigate = useNavigate()
@@ -28,11 +27,7 @@ const Header = () => {
         error:notify_error, 
         notifications
     } = useSelector(state => state.listNotifications)
-    const avatar = localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')).avatar 
-    : null
    
-    
     const toggleNotifyData = type => {    
         if(type === 'notification'){
             if(page !== '/notifications') {
@@ -80,32 +75,26 @@ const Header = () => {
         document.body.style.overflow = 'unset'
     })
 
-    useEffect(() => {
-        let intervalNotificationsRequest;
-        if(pushNotifications) {
-            intervalNotificationsRequest = setTimeout(() => {
-              dispatch(actions.notifications.pushNotification())
-             },1000 * 30)
-        }
-        return () => clearTimeout(intervalNotificationsRequest)
-    },[pushNotifications])
+    // useEffect(() => {
+    //     let intervalNotificationsRequest;
+    //     if(pushNotifications) {
+    //         intervalNotificationsRequest = setTimeout(() => {
+    //           dispatch(actions.notifications.pushNotification())
+    //          },1000 * 30)
+    //     }
+    //     return () => clearTimeout(intervalNotificationsRequest)
+    // },[pushNotifications])
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        const initNotifications = isAuth && setTimeout(() => {
-            dispatch(actions.notifications.pushNotification())      
-        }, 5000);
+    //     const initNotifications = isAuth && setTimeout(() => {
+    //         dispatch(actions.notifications.pushNotification())      
+    //     }, 5000);
         
-        !nonRead && dispatch(actions.notifications.listNotification())
-        
-        page === '/' 
-        ? setNavbarColor('rgba(26, 55, 77, 0.7)')
-        : setNavbarColor('#1A374D')
-
-        page === '/login' && setSideMenu(false)
-        
-        return () => clearTimeout(initNotifications)
-    },[page, isAuth])
+    //     !nonRead && dispatch(actions.notifications.listNotification())
+    
+    //     return () => clearTimeout(initNotifications)
+    // },[page, isAuth])
 
     return (
         <>
@@ -122,10 +111,7 @@ const Header = () => {
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
             
             <div className={style.header}
-            style={{
-                backgroundColor:navbarColor,
-                display: (page === '/login' || page === '/register') ?'none' :'block'
-                }}>
+            style={{ display:page === '/login' ?'none' :'block' }}>
                
                 <div className="container">
                     <div className={style.header__wrapper}>
@@ -211,8 +197,8 @@ const Header = () => {
 
                                 <span>
                                     <img src={
-                                        avatar 
-                                        ? `/api/files/${avatar}`
+                                       staff && staff.avatar  
+                                        ? `/api/files/${staff.avatar}`
                                         :"/images/photos/photo-1.png"
                                     } alt="personal avatar" />
                                 </span>

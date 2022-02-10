@@ -4,8 +4,8 @@
 .segment {
 
     & > div {
-        display: grid;
         display: -ms-grid;
+        display: grid;
         place-items: center;
     }
     &__doc {
@@ -35,8 +35,8 @@
             height: 10rem;
             border-radius: 1rem;
             border:1px dashed var.$main-color;
-            display: grid;
             display: -ms-grid;
+            display: grid;
             place-items: center;
             font-size: 1.4rem;
             font-weight: 300;

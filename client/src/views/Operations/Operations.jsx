@@ -34,6 +34,10 @@ const Operation = () => {
     }
 
     useEffect(() => {
+        loading && setIsFilter(false)
+      },[loading])
+
+    useEffect(() => {
        dispatch(actions.operations.listAllOperations())
        return () => dispatch({type:constants.operations.LIST_OPERATIONS_RESET})
     },[])
@@ -45,7 +49,13 @@ const Operation = () => {
                 onClick={() => setIsFilter(false)}>
                 <Times/>
             </span>
-            <Filter/>
+            <Filter
+            op 
+            filterOperationHandler={filterOperationHandler}
+            resetFilterOperations={resetFilterOperations}
+            searchFilter={searchFilter}
+            setSearchFilter={setSearchFilter}
+            />
         </Modal>
         <div className={style.operation}>
             <h1>Operations Records</h1>

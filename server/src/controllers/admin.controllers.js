@@ -19,7 +19,7 @@ export const login = async (req, res, next) => {
         res.json({
             success:true, 
             code:200,
-            staff: {_id:staff._id, name:staff.fullNameInEnglish},
+            staff: {_id:staff._id, avatar:staff.avatar, roles:staff.roles},
             expiryAdAt: expireAt(7),
         })
 

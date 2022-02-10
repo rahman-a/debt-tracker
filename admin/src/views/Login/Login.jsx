@@ -10,7 +10,7 @@ const Login = () => {
     
     useEffect(() => {
         isAuth && console.log({isAuth});
-        isAuth && navigate('/dashboard')
+        isAuth && navigate('/')
     },[isAuth])
     
     return (

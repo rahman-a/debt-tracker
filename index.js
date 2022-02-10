@@ -27,16 +27,20 @@ databaseConnection()
 // middlewares
 app.use(express.json())
 app.use(cors())
-// app.use(helmet())
+app.use(helmet())
 app.use(cookieParser())
 app.use(morgan('dev'))
 
 if(process.env.NODE_ENV === 'production') {
+    
     app.use(express.static(path.resolve(__dirname, 'client/build')))
+
     app.use(express.static(path.resolve(__dirname, 'admin/build')))
-    app.get('/', (req, res) => {
+    
+    app.get('', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/build/index.html'))
     })
+    
     app.get('/dashboard', (req, res) => {
         res.sendFile(path.join(__dirname, 'admin/build/index.html'))
     })

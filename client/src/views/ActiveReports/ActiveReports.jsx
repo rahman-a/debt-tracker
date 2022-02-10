@@ -47,6 +47,10 @@ const Reports = () => {
     }
 
     useEffect(() => {
+        loading && setIsFilter(false)
+    },[loading])
+
+    useEffect(() => {
         dispatch(actions.reports.listAllReports())
         return () => dispatch({type:constants.reports.REPORTS_ALL_RESET})
      },[])
@@ -58,7 +62,13 @@ const Reports = () => {
                 onClick={() => setIsFilter(false)}>
                 <Times/>
             </span>
-            <Filter/>
+            <Filter
+            isDueDate={!isDueDate}
+            searchFilter={searchFilter} 
+            setSearchFilter={setSearchFilter}
+            filterOperationHandler={filterOperationHandler}
+            resetFilterOperations={resetFilterOperations}
+            />
         </Modal>
         <div className={style.reports}>
             {/* <button className={style.reports__end}>

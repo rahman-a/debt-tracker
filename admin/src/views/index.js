@@ -1,3 +1,5 @@
 export {default as Login} from './Login/Login'
-export {default as Home} from './Home/Home'
+export {default as Dashboard} from './Dashboard/Dashboard'
 export {default as ResetPassword} from './ResetPassword/ResetPassword'
+export {default as Members} from './Members/Members'
+export {default as Member} from './Member/Member'

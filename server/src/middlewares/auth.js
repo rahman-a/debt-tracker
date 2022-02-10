@@ -27,6 +27,27 @@ export const isAuth = async (req, res, next) => {
     }
 }
 
+export const checkRoles = (...requiredRoles) => {
+    return (req, res, next)  => {
+        try {
+            const allowedRoles = [...requiredRoles]
+            const userRoles = req.user.roles 
+
+            const isFound = userRoles.map(role => allowedRoles.includes(role)).find(val => val === true)
+            
+            if(!isFound) {
+                res.status(401)
+                throw new Error('Not Authorized to Handle that request')
+            }
+            
+            next()
+        } catch (error) {
+            next(error)
+        }
+    }
+
+}
+
 export const verifyAPIKey = async (req, res, next) => {
     try {
         if(req.headers.apikey) {

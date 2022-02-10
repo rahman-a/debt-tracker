@@ -16,7 +16,7 @@ const Filter = ({
 
     const searchFilterHandler = e => {
         const value = {[e.target.name]: e.target.value}
-        setSearchFilter({...setSearchFilter, ...value})
+        setSearchFilter({...searchFilter, ...value})
     }
 
     const selectSearchFilterHandler = filter => {
@@ -36,10 +36,17 @@ const Filter = ({
         setSearchFilter(resetFilterObject)
         resetFilterOperations()
     }
+
+    const startFilterProcessOnEnter = e => {
+        if(e.keyCode === 13 || e.which === 13) {
+            filterOperationHandler()
+        }
+    }
     
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
-        style={{justifyContent:isDueDate ? 'center' :'unset'}}>
+        style={{justifyContent:isDueDate ? 'center' :'unset'}}
+        onKeyDown={startFilterProcessOnEnter}>
             
             <div className={style.filter__input}>
                 <Input

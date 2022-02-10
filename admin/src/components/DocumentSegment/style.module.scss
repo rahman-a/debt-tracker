@@ -1,0 +1,57 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.segment {
+    margin-right:1rem;
+    & > div {
+        display: -ms-grid;
+        display: grid;
+        place-items: center;
+    }
+    &__doc {
+        border-radius: 1rem;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        img {
+            width:11rem;
+            height: 8rem;
+            @include media.mq(sm){
+                width:9rem;
+                height: 7rem;
+            }
+        }
+        span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &__backdrop {
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background-color:rgba(0,0,0,0.5);
+    }
+
+    p {
+        color:var.$main-color;
+        margin-top:0.5rem;
+        font-size: 1.1rem;
+        text-align: center;
+        @include media.mq(sm) {
+            font-size: 1rem;
+        }
+    }
+
+    &__image {
+        text-align: center;
+        img {
+            max-width: 50rem;
+        }
+    }
+}

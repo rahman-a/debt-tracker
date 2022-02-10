@@ -13,6 +13,31 @@ const adminAPI = {
     verifyAuthLink(data) {
         return service().patch(`users/verify`, data)
     },
+    members(query) {
+        let queryObj = {}
+        for(let key in query) {
+            if(key === 'isActive' || key === 'isProvider') {
+                queryObj[key] = query[key]
+            }else if(query[key]) {
+                queryObj[key] = query[key]
+            }
+        }
+        const queryString = new URLSearchParams(queryObj).toString()
+        return service().get(`users/all?${queryString}`)
+    },
+
+    member(id) {
+        return service().get(`users/me/${id}`)
+    },
+    toggle(id) {
+        return service().patch(`users/activate/${id}`)
+    },
+    color(id, data) {
+        return service().patch(`users/color/${id}`, data)
+    },
+    delete(id) {
+        return service().delete(`users/${id}`)
+    }
 }
 
 export default adminAPI

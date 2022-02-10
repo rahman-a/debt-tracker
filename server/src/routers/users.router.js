@@ -16,7 +16,11 @@ import {
     sendLoginCodeHandler,
     logoutHandler,
     updateUserPassword,
-    findUserHandler
+    findUserHandler,
+    listAllUsers,
+    deleteUser,
+    toggleUserActivation,
+    changeUserColorCode
 } from '../controllers/users.controller.js'
 
 import {
@@ -25,7 +29,8 @@ import {
 } from '../controllers/admin.controllers.js'
 
 import {
-    isAuth
+    isAuth,
+    checkRoles
 } from '../middlewares/auth.js'
 
 import {uploadHandler} from '../middlewares/uploads.js'
@@ -49,12 +54,17 @@ router.post('/login', login)
 router.get('/login/code/new/:id', sendLoginCodeHandler)
 router.patch('/login/code/verify/:id', verifyLoginCodeHandler)
 router.get('/password/reset', sendPasswordResetLink)
-router.get('/me', isAuth, sendUserData)
+router.get('/me/:id?', isAuth, sendUserData)
 router.post('/logout', isAuth, logoutHandler)
 router.patch('/password/update',isAuth,  updateUserPassword)
 router.get('/search',isAuth,  findUserHandler)
 
+// DASHBOARD ROUTERS
 router.post('/staff/login', staffLogin)
 router.post('/staff/logout', staffLogout)
+router.get('/all', isAuth, checkRoles('manager', 'hr'), listAllUsers)
+router.delete('/:id', isAuth, checkRoles('manager', 'hr'), deleteUser)
+router.patch('/activate/:id', isAuth, checkRoles('manager', 'hr'), toggleUserActivation)
+router.patch('/color/:id', isAuth, checkRoles('manager', 'hr'), changeUserColorCode)
 
 export default router

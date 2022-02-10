@@ -131,11 +131,167 @@ const VerifyAuthLink = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const members = (state, action) => {
+    const cases = {
+        [constants.admin.USERS_LIST_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USERS_LIST_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            members:action.users,
+            count:action.count
+        },
+        [constants.admin.USERS_LIST_FAIL]: 
+        {
+            loading:false,
+            error:action.payload
+        },
+        [constants.admin.USERS_LIST_RESET]: 
+        {
+            loading:false,
+            error:null,
+            members:null,
+            count:0
+        }
+    }
+    return cases[action.type] || {...state}
+}
+
+const member = (state, action) => {
+    const cases = {
+        [constants.admin.USER_DATA_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USER_DATA_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            member:action.payload,
+        },
+        [constants.admin.USER_DATA_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.USER_DATA_RESET]: 
+        {
+            loading:false,
+            error:null,
+            member:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
+
+const toggleUser = (state, action) => {
+    const cases = {
+        [constants.admin.USER_TOGGLE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USER_TOGGLE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            isConfirmed:action.payload,
+        },
+        [constants.admin.USER_TOGGLE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.USER_TOGGLE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            isConfirmed:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const userColorCode = (state, action) => {
+    const cases = {
+        [constants.admin.USER_COLOR_CHANGE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USER_COLOR_CHANGE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload,
+        },
+        [constants.admin.USER_COLOR_CHANGE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.USER_TOGGLE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const deleteUser = (state, action) => {
+    const cases = {
+        [constants.admin.USER_DELETE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USER_DELETE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload,
+        },
+        [constants.admin.USER_DELETE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.USER_DELETE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducer = {
     login,
     sendResetLink,
     VerifyAuthLink,
-    logout
+    logout,
+    members,
+    member,
+    toggleUser,
+    userColorCode,
+    deleteUser
 }
 
 export default reducer

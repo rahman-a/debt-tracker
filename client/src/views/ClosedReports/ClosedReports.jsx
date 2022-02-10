@@ -39,6 +39,10 @@ const Reports = () => {
     }
 
     useEffect(() => {
+        loading && setIsFilter(false)
+    },[loading])
+
+    useEffect(() => {
         dispatch(actions.reports.listAllReports({isActive:false}))
         return () => dispatch({type:constants.reports.REPORTS_ALL_RESET})
      },[])
@@ -51,7 +55,13 @@ const Reports = () => {
                 onClick={() => setIsFilter(false)}>
                 <Times/>
             </span>
-            <Filter/>
+            <Filter
+            closed 
+            setSearchFilter={setSearchFilter} 
+            searchFilter={searchFilter}
+            filterOperationHandler={filterOperationHandler}
+            resetFilterOperations={resetFilterOperations}
+            />
         </Modal>
         <div className={style.reports}>
             <h1>Closed Reports Records</h1>

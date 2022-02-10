@@ -415,11 +415,23 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
 
 // Send the user data
 export const sendUserData = async (req, res, next) => {
-    
+        const {id} = req.params 
     try {
-        const user ={...req.user._doc} 
+        let user = null 
         
-
+        if(id) {
+            if(req.user.roles.includes('manager')
+            || req.user.roles.includes('hr')) {
+                const userData = await User.findById(id)
+                user = {...userData._doc}
+            } else {
+                res.status(401)
+                throw new Error('Not Authorized to handle request')
+            }
+        } else {
+            user ={...req.user._doc} 
+        }
+        
         if(user.identity){
             const now = DateTime.now().ts
             const date = new Date(user.identity.expireAt)
@@ -480,6 +492,213 @@ export const updateUserPassword = async (req, res, next) => {
     }
 }
 
+
+////////////////////////////////////////////////////
+//////////////// Dashboard Routers
+/////////////////////////////////////////////////// 
+
+// LIST ALL USERS FOR ADMIN DASHBOARD 
+export const listAllUsers = async (req, res, next) => {
+    const {
+        skip, 
+        arabicName, 
+        englishName, 
+        code, 
+        username,
+        color,
+        isProvider,
+        isActive,
+        email,
+        phone,
+        country
+    }  = req.query
+    
+    let searchFilter = {}
+    
+    try {
+        if(code) {
+            searchFilter = {
+                ...searchFilter,
+                code
+            }
+        }
+        if(arabicName) {
+            searchFilter = {
+                ...searchFilter,
+                fullNameInArabic: {
+                    $regex:arabicName,
+                    $options:'i'
+                }
+            }
+        }
+        if(englishName) {
+            searchFilter = {
+                ...searchFilter,
+                fullNameInEnglish: {
+                    $regex:englishName,
+                    $options:'i'
+                }
+            }
+        }
+        if(email) {
+            searchFilter = {
+                ...searchFilter,
+                "emails.email": email
+            }
+        }
+        if(phone) {
+            searchFilter = {
+                ...searchFilter,
+                "insidePhones.phone":phone
+            }
+        }
+        if(country) {
+            searchFilter = {
+                ...searchFilter,
+                "country.name": {
+                    $regex:country,
+                    $options:'i'
+                }
+            }
+        }
+        if(username) {
+            searchFilter = {
+                ...searchFilter,
+                username
+            }
+        }
+        if(color) {
+            searchFilter = {
+                ...searchFilter,
+                "colorCode.code":color
+            }
+        }
+        if(isProvider) {
+            searchFilter = {
+                ...searchFilter,
+                isProvider: isProvider === 'true'
+            }
+        }
+
+        if(isActive) {
+            searchFilter = {
+                ...searchFilter,
+                isAccountConfirmed: isActive === 'true'
+            }
+        }
+
+        const users = await User.find({...searchFilter}, {
+            _id:1,
+            fullNameInEnglish:1,
+            code:1,
+            avatar:1,
+            colorCode:1,
+            createdAt:1,
+            isAccountConfirmed:1
+        }).limit(10).skip(parseInt(skip) || 0)
+        if(!users.length) {
+            res.status(404)
+            throw new Error('No Users Found in the Database')
+        }
+        const count = await User.count({...searchFilter})
+        
+        res.send({
+            code:200,
+            success:true,
+            users,
+            count
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// DELETE USER ROUTER 
+export const deleteUser = async (req, res, next) => {
+    const {id} = req.params 
+
+    try {
+        const user = await User.findById(id) 
+        if(!user) {
+            res.status(404)
+            throw new Error('No User Found to Delete')
+        }
+        await user.remove()
+        res.send({
+            code:200,
+            success:true,
+            message:`${user.fullNameInEnglish} has been deleted`
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// TOGGLE USER ACTIVATION 
+
+export const toggleUserActivation = async (req, res, next) => {
+    const {id} = req.params 
+
+    try {
+        const user = await User.findById(id) 
+        if(!user) {
+            res.status(404) 
+            throw new Error('No User Found')
+        }
+        user.isAccountConfirmed = !user.isAccountConfirmed
+        await user.save() 
+    
+        res.send({
+            success:true,
+            code:200,
+            isConfirmed: user.isAccountConfirmed
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const changeUserColorCode = async (req, res, next) => {
+    const {id} = req.params 
+    const {code, state} = req.body 
+    
+    try {
+        const user = await User.findById(id) 
+        
+        if(!user) {
+            res.status(404)
+            throw new Error('No User Found')
+        }
+        
+        console.log({code}, {state});
+        
+        if(code === '#037A12') {
+            user.colorCode = {
+                code,
+                state:[]
+            }
+        }else {
+            user.colorCode = {
+                code,
+                state:[...user.colorCode.state, state]
+            }
+        }
+
+        await user.save() 
+        
+        res.send({
+            success:true,
+            code:200,
+            message:'Color Code has been changed'
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
 
 /*******************************************************************/
 /******************** HELPER FUNCTION 

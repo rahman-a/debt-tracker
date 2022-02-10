@@ -9,7 +9,8 @@ const Loader = ({size, text, center, custom, options}) => {
                 position:'absolute',
                 left:'50%',
                 top:'50%',
-                transform:'translate(-50%, -50%)'
+                transform:'translate(-50%, -50%)',
+                zIndex:'9999999999'
             }
         }
         if(custom) {

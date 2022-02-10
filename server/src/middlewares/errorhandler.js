@@ -12,14 +12,14 @@ export const errorHandler = async (err, req, res, next) => {
         errorObject = {
             success:false,
             message:err.message ,
-            error:statusCode,
+            code:statusCode,
             stack:err.stack
         }
     }else {
         errorObject = {
             success:false,
             message:err.message ,
-            error:statusCode,
+            code:statusCode,
         }
     }
     res.status(statusCode).send(errorObject)

@@ -1,0 +1,21 @@
+@use '../../sass/variables' as var;
+
+.back {
+    all: unset;
+    position: absolute;
+    span {
+        transition: all 0.3s ease;
+    }
+
+    span:first-child {
+        display: inline-block;
+    }
+
+    &:hover span:last-child {
+        border-bottom: 1px dashed var.$main-color;
+    }
+
+    &:hover span:first-child {
+        transform:rotate(180deg) translate(5px, -2px);
+    }
+}

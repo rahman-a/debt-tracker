@@ -1,0 +1,12 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.date {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    width: 100%;
+    margin-left:2rem;
+    transform: translateY(1.5rem);
+    z-index:1;
+}
