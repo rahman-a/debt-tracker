@@ -2,7 +2,7 @@ import React from 'react';
 import style from './style.module.scss'
 import {Modal} from 'react-bootstrap'
 import {Times} from '../../icons'
-import {UserFilter} from '../../components'
+import {UserFilter, OperationFilter, ReportFilter} from '../../components'
 
 const FilterModal = ({isFilter, setIsFilter, type, options}) => {
   return <>
@@ -13,7 +13,12 @@ const FilterModal = ({isFilter, setIsFilter, type, options}) => {
         <Times/>
     </span>
     {
-        <UserFilter {...options}/>
+      type === 'user' 
+      ? <UserFilter {...options}/>
+      : type === 'operation'
+      ? <OperationFilter {...options}/>
+      : type === 'report'
+      && <ReportFilter {...options}/>
     }
   </Modal>
   

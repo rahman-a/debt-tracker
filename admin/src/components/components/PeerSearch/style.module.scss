@@ -1,0 +1,122 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.search {
+    display: flex;
+    align-items: flex-start;
+    @include media.mq(xs){
+        flex-direction: column;
+    }
+    @include media.mq(xxs){
+        margin-left: 2rem;
+    }
+    button {
+        all:unset;
+        display: block;
+        width:10rem;
+        height: 7rem;
+        text-align: center;
+        font-size: 1.4rem;
+        background-color: var.$white-color;
+        padding:1.9rem;
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        color:var.$main-color;
+        margin-bottom:0.5rem;
+        box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 30%);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        &:hover {
+            background-color: lighten(var.$full-light-color, 15%);
+        }
+        @include media.mq(xs){
+            display: inline-block;
+            margin-bottom: 1rem;
+            margin-right:1rem;
+            &:nth-child(2){
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            &:last-child {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                border-top-right-radius: 1rem;
+                border-bottom-right-radius: 1rem;
+            }
+        }
+    }
+    
+    &__filter {
+        margin-right:0.5rem;
+        &_active {
+            background-color: var.$full-light-color !important;
+            box-shadow: inset 0px 0px 7px 0px rgb(0 0 0 / 30%) !important;
+        }
+    }
+
+    &__input {
+        display: flex;
+        position: relative;
+        input {
+            all: unset;
+            background-color: #fff;
+            padding: 2rem;
+            width: 30rem;
+            height: 7rem;
+            box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 30%);
+            &::placeholder {
+                color:var.$full-light-color;
+                font-size: 1.4rem;
+            }
+
+            @include media.mq(xxs){
+                width:25rem;
+            }
+        }
+
+        button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            font-size: 1.7rem;
+            margin-bottom: 0;
+            margin-left:0.5rem;
+            @include media.mq(xxs){
+               width:9rem;
+               font-size: 1.5rem;
+            }
+        }
+
+        ul {
+            max-height:30rem;
+            position: absolute;
+            list-style: none;
+            background-color: var.$white-color;
+            padding:0;
+            margin:0;
+            width:30rem;
+            top:7.5rem;
+            overflow-y: auto;
+            li {
+                position: relative;
+                display: flex;
+                align-items: center;
+                color:var.$main-color;
+                font-weight: 500;
+                padding:1.5rem 2rem;
+                border-bottom:1px dashed;
+                cursor: pointer;
+                &:hover {
+                    background-color: lighten(var.$full-light-color, 15%);
+                }
+            }
+            img {
+                margin-right:2rem;
+                width:4.5rem;
+                height: 4.5rem;
+                border-radius: 50%;
+            }
+        }
+    }
+}

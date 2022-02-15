@@ -1,0 +1,133 @@
+@use '../../sass/variables.scss' as var;
+@use '../../sass/media' as media;
+
+.contact {
+    position: relative;
+    background-image: url('../../../public/images/contact-bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+
+    @include media.mq(sm) {
+        height: 102rem;
+    }
+    &__bg  {
+        position: absolute;
+        top:0;
+        left:0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(var.$main-color, 80%);
+        @include media.mq(sm){
+            height: 100%;
+        }
+    }
+    
+    &__wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:7rem 10rem;
+        z-index: 99;
+        
+        @include media.mq(lg) {
+            padding: 5rem 0;
+        }
+        
+        @include media.mq(md){
+            padding: 5rem 1.6rem;
+        }
+
+        @include media.mq(sm) {
+            flex-direction: column;
+            padding: 7rem 2rem;
+        }
+    }
+
+    &__description {
+        color:var.$white-color;
+        margin-right: 15rem;
+        @include media.mq(md){
+            margin-right: 5rem;
+        }
+        
+        @include media.mq(sm) {
+            margin-right: unset;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__text {
+        margin-top: 10rem;
+        @include media.mq(sm){
+           margin-top:0; 
+        }
+        h2 {
+            font-weight: 700;
+            font-size:3.5rem;
+            margin-bottom: 1.6rem;
+            @include media.mq(md){
+                font-size:2.5rem;
+            }
+        }
+
+        p {
+            @include media.mq(md){
+                font-size:1.5rem;
+            } 
+        }
+    }
+
+    &__form {
+        h3 {
+            font-size:5rem;
+            font-weight: 400;
+            color:var.$white-color;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            @include media.mq(md){
+                font-size:4rem;
+            }
+        }
+        input, textarea {
+            all:unset;
+            box-sizing: border-box;
+            width:100%;
+            padding:1rem 2rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            background-color: var.$white-color;
+            color:var.$main-color;
+            &::placeholder {
+                color:var.$full-light-color;
+                font-size:1.4rem;
+                font-weight: 300;
+                font-style: italic;
+            }
+        }
+        button {
+            all:unset;
+            background-color: var.$white-color;
+            padding:1rem 0.5rem;
+            color:var.$main-color;
+            border-radius: 2.5rem;
+            width:15rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 2px 5px 3px rgba(0,0,0,0.3);
+            }
+            &:active {
+                transform: scale(0.95);
+                box-shadow: unset;
+            }
+        }
+    }
+
+}

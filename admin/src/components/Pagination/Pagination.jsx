@@ -26,7 +26,7 @@ const Pagination = ({count,moveToPageHandler, resetPagination}) => {
         }else {
             currentPageHandler(info)
         }
-        const skip = (pageValue + 0) * 10 - 10
+        const skip = (pageValue + 0) * 5 - 5
         moveToPageHandler({skip})
     }
     

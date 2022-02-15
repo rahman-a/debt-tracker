@@ -18,7 +18,6 @@ const Input = ({name, getExpiryDate, disabled, custom}) => {
           value={date}
           onChange={(value) => getDateHandler(value)}
           format='dd-M-y'
-          minDate={new Date()}
           name={name}
           disabled={disabled}
           onCalendarOpen={() => setZIndex(2)}

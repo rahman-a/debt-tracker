@@ -72,7 +72,7 @@ const Row = ({user, idx}) => {
     </Modal>
     
     
-    <tr key={user._id}>
+    <tr>
         
         <td> {idx + 1} </td>
         

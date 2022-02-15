@@ -81,12 +81,12 @@ const SideNavbar = ({
                 </li>
                 <li className={style.navbar__menu_item}
                 >
-                    <div onClick={() => navigate('/operation')}>
+                    <div onClick={() => navigate('/operations')}>
                         <span>
                             <Cogs/>
                         </span>
                         <span>
-                            Operation
+                            Operations
                         </span>
                     </div>
                 </li>

@@ -20,6 +20,7 @@ export const createReport = async (req, res, next) => {
             res.status(404)
             throw new Error('This Operation isn\'t Exist, please choose another operation')
         }
+        console.log({targetedOperation});
         const newReport = {
             operation:targetedOperation._id,
             currency:targetedOperation.currency,
@@ -49,7 +50,7 @@ export const createReport = async (req, res, next) => {
 }
 
 
-export const listAllReports = async (req, res, next) => {
+export const listAllMemberReports = async (req, res, next) => {
     const {
         code,
         name, 
@@ -320,7 +321,7 @@ export const updateReportValues = async (req, res, next) => {
     const {id} = req.params 
     const updatedValue = req.query
     try {
-
+        console.log(updatedValue);
         const report = await Report.findById(id)
         if(!report) {
             res.status(404)
@@ -341,11 +342,32 @@ export const updateReportValues = async (req, res, next) => {
             }
         }
 
-        await report.save()
+       const savedReport =  await report.save()
+       const populatedReport = await Report.findById(savedReport._id).populate({
+                path:'operation',
+                populate:{
+                    path:'initiator',
+                    populate:{
+                        path:'user',
+                        select:'fullNameInEnglish fullNameInArabic type code'
+                    }
+                },
+            })
+            .populate({
+                path:'operation',
+                populate:{
+                    path:'peer',
+                    populate:{
+                        path:'user',
+                        select:'fullNameInEnglish fullNameInArabic type code'
+                    }
+                },
+            }).populate('currency', 'name abbr image') 
 
         res.json({
             success:true,
             code:200,
+            report:populatedReport,
             message:'report has been updated'
         })
     } catch (error) {
@@ -378,7 +400,6 @@ export const closeReportHandler = async(req, res, next) => {
         const color = debtor.colorCode.code 
 
         if(color === code['green']) {
-            console.log(color, code['green']);
             report.isActive = false 
             report.paymentDate = new Date()
             await report.save()
@@ -436,6 +457,309 @@ export const closeReportHandler = async(req, res, next) => {
     }
 }
 
+
+export const listAllReports = async (req, res, next) => {
+    const {
+        arabicName,
+        englishName, 
+        code, 
+        value,
+        currency,
+        dueDate,
+        isActive,
+        isDue,
+        paymentDate,
+        skip,
+        page
+    } = req.query
+    try {
+        if(code) {
+            const report = await Report.findById(code)
+            .populate({
+                path:'operation',
+                populate:{
+                    path:'initiator',
+                    populate:{
+                        path:'user',
+                        select:'fullNameInEnglish fullNameInArabic type code'
+                    }
+                },
+            })
+            .populate({
+                path:'operation',
+                populate:{
+                    path:'peer',
+                    populate:{
+                        path:'user',
+                        select:'fullNameInEnglish fullNameInArabic type code'
+                    }
+                },
+            }).populate('currency', 'name abbr image')
+            
+            res.send({
+                success:true, 
+                code:200,
+                count:1,
+                reports:[report]
+            })
+
+            return 
+        }
+
+        let searchFilter = {}
+        let dueFilter = {createdAt:-1}
+        
+        if(isActive) {
+            const active = isActive === 'true'
+            
+            if(active) { 
+                searchFilter = {
+                    ...searchFilter,
+                    isActive:true
+                }
+            } else {
+                searchFilter = {
+                    ...searchFilter,
+                    isActive:false
+                } 
+                dueFilter = {paymentDate:-1}
+            }
+            
+        }
+        
+        // sort document according to 
+        //  if operation has due date or not
+        if(isDue) {
+            const due = isDue === 'true'
+            if(due) {
+                searchFilter = {
+                    ...searchFilter,
+                    dueDate: {$ne:null}
+                }
+                dueFilter = {dueDate:-1}
+            }else {
+                searchFilter = {
+                    ...searchFilter,
+                    dueDate: {$eq:null}
+                }
+            }
+        }
+
+        if(paymentDate) {
+            const date = new Date(paymentDate)
+            date.setDate(date.getDate() + 1)
+            
+            searchFilter = {
+                ...searchFilter,
+                dueDate : {
+                    $gte:new Date(paymentDate),
+                    $lte: new Date(date)
+                }
+            }
+        }
+        
+        if(arabicName) {
+            searchFilter = {
+                ...searchFilter,
+                $or:[
+                    {"operation.initiator.fullNameInArabic":{$regex:arabicName, $options:'i'}},
+                    {"operation.peer.fullNameInArabic":{$regex:arabicName, $options:'i'}},
+                ]
+            }
+        }
+        if(englishName) {
+            searchFilter = {
+                ...searchFilter,
+                $or:[
+                    {"operation.initiator.fullNameInEnglish":{$regex:englishName, $options:'i'}},
+                    {"operation.peer.fullNameInEnglish":{$regex:englishName, $options:'i'}},
+                ]
+            }
+        }
+        if(currency) {
+            searchFilter = {
+                ...searchFilter,
+                "currency.abbr": currency
+            }
+        }
+
+        if(dueDate) {
+            const date = new Date(dueDate)
+            date.setDate(date.getDate() + 1)
+            
+            searchFilter = {
+                ...searchFilter,
+                dueDate : {
+                    $gte:new Date(dueDate),
+                    $lte: new Date(date)
+                }
+            }
+        }
+
+        if(value) {
+            const values = value.split(':')
+            if(values.length === 2) {
+                searchFilter = {
+                    ...searchFilter, 
+                    $or: [
+                        {
+                            credit:{
+                                $gte:parseInt(values[0]),
+                                $lte:parseInt(values[1])
+                            }
+                        },
+                        {
+                            debt:{
+                                $gte:parseInt(values[0]),
+                                $lte:parseInt(values[1])
+                            }
+                        }
+                    ],
+                    
+                }
+            }else {
+                searchFilter = {
+                    ...searchFilter, 
+                    $or: [
+                        {credit: parseInt(values[0])},
+                        {debt:parseInt(values[0])}
+                    ],
+                }
+            }
+        }
+
+        const aggregateOptions = [
+            // JOIN CURRENCY COLLECTION
+            {
+                $lookup:{
+                    from:'currencies',
+                    localField:'currency',
+                    foreignField:'_id',
+                    as:'currency'
+                }
+            },
+            
+            {
+                $lookup: {
+                    from:'operations',
+                    let:{ operationId: "$operation"},
+                    pipeline:[
+                        {
+                            $match: { $expr: {$eq:["$_id", "$$operationId"]}}
+                        },
+                        {
+                            $lookup: {
+                                from:'users',
+                                let:{userId:'$initiator.user', type:"$initiator.type"},
+                                pipeline:[
+                                    {$match: {$expr:{$eq:["$_id","$$userId"]}}},
+                                    {
+                                        $project: {
+                                            fullNameInEnglish:1,
+                                            fullNameInArabic:1,
+                                            code:1,
+                                            type:"$$type"
+                                        }
+                                    }
+                                ],
+                                as:"initiator"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from:'users',
+                                let:{userId:'$peer.user', type:'$peer.type'},
+                                pipeline:[
+                                    {$match: {$expr:{$eq:["$_id","$$userId"]}}},
+                                    {
+                                        $project: {
+                                            fullNameInEnglish:1,
+                                            fullNameInArabic:1,
+                                            code:1,
+                                            type:"$$type"
+                                        }
+                                    }
+                                ],
+                                as:"peer"
+                            }
+                        },
+                        {
+                            $unwind:"$initiator"
+                        },
+                        {
+                            $unwind:"$peer"
+                        },
+                        {
+                            $project:{
+                                "initiator._id":1,
+                                "initiator.fullNameInEnglish":1,
+                                "initiator.fullNameInArabic":1,
+                                "initiator.code":1,
+                                "initiator.type":1,
+                                "peer._id":1,
+                                "peer.fullNameInEnglish":1,
+                                "peer.fullNameInArabic":1,
+                                "peer.code":1,
+                                "peer.type":1,
+                                note:1,
+                                createdAt:1
+                            }
+                        }
+                    ],
+
+                    as: 'operation'
+                },
+            },
+            {
+                $unwind:"$currency",
+            },
+            {
+                $unwind:"$operation"
+            },
+            {
+                $match:{...searchFilter}
+            },
+        ]
+
+        const reports = await Report.aggregate([
+            ...aggregateOptions,
+            {$sort:dueFilter},
+            {$skip: parseInt(skip) || 0},
+            {$limit: parseInt(page) || 5},
+        ])
+
+        const documentCount = await Report.aggregate([
+            ...aggregateOptions,
+            {$count:"document_count"}
+         ])
+         
+         let count = 0;
+ 
+         if(documentCount[0]) {
+             count =  documentCount[0]['document_count']
+         }
+ 
+         if(reports.length === 0) {
+             res.status(404)
+             throw new Error('No Reports Found')
+         }
+
+        res.send({
+            success:true, 
+            code:200,
+            count,
+            reports
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
+
+
 const scanReportsDueDate = async () => {
     let date = DateTime.now().setZone('Africa/Cairo').toLocaleString(DateTime.DATETIME_MED)
     console.log(`Start Reports Scanning.... at ${date}`);
@@ -468,7 +792,7 @@ const scanReportsDueDate = async () => {
                             await takeAction(debtor._id, 'yellow', 'payLate', report._id)
                         }else {
                             debtor.colorCode.state = debtor.colorCode.state.filter(
-                                st => st.report.toString() !== report._id.toString()
+                                st => st.report?.toString() !== report._id.toString()
                             )
                             await debtor.save()
                             await takeAction(debtor._id, 'red', 'payExpired', report._id)
@@ -503,7 +827,7 @@ const scanReportsDueDate = async () => {
 
                         // remove late payment from state
                         debtor.colorCode.state = debtor.colorCode.state.filter(
-                            st => st.report.toString() !== report._id.toString()
+                            st => st.report?.toString() !== report._id.toString()
                         )
                         await debtor.save()
                         await takeAction(debtor._id, 'green', 'clear', report._id)
@@ -516,11 +840,12 @@ const scanReportsDueDate = async () => {
         console.log(`Done Reports Scanning!!!! at ${date}`);
     } catch (error) {
         date = DateTime.now().setZone('Africa/Cairo').toLocaleString(DateTime.DATETIME_MED)
+        console.log(error);
         console.error("\x1b[31m", `Done Reports Scanning!!!! at ${date} with ERROR: ${error.message}`);
     }
 }
 
 
-cron.schedule('* 6 * * *', scanReportsDueDate, {
+cron.schedule('* 8 * * *', scanReportsDueDate, {
     timezone:'Asia/Dubai'
 })

@@ -1,0 +1,24 @@
+@use '../../sass/media' as media;
+
+.document {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    @include media.mq(sm){
+        flex-direction: column;
+    }
+    &  div {
+        @include media.mq(sm){
+            margin:1rem 0 !important
+        }
+    }
+    hr {
+        display: none;
+        background-color: #fff;
+        width:100%;
+        @include media.mq(sm) {
+            display: block;
+        }
+    }
+}

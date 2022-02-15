@@ -51,7 +51,7 @@ export const createOperation = async (req, res, next) => {
     }
 }
 
-export const listAllOperations = async (req, res, next) => {
+export const listAllMemberOperations = async (req, res, next) => {
 
     const {
         code,
@@ -307,22 +307,37 @@ export const getOneOperation = async (req, res, next) => {
 }
 
 export const updateOperationState = async (req, res, next) => {
-    const {state} = req.query 
+    
+    const {state, isAdmin} = req.query 
+    
     const {id, notification} = req.params 
+    
     try {
+        
         const operation = await Operation.findById(id) 
+        
         if(!operation) {
             res.status(404)
             throw new Error('No Operation Found')
         }
+
         const initiator = await User.findById(operation.initiator.user)
         const peer = await User.findById(operation.peer.user)
 
+        if(isAdmin) {
+            operation.state = state 
+            await operation.save() 
+
+        }
+
         operation.state = state 
+        
         await operation.save() 
         
         const targetedNotification = await Notification.findById(notification)
+        
         targetedNotification.isRead = true 
+        
         await targetedNotification.save()
 
         if(state === 'active') {
@@ -365,6 +380,233 @@ export const updateOperationState = async (req, res, next) => {
             code:200,
             message:`operation has been set as ${state}`
         })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const listAllOperation = async(req, res, next) => {
+    const {
+        arabicName,
+        englishName, 
+        code, 
+        value,
+        currency,
+        state,
+        dueDate,
+        skip,
+        page
+    } = req.query
+    console.log('List All Operations');
+    try {
+        if(code) {
+            const operation = await Operation.findById(code)
+            .populate({
+                path:'initiator',
+                populate:{
+                    path:'user',
+                    select:'fullNameInEnglish fullNameInArabic avatar'
+                }
+            }).populate({
+                path:'peer',
+                populate:{
+                    path:'user',
+                    select:'fullNameInEnglish fullNameInArabic avatar'
+                }
+            }).populate('currency', 'name abbr image')
+
+            if(!operation) {
+                res.status(404)
+                throw new Error('No Operations Found')
+            }
+
+            res.send({
+                success:true, 
+                code:200,
+                count:1,
+                operations:[operation]
+            })
+
+            return 
+        }
+
+        let searchFilter = {
+            state:{$ne:'active'}
+        }
+
+        if(arabicName) {
+            searchFilter = {
+                ...searchFilter,
+                $or:[
+                    {"initiator.user.fullNameInArabic":{$regex:arabicName, $options:'i'}},
+                    {"peer.user.fullNameInArabic":{$regex:arabicName, $options:'i'}},
+                ]
+            }
+        }
+        if(englishName) {
+            searchFilter = {
+                ...searchFilter,
+                $or:[
+                    {"initiator.user.fullNameInEnglish":{$regex:englishName, $options:'i'}},
+                    {"peer.user.fullNameInEnglish":{$regex:englishName, $options:'i'}},
+                ]
+            }
+        }
+        if(state) {
+            searchFilter = {
+                ...searchFilter,
+                state: state
+            }
+        }
+        if(currency) {
+            searchFilter = {
+                ...searchFilter,
+                "currency.abbr": currency
+            }
+        }
+
+        if(dueDate) {
+            const date = new Date(dueDate)
+            date.setDate(date.getDate() + 1)
+            
+            searchFilter = {
+                ...searchFilter,
+                dueDate : {
+                    $gte:new Date(dueDate),
+                    $lte: new Date(date)
+                }
+            }
+        }
+
+        if(value) {
+            const values = value.split(':')
+            if(values.length === 2) {
+                searchFilter = {
+                    ...searchFilter, 
+                    $or: [
+                        {
+                            'peer.value':{
+                                $gte:parseInt(values[0]),
+                                $lte:parseInt(values[1])
+                            }
+                        },
+                        {
+                            'initiator.value':{
+                                $gte:parseInt(values[0]),
+                                $lte:parseInt(values[1])
+                            }
+                        }
+                    ],
+                    
+                }
+            }else {
+                searchFilter = {
+                    ...searchFilter, 
+                    $or: [
+                        {'peer.value': parseInt(values[0])},
+                        {'initiator.value':parseInt(values[0])}
+                    ],
+                }
+            }
+        }
+
+        const aggregateOptions = [
+            // JOIN CURRENCY COLLECTION
+            {
+                $lookup:{
+                    from:'currencies',
+                    localField:'currency',
+                    foreignField:'_id',
+                    as:'currency'
+                }
+            },
+            // JOIN USER COLLECTION ON INITIATOR FIELD
+            {
+                $lookup:{
+                    from:'users',
+                    let:{initiatorId:"$initiator.user"},
+                    pipeline:[
+                        {$match: {
+                            $expr:{ $eq:["$_id", "$$initiatorId"]} }
+                        },
+                        {$project:{
+                            fullNameInEnglish:1,
+                            fullNameInArabic:1,
+                            code:1
+                        }}
+                    ],
+                    as:'initiator.user',
+                }
+            },
+            // JOIN USER COLLECTION ON PEER FIELD
+            {
+                $lookup:{
+                    from:'users',
+                    let:{peerId:"$peer.user"},
+                    pipeline:[
+                        {$match: {
+                            $expr:{$eq:["$_id", "$$peerId"]},
+                        }},
+                        {$project:{
+                            fullNameInEnglish:1,
+                            fullNameInArabic:1,
+                            code:1
+                        }}
+                    ],
+                    as:'peer.user',
+                },
+                
+                
+            },
+            {
+                $unwind:"$currency"
+            },
+            {
+                $unwind:"$initiator.user"
+            },
+            {
+                $unwind:"$peer.user"
+            },
+            {
+                $match:{ ...searchFilter}
+            },
+        ]
+
+        console.log(searchFilter);
+        
+        const operations = await Operation.aggregate([
+            ...aggregateOptions,
+            {$sort:{createdAt:-1}},
+            {$skip: parseInt(skip) || 0},
+            {$limit: parseInt(page) || 5},
+        ])
+
+        console.log('Operations Length', operations.length);
+
+        const documentCount = await Operation.aggregate([
+           ...aggregateOptions,
+           {$count:"document_count"}
+        ])
+        
+        let count = 0;
+
+        if(documentCount[0]) {
+            count =  documentCount[0]['document_count']
+        }
+
+        if(operations.length === 0) {
+            res.status(404)
+            throw new Error('No Operations Found')
+        }
+
+        res.send({
+            success:true,
+            code:200,
+            count,
+            operations
+        })
+
     } catch (error) {
         next(error)
     }

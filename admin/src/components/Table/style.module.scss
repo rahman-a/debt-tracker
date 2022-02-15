@@ -3,7 +3,9 @@
 
 .records {
     width:100%;
-    overflow: auto;
+    @include media.mq(xxl) {
+        overflow: auto;
+    }
     table {
         text-align: center;
         tr {
@@ -12,7 +14,7 @@
             td {
                 width: 15rem;
                 height: 8rem;
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 text-align: center;
                 background-color: var.$white-color;
                 color:var.$main-color;
@@ -30,7 +32,7 @@
         th {
             width: 15rem;
             height: 8rem;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             text-align: center;
             background-color: var.$white-color;
             color:var.$main-color;
@@ -39,7 +41,7 @@
             border-bottom: 2px solid var.$full-light-color; 
             padding: 2.5rem 0;
             display: inline-block;
-            font-weight: 400;
+            font-weight: 500;
         }
     }
 }

@@ -9,7 +9,6 @@ export const createCurrency = async(req, res, next) => {
         ...req.body,
         image:req.file.filename
     })
-    console.log('image', req.file.filename);
     try {
         const isFound = await Currency.findOne({name:newCurrency.name})
         if(isFound) {

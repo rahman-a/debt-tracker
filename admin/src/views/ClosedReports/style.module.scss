@@ -1,0 +1,120 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+
+.reports {
+    min-height: calc(100vh - 10rem);
+    text-align: -webkit-center;
+    margin-bottom: 5rem;
+
+    &__id {
+        position: relative;
+        cursor: pointer;
+        span {
+            display: none !important;
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: grid;
+            display: -ms-grid;
+            place-items: center;
+            cursor: pointer;
+            color:var.$white-color;
+        }
+        &:hover span {
+            display: grid !important;
+            display: -ms-grid !important;
+        }
+    }
+
+    &__note {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        transition: all 0.3s ease-in;
+        cursor: pointer;
+        span {
+            position: absolute;
+            top:0;
+            left:0;
+            display: none;
+            place-items: center;
+            width:100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            color:var.$white-color;
+        }
+        &:hover span{
+            display: grid;
+            display: -ms-grid;
+        }
+    }
+
+    &__delete {
+        text-align: center;
+        h2 {
+            font-weight: 400;
+            color:var.$code-red-color
+        }
+        p {
+            font-weight: 300;
+            padding: 0.5rem 0;
+        }
+    }
+
+    &__actions {
+        height: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        span {
+            cursor: pointer;
+        }
+        span:first-child {
+            color:var.$main-color
+        }
+        span:nth-child(2) {
+            color:var.$code-yellow-color 
+        }
+        span:last-child {
+            color:var.$code-red-color
+        }
+        svg {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+
+    &__party {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        span:nth-child(2) {
+            margin-top: 1rem;
+        }
+    }
+
+    &__label {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        font-size: 1rem;
+        color:var.$white-color;
+        border-radius: 0.5rem;
+        padding: 0 2px;
+        background-color:#000;
+    }
+
+    &__code {
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 1rem;
+    }
+}

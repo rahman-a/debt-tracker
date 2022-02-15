@@ -39,7 +39,7 @@ const Members = () => {
     
     let query = {...filter}
     
-    if(skip?.skip) {
+    if(skip?.skip || skip?.skip === 0) {
       setSkipValue(skip.skip)
       query = {...filter, ...skip}
     }
@@ -112,7 +112,7 @@ const Members = () => {
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody  style={{position:'relative'}}>
           {
             loading 
             ? <Loader 

@@ -18,7 +18,7 @@ import {
 
 
 // TO DO ==> ADD ADMIN ROLE TO THIS ENDPOINT
-router.post('/new', isAuth,uploadHandler.single('flag'), createCurrency)
+router.post('/new', isAuth, uploadHandler.single('flag'), createCurrency)
 
 router.get('/', isAuth, listAllCurrency)
 

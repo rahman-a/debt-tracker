@@ -56,6 +56,8 @@ body {
     }
 }
 
+
+
 // customize carousel
 .control-dots {
     .dot {
@@ -78,9 +80,9 @@ body {
 .react-date-picker {
     width: 100%;
     &__wrapper {
-        border-radius: 2rem;
         overflow: hidden;
         background-color: #fff;
+        border: thin solid #bdd7e5 !important;
         button {
             svg {
                 rect {
@@ -93,7 +95,7 @@ body {
         }
     }
     &__inputGroup {
-        padding:1.2rem 2rem !important;
+        padding:.5rem 2rem !important;
         width:100%;
         &__input {
             padding:0 !important;

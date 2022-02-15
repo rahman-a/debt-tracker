@@ -1,0 +1,22 @@
+@use '../../sass/variables' as var;
+
+.button {
+    all: unset;
+    position: relative;
+    background-color: var.$white-color;
+    padding: 2rem 5rem;
+    border-radius: 2rem;
+    font-size: 1.7rem;
+    align-self: flex-end;
+    p {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        svg {
+            margin-left:0.8rem;
+        }
+    }
+}

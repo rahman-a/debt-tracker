@@ -10,7 +10,7 @@ export const login = async (req, res, next) => {
             throw new Error('Not Authorized to Access The Dashboard')
         }
 
-        const tokenExpiry = '7d'
+        const tokenExpiry = '7 days'
         
         const token = staff.generateToken(tokenExpiry)
         
@@ -19,6 +19,7 @@ export const login = async (req, res, next) => {
         res.json({
             success:true, 
             code:200,
+            token,
             staff: {_id:staff._id, avatar:staff.avatar, roles:staff.roles},
             expiryAdAt: expireAt(7),
         })

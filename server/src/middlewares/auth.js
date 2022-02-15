@@ -2,11 +2,15 @@ import User from '../models/users.model.js'
 import jwt from 'jsonwebtoken'
 
 export const isAuth = async (req, res, next) => {
+    // req.cookies['token'] || 
     try {
-        if(req.cookies['token'] || req.cookies['tkid']) {
-            const token = req.cookies['token'] || req.cookies['tkid']
+        if(req.cookies['tkid']) {
+            const token = req.cookies['tkid']
             const decode = jwt.verify(token, process.env.JWT_TOKEN, (error, decode) => {
-                if(error) throw new Error('Please Login First') 
+                if(error){
+                    res.status(401)
+                    throw new Error('Please Login First')
+                }  
                 return decode
             })
             const user = await User.findById(decode._id)
@@ -28,7 +32,7 @@ export const isAuth = async (req, res, next) => {
 }
 
 export const checkRoles = (...requiredRoles) => {
-    return (req, res, next)  => {
+    return (req, res, next)  => {        
         try {
             const allowedRoles = [...requiredRoles]
             const userRoles = req.user.roles 
