@@ -28,6 +28,7 @@ const SideNavbar = ({
     const [isReportMenu, setIsReportMenu] = useState(false)
     const reportRef = useRef(null)
     const {loading, error, isLogout}  = useSelector(state => state.logout)
+    const {staff}  = useSelector(state => state.login)
     const dispatch = useDispatch()
 
 
@@ -136,6 +137,19 @@ const SideNavbar = ({
                         </span>
                    </div>
                 </li>
+                {
+                    (staff.roles.includes('manager') || staff.roles.includes('hr')) && 
+                    <li className={style.navbar__menu_item}>
+                        <div onClick={() => navigate('/provider')}>
+                            <span>
+                                <AddressCard/>
+                            </span>
+                            <span>
+                                Provider
+                            </span>
+                        </div>
+                    </li>  
+                }
                 <li className={style.navbar__menu_item}
                 >
                     <div onClick={logoutHandler}>

@@ -3,9 +3,8 @@ import api from '../api'
 
 const listNotification = (query) => async (dispatch) => {
     dispatch({type: constants.notifications.LIST_NOTIFICATIONS_REQUEST}) 
-
     try {
-        const {data} = await api.notifications.index(query) 
+        const {data} = await api.notifications.index(query)
         dispatch({
             type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
             notifications: data.notifications,

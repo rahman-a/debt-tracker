@@ -4,7 +4,7 @@ import {Info, Check} from '../../icons'
 
 
 
-const SideAlert = ({type, text, isOn}) => {
+const SideAlert = ({type, text, isOn, reset}) => {
     const [isToggle, setIsToggle] = useState(false)
     const [progressWidth, setProgressWidth] = useState(0)
 
@@ -23,6 +23,7 @@ const SideAlert = ({type, text, isOn}) => {
           clearInterval(progressInterval)
           setProgressWidth(0)
           setIsToggle(false)
+          reset()
         },10000)
       }
       return () => clearTimeout(toggleSideAlert)

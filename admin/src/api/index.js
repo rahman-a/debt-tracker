@@ -1,11 +1,13 @@
 import adminAPI from "./admin.api"
 import operationAPI from './operations.api'
 import reportsAPI from "./reports.api"
+import notificationsAPI from './notifications.api'
 
 const api = {
     admin:adminAPI,
     operations:operationAPI,
-    reports:reportsAPI
+    reports:reportsAPI,
+    notifications:notificationsAPI
 }
 
 export default api

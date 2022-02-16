@@ -25,7 +25,9 @@ import {
 
 import {
     login as staffLogin,
-    logoutHandler as staffLogout
+    logoutHandler as staffLogout,
+    changeUserRole,
+    createProviderAccount
 } from '../controllers/admin.controllers.js'
 
 import {
@@ -66,5 +68,7 @@ router.get('/all', isAuth, checkRoles('manager', 'hr'), listAllUsers)
 router.delete('/:id', isAuth, checkRoles('manager', 'hr'), deleteUser)
 router.patch('/activate/:id', isAuth, checkRoles('manager', 'hr'), toggleUserActivation)
 router.patch('/color/:id', isAuth, checkRoles('manager', 'hr'), changeUserColorCode)
+router.patch('/role/:id', isAuth, checkRoles('manager'), changeUserRole)
+router.post('/provider', isAuth, checkRoles('manager', 'hr'), uploadHandler.fields(imagesFields), createProviderAccount)
 
 export default router

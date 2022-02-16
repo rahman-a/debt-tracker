@@ -37,6 +37,15 @@ const adminAPI = {
     },
     delete(id) {
         return service().delete(`users/${id}`)
+    },
+    role(id, role){
+        const queryString = role 
+        ? new URLSearchParams({role}).toString()
+        : null
+        return service().patch(`users/role/${id}?${queryString}`)
+    },
+    provider(data) {
+        return service().post('users/provider', data)
     }
 }
 

@@ -1,0 +1,73 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+
+.provider {
+    min-height: calc(100vh - 10rem);
+    margin-bottom: 5rem;
+    &__provider {
+        width:50%
+    }
+    
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        @include media.mq(md) {
+            justify-content: center;
+        }
+    }
+
+    &__info {
+        width: 45%;
+        margin-right:5rem;
+        @include media.mq(sm) {
+            width: 95%;
+            padding-left: 2rem;
+        }
+    }
+    
+    &__segment {
+        border-bottom: 1px solid #ccc;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        h2 {
+            font-weight: 300;
+            background-color: #eaeaea;
+            padding: 0.5rem;
+        }
+        label {
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
+    }
+
+    &__multiple {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        &_single {
+            width:84%;
+            @include media.mq(xs) {
+                width:80%;
+            }
+        }
+
+        &_toggle {
+            transform: translateY(1rem);
+            span {
+                margin-right: 1rem;
+                width: 5rem;
+                height: 5rem;
+                background-color:var.$main-color;
+                padding: 0.3rem;
+                border-radius: 0.3rem;
+                color:var.$white-color;
+                cursor: pointer;
+                @include media.mq(xs) {
+                    margin-right: 0.5rem;
+                }
+            }
+        }
+    }
+}

@@ -28,6 +28,7 @@ const logout = () => async (dispatch) => {
         localStorage.removeItem('staff')
         localStorage.removeItem('expiryAdAt')
         dispatch({type:constants.admin.ADMIN_LOGOUT_SUCCESS}) 
+        dispatch({type:constants.admin.ADMIN_LOGIN_RESET}) 
     } catch (error) {
         dispatch({
             type:constants.admin.ADMIN_LOGOUT_FAIL, 
@@ -130,6 +131,22 @@ const userColorCode = (id,info) => async (dispatch) => {
     }
 }
 
+const changeUserRole = (id, role) => async dispatch => {
+    dispatch({type: constants.admin.USER_ROLE_CHANGE_REQUEST}) 
+    try {
+        const {data} = await api.admin.role(id, role)
+        dispatch({
+            type: constants.admin.USER_ROLE_CHANGE_SUCCESS,
+            payload:data.message
+        })
+    } catch (error) {
+        dispatch({
+            type: constants.admin.USER_ROLE_CHANGE_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
 const deleteUser = (id) => async (dispatch) => {
     dispatch({type: constants.admin.USER_DELETE_REQUEST}) 
 
@@ -147,6 +164,23 @@ const deleteUser = (id) => async (dispatch) => {
     }
 }
 
+const createProvider = (info) => async (dispatch) => {
+    dispatch({type: constants.admin.CREATE_PROVIDER_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.provider(info)
+        dispatch({
+            type:constants.admin.CREATE_PROVIDER_SUCCESS,
+            payload:data.message
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.CREATE_PROVIDER_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
 
 const actions = {
     login,
@@ -157,6 +191,8 @@ const actions = {
     member,
     toggleUser,
     userColorCode,
+    changeUserRole,
+    createProvider,
     deleteUser
 }
 

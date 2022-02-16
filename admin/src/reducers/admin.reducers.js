@@ -240,7 +240,7 @@ const userColorCode = (state, action) => {
             loading:false,
             error:action.payload 
         },
-        [constants.admin.USER_TOGGLE_RESET]: 
+        [constants.admin.USER_COLOR_CHANGE_RESET]: 
         {
             loading:false,
             error:null,
@@ -282,6 +282,67 @@ const deleteUser = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+
+const changeUserRole = (state, action) => {
+    
+    const cases = {
+        [constants.admin.USER_ROLE_CHANGE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.USER_ROLE_CHANGE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload,
+        },
+        [constants.admin.USER_ROLE_CHANGE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.USER_ROLE_CHANGE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const createProvider = (state, action) => {
+    
+    const cases = {
+        [constants.admin.CREATE_PROVIDER_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.CREATE_PROVIDER_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload,
+        },
+        [constants.admin.CREATE_PROVIDER_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.CREATE_PROVIDER_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducer = {
     login,
     sendResetLink,
@@ -291,7 +352,9 @@ const reducer = {
     member,
     toggleUser,
     userColorCode,
-    deleteUser
+    deleteUser,
+    createProvider,
+    changeUserRole
 }
 
 export default reducer

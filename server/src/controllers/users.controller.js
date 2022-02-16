@@ -67,7 +67,7 @@ export const completeRegistration = async (req, res, next) => {
         }
 
         const code = createUserCode(user.fullNameInEnglish, user.country.name)
-        user.code = code
+        user.code = code.toLocaleUpperCase()
         await user.save()
         res.send({
             success:true,

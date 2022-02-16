@@ -25,11 +25,15 @@ export const createNewNotification = async (req, res, next) => {
 }
 
 export const listAllUserNotifications = async (req, res, next) => {
+    
     const {skip, state} = req.query
+    
     let searchFilter = {'user._id':req.user._id}
+    
     if(state) {
         searchFilter = {...searchFilter, 'operation.state': state}
     }
+    
     try {
         
         const aggregateOptions = [
