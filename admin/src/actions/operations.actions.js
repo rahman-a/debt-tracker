@@ -19,9 +19,24 @@ const listAllOperations = query => async dispatch => {
         })
     }
 }
-
+const updateOperationState = (id,notification ,state) => async (dispatch) => {
+    dispatch({type: constants.operations.UPDATE_OPERATION_STATE_REQUEST}) 
+    try {
+        const {data} = await api.operations.updateState(id, notification, state)
+        dispatch({
+            type: constants.operations.UPDATE_OPERATION_STATE_SUCCESS, 
+            payload:data.message
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.operations.UPDATE_OPERATION_STATE_FAIL, 
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
 const actions = {
-    listAllOperations
+    listAllOperations,
+    updateOperationState
 }
 
 export default actions

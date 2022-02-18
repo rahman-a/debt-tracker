@@ -15,7 +15,9 @@ import {
   ClosedReports,
   Messages,
   Notifications,
-  Provider
+  Provider,
+  Support,
+  Ticket
 } from './views'
 
 
@@ -37,6 +39,8 @@ function App() {
             <Route path='/messages' element={isAuth ? <Messages/> : <Navigate to='/login'/>}/>
             <Route path='/notifications' element={isAuth ? <Notifications/> : <Navigate to='/login'/>}/>
             <Route path='/provider' element={isAuth ? <Provider/> : <Navigate to='/login'/>}/>
+            <Route path='/support' element={isAuth ? <Support/> : <Navigate to='/login'/>}/>
+            <Route path='/ticket/:id' element={isAuth ? <Ticket/> : <Navigate to='/login'/>}/>
             <Route path='/reset' element={<ResetPassword/>}/>
           </Routes>
         <Footer/>

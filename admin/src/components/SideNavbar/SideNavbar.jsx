@@ -13,7 +13,9 @@ import {
     AddressCard, 
     Globe,
     CashRegister,
-    HandshakeSlash
+    HandshakeSlash,
+    Help,
+    Wrench
 } from '../../icons'
 
 
@@ -142,10 +144,23 @@ const SideNavbar = ({
                     <li className={style.navbar__menu_item}>
                         <div onClick={() => navigate('/provider')}>
                             <span>
-                                <AddressCard/>
+                                <Wrench/>
                             </span>
                             <span>
                                 Provider
+                            </span>
+                        </div>
+                    </li>  
+                }
+                {
+                    (staff.roles.includes('manager') || staff.roles.includes('cs')) && 
+                    <li className={style.navbar__menu_item}>
+                        <div onClick={() => navigate('/support')}>
+                            <span>
+                                <Help/>
+                            </span>
+                            <span>
+                                Support
                             </span>
                         </div>
                     </li>  

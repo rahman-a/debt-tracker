@@ -39,6 +39,7 @@ const Notification = ({data}) => {
             id={data.operation}
             notificationId={data.id}
             /> }
+            
             <div className={style.notification}
                 onClick={takeDecisionHandler}
                 style={{backgroundColor: data.isRead ? '#fff':'#e7f5ff'}}>

@@ -421,7 +421,8 @@ export const sendUserData = async (req, res, next) => {
         
         if(id) {
             if(req.user.roles.includes('manager')
-            || req.user.roles.includes('hr')) {
+            || req.user.roles.includes('hr')
+            || req.user.roles.includes('cs')) {
                 const userData = await User.findById(id)
                 user = {...userData._doc}
             } else {

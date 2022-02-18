@@ -11,6 +11,9 @@ const operationAPI = {
         }
         const queryString = new URLSearchParams(queryObj).toString() 
         return service().get(`operations/all?${queryString}`)
+    },
+    updateState(id, notification, state){
+        return service().patch(`operations/${id}/${notification}?state=${state}`)
     }
 }
 

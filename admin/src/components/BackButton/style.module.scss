@@ -1,8 +1,12 @@
 @use '../../sass/variables' as var;
+@use '../../sass/media' as media;
 
 .back {
     all: unset;
     position: absolute;
+    @include media.mq(md) {
+        font-size: 1.4rem;
+    }
     span {
         transition: all 0.3s ease;
     }

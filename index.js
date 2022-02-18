@@ -14,6 +14,7 @@ import operationRouter from './server/src/routers/operations.router.js'
 import reportsRouter from './server/src/routers/reports.router.js'
 import currenciesRouter from './server/src/routers/currencies.router.js'
 import notificationsRouter from './server/src/routers/notifications.router.js'
+import ticketsRouter from './server/src/routers/tickets.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
 dotenv.config()
@@ -51,6 +52,7 @@ app.use('/api/operations',verifyAPIKey, operationRouter)
 app.use('/api/reports',verifyAPIKey, reportsRouter)
 app.use('/api/currencies',verifyAPIKey, currenciesRouter)
 app.use('/api/notifications',verifyAPIKey, notificationsRouter)
+app.use('/api/tickets', verifyAPIKey, ticketsRouter)
 
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
 app.use(notFound)

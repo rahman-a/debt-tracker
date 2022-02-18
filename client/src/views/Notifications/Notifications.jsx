@@ -56,7 +56,7 @@ const Notifications = () => {
                     <div className={style.notifications__header}>
                       <h1>Notifications</h1>
                       <div className={style.notifications__dropdown}>
-                        {/* {loading && <Loader size='4' options={{animation:'border'}}/>} */}
+                        {loading && <Loader size='4' options={{animation:'border'}}/>}
                         <div className={style.notifications__dropdown_menu}>
                             <DropdownMenu
                                 data={dropdownData}

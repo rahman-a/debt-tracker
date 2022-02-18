@@ -23,7 +23,20 @@ export const uploadHandler = multer({
     },
     fileFilter(req, file, cb){
         if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|svg|SVG)$/)) {
-            cb(new Error('please upload image with following formats [png, jpg, jpeg, svg]'))
+            cb(new Error('please upload image with following extension [png, jpg, jpeg, svg]'))
+        }
+        cb(undefined, true)
+    }
+})
+
+export const fileUploadHandler = multer({
+    storage,
+    limits:{
+        fileSize:5000000
+    },
+    fileFilter(req, file, cb){
+        if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|doc|docx|pdf|xlsx|pptx)$/)) {
+            cb(new Error('please upload image with following extension [png, jpg, jpeg, svg, pdf, docx. xlsx, pptx]'))
         }
         cb(undefined, true)
     }

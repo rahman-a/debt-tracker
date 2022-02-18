@@ -71,7 +71,9 @@ const updateOperationState = (id,notification ,state) => async (dispatch) => {
     try {
         const {data} = await api.operations.updateState(id, notification, state)
         dispatch({
-            type: constants.operations.UPDATE_OPERATION_STATE_SUCCESS, payload:data.message})
+            type: constants.operations.UPDATE_OPERATION_STATE_SUCCESS, 
+            payload:data.message
+        })
     } catch (error) {
         dispatch({
             type:constants.operations.UPDATE_OPERATION_STATE_FAIL, 

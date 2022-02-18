@@ -36,15 +36,34 @@ const newNotification = (info) => async (dispatch) => {
     }
 }
 
-const updateNotificationState = (id) => async (dispatch) => {
+const updateNotificationState = (id) => async (dispatch, getState) => {
     dispatch({type: constants.notifications.UPDATE_NOTIFICATION_REQUEST}) 
 
     try {
         const {data} = await api.notifications.updateState(id) 
+        
+        let {notifications, count, nonRead} = getState().listNotifications 
+        
+        if(notifications) {       
+            let targetNotification = notifications.find(notification => notification._id === id) 
+            targetNotification.isRead = data.isRead 
+            let filteredNotifications = notifications.filter(notification => notification._id !== id) 
+            filteredNotifications = [targetNotification, ...filteredNotifications]
+            let countNonRead = data.isRead ? nonRead - 1 : nonRead + 1 
+            
+            dispatch({
+                type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
+                notifications: filteredNotifications,
+                count,
+                nonRead:countNonRead
+            })
+        }   
+        
         dispatch({
             type: constants.notifications.UPDATE_NOTIFICATION_SUCCESS,
             payload: data.message
         })
+
     } catch (error) {
         dispatch({
             type:constants.notifications.UPDATE_NOTIFICATION_FAIL, 

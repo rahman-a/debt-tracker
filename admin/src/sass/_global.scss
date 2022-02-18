@@ -30,7 +30,13 @@ html  {
     text-align: center;
     font-size: 5rem;
     padding: 3rem 0;
-    font-weight: 200
+    font-weight: 200;
+    @include mq(md) {
+        font-size: 4rem;
+    }
+    @include mq(sm) {
+        font-size: 3rem;
+    }
 }
 
 p {
@@ -102,6 +108,18 @@ body {
         }
     }
     
+}
+
+.public-DraftEditor-content {
+    width:50rem !important;
+    height: 50rem !important;
+    @include mq(sm) {
+        width:45rem !important;
+    }
+    @include mq(xs) {
+        height: 45rem !important;
+        width:40rem !important;
+    }
 }
 
 

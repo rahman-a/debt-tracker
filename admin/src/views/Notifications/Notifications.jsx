@@ -7,14 +7,12 @@ import actions from '../../actions'
 
 const Notifications = () => {
     const [filter, setFilter] = useState(null)
-    const [skip, setSkip] = useState(1)
+    const [skip, setSkip] = useState(0)
     const [resetPagination, setResetPagination] = useState(false)
     const dispatch = useDispatch()
     const {loading, error, count, notifications} = useSelector(state => state.listNotifications)
-    const {isUpdated} = useSelector(state => state.updateNotification)
     const {message} = useSelector(state => state.updateOperationState)
 
-    
     const selectItemHandler = state => {
         !state && setResetPagination(true)
         setFilter({state})
@@ -31,10 +29,10 @@ const Notifications = () => {
     const dropdownData = {
         label:'operation state',
         items: [
-            {text:'All', icon:<Redo/>, value:''},
-            {text:'Pending', icon:<Spinner/>, value:'pending'},
-            {text:'Active', icon:<CheckDouble/>, value:'active'},
-            {text:'Decline', icon: <Times/>, value:'decline'},
+            {text:'All',     icon:<Redo/>,        value:''},
+            {text:'Pending', icon:<Spinner/>,     value:'pending'},
+            {text:'Active',  icon:<CheckDouble/>, value:'active'},
+            {text:'Decline', icon:<Times/>,      value:'decline'},
         ]
     }
 
@@ -43,11 +41,14 @@ const Notifications = () => {
     },[notifications])
 
     useEffect(() => {
-        !message && isUpdated && dispatch(actions.notifications.listNotification({skip}))
         message && setTimeout(() => {
             dispatch(actions.notifications.listNotification())
         },2000);
-    },[message, isUpdated])
+    },[message])
+
+    useEffect(() => {
+        dispatch(actions.notifications.listNotification({skip}))
+    },[])
 
     return (
         <div className={style.notifications}>
@@ -56,7 +57,7 @@ const Notifications = () => {
                     <div className={style.notifications__header}>
                       <h1>Notifications</h1>
                       <div className={style.notifications__dropdown}>
-                        {/* {loading && <Loader size='4' options={{animation:'border'}}/>} */}
+                        {loading && <Loader size='4' options={{animation:'border'}}/>}
                         <div className={style.notifications__dropdown_menu}>
                             <DropdownMenu
                                 data={dropdownData}

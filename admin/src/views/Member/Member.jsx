@@ -15,6 +15,7 @@ import Actions from './Actions'
 
 const Profile = () => {
     const {loading, error, member} = useSelector(state => state.member)
+    const {staff} = useSelector(state => state.login)
     const dispatch = useDispatch()
     const {id} = useParams()
     
@@ -24,9 +25,13 @@ const Profile = () => {
     return (
         <div className={style.profile}>
             
-            <BackButton
-            page='members'
-            />    
+           {
+               !(staff.roles.includes('cs')) &&
+                
+                <BackButton
+                page='members'
+                />    
+           } 
             <div className="container">
                 {
                     loading
@@ -59,13 +64,17 @@ const Profile = () => {
                             snapshot:member.verificationImage
                         }}/>
                         <Company company={member.company}/>
-                        <Actions
-                         data = {{
-                             _id:member._id,
-                             color:member.colorCode.code, 
-                             isActive:member.isAccountConfirmed
-                         }}
-                        />
+                        {
+                            !(staff.roles.includes('cs')) && 
+                                <Actions
+                                data = {{
+                                    _id:member._id,
+                                    color:member.colorCode.code, 
+                                    isActive:member.isAccountConfirmed
+                                }}
+                                />
+                        }
+                        
                     </div>   
                 } 
             </div>

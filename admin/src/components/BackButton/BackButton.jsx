@@ -3,20 +3,34 @@ import style from './style.module.scss'
 import {useNavigate} from 'react-router-dom'
 import {ArrowRight} from '../../icons'
 
-const BackButton = ({page, position}) => {
+const BackButton = ({page, position, text}) => {
   
     const navigate = useNavigate()
+    
     const getStyle = _ => {
         let style = { 
         top:'2rem',
         left:'10rem',
-    }
+        }
+        if(window.matchMedia("(max-width:61.99em)").matches) {
+            style = {
+                top:'1rem',
+                left:'2rem'
+            }
+        }
         if(position === 'right') {
             style = {
                 top:'2rem',
                 right:'10rem'
             }
+            if(window.matchMedia("(max-width:61.99em)").matches) {
+                style = {
+                    top:'1rem',
+                    right:'2rem'
+                }
+            }
         }
+        
         return style
     }
 
@@ -41,7 +55,7 @@ const BackButton = ({page, position}) => {
             <span style={arrowStyle()}> 
                 <ArrowRight/> 
             </span>
-            <span> back to members </span>
+            <span> back to {text || 'members'} </span>
         </button>
   )
 }

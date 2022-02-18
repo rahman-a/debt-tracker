@@ -118,10 +118,44 @@ const declineOperation = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const updateOperationState = (state, action) => {
+    const cases = {
+        [constants.operations.UPDATE_OPERATION_STATE_REQUEST] : 
+        {
+            loading:true, 
+            error:null
+        }, 
+
+        [constants.operations.UPDATE_OPERATION_STATE_SUCCESS]:
+        {
+            loading:false, 
+            error:null, 
+            message:action.payload
+        }, 
+
+        [constants.operations.UPDATE_OPERATION_STATE_FAIL] : 
+        {
+            loading:false, 
+            error:action.payload
+        },
+        
+        [constants.operations.UPDATE_OPERATION_STATE_RESET] : 
+        {
+            loading:false, 
+            error:null, 
+            message:null
+        }
+
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducer = {
     listAllOperations,
     getOperation,
     deleteOperation,
+    updateOperationState,
     declineOperation
 }
 
