@@ -4,6 +4,7 @@ import {Badge, Modal, Button} from 'react-bootstrap'
 import {useNavigate} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CopyToClipboard from 'react-copy-to-clipboard'
+import parser from 'html-react-parser'
 import {Loader, SideAlert} from '../../components'
 import {Lock, Check, Copy} from '../../icons'
 import actions from '../../actions'
@@ -49,6 +50,11 @@ const Row = ({ticket,idx}) => {
             setIsCopied(false)
         },500)
     }
+
+    const parseHTMLBody = _ => {
+        const text = parser(ticket.body.substring(0,75) + '....')
+        return text
+     }
     
     useEffect(() => {
     message && setIsClosing(false)
@@ -126,7 +132,7 @@ return (
                     {ticket.title} 
                 </h3>
                 <p>
-                    {ticket.body.substring(0, 75) + '....'}
+                    {parseHTMLBody()}
                 </p>
             </td> 
             

@@ -125,6 +125,17 @@ const SideNavbar = ({
                 </li>
                 <li className={style.navbar__menu_item}
                 >
+                   <div onClick={() => navigate('/tickets')}>
+                        <span>
+                            <AddressCard/>
+                        </span>
+                        <span>
+                            Tickets
+                        </span>
+                   </div>
+                </li>
+                <li className={style.navbar__menu_item}
+                >
                     <div onClick={logoutHandler}>
                        {loading && <span className={style.navbar__menu_item_loading}>
                             <Loader center size='5' options={{animation:'border'}}/>

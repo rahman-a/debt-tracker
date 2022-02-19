@@ -11,6 +11,7 @@ export const createNewTicket = async (req, res, next) => {
             throw new Error('This title already exist, please choose another title')
         }
         const newTicket = new Ticket(req.body)
+        newTicket.member = req.user._id
         newTicket.code = createTicketCode()
         if(req.file) {
             newTicket.file = req.file.filename
@@ -29,10 +30,18 @@ export const createNewTicket = async (req, res, next) => {
 
 export const listAllMemberTickets = async (req, res, next) => {
     const {id} = req.params 
-    const {title, isOpen,skip, page} = req.query
+    const {title, isOpen,ticket, skip, page} = req.query
     
     try {
         let searchFilter = {member:id}
+        
+        if(ticket) {
+            searchFilter = {
+                ...searchFilter,
+               code:ticket
+            }
+        }
+        
         if(title) {
             searchFilter = {
                 ...searchFilter,
@@ -51,7 +60,7 @@ export const listAllMemberTickets = async (req, res, next) => {
         }
         
         const tickets = await Ticket.find({...searchFilter})
-        .sort({createdAt:-1}).limit(parseInt(page) || 10).skip(parseInt(skip) || 0)
+        .sort({createdAt:-1}).limit(parseInt(page) || 5).skip(parseInt(skip) || 0)
         
         if(tickets.length === 0) {
             res.status(404)
@@ -246,24 +255,25 @@ export const updateTicketStatus = async (req, res, next) => {
 
 export const addTicketResponse = async (req, res, next) => {
     const {id} = req.params 
-    const {title, body} = req.body 
+    const {title, body, sender} = req.body 
     try {
         const ticket = await Ticket.findById(id) 
         if(!ticket) {
             res.status(404)
             throw new Error('Ticket Not Found') 
         } 
-        const newResponse = {title, body} 
+        const newResponse = {title, body, sender} 
         if(req.file) {
             newResponse.file = req.file.filename 
         }
         ticket.response = ticket.response.concat(newResponse)
-        await ticket.save() 
+        const updatedTicket = await ticket.save() 
         
         res.send({
             success:true,
             code:201,
             ticket:ticket._id,
+            updatedAt:updatedTicket.updatedAt,
             response:newResponse,
             message:'Reply has been sent'
         })

@@ -2,11 +2,11 @@ import constants from "../constants";
 import api from '../api'
 
 
-const listAllTickets = query => async dispatch => {
+const listAllTickets = (id, query) => async dispatch => {
     dispatch({type:constants.tickets.LIST_TICKETS_REQUEST}) 
 
     try {
-        const {data} = await api.tickets.index(query) 
+        const {data} = await api.tickets.index(id, query) 
         dispatch({
             type:constants.tickets.LIST_TICKETS_SUCCESS,
             tickets:data.tickets,
@@ -15,6 +15,31 @@ const listAllTickets = query => async dispatch => {
     } catch (error) {
         dispatch({
             type:constants.tickets.LIST_TICKETS_FAILS,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
+const createNewTicket = info => async (dispatch, getState) => {
+    dispatch({type:constants.tickets.CREATE_TICKET_REQUEST}) 
+    try {
+        const {data} = await api.tickets.create(info) 
+        const {tickets, count} = getState().listTickets 
+        if(tickets) {
+            const newTickets = [data.ticket, ...tickets] 
+            dispatch({
+                type:constants.tickets.LIST_TICKETS_SUCCESS,
+                tickets:newTickets,
+                count:count + 1
+            })
+        }
+        dispatch({
+            type:constants.tickets.CREATE_TICKET_SUCCESS,
+            payload:data.message
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.tickets.CREATE_TICKET_FAILS,
             payload:error.response && error.response.data.message
         })
     }
@@ -82,7 +107,7 @@ const addResponseToTickets = (id, info) => async (dispatch, getState) => {
         
         if(ticket) {
             const copiedTicket = {...ticket}
-            copiedTicket.response = copiedTicket.response.concat(data.response) 
+            copiedTicket.response = copiedTicket.response.concat(data.response)
             copiedTicket.updatedAt = data.updatedAt
             dispatch({
                 type:constants.tickets.GET_TICKET_SUCCESS,
@@ -105,6 +130,7 @@ const addResponseToTickets = (id, info) => async (dispatch, getState) => {
 
 const actions = {
     addResponseToTickets,
+    createNewTicket,
     updateTicketStatus,
     getTicketInformation,
     listAllTickets

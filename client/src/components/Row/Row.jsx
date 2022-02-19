@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
+import {Badge} from 'react-bootstrap'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {useSelector}  from 'react-redux'
 import {Currency} from '../../components'
@@ -144,7 +145,7 @@ const Row = ({record, idx, due, op, closed}) => {
                         }
                     </i> 
                   </p>  
-                : 'N/A'}
+                : <Badge bg='dark'>N/A</Badge>}
             </td>
 
             {/* Creditor amount value*/}
@@ -176,7 +177,7 @@ const Row = ({record, idx, due, op, closed}) => {
             ? new Date(record.paymentDate).toLocaleDateString()
             : record.dueDate
             ? new Date(record.dueDate).toLocaleDateString()
-            : 'N/A'} 
+            : <Badge bg='dark'>N/A</Badge>} 
             </td>
            } 
         </tr> 

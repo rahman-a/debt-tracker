@@ -17,7 +17,9 @@ import {
   ActiveReports,
   ClosedReports,
   EmailActivation,
-  ResetPassword
+  ResetPassword,
+  Tickets,
+  Ticket
 } from './views'
 
 function App() {
@@ -42,6 +44,10 @@ function App() {
             <Route path='/profile' element={isAuth ? <Profile/> : <Navigate to='/login'/>}/>
             <Route path='/notifications' element={isAuth ? <Notifications/> : <Navigate to='/login'/>}/>
             <Route path='/messages' element={isAuth ? <Messages/> : <Navigate to='/login'/>}/>
+            <Route path='/tickets'>
+              <Route index element={isAuth ? <Tickets/> : <Navigate to='/login'/>}/>
+              <Route path=':id' element={isAuth ? <Ticket/> : <Navigate to='/login'/>}/>
+            </Route>
             <Route path='/activate' element={<EmailActivation/>}/>
             <Route path='/reset' element={<ResetPassword/>}/>
           </Routes>

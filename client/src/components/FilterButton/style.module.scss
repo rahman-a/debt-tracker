@@ -1,0 +1,33 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.filter {
+    all: unset;
+    display: none;
+    color: var.$main-color;
+    box-shadow: inset 0px -1px 2px 0px rgb(0 0 0 / 30%);
+    background-color: var.$white-color;
+    border-radius: 1.6rem;
+    text-align: center;
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+    align-items:center;
+    justify-content: center;
+    width: 15rem;
+    padding: 0.5rem 2rem;
+    float: right;
+    transform: translateX(-1rem);
+    margin:1rem 0;
+    span {
+        margin-right:1rem;
+    }
+    &:hover {
+    transform: scale(1.02);
+    }
+    &:active {
+        transform:scale(0.95)
+    }
+    @include media.mq(md) {
+        display: flex;
+    }
+}
