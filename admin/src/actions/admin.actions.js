@@ -181,6 +181,90 @@ const createProvider = (info) => async (dispatch) => {
     }
 }
 
+const appInfo = () => async (dispatch) => {
+    dispatch({type: constants.admin.APP_INFO_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.info()
+        dispatch({
+            type:constants.admin.APP_INFO_SUCCESS,
+            payload:data.info
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.APP_INFO_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
+const latestMembers = () => async (dispatch) => {
+    dispatch({type: constants.admin.MEMBERS_LATEST_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.latest()
+        dispatch({
+            type:constants.admin.MEMBERS_LATEST_SUCCESS,
+            payload:data.members
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.MEMBERS_LATEST_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
+const latestTickets = () => async (dispatch) => {
+    dispatch({type: constants.admin.TICKETS_LATEST_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.tickets()
+        dispatch({
+            type:constants.admin.TICKETS_LATEST_SUCCESS,
+            payload:data.tickets
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.TICKETS_LATEST_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
+const latestOperations = () => async (dispatch) => {
+    dispatch({type: constants.admin.OPERATIONS_LATEST_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.operations()
+        dispatch({
+            type:constants.admin.OPERATIONS_LATEST_SUCCESS,
+            payload:data.operations
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.OPERATIONS_LATEST_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
+
+const latestReports = () => async (dispatch) => {
+    dispatch({type: constants.admin.REPORTS_LATEST_REQUEST}) 
+
+    try {
+        const {data} = await api.admin.reports()
+        dispatch({
+            type:constants.admin.REPORTS_LATEST_SUCCESS,
+            payload:data.reports
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.admin.REPORTS_LATEST_FAIL,
+            payload:error.response && error.response.data.message
+        })
+    }
+}
 
 const actions = {
     login,
@@ -193,7 +277,12 @@ const actions = {
     userColorCode,
     changeUserRole,
     createProvider,
-    deleteUser
+    deleteUser,
+    appInfo,
+    latestMembers,
+    latestTickets,
+    latestOperations,
+    latestReports
 }
 
 export default actions

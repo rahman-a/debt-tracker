@@ -343,6 +343,156 @@ const createProvider = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const appInfo = (state, action) => {
+    
+    const cases = {
+        [constants.admin.APP_INFO_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.APP_INFO_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            info:action.payload,
+        },
+        [constants.admin.APP_INFO_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.APP_INFO_RESET]: 
+        {
+            loading:false,
+            error:null,
+            info:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const latestMembers = (state, action) => {
+    
+    const cases = {
+        [constants.admin.MEMBERS_LATEST_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.MEMBERS_LATEST_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            members:action.payload,
+        },
+        [constants.admin.MEMBERS_LATEST_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.MEMBERS_LATEST_RESET]: 
+        {
+            loading:false,
+            error:null,
+            members:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const latestTickets = (state, action) => {
+    
+    const cases = {
+        [constants.admin.TICKETS_LATEST_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.TICKETS_LATEST_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            tickets:action.payload,
+        },
+        [constants.admin.TICKETS_LATEST_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.TICKETS_LATEST_RESET]: 
+        {
+            loading:false,
+            error:null,
+            tickets:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const latestOperations = (state, action) => {
+    
+    const cases = {
+        [constants.admin.OPERATIONS_LATEST_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.OPERATIONS_LATEST_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            operations:action.payload,
+        },
+        [constants.admin.OPERATIONS_LATEST_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.OPERATIONS_LATEST_RESET]: 
+        {
+            loading:false,
+            error:null,
+            operations:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const latestReports = (state, action) => {
+    
+    const cases = {
+        [constants.admin.REPORTS_LATEST_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.admin.REPORTS_LATEST_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            reports:action.payload,
+        },
+        [constants.admin.REPORTS_LATEST_FAIL]: 
+        {
+            loading:false,
+            error:action.payload 
+        },
+        [constants.admin.REPORTS_LATEST_RESET]: 
+        {
+            loading:false,
+            error:null,
+            reports:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducer = {
     login,
     sendResetLink,
@@ -354,7 +504,12 @@ const reducer = {
     userColorCode,
     deleteUser,
     createProvider,
-    changeUserRole
+    changeUserRole,
+    appInfo,
+    latestMembers,
+    latestTickets,
+    latestOperations,
+    latestReports
 }
 
 export default reducer

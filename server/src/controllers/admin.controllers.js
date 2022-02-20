@@ -1,4 +1,7 @@
 import User from '../models/users.model.js'
+import Operation from '../models/operations.model.js'
+import Report from '../models/reports.model.js'
+import Ticket from '../models/tickets.model.js'
 
 export const login = async (req, res, next) => {
     const {email, password} = req.body 
@@ -144,6 +147,176 @@ export const changeUserRole = async (req, res, next) => {
             success:true,
             code:200,
             message:`User has been set as ${roles[role]}`
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const mainDashboardInfo = async (req, res, next) => {
+    try {
+        const pendingOperationCount = await Operation.count({state:'pending'})
+        const declinedOperationCount = await Operation.count({state:'decline'})
+        const activeReportsCount = await Report.count({isActive:true})
+        const closedReportsCount = await Report.count({isActive:false})
+        const membersCount =  await User.count({})
+        const openedTicketsCount = await Ticket.count({isOpen:true}) 
+
+        res.send({
+            success:true,
+            code:200,
+            info:{
+                pending:pendingOperationCount,
+                declined:declinedOperationCount,
+                active:activeReportsCount,
+                closed:closedReportsCount,
+                members:membersCount,
+                tickets:openedTicketsCount
+            }
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const pendingOperationsAtLastWeek = async (req, res, next) => {
+    try {
+        const today = new Date()
+        const lastWeek  = new Date(new Date().setDate(new Date().getDate() - 7))
+        
+        const weekDayCount = {
+            saturday:0,
+            sunday:0,
+            monday:0,
+            tuesday:0,
+            wednesday:0,
+            thursday:0,
+            friday:0
+        }
+
+        const operations = await Operation.aggregate([
+            {
+                $match:{
+                    state:'pending',
+                    createdAt:{
+                        $gte:lastWeek,
+                        $lte:today
+                    }
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    day:{$dayOfWeek:"$createdAt"}
+                }
+            }
+        ])
+
+        operations.forEach(({day}) => {
+            if (day === 1) weekDayCount['sunday'] =+ weekDayCount['sunday'] + 1
+            if (day === 2) weekDayCount['monday'] =+ weekDayCount['monday'] + 1
+            if (day === 3) weekDayCount['tuesday'] =+ weekDayCount['tuesday'] + 1
+            if (day === 4) weekDayCount['wednesday'] =+ weekDayCount['wednesday'] + 1
+            if (day === 5) weekDayCount['thursday'] =+ weekDayCount['thursday'] + 1
+            if (day === 6) weekDayCount['friday'] =+ weekDayCount['friday'] + 1
+            if (day === 7) weekDayCount['saturday'] =+ weekDayCount['saturday'] + 1
+        })
+
+        res.send({
+            success:true,
+            code:200,
+            operations:Object.values(weekDayCount)
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const activeReportsAtLastWeek = async (req, res, next) => {
+    try {
+        const today = new Date()
+        const lastWeek  = new Date(new Date().setDate(new Date().getDate() - 7))
+        
+        const weekDayCount = {
+            saturday:0,
+            sunday:0,
+            monday:0,
+            tuesday:0,
+            wednesday:0,
+            thursday:0,
+            friday:0
+        }
+
+        const reports = await Report.aggregate([
+            {
+                $match:{
+                    isActive:true,
+                    createdAt:{
+                        $gte:lastWeek,
+                        $lte:today
+                    }
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    day:{$dayOfWeek:"$createdAt"}
+                }
+            }
+        ])
+
+        reports.forEach(({day}) => {
+            if (day === 1) weekDayCount['sunday'] =+ weekDayCount['sunday'] + 1
+            if (day === 2) weekDayCount['monday'] =+ weekDayCount['monday'] + 1
+            if (day === 3) weekDayCount['tuesday'] =+ weekDayCount['tuesday'] + 1
+            if (day === 4) weekDayCount['wednesday'] =+ weekDayCount['wednesday'] + 1
+            if (day === 5) weekDayCount['thursday'] =+ weekDayCount['thursday'] + 1
+            if (day === 6) weekDayCount['friday'] =+ weekDayCount['friday'] + 1
+            if (day === 7) weekDayCount['saturday'] =+ weekDayCount['saturday'] + 1
+        })
+
+        res.send({
+            success:true,
+            code:200,
+            reports:Object.values(weekDayCount)
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const latestTenRegisteredMembers = async (req, res, next) => {
+    try {
+        
+        const members = await User.find({},{
+            fullNameInEnglish:1,
+            fullNameInArabic:1,
+            createdAt:1
+        }).sort({createdAt:-1}).limit(10)
+        
+        
+        res.send({
+            success:true,
+            code:200,
+            members
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const latestTenIssuedTickets = async (req, res, next) => {
+    try {
+        const tickets = await Ticket.find({},{
+            title:1,
+            createdAt:1
+        }).sort({createdAt:-1}).limit(10)
+        
+        res.send({
+            success:true,
+            code:200,
+            tickets
         })
     } catch (error) {
         next(error)

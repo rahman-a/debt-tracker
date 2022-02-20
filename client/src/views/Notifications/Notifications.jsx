@@ -7,11 +7,10 @@ import actions from '../../actions'
 
 const Notifications = () => {
     const [filter, setFilter] = useState(null)
-    const [skip, setSkip] = useState(1)
+    const [skip, setSkip] = useState(0)
     const [resetPagination, setResetPagination] = useState(false)
     const dispatch = useDispatch()
     const {loading, error, count, notifications} = useSelector(state => state.listNotifications)
-    const {isUpdated} = useSelector(state => state.updateNotification)
     const {message} = useSelector(state => state.updateOperationState)
 
     
@@ -43,11 +42,11 @@ const Notifications = () => {
     },[notifications])
 
     useEffect(() => {
-        !message && isUpdated && dispatch(actions.notifications.listNotification({skip}))
+        !message && dispatch(actions.notifications.listNotification({skip}))
         message && setTimeout(() => {
             dispatch(actions.notifications.listNotification())
         },2000);
-    },[message, isUpdated])
+    },[message])
 
     return (
         <div className={style.notifications}>

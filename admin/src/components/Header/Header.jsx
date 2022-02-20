@@ -75,25 +75,25 @@ const Header = () => {
         document.body.style.overflow = 'unset'
     })
 
-    // useEffect(() => {
-    //     let intervalNotificationsRequest;
-    //     if(pushNotifications) {
-    //         intervalNotificationsRequest = setTimeout(() => {
-    //           dispatch(actions.notifications.pushNotification())
-    //          },1000 * 30)
-    //     }
-    //     return () => clearTimeout(intervalNotificationsRequest)
-    // },[pushNotifications])
+    useEffect(() => {
+        let intervalNotificationsRequest;
+        if(pushNotifications) {
+            intervalNotificationsRequest = setTimeout(() => {
+              dispatch(actions.notifications.pushNotification())
+             },1000 * 30)
+        }
+        return () => clearTimeout(intervalNotificationsRequest)
+    },[pushNotifications])
 
-    // useEffect(() => {
-    //     const initNotifications = isAuth && setTimeout(() => {
-    //         dispatch(actions.notifications.pushNotification())      
-    //     }, 5000);
+    useEffect(() => {
+        const initNotifications = isAuth && setTimeout(() => {
+            dispatch(actions.notifications.pushNotification())      
+        }, 5000);
         
-    //     !nonRead && dispatch(actions.notifications.listNotification())
+        !nonRead && dispatch(actions.notifications.listNotification())
     
-    //     return () => clearTimeout(initNotifications)
-    // },[page, isAuth])
+        return () => clearTimeout(initNotifications)
+    },[page, isAuth])
 
     return (
         <>

@@ -1,4 +1,6 @@
 import Ticket from '../models/tickets.model.js'
+import User from '../models/users.model.js'
+import Notification from '../models/notifications.model.js'
 import ObjectId from 'mongoose/lib/types/objectid.js'
 
 export const createNewTicket = async (req, res, next) => {
@@ -17,6 +19,12 @@ export const createNewTicket = async (req, res, next) => {
             newTicket.file = req.file.filename
         }
         const ticket = await newTicket.save() 
+
+        const adminNotification = {
+            title:`Ticket has initiated by ${req.user.fullNameInEnglish}`,
+            body:`${req.user.fullNameInEnglish} has initiate new ticket #{{${ticket.code}}} related to ${ticket.title}`
+        }
+        await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
             success:true,
             code:201,
@@ -236,13 +244,18 @@ export const updateTicketStatus = async (req, res, next) => {
     const {id} = req.params 
 
     try {
-        const ticket = await Ticket.findById(id) 
+        const ticket = await Ticket.findById(id).populate('member', 'fullNameInEnglish')
         if(!ticket) {
             res.status(404)
             throw new Error('Ticket Not Found') 
         }
         ticket.isOpen = false
         await ticket.save()
+        const adminNotification = {
+            title:'Ticket has closed',
+            body:`ticket with code #{{${ticket.code}}} related to ${ticket.member.fullNameInEnglish} has marked as solved and is now closed`
+        }
+        await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
             success:true,
             code:200,
@@ -339,6 +352,23 @@ export const getTicketInformation = async (req, res, next) => {
         })
     } catch (error) {
         next(error)
+    }
+}
+
+const sendNotificationToAdminPanel = async (roles, data) => {
+    try {
+        
+        const users = await User.find({roles:{$in:roles}})
+        const usersIds = users.map(user => user._id)
+        if(usersIds.length) {
+            for(const id of usersIds) {
+                data.user = id 
+                const newNotification = new Notification(data) 
+                await newNotification.save()
+            }
+        }
+    } catch (error) {
+       throw new Error(error)
     }
 }
 

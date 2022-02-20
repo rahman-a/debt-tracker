@@ -28,29 +28,14 @@ export const listAllUserNotifications = async (req, res, next) => {
     
     const {skip, state} = req.query
     
-    let searchFilter = {'user._id':req.user._id}
+    let searchFilter = {'user':req.user._id}
     
     if(state) {
         searchFilter = {...searchFilter, 'operation.state': state}
     }
     
     try {
-        
         const aggregateOptions = [
-            {
-                $lookup: {
-                    from:'users',
-                    let:{userId: '$user'},
-                    pipeline:[
-                        {$match : {$expr : {$eq: ['$_id', '$$userId' ]}} },
-                        {
-                            $project: {avatar:1}
-                        }
-                    ],
-                    as: 'user'
-                }
-            },
-
             {
                 $lookup: {
                     from:'operations',
@@ -65,10 +50,6 @@ export const listAllUserNotifications = async (req, res, next) => {
                 }
             },
             {
-                $unwind:'$user'
-            },
-
-            {
                 $unwind:"$operation"
             }, 
             {
@@ -78,10 +59,9 @@ export const listAllUserNotifications = async (req, res, next) => {
         
         let notifications = await Notification.aggregate([
             ...aggregateOptions,
-            {$sort:{createdAt:-1}},
-            {$sort:{isRead:1}},
+            {$sort:{createdAt:-1, isRead:-1}},
             {$skip: parseInt(skip) || 0 },
-            {$limit: 5}
+            {$limit:5}
         ])
 
         if(!state) {
@@ -91,10 +71,10 @@ export const listAllUserNotifications = async (req, res, next) => {
             })
             .skip(parseInt(skip) || 0)
             .limit(5)
-            .sort({createdAt:-1})
+            .sort({createdAt:-1, isRead:-1})
 
             notifications = notificationsWithoutOperation.length
-            ? [...notificationsWithoutOperation, ...notifications]
+            ? [...notifications, ...notificationsWithoutOperation]
             : notifications
         }
 

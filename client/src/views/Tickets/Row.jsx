@@ -72,7 +72,7 @@ return (
             <Modal.Body>
                 <div className={style.tickets__close}>
                 <h2>Are You Sure?</h2>
-                <p>Do you really want to delete the member?</p>
+                <p>Do you really want to close the ticket?</p>
                 <p>This Process can't be undone.</p>
                 </div>
             </Modal.Body>

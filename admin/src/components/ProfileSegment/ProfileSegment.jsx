@@ -9,14 +9,21 @@ import messages from '../../config/messages'
 import actions from '../../actions'
 
 const Country = ({country}) => {
+    console.log({country});
     return (
         <span style={{flexDirection:'row'}}>
-            <img 
-            src={country.image} 
-            alt={country.name} 
-            width='25'
-            style={{marginRight:'1rem'}}/>
-            {`${country.abbr} ${country.name}`}
+          {
+              country.name 
+              ?<> 
+                <img 
+                src={country.image} 
+                alt={country.name} 
+                width='25'
+                style={{marginRight:'1rem'}}/>
+                {`${country.abbr} ${country.name}`}
+              </>
+              : <Badge bg='danger'>Not Provided</Badge>
+          }  
         </span>
     )
 }

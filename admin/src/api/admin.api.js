@@ -46,6 +46,21 @@ const adminAPI = {
     },
     provider(data) {
         return service().post('users/provider', data)
+    },
+    info(){
+        return service().get('users/info')
+    },
+    latest(){
+        return service().get('users/latest')
+    },
+    tickets(){
+        return service().get('users/tickets')
+    },
+    operations(){
+        return service().get('users/operations')
+    },
+    reports(){
+        return service().get('users/reports')
     }
 }
 

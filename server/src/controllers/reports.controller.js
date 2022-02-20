@@ -16,11 +16,12 @@ export const createReport = async (req, res, next) => {
             throw new Error('Report already Exist with this operation')
         }
         const targetedOperation = await Operation.findById(operation)
+        
         if(!targetedOperation) {
             res.status(404)
             throw new Error('This Operation isn\'t Exist, please choose another operation')
         }
-        console.log({targetedOperation});
+        
         const newReport = {
             operation:targetedOperation._id,
             currency:targetedOperation.currency,

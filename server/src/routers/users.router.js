@@ -27,7 +27,12 @@ import {
     login as staffLogin,
     logoutHandler as staffLogout,
     changeUserRole,
-    createProviderAccount
+    createProviderAccount,
+    mainDashboardInfo,
+    latestTenRegisteredMembers,
+    latestTenIssuedTickets,
+    pendingOperationsAtLastWeek,
+    activeReportsAtLastWeek
 } from '../controllers/admin.controllers.js'
 
 import {
@@ -70,5 +75,11 @@ router.patch('/activate/:id', isAuth, checkRoles('manager', 'hr'), toggleUserAct
 router.patch('/color/:id', isAuth, checkRoles('manager', 'hr'), changeUserColorCode)
 router.patch('/role/:id', isAuth, checkRoles('manager'), changeUserRole)
 router.post('/provider', isAuth, checkRoles('manager', 'hr'), uploadHandler.fields(imagesFields), createProviderAccount)
+router.get('/info', isAuth, checkRoles('manager', 'hr', 'cs'), mainDashboardInfo)
+router.get('/latest', isAuth, checkRoles('manager', 'hr', 'cs'), latestTenRegisteredMembers)
+router.get('/tickets', isAuth, checkRoles('manager', 'hr', 'cs'), latestTenIssuedTickets)
+router.get('/operations', isAuth, checkRoles('manager', 'hr', 'cs'), pendingOperationsAtLastWeek)
+router.get('/reports', isAuth, checkRoles('manager', 'hr', 'cs'), activeReportsAtLastWeek)
+
 
 export default router

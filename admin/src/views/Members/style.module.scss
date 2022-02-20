@@ -56,4 +56,17 @@
             padding: 0.5rem 0;
         }
     }
+
+    &__provider {
+        span {
+            color:#dc3545;
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            svg {
+                width:1.4rem;
+                height: 1.4rem;
+            }
+        }
+    }
 }

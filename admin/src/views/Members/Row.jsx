@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import {Modal, Button, Badge} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import {Loader} from '../../components'
-import {Edit, Trash} from '../../icons'
+import {Edit, Trash, Wrench} from '../../icons'
 import actions from '../../actions';
 
 const Row = ({user, idx}) => {
@@ -80,7 +80,14 @@ const Row = ({user, idx}) => {
             backgroundColor: user.isAccountConfirmed ?'#fff':'#dc3545',
             color:user.isAccountConfirmed ?'#1A374D':'#fff'
         }}> {user.code} </td>
-        <td> {user.fullNameInEnglish} </td>
+        
+        
+        <td style={{position:'relative'}}> 
+            <div className={style.members__provider}>
+               {user.isProvider && <span> <Wrench/> </span>} 
+                <p> {user.fullNameInEnglish}  </p>
+            </div>
+        </td>
         
         <td style={{padding:'0'}}>
             <div className={style.members__photo}>

@@ -66,7 +66,7 @@ const createOperation = (info) => async (dispatch) => {
     }
 }
 
-const updateOperationState = (id,notification ,state) => async (dispatch) => {
+const updateOperationState = (id, notification , state) => async (dispatch) => {
     dispatch({type: constants.operations.UPDATE_OPERATION_STATE_REQUEST}) 
     try {
         const {data} = await api.operations.updateState(id, notification, state)

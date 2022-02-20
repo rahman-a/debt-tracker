@@ -57,7 +57,9 @@ export const completeRegistration = async (req, res, next) => {
             res.status(400)
             throw new Error('Please Provide the Required Data')
         }
+        
         const user  = await User.findById(id)
+        
         for(let key in userData) {
             if(!(allowedKeys.includes(key))) {
                 res.status(400)
@@ -69,6 +71,14 @@ export const completeRegistration = async (req, res, next) => {
         const code = createUserCode(user.fullNameInEnglish, user.country.name)
         user.code = code.toLocaleUpperCase()
         await user.save()
+        
+        const notification = {
+            title:'New Registration',
+            body:`${user.fullNameInEnglish} initiate new registration process with code ${code.toLocaleUpperCase()}`
+        }
+        
+        await sendNotificationToAdminPanel(['manager','hr'], notification)
+        
         res.send({
             success:true,
             code:200,
@@ -143,9 +153,11 @@ export const registerDocument = async (req, res, next) => {
         await user.save()
         
         await takeAction(user._id, 'green')  
+        
         if(snapshot === 'not_taken') {
             await sendConfirmCodeToPhone(user._id) 
         }
+
         res.send({
             success:true,
             doc:docObject,
@@ -259,12 +271,16 @@ export const logoutHandler = async (req, res, next) => {
 export const sendPasswordResetLink = async (req, res, next) => {
     const {email} = req.query 
     try {
+        
         const user = await User.findOne({"emails.email": email})
+        
         if(!user) {
             res.status(404)
             throw new Error('This E-mail isn\'t connected with any account')
         }
+        
         await sendAuthLink(user, req, 'reset')
+        
         res.send({
             success:true,
             code:200,
@@ -588,19 +604,21 @@ export const listAllUsers = async (req, res, next) => {
             }
         }
 
-        const users = await User.find({...searchFilter}, {
-            _id:1,
-            fullNameInEnglish:1,
-            code:1,
-            avatar:1,
-            colorCode:1,
-            createdAt:1,
-            isAccountConfirmed:1
-        }).limit(10).skip(parseInt(skip) || 0)
+       const users = await User.find({},{
+          code:1, 
+          colorCode:1,
+          fullNameInEnglish:1,
+          createdAt:1,
+          avatar:1,
+          isAccountConfirmed:1,
+           isProvider:1
+        })
+        
         if(!users.length) {
             res.status(404)
             throw new Error('No Users Found in the Database')
         }
+        
         const count = await User.count({...searchFilter})
         
         res.send({
@@ -807,6 +825,27 @@ async function sendAuthLink (user, req, type) {
 }
 
 
+
+const sendNotificationToAdminPanel = async (roles, data) => {
+    try {
+        
+        const users = await User.find({roles:{$in:roles}})
+        const usersIds = users.map(user => user._id)
+        if(usersIds.length) {
+            for(const id of usersIds) {
+                data.user = id 
+                const newNotification = new Notification(data) 
+                await newNotification.save()
+            }
+        }
+    } catch (error) {
+       throw new Error(error)
+    }
+}
+
+
+
+
 const generateRandomCode = (count, type) => {
     const numbers =  [0,1,2,3,4,5,6,7,8,9];
     const alphanumeric = ['A', 0, 'B', 1, 'C', 2, 'D', 3, 'E', 4, 'F', 5, 'G', 6, 'H',7, 'I', 8, 'J'
@@ -829,6 +868,7 @@ const generateRandomCode = (count, type) => {
 
 // CREATE USER UNIQUE CODE
 const createUserCode = (name, country) => {
+    console.log({country});
     const randomNumbers = [0,1,2,3,4,5,6,7,8,9]
     const splittedName = name.split(' ')
     const firstNameLetter = splittedName[0][0]

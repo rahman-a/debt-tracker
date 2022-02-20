@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {ProfileContainer, ProfileSegment} from '../../components'
-import {Copy, Check} from '../../icons'
+import {Copy, Check, Wrench} from '../../icons'
 
 const Personal = ({data}) => {
     const [isCopied, setIsCopied] = useState(false)
@@ -19,6 +19,13 @@ const Personal = ({data}) => {
             ribbon={{color:data.color.code, states:data.color.state}}>
                 
                 <div className={style.profile__personal_info}>
+                    {
+                        data.isProvider && 
+                        <div className={style.profile__personal_provider}>
+                          <span> <Wrench/> </span>
+                          <p> Provider </p>
+                        </div>
+                    }
                     <img src={
                         `api/files/${data.avatar}`
                     } alt="" />

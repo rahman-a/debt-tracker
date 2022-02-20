@@ -9,7 +9,6 @@ const mainReducer = combineReducers(globalReducer)
 
 const rootReducer = (state, action) =>{
     if(action.type === 'ADMIN_LOGOUT_SUCCESS') {
-        console.log({action:action.type});
         state = undefined
     }
     

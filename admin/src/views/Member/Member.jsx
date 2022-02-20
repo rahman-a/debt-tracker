@@ -46,6 +46,7 @@ const Profile = () => {
                             avatar:member.avatar,
                             fullName:member.fullName,
                             username:member.username,
+                            isProvider:member.isProvider,
                             emails:member.emails
                         }}/>
                         <Phone data={{

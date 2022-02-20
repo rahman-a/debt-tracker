@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken'
 export const isAuth = async (req, res, next) => {
     // req.cookies['token'] || 
     try {
-        if(req.cookies['tkid']) {
-            const token = req.cookies['tkid']
+        if(req.cookies['token'] || req.cookies['tkid']) {
+            const token = req.cookies['token'] || req.cookies['tkid']
             const decode = jwt.verify(token, process.env.JWT_TOKEN, (error, decode) => {
                 if(error){
                     res.status(401)

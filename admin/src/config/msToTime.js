@@ -6,7 +6,13 @@ function msToTime(ms) {
     if (seconds < 60) return "since a few seconds";
     else if (minutes < 60) return "since " + Math.round(minutes) + " minutes";
     else if (hours < 24) return "since " + Math.round(hours) + " hours";
-    else return "since " + Math.round(days) + " days"
+    else {
+        if(Math.round(days) === 1) {
+            return "since " + Math.round(days) + " day"
+        }else  {
+            return "since " + Math.round(days) + " days"
+        }
+    }
 }
 
 export default msToTime

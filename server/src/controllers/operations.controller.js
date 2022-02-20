@@ -27,18 +27,41 @@ export const createOperation = async (req, res, next) => {
     const newOperation = new Operation(req.body) 
     try {
         let operation = await newOperation.save()
-        operation = await operation.populate('currency', 'name')
+        operation = await Operation.findById(operation._id).populate('currency', 'name')
+        .populate({
+            path:'initiator',
+            populate:{
+                path:'user',
+                select:'fullNameInEnglish fullNameInArabic code'
+            }
+        })
+        .populate({
+            path:'peer',
+            populate:{
+                path:'user',
+                select:'fullNameInEnglish fullNameInArabic code'
+            }
+        })
         
         const notification = {
             user:operation.peer.user,
             operation:operation._id,
-            title:'New Operation new Agent Number 0:0',
+            title:'New Operation has created',
             body:`you have been set as (${operation.peer.type}) 
             and the value is (${operation.peer.value}) in (${operation.currency.name}) currency`
         }
 
         const pushNotification = new Notification(notification)
         await pushNotification.save()
+
+        const adminNotification = {
+            title:'New Operation has created',
+            body:`operation has created #{{${operation._id}}} between ${operation.initiator.user.fullNameInEnglish} 
+            as ${operation.initiator.type} and ${operation.initiator.user.fullNameInEnglish} as ${operation.peer.type} 
+            and operation value is ${operation.peer.value}`
+        }
+
+        await sendNotificationToAdminPanel(['manager'], adminNotification)
 
         res.status(201).send({
             success:true,
@@ -104,7 +127,7 @@ export const listAllMemberOperations = async (req, res, next) => {
             ],
             state:{$ne:'active'}
         };
-
+        
         let dueDateFilter = {createdAt:-1}
         
         if(type) {
@@ -372,9 +395,24 @@ export const updateOperationState = async (req, res, next) => {
             : 'is Active and moved to Reports Documents'}`
         }
 
+        const adminNotification = {
+            user:initiator._id,
+            title:state === 'decline' 
+            ? 'Operation has been declined' 
+            : 'Operation is Active and Running',
+            body:`operation #{{${operation._id}}} between ${initiator.fullNameInEnglish} and ${peer.fullNameInEnglish}
+            ${
+                state === 'decline'
+                ? 'has been declined and closed'
+                : 'is Active and moved to Reports Records'
+            }`
+        }
+
+        
         const pushNotification = new Notification(notificationData)
         await pushNotification.save()
-
+        
+        await sendNotificationToAdminPanel(['manager'], adminNotification)
         res.send({
             success:true,
             code:200,
@@ -609,5 +647,22 @@ export const listAllOperation = async(req, res, next) => {
 
     } catch (error) {
         next(error)
+    }
+}
+
+const sendNotificationToAdminPanel = async (roles, data) => {
+    try {
+        
+        const users = await User.find({roles:{$in:roles}})
+        const usersIds = users.map(user => user._id)
+        if(usersIds.length) {
+            for(const id of usersIds) {
+                data.user = id 
+                const newNotification = new Notification(data) 
+                await newNotification.save()
+            }
+        }
+    } catch (error) {
+       throw new Error(error)
     }
 }

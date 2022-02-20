@@ -12,7 +12,6 @@ const reportsAPI = {
             }
         }
         const queryString = new URLSearchParams(queryObj).toString() 
-        console.log({queryString});
         return service().get(`reports/all?${queryString}`)
     },
     update(id, query) {

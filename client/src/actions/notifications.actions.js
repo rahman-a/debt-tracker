@@ -37,11 +37,31 @@ const newNotification = (info) => async (dispatch) => {
     }
 }
 
-const updateNotificationState = (id) => async (dispatch) => {
+const updateNotificationState = (id) => async (dispatch, getState) => {
     dispatch({type: constants.notifications.UPDATE_NOTIFICATION_REQUEST}) 
 
     try {
-        const {data} = await api.notifications.updateState(id) 
+        const {data} = await api.notifications.updateState(id)
+        
+        let {notifications, nonRead, count} = getState().listNotifications
+                
+        if(notifications) {
+            
+            const copiedNotifications = [...notifications] 
+            
+            copiedNotifications.forEach(notification => {
+                if(notification._id === id) {
+                    notification.isRead = data.isRead
+                }
+            })
+            
+            dispatch({
+                type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
+                notifications:copiedNotifications,
+                count,
+                nonRead: data.isRead ? nonRead - 1 : nonRead + 1
+            })
+        }
         dispatch({
             type: constants.notifications.UPDATE_NOTIFICATION_SUCCESS,
             payload: data.message
@@ -60,11 +80,9 @@ const pushNotification = () => async (dispatch, getState) => {
     try {
         const {data} = await api.notifications.push()
         
-        let {notifications} = getState().listNotifications
-        let {nonRead} = getState().listNotifications
+        let {notifications, nonRead, count} = getState().listNotifications
         if(notifications) {
             notifications = [...data.notifications, ...notifications]
-            const {count} = getState().listNotifications
             dispatch({
                 type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
                 notifications,

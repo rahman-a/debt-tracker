@@ -21,6 +21,7 @@
     }
     &__personal {
         &_info {
+            position: relative;
             display: grid;
             display: -ms-grid;
             place-items: center;
@@ -46,6 +47,22 @@
                     cursor: pointer;
                     color:var.$second-color;
                 }
+            }
+        }
+        &_provider {
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #dc3545;
+            p {
+                font-size: 1.4rem;
+            }
+            svg {
+                width:2rem;
+                height: 2rem;
             }
         }
         img {

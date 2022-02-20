@@ -9,10 +9,12 @@ import mongoDB from '../../database.connection.js'
 mongoDB()
 
 export const takeAction = async (id, state, messageState, report) => {
+    
+    
     const lang = 'en'
     const color = code[state]
     let newNotification = null
-    let info = null
+    let adminNotification = null
     let label = null 
     let message = null
     
@@ -26,12 +28,27 @@ export const takeAction = async (id, state, messageState, report) => {
         label = labels[messageState] 
         message  = report 
         ? messages[messageState](report) 
-        : messages[messageState]
+        : messages[messageState]()
+        
+        const userInfo = {
+            englishName:user.fullNameInEnglish,
+            arabicName: user.fullNameInArabic,
+            code:user.code
+        }
+        
+        const adminMessage = report 
+        ? message[messageState](report, 'admin', userInfo)
+        : message[messageState]('admin', userInfo)
 
         newNotification = {
             user:user._id, 
             title:label[lang],
             body:message[lang]
+        }
+
+        adminNotification = {
+            title:label[lang],
+            body:adminMessage[lang]
         }
 
         // info = {
@@ -55,6 +72,8 @@ export const takeAction = async (id, state, messageState, report) => {
                 const notification = new Notification(newNotification)
                 await notification.save()
                 
+                await sendNotificationToAdminPanel(['manager', 'hr'], adminNotification)
+                
                 // send email to inform the user
                 // await sendEmail(info, 'notice')
             }
@@ -76,6 +95,8 @@ export const takeAction = async (id, state, messageState, report) => {
                 const notification = new Notification(newNotification)
                 await notification.save()
                 
+                await sendNotificationToAdminPanel(['manager', 'hr'], adminNotification)
+
                 // send email to inform the user
                 // await sendEmail(info, 'notice')
             }
@@ -93,6 +114,8 @@ export const takeAction = async (id, state, messageState, report) => {
                 // sent notification to user
                 const notification = new Notification(newNotification)
                 await notification.save()
+
+                await sendNotificationToAdminPanel(['manager','hr'], adminNotification)
                 
                  // send email to inform the user
                 // await sendEmail(info, 'notice')
@@ -101,4 +124,20 @@ export const takeAction = async (id, state, messageState, report) => {
     }
 }
 
-// takeAction('61e71bab448e1df0b7510f6f', 'yellow', 'payLate', '61f518cdc9940216ba66396a')
+
+const sendNotificationToAdminPanel = async (roles, data) => {
+    try {
+        
+        const users = await User.find({roles:{$in:roles}})
+        const usersIds = users.map(user => user._id)
+        if(usersIds.length) {
+            for(const id of usersIds) {
+                data.user = id 
+                const newNotification = new Notification(data) 
+                await newNotification.save()
+            }
+        }
+    } catch (error) {
+       throw new Error(error)
+    }
+}

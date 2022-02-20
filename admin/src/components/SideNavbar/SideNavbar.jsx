@@ -73,7 +73,7 @@ const SideNavbar = ({
             <ul className={style.navbar__menu_list}>
                 <li className={style.navbar__menu_item}
                 >
-                    <div onClick={() => navigate('/dashboard')}>
+                    <div onClick={() => navigate('/')}>
                         <span>
                             <Dashboard/>
                         </span>
@@ -82,75 +82,81 @@ const SideNavbar = ({
                         </span>
                     </div>
                 </li>
-                <li className={style.navbar__menu_item}
-                >
-                    <div onClick={() => navigate('/operations')}>
-                        <span>
-                            <Cogs/>
-                        </span>
-                        <span>
-                            Operations
-                        </span>
-                    </div>
-                </li>
-                <li className={style.navbar__menu_item}
-                >
-                    <div onClick={showReportsMenu}>
-                        <span>
-                            <File/>
-                        </span>
-                        <span>
-                            Reports
-                        </span>
-                    </div>
-                    {/* ///////////////////////////////////// */}
-                    <ul className={style.navbar__menu_reports}>
-                        <div ref={reportRef}>
-                            <li className={style.navbar__menu_reports_item}
-                            onClick={() => navigate('/reports/active')}>
-                                <span>
-                                    <CashRegister/>
-                                </span>
-                                <span>
-                                    Active Reports
-                                </span>
-                            </li>
-                            <li className={style.navbar__menu_reports_item}
-                            onClick={() => navigate('/reports/closed')}>
-                                <span>
-                                    <HandshakeSlash/>
-                                </span>
-                                <span>
-                                    closed Reports
-                                </span>
-                            </li>
+                {
+                    staff.roles.includes('manager') && 
+                    <li className={style.navbar__menu_item}>
+                        <div onClick={() => navigate('/operations')}>
+                            <span>
+                                <Cogs/>
+                            </span>
+                            <span>
+                                Operations
+                            </span>
                         </div>
-                    </ul>
+                    </li>
+                }
+                {
+                    staff.roles.includes('manager') && 
+                    <li className={style.navbar__menu_item}>
+                        <div onClick={showReportsMenu}>
+                            <span>
+                                <File/>
+                            </span>
+                            <span>
+                                Reports
+                            </span>
+                        </div>
                     {/* ///////////////////////////////////// */}
-                </li>
-                <li className={style.navbar__menu_item}
-                >
-                   <div onClick={() => navigate('/members')}>
-                        <span>
-                            <AddressCard/>
-                        </span>
-                        <span>
-                            Members
-                        </span>
-                   </div>
-                </li>
+                        <ul className={style.navbar__menu_reports}>
+                            <div ref={reportRef}>
+                                <li className={style.navbar__menu_reports_item}
+                                onClick={() => navigate('/reports/active')}>
+                                    <span>
+                                        <CashRegister/>
+                                    </span>
+                                    <span>
+                                        Active Reports
+                                    </span>
+                                </li>
+                                <li className={style.navbar__menu_reports_item}
+                                onClick={() => navigate('/reports/closed')}>
+                                    <span>
+                                        <HandshakeSlash/>
+                                    </span>
+                                    <span>
+                                        closed Reports
+                                    </span>
+                                </li>
+                            </div>
+                        </ul>
+                    {/* ///////////////////////////////////// */}
+                    </li>
+                }
                 {
                     (staff.roles.includes('manager') || staff.roles.includes('hr')) && 
+                   <>
+                   
                     <li className={style.navbar__menu_item}>
-                        <div onClick={() => navigate('/provider')}>
-                            <span>
-                                <Wrench/>
-                            </span>
-                            <span>
-                                Provider
-                            </span>
-                        </div>
-                    </li>  
+                            <div onClick={() => navigate('/members')}>
+                                <span>
+                                    <AddressCard/>
+                                </span>
+                                <span>
+                                    Members
+                                </span>
+                            </div>
+                        </li>
+                        <li className={style.navbar__menu_item}>
+                            <div onClick={() => navigate('/provider')}>
+                                <span>
+                                    <Wrench/>
+                                </span>
+                                <span>
+                                    Provider
+                                </span>
+                            </div>
+                        </li>  
+                   </> 
                 }
                 {
                     (staff.roles.includes('manager') || staff.roles.includes('cs')) && 

@@ -124,7 +124,7 @@ userSchema.methods.toJSON = function(){
     delete user.password
     delete user.isPhoneConfirmed
     delete user.isEmailConfirmed
-    delete user.isProvider
+    // delete user.isProvider
     delete user.roles
     delete user.verificationImage
     delete user.phoneCode
