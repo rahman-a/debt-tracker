@@ -1,5 +1,4 @@
 import React from 'react';
-import style from './style.module.scss'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 

@@ -28,6 +28,12 @@ const reportsAPI = {
             queryString = '?' + new URLSearchParams(query).toString()
         }
         return service().patch(`reports/${id}${queryString}`)
+    },
+    changeDueDate(id, date) {
+        return service().patch(`reports/${id}/due`, date)
+    },
+    approveDueDate(id, date) {
+        return service().patch(`reports/${id}/due/approve`, date)
     }
 }
 

@@ -6,10 +6,12 @@ import {useSelector}  from 'react-redux'
 import {Currency} from '../../components'
 import {Copy, Check, Reader} from '../../icons'
 import Description from './Description';
+import ChangeDue from './ChangeDue';
 
 const Row = ({record, idx, due, op, closed}) => {
     const [isCopied, setIsCopied] = useState(false)
     const [isDescribeOn, setIsDescribeOn] = useState(false)
+    const [isDueChange,setIsDueChange] = useState(false)
     const {user} = useSelector(state => state.login)
     
     const copyIdHandler = _ => {
@@ -66,6 +68,16 @@ const Row = ({record, idx, due, op, closed}) => {
         return value
     }
 
+    const isCurrentUserCredit = _ =>{
+        if(!op) {
+            const creditor = record.operation.initiator.type === 'credit'
+            ? record.operation.initiator._id 
+            : record.operation.peer._id 
+             if(creditor === user._id)  return true
+        }
+
+        return false
+    }
     
     const getStateColor = state => { 
         const states = {
@@ -82,9 +94,16 @@ const Row = ({record, idx, due, op, closed}) => {
         
         <>
         <Description
-        note={record.note || record.operation.note}
+        note={record?.note || record?.operation?.note}
         isDescribeOn={isDescribeOn} 
         setIsDescribeOn={setIsDescribeOn}
+        />
+
+        <ChangeDue
+        isDueChange={isDueChange}
+        setIsDueChange={setIsDueChange}
+        id={record._id}
+        op={op}
         />
         
         <tr className={style.row}>
@@ -133,8 +152,8 @@ const Row = ({record, idx, due, op, closed}) => {
             </td>
             
             {/* Operation Description */}
-            <td style={{padding: (record.note || record.operation.note) ? '0' :'2.5rem 0'}}>
-                {record.note || record.operation.note
+            <td style={{padding: (record?.note || record?.operation?.note) ? '0' :'2.5rem 0'}}>
+                {record?.note || record?.operation?.note
                 ? <p className={style.row__desc}> 
                     <span onClick={() => setIsDescribeOn(true)}><Reader/></span> 
                     <i style={{lineBreak:'anywhere', padding:'0 0.8rem'}}>
@@ -176,7 +195,10 @@ const Row = ({record, idx, due, op, closed}) => {
             record.paymentDate
             ? new Date(record.paymentDate).toLocaleDateString()
             : record.dueDate
-            ? new Date(record.dueDate).toLocaleDateString()
+            ? <span className={isCurrentUserCredit() ? style.row__due :''} 
+                    onClick={() => isCurrentUserCredit() && setIsDueChange(true)}> 
+                {new Date(record.dueDate).toLocaleDateString()} 
+             </span> 
             : <Badge bg='dark'>N/A</Badge>} 
             </td>
            } 

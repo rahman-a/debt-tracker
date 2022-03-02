@@ -84,4 +84,12 @@
         border-radius: 0.5rem;
         padding: 0 2px;
     }
+
+    &__due {
+        border-bottom: 1px dashed #fd7e14;
+        cursor: pointer;
+        &:hover {
+            border-bottom: 1px solid #fd7e14; 
+        }
+    }
 }

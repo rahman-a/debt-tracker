@@ -42,6 +42,31 @@ export const createOperation = async (req, res, next) => {
                 select:'fullNameInEnglish fullNameInArabic code'
             }
         })
+
+        const user = await User.findById(operation.initiator.user) 
+        if(user.isProvider) {
+            operation.state = 'active'
+            await operation.save() 
+
+            const newReportData = {
+                operation:operation._id,
+                isActive:true,
+                currency:operation.currency,
+                credit:operation.initiator.type === 'credit'
+                ? operation.initiator.value 
+                : operation.peer.value,
+                debt:operation.initiator.type === 'debt'
+                ? operation.initiator.value 
+                : operation.peer.value
+            }
+
+            if(operation.dueDate) {
+                newReportData.dueDate = operation.dueDate
+            }
+
+            const newReport = new Report(newReportData) 
+            await newReport.save()
+        }
         
         const notification = {
             user:operation.peer.user,

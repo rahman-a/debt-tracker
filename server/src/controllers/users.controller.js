@@ -776,12 +776,12 @@ async function sendLoginCodeToEmail(id) {
         await user.save()
 
         
-        const info = {
-            code:code,
-            name:user.fullNameInEnglish,
-            email:user.emails.find(email => email.isPrimary === true).email
-        }
-        await sendEmail(info, 'code')
+        // const info = {
+        //     code:code,
+        //     name:user.fullNameInEnglish,
+        //     email:user.emails.find(email => email.isPrimary === true).email
+        // }
+        // await sendEmail(info, 'code')
 
     } catch (error) {
         throw new Error(error)

@@ -1,8 +1,20 @@
 /*
+  object-assign
+  (c) Sindre Sorhus
+  @license MIT
+  */
+
+/*
 object-assign
 (c) Sindre Sorhus
 @license MIT
 */
+
+/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+  */
 
 /*!
   Copyright (c) 2018 Jed Watson.
@@ -10,19 +22,12 @@ object-assign
   http://jedwatson.github.io/classnames
 */
 
-/*! exports provided: default */
-
-/*! no static exports found */
-
-/*! react */
-
-/*!******************************!*\
-        !*** ./src/react-webcam.tsx ***!
-        \******************************/
-
-/*!**************************************************************************************!*\
-        !*** external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"} ***!
-        \**************************************************************************************/
+/*!
+ * Chart.js v3.7.1
+ * https://www.chartjs.org
+ * (c) 2022 Chart.js Contributors
+ * Released under the MIT License
+ */
 
 /**
  * React Router DOM v6.2.1

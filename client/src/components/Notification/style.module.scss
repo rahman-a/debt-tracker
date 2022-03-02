@@ -98,4 +98,12 @@
         padding:0.3rem;
         border-radius: 0.5rem;
     }
+
+    &__dueDate {
+        background-color: #ddd;
+        padding: 0.2rem;
+        border-radius: 0.5rem;
+        font-size: 1.4rem;
+        font-style: italic
+    }
 }

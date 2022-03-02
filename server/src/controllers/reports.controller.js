@@ -1,6 +1,7 @@
 import Report from '../models/reports.model.js'
 import Operation from '../models/operations.model.js'
 import User from '../models/users.model.js'
+import Notification from '../models/notifications.model.js'
 import {takeAction} from '../config/takeAction.js'
 import {code} from '../config/code.js'
 import {DateTime} from 'luxon'
@@ -453,6 +454,120 @@ export const closeReportHandler = async(req, res, next) => {
             return
         }
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const requestDueDateChange = async (req, res, next) => {
+    const {id} = req.params 
+    const {date} = req.body 
+    console.log({id});
+    console.log({date});
+    try {
+        const report = await Report.findById(id) 
+        
+        if(!report) {
+            res.status(404)
+            throw new Error('No Report Found to Change')
+        }
+        
+        const operation = await Operation.findById(report.operation) 
+        if(!operation) {
+            res.status(404)
+            throw new Error('No Operation connected to this report')
+        }
+        
+        const creditUser = operation.initiator.type === 'credit' 
+        ? operation.initiator.user
+        : operation.peer.user
+        if(req.user._id.toString() !== creditUser.toString()) {
+            res.status(401)
+            throw new Error('you must be credit to request due date change')
+        }
+        
+        const debtUser = operation.initiator.type === 'debt' 
+        ? operation.initiator.user
+        : operation.peer.user
+        
+        const userData = await User.findById(creditUser)
+        
+        const notificationData = {
+            user:debtUser,
+            title:'Request Due Date Change',
+            body:`${userData.fullNameInEnglish} change Dua Date of report #{{${id}}} to ${new Date(date).toDateString()}`,
+            report:id,
+            payload:{
+                date,
+                name:userData.fullNameInEnglish
+            }
+        }
+
+        const newNotification = new Notification(notificationData)
+        await newNotification.save()
+
+        res.send({
+            success:true, 
+            code:200,
+            message:'Change has been requested and waiting for debtor approve'
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const approveDueDateChange = async (req, res, next) => {
+    const {id} = req.params 
+    const {date} = req.body 
+
+    try {
+        const report = await Report.findById(id) 
+        if(!report) {
+            res.status(404)
+            throw new Error('No Report Found to Change')
+        }
+        
+        const operation = await Operation.findById(report.operation) 
+        if(!operation) {
+            res.status(404)
+            throw new Error('No Operation connected to this report')
+        }
+        
+        const debtUser = operation.initiator.type === 'debt' 
+        ? operation.initiator.user
+        : operation.peer.user
+        
+        if(req.user._id.toString() !== debtUser.toString()) {
+            res.status(401)
+            throw new Error('you must be debtor to approve this change')
+        }
+        
+        const creditUser = operation.initiator.type === 'credit' 
+        ? operation.initiator.user
+        : operation.peer.user
+        
+        const userData = await User.findById(debtUser)
+        
+        report.dueDate = new Date(date) 
+        await report.save() 
+        
+        
+        const notificationData = {
+            user:creditUser,
+            title:'Request Due Date Change',
+            body:`${userData.fullNameInEnglish} approve the due Date Change of report #{{${id}}}`,
+        }
+
+        const newNotification = new Notification(notificationData)
+        await newNotification.save()
+        
+        res.send({
+            success:true,
+            code:200,
+            message:'Due Date has Changed Successfully'
+        })
     } catch (error) {
         next(error)
     }

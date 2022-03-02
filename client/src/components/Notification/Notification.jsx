@@ -1,12 +1,16 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {OperationDecision} from '../../components'
 import actions from '../../actions'
 import {renderStateMessage} from '../../config/stateMessage'
+import DueDateChange from './DueDateChange'
 
 const Notification = ({data}) => {
     const [isStateOn, setIsStateOn] = useState(false)
+    const [isDueChange, setIsDueChange] = useState(false)
+    const {message} = useSelector(state => state.approveDueDate)
+
     const dispatch = useDispatch()
 
     const stateColorStyle = _ => {
@@ -25,10 +29,17 @@ const Notification = ({data}) => {
     const takeDecisionHandler = _ => {
         if(data.state === 'pending') {
             setIsStateOn(true)
-        }else {
+        } else if(data.report) {
+            setIsDueChange(true)
+        }
+        else {
             dispatch(actions.notifications.updateNotificationState(data.id))
         }
     }
+
+    useEffect(() =>{
+     message && dispatch(actions.notifications.updateNotificationState(data.id))
+    },[message])
 
     return (
         <>
@@ -39,6 +50,16 @@ const Notification = ({data}) => {
             id={data.operation}
             notificationId={data.id}
             /> }
+
+            <DueDateChange
+            isDueChange={isDueChange}
+            setIsDueChange={setIsDueChange}
+            report={data.report}
+            date={data.payload?.date}
+            name={data.payload?.name}
+            />
+
+
             <div className={style.notification}
                 onClick={takeDecisionHandler}
                 style={{backgroundColor: data.isRead ? '#fff':'#e7f5ff'}}>

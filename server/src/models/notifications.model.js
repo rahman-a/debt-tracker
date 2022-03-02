@@ -10,6 +10,10 @@ const notificationSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Operation'
     },
+    report: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Report'
+    },
     title:{
         type:String,
         default:'Initiate a New Operation',
@@ -18,6 +22,7 @@ const notificationSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    payload:Object,
     isRead:{
         type:Boolean,
         default:false

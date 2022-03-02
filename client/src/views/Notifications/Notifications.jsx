@@ -91,7 +91,11 @@ const Notifications = () => {
                                     date:new Date(notification.createdAt).toLocaleDateString(),
                                     state:notification.operation?.state
                                     ? notification.operation?.state
-                                    : null
+                                    : null,
+                                    report:notification?.report 
+                                    ? notification.report : null,
+                                    payload:notification?.payload
+                                    ? notification.payload : null
                                     }}/>
                                 ))
                             }

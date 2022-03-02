@@ -62,10 +62,71 @@ const updateReport = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const updateDueDate = (state, action) => {
+    
+    const cases = {
+        [constants.reports.DUE_DATE_CHANGE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.reports.DUE_DATE_CHANGE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload
+        },
+        [constants.reports.DUE_DATE_CHANGE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload,
+        },
+        [constants.reports.DUE_DATE_CHANGE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const approveDueDate = (state, action) => {
+    
+    const cases = {
+        [constants.reports.DUE_DATE_APPROVE_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.reports.DUE_DATE_APPROVE_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload
+        },
+        [constants.reports.DUE_DATE_APPROVE_FAIL]: 
+        {
+            loading:false,
+            error:action.payload,
+        },
+        [constants.reports.DUE_DATE_APPROVE_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
 
 const reducer = {
     listAllReports,
-    updateReport
+    updateReport,
+    updateDueDate,
+    approveDueDate
 }
 
 export default reducer
