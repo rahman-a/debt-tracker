@@ -6,6 +6,7 @@ import {CircleCheck, Verify} from '../../icons'
 import {Input, SideButton, Loader} from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 const OTPCode = () => {
     const [completeCreation, setCompleteCreation] = useState(false)
@@ -20,6 +21,8 @@ const OTPCode = () => {
     } = useSelector(state => state.sendPhoneCode)
 
     const dispatch = useDispatch()
+
+    const {t} = useTranslation()
     
     const clearAlert = _ => {
         dispatch({type:constants.users.SEND_PHONE_CODE_RESET})
@@ -51,14 +54,14 @@ const OTPCode = () => {
                 fill='#7dff6e'
                 />
             </span>
-            <h2 style={{fontSize:'3.5rem', fontWeight:'100'}}>Congratulation</h2>
-            <p style={{marginBottom:'5rem', letterSpacing:'2px'}}>Your Account has been Created</p>
+            <h2 style={{fontSize:'3.5rem', fontWeight:'100'}}>{t('congratulation')}</h2>
+            <p style={{marginBottom:'5rem', letterSpacing:'2px'}}>{t('account-created')}</p>
             
             {
             !completeCreation 
             ? <>  {/* Sent Code To Verify Phone Number */} 
-                <p>A Code has been sent to your Phone</p>
-                <p>Please type this code to activate your Phone</p>
+                <p>{t('code-sent-phone')}</p>
+                <p>{t('type-code-activate')}</p>
                 <div
                 style={{
                     display:'flex',
@@ -68,14 +71,14 @@ const OTPCode = () => {
                     <Input
                         type='number'
                         name='otp'
-                        placeholder='type the code sent to your phone'
+                        placeholder='type-code-sent-phone'
                         onChange={(e) => setPhoneCode(e.target.value)}
                         value={phoneCode}
                         icon={<strong className={style.done__icon}>OTP</strong>}
                     />
                     <SideButton 
                     noIcon 
-                    text={!loading && <Verify/>} 
+                    text={!loading && <CircleCheck/>} 
                     loading={loading}
                     handler={verifyPhoneCodeHandler}/>
                 </div>
@@ -85,7 +88,7 @@ const OTPCode = () => {
                   {
                   phone_loading
                   ? <Loader size='5' options={{animation:'border'}}/>
-                  : 'send code again'
+                  : t('send-code-again')
                   }  
                 </button>
                 { phone_error 
@@ -105,11 +108,10 @@ const OTPCode = () => {
                     marginLeft:'1rem', 
                     fontWeight:'400', 
                     fontSize:'2rem'
-                }}>Your Phone has been Verified</p>
+                }}>{t('phone-verified')}</p>
             </div>
             <div className={style.done__emailSent}>
-                A link has been sent to your E-mail, please click on it
-                to activate your E-mail
+                {t('send-activation-link')}
             </div>
             </>}
 

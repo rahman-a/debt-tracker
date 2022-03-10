@@ -3,32 +3,33 @@ import style from './style.module.scss'
 import {ProfileContainer, ProfileSegment} from '../../components'
 
 const Address = ({data}) => {
+    
     return (
         <div className={style.profile__address}>
-            <ProfileContainer title='Addresses'>
+            <ProfileContainer title='addresses'>
                 
                 <ProfileSegment
-                    title='Country'
+                    title='country'
                     type='country'
                     text={data.country}
                 />
                 
                 
                 <ProfileSegment
-                    title='Addresses in UAE'
+                    title='uae-addresses'
                     text={data.insideAddress}
                 />
 
                 {
                     data.outsideAddress 
                     ?   <ProfileSegment
-                        title='Addresses outside UAE'
+                        title='outside-uae-addresses'
                         text={data.outsideAddress }
                         />
                     :   <ProfileSegment
-                        title='Addresses outside UAE'
+                        title='outside-uae-addresses'
                         type='outAddress'
-                        placeholder='Enter Your Outside Address'
+                        placeholder='enter-outside-address'
                         />
                 }
                 

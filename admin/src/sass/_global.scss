@@ -49,6 +49,11 @@ body {
     line-height: 1.6;
 }
 
+.arabic-language  {
+    font-family: var(--second-font) !important;
+    direction: rtl !important;
+}
+
 .container {
     max-width:80%;
     margin:0 auto;
@@ -122,6 +127,12 @@ body {
     }
 }
 
+
+.simplebar-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
 
 
 @media (min-width:576px) {

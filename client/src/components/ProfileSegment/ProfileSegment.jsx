@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {useSelector, useDispatch} from 'react-redux'
+import {useTranslation} from 'react-i18next'
 
 import {Loader} from '../../components'
-import { Edit, ArrowRight, Plus} from '../../icons'
+import { Edit, ArrowRight, Plus, ArrowLeft} from '../../icons'
 import actions from '../../actions'
+import i18next from 'i18next'
 
 
 
@@ -33,7 +35,9 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
     const [addressSuccess, setAddressSuccess] = useState(null)
     const [phoneSuccess, setPhoneSuccess] = useState(null)
     const dispatch = useDispatch()
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
+
     const {loading, error, message} = useSelector(state => state.updatePassword)
     const {user} = useSelector(state => state.userProfile)
     
@@ -67,11 +71,11 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
         }
         if(message ||isDone) {
             message 
-            ? setPassSuccess(message)
+            ? setPassSuccess(t('pass-updated'))
             : isDone && isAddressEdit
-            ? setAddressSuccess(`${title} has been added`)
+            ? setAddressSuccess(t('address-added', {title:t(title)}))
             : isDone && isPhoneEdit
-            && setPhoneSuccess(`${title} has been added`)
+            && setPhoneSuccess(t('phone-added', {title:t(title)}))
             
             setIsSubmitting(false)
             setEditError(null)
@@ -79,9 +83,9 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
     },[loading, error,message, info_loading,info_error, isDone])
     
     return (
-        <div className={style.segment}>
+        <div className={`${style.segment} ${lang === 'ar' ? style.segment_ar :''}`}>
             <h3>
-                {title}
+                {t(title)}
                 {
                     type === 'password' && 
                     <span onClick={() => setIsEdit(prev => !prev)}><Edit/></span>
@@ -105,17 +109,19 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
             </p>
             
             {isEdit 
-            && <div className={style.segment__edit}>
+            && <div className={`${style.segment__edit} ${lang === 'ar' ? style.segment__edit_ar :''}`}>
                 
                 <input 
                 type={type} 
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 onChange={(e) => setInfo(e.target.value)}/>
                 
                 {
                     isSubmitting 
                     ? <Loader size='4' options={{animation:'border'}}/>
-                    : <button onClick={submitDataHandler}> <ArrowRight/> </button> 
+                    : <button onClick={submitDataHandler}>
+                        {lang === 'ar' ? <ArrowLeft/> : <ArrowRight/> } 
+                     </button> 
                 }
                 
                 { 

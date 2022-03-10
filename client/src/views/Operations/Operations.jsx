@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
 import {Modal} from 'react-bootstrap'
+import {useTranslation} from 'react-i18next'
 import {Pagination, Table, Filter, Loader, HeaderAlert} from '../../components'
 import {FilterSearch, Times} from '../../icons'
 import actions from '../../actions'
@@ -19,6 +20,7 @@ const Operation = () => {
         paymentDate:null,
         state:null, 
     })
+    const {t} = useTranslation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {loading, error, count, operations} = useSelector(state => state.listOperations)
@@ -58,17 +60,17 @@ const Operation = () => {
             />
         </Modal>
         <div className={style.operation}>
-            <h1>Operations Records</h1>
+            <h1>{t('operations-records')}</h1>
             <div className={style.operation__wrapper}>
                 <div className={style.operation__actions}>
                     <button 
                     onClick={() => navigate('/operation/new')}>
-                        New Operation
+                        {t('new-operation')}
                     </button>
                     <button className={style.operation__filter}
                     onClick={() => setIsFilter(true)}>
                         <span> <FilterSearch/> </span>
-                        <span> Filter </span>
+                        <span>  {t('filter')} </span>
                     </button>
                 </div>
                 

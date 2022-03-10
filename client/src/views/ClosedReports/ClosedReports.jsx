@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {Modal} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import {useTranslation} from 'react-i18next'
 import {Pagination, Table, Filter, Loader, HeaderAlert} from '../../components'
 import {FilterSearch, Times} from '../../icons'
 import actions from '../../actions'
@@ -26,7 +27,8 @@ const Reports = () => {
     const dispatch = useDispatch()
     
     const {loading, error, count, reports} = useSelector(state => state.listAllReports)
-
+    
+    const {t} = useTranslation()
 
     const filterOperationHandler = (skip) => {
         let query = {...searchFilter} 
@@ -64,13 +66,13 @@ const Reports = () => {
             />
         </Modal>
         <div className={style.reports}>
-            <h1>Closed Reports Records</h1>
+            <h1>{t('closed-reports-records')}</h1>
             <div className={style.reports__wrapper}>
                 <div className={style.reports__actions}>
                     <button className={style.reports__filter}
                     onClick={() => setIsFilter(true)}>
                         <span> <FilterSearch/> </span>
-                        <span> Filter </span>
+                        <span> {t('filter')} </span>
                     </button>
                 </div>
                 

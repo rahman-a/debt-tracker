@@ -40,5 +40,10 @@
         @include media.mq(sm){
             width:8rem;
         }
+
+        &_ar {
+            margin-left:unset;
+            margin-right: 1rem;
+        }
     }
 }

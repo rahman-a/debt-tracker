@@ -1,0 +1,22 @@
+* {
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  background-color: #dadbd3;
+  min-height: 100vh;
+  padding-top:5rem;
+
+  &__container {
+    display:flex;
+    background-color: #fff;
+    height:80vh;
+    width:90vw;
+    margin:0 auto;
+    box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.75);
+  }
+  
+}
+

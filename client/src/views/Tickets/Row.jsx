@@ -5,11 +5,13 @@ import {useNavigate} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import parser from 'html-react-parser'
+import {useTranslation} from 'react-i18next'
 import {Loader} from '../../components'
 import {Lock, Check, Copy} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
 import msToTime from '../../config/msToTime'
+import i18next from 'i18next'
 
 const Row = ({ticket,idx}) => {
     const [toggleClose, setToggleClose] = useState(false)
@@ -18,7 +20,8 @@ const Row = ({ticket,idx}) => {
     const {message} = useSelector(state => state.updateTicketState)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    
+    const {t} = useTranslation()
+    const lang = i18next.language 
     const dateFormat = {
         day:'2-digit',
         month:'short',
@@ -71,23 +74,23 @@ return (
         <Modal show={toggleClose} onHide={() => setToggleClose(false)}>
             <Modal.Body>
                 <div className={style.tickets__close}>
-                <h2>Are You Sure?</h2>
-                <p>Do you really want to close the ticket?</p>
-                <p>This Process can't be undone.</p>
+                <h2>{t('are-you-sure')}</h2>
+                <p>{t('confirm-ticket-close')}</p>
+                <p>{t('undone-process')}</p>
                 </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button 
                     onClick={() => setToggleClose(false)} 
-                    variant='success' 
+                    variant='danger' 
                     size='lg'>
-                    NO, DON'T CLOSE
+                    {t('close-btn')}
                 </Button>
                 <Button 
-                    variant='danger' 
+                    variant='success' 
                     size='lg'
                     onClick={confirmClose}>
-                    YES, CLOSE THE TICKET
+                    {t('dont-close')}
                 </Button>
             </Modal.Footer>
         </Modal>
@@ -112,8 +115,8 @@ return (
                 <td className={style.tickets__status}>
                     {
                         ticket.isOpen 
-                        ? <Badge bg='danger'>OPEN</Badge>
-                        : <Badge bg='success'>SOLVED</Badge>
+                        ? <Badge bg='danger'>{t('open')}</Badge>
+                        : <Badge bg='success'>{t('closed')}</Badge>
                     } 
                 </td>
                 <td>
@@ -123,7 +126,7 @@ return (
                 </td>
                 <td>
                     {
-                        msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime())
+                        msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime(), lang)
                     }
                 </td>
                 <td style={{padding:0}}>

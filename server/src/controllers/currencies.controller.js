@@ -14,7 +14,7 @@ export const createCurrency = async(req, res, next) => {
         if(isFound) {
             fs.unlinkSync(path.resolve(__dirname, `../../uploads/${req.file.filename}`))
             res.status(400)
-            throw new Error('The Currency Already Exist')
+            throw new Error(req.t('currency_already_exist'))
         }
 
         const currency = await newCurrency.save()
@@ -22,7 +22,7 @@ export const createCurrency = async(req, res, next) => {
             success:true,
             code:201,
             id:currency._id,
-            message:'New Currency has been Created'
+            message:req.t('currency_created')
         })
     } catch (error) {
         next(error)
@@ -34,7 +34,7 @@ export const listAllCurrency = async (req, res, next) => {
         const currencies = await Currency.find({})
         if(currencies.length === 0) {
             res.status(404)
-            throw new Error('No Currencies Found')
+            throw new Error(req.t('no_currency_found'))
         }
         res.send({
             success:true,
@@ -52,13 +52,13 @@ export const deleteCurrency = async (req, res, next) => {
         const currency = await Currency.findById(id) 
         if(!currency) {
             res.status(404)
-            throw new Error('No Currency Found')
+            throw new Error(req.t('no_currency_found'))
         }
         await currency.remove()
         res.send({
             success:true,
             code:200,
-            message:'Currency has been removed'
+            message:req.t('currency_deleted')
         })
     } catch (error) {
         next(error)

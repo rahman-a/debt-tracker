@@ -6,7 +6,7 @@
      &__container {
          background-color: var.$white-color;
          position: absolute;
-         top:5.4rem;
+         top:5rem;
          right:5rem;
          width:30rem;
          box-shadow: -1px 0px 8px 2px rgb(0 0 0 / 30%);
@@ -35,6 +35,11 @@
            &:hover {
              text-decoration: underline;
            }
+         }
+
+         &_ar {
+           left:5rem;
+           right:unset
          }
      }
  

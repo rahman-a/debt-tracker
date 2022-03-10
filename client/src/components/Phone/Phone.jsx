@@ -5,6 +5,7 @@ import {v4 as uuidv4} from 'uuid'
 import {Input, SideButton, Button} from '../../components'
 import {Phone} from '../../icons'
 import actions from '../../actions'
+import { useTranslation } from 'react-i18next'
 
 const Phones = ({setStep, info}) => {
     const [moreInsidePhone, setMoreInsidePhone] = useState(1)
@@ -19,16 +20,16 @@ const Phones = ({setStep, info}) => {
     const dispatch = useDispatch()
     const insideRef = useRef()
     const outsideRef = useRef()
-    
+    const {t} = useTranslation()
     
     const moveNextHandler = _ => {
         if(!(insidePhones.length)) {
-            setErrors('Please Provide at least one phone inside UAE')
+            setErrors(t('provide-phone'))
             return false
         }else {
             for(let phone of insidePhones) {
                 if(phone === '' || phone === ' ') {
-                    setErrors('Please Provide at least one phone inside UAE')
+                    setErrors(t('provide-phone'))
                     return false
                 }
             }
@@ -117,8 +118,8 @@ const Phones = ({setStep, info}) => {
                     }}> 
                         <Input
                             name='insidePhone'
-                            placeholder='Phone inside UAE'
-                            label='Phone inside UAE'
+                            placeholder='phone-in-uae'
+                            label='phone-in-uae'
                             type='text'
                             icon={<Phone/>}
                             value={insidePhones[idx] ? insidePhones[idx] : ''}
@@ -128,9 +129,9 @@ const Phones = ({setStep, info}) => {
                             custom={{marginBottom:'3rem'}}
                         />
                         {moreInsidePhone === (idx + 1) 
-                        && <SideButton text='another phone' handler={() => addMorePhoneHandler('inside')}/>}
+                        && <SideButton text={t('another-phone')} handler={() => addMorePhoneHandler('inside')}/>}
                         {moreInsidePhone === (idx + 1) && moreInsidePhone > 1 
-                        && <SideButton minus text='remove phone' handler={() => removeMorePhoneHandler('inside')}/>}
+                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('inside')}/>}
                         </div>
                     
                 }) 
@@ -145,8 +146,8 @@ const Phones = ({setStep, info}) => {
                     }}>
                         <Input 
                         name='outsidePhone'
-                        placeholder='Phone outside UAE'
-                        label='Phone outside UAE'
+                        placeholder='phone-out-uae'
+                        label='phone-out-uae'
                         type='text'
                         icon={<Phone/>}
                         value={outsidePhones[idx] ? outsidePhones[idx] : ''}
@@ -157,17 +158,17 @@ const Phones = ({setStep, info}) => {
                         /> 
                         {
                         moreOutsidePhone === (idx + 1) 
-                        && <SideButton text='another phone' handler={() => addMorePhoneHandler('outside')}/> 
+                        && <SideButton text={t('another-phone')} handler={() => addMorePhoneHandler('outside')}/> 
                         }
                         {
                         moreOutsidePhone === (idx + 1) && moreOutsidePhone > 1
-                        && <SideButton minus text='remove phone' handler={() => removeMorePhoneHandler('outside')}/> 
+                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('outside')}/> 
                         }
                     </div>
                 })
             }
           
-          <Button value='next' handler={moveNextHandler} loading={loading && loading}/> 
+          <Button value={t('next')} handler={moveNextHandler} loading={loading && loading}/> 
         </>
     )
 }

@@ -3,6 +3,8 @@ import style from './style.module.scss'
 import {Badge} from 'react-bootstrap'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {useSelector}  from 'react-redux'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next';
 import {Currency} from '../../components'
 import {Copy, Check, Reader} from '../../icons'
 import Description from './Description';
@@ -13,7 +15,9 @@ const Row = ({record, idx, due, op, closed}) => {
     const [isDescribeOn, setIsDescribeOn] = useState(false)
     const [isDueChange,setIsDueChange] = useState(false)
     const {user} = useSelector(state => state.login)
-    
+    const lang = i18next.language
+    const {t} = useTranslation()
+
     const copyIdHandler = _ => {
         setIsCopied(true)
         setTimeout(() => {
@@ -78,7 +82,25 @@ const Row = ({record, idx, due, op, closed}) => {
 
         return false
     }
-    
+
+    const getMemberName = _ => {
+        if(lang === 'ar') {
+            return (
+                (record.peer?.user?._id || record.operation.peer._id) === user._id
+                ? record.initiator?.user?.fullNameInArabic || record.operation.initiator.fullNameInArabic
+                : record.peer?.user?.fullNameInArabic || record.operation.peer.fullNameInArabic
+            )
+        } else {
+            return (
+                
+                (record.peer?.user?._id || record.operation.peer._id) === user._id
+                ? record.initiator?.user?.fullNameInEnglish || record.operation.initiator.fullNameInEnglish
+                : record.peer?.user?.fullNameInEnglish || record.operation.peer.fullNameInEnglish
+            )
+        }
+        
+    }
+
     const getStateColor = state => { 
         const states = {
             pending:'#FBFCD4',
@@ -129,14 +151,11 @@ const Row = ({record, idx, due, op, closed}) => {
                 }}>
                     {
                         (record.peer?.user?._id || record.operation.peer._id) === user._id
-                        ? record.initiator?.type || record.operation.initiator.type 
-                        : record.peer?.type || record.operation.peer.type
+                        ? t(record.initiator?.type) || t(record.operation.initiator.type)
+                        : t(record.peer?.type) || t(record.operation.peer.type)
                     }
                 </span>
-                { (record.peer?.user?._id || record.operation.peer._id) === user._id
-                ? record.initiator?.user?.fullNameInEnglish || record.operation.initiator.fullNameInEnglish
-                : record.peer?.user?.fullNameInEnglish || record.operation.peer.fullNameInEnglish
-                }
+                { getMemberName() }
             </td>
             
             {/* Operation Second Peer or Initiator Photo */}
@@ -174,7 +193,7 @@ const Row = ({record, idx, due, op, closed}) => {
             <td> {defineValue(peerType(), 'debt')} </td>
 
             {/* Operation Currency [usd, euro, aed]*/}
-            <td style={{textAlign:'start', paddingLeft:'1rem'}}>
+            <td style={{textAlign:lang === 'ar' ? 'center' :'start', paddingLeft:'1rem'}}>
                 <Currency currency={record.currency}/> 
             </td>
             
@@ -184,7 +203,7 @@ const Row = ({record, idx, due, op, closed}) => {
                 backgroundColor:getStateColor(record.state),
                 textTransform:'uppercase'
                 }}>
-                {record.state}
+                {t(record.state)}
             </td> }
             
             {/* Operation Due Date */}

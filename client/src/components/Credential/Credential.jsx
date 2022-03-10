@@ -6,6 +6,8 @@ import {Input, SideButton, Button} from '../../components'
 import {EnvelopOpen, Key, Fingerprint} from '../../icons'
 import constants from '../../constants'
 import actions from '../../actions'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Credential = ({setStep}) => {
     const [moreEmail, setMoreEmail] = useState(1)
@@ -21,8 +23,8 @@ const Credential = ({setStep}) => {
     const userRef = useRef()
     const {loading, error, userId} = useSelector(state => state.registerCredential)
     const dispatch = useDispatch()
-    
-   
+    const {t} = useTranslation()
+    const lang = i18next.language
     
     
     const submitHandler = _ => {  
@@ -45,27 +47,27 @@ const Credential = ({setStep}) => {
 
     const isFormValid = _ => {
         if(!username) {
-            setErrors('Please type a unique username')
+            setErrors(t('provide-unique-username'))
             return false
         }
         
         if(emails.length === 0) {
-            setErrors('Provide at least one E-mail')
+            setErrors(t('provide-least-one-email'))
             return false
         }
 
         if(!password) {
-            setErrors('Please Provide a Password')
+            setErrors(t('provide-password'))
             return false
         }
 
         if(password !== confirmPassword) {
-            setErrors('Password doesn\'t match')
+            setErrors(t('pass-not-match'))
             return false
         }
 
         if(!isAgree) {
-            setErrors('Please Agree the terms & conditions')
+            setErrors(t('agree-terms-condition'))
             return false
         }
 
@@ -129,9 +131,9 @@ const Credential = ({setStep}) => {
             {/* INPUTS TO ENTER USERNAME*/}
             <Input
             type='text'
-            placeholder='choose a unique username'
+            placeholder='type-unique-username'
             name='username'
-            label='choose a unique username'
+            label='type-unique-username'
             icon={<Fingerprint/>}
             custom={{marginBottom:'3rem'}}
             value={username}
@@ -149,8 +151,8 @@ const Credential = ({setStep}) => {
                         <Input
                             name='email'
                             id={`email-${idx + 1}`}
-                            placeholder={idx > 0 ? 'Add Another E-mail' :'Main E-mail Address'}
-                            label={idx > 0 ? 'Add Another E-mail' :'Main E-mail Address'}
+                            placeholder={idx > 0 ? 'add-another-emaill' :'main-email'}
+                            label={idx > 0 ? 'add-another-email' :'main-email'}
                             type='email'
                             icon={<EnvelopOpen/>}
                             custom={{marginBottom:'3rem'}}
@@ -162,12 +164,12 @@ const Credential = ({setStep}) => {
                         />
                         {moreEmail === (idx + 1) 
                         && <SideButton 
-                        text='another email' 
+                        text={t('another-email')} 
                         handler={addMoreEmailHandler}/>}
                         {moreEmail === (idx + 1) && moreEmail > 1 
                         && <SideButton 
                         minus 
-                        text='remove email' 
+                        text={t('remove-email')} 
                         handler={removeMoreEmailHandler}/>}
                     </div>
                     
@@ -176,8 +178,8 @@ const Credential = ({setStep}) => {
             
             <Input
                 name='password'
-                placeholder='Password'
-                label='Password'
+                placeholder='password'
+                label='password'
                 type='password'
                 icon={<Key/>}
                 value={password}
@@ -187,8 +189,8 @@ const Credential = ({setStep}) => {
           
           <Input
                 name='confirmPassword'
-                placeholder='Confirm Password'
-                label='Confirm Password'
+                placeholder='confirm-pass'
+                label='confirm-pass'
                 type='password'
                 icon={<Key/>}
                 value={confirmPassword}
@@ -206,14 +208,17 @@ const Credential = ({setStep}) => {
                 <input 
                 type="checkbox" 
                 name='isAgree' 
-                style={{marginRight:'1rem'}}
+                style={{
+                    marginRight:lang === 'ar' ? 'unset' :'1rem',
+                    marginLeft:lang === 'ar' ? '1rem' :'unset',
+                }}
                 onChange={(e) => setIsAgree(!isAgree)}/>
                 <label style={{
                     fontSize:'1.4rem',
-                }} htmlFor="terms">I Agree on <a href="#" style={{color:'#B1D0E0'}}>Terms & Condition</a></label>
+                }} htmlFor="terms">{t('i-agree')} <a href="#" style={{color:'#B1D0E0'}}>{t("condition&terms")}</a></label>
             </div>
           <Button 
-          value='next' 
+          value={t('next')}
           handler={submitHandler} 
           loading={loading && loading}/> 
         </>

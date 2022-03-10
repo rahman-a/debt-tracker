@@ -5,24 +5,24 @@ import {ProfileContainer, ProfileSegment} from '../../components'
 const Phone = ({data}) => {
     return (
         <div className={style.profile__phones}>
-            <ProfileContainer title='Phones'>
+            <ProfileContainer title='phones'>
                     <ProfileSegment
-                        title='Phones inside UAE'
+                        title='uae-phones'
                         type='phones'
                         text={data.insidePhones}
                     />
                     {
                         data.outsidePhones.length > 0
                         ? <ProfileSegment
-                        title='Phones outside UAE'
+                        title='outside-uae-phones'
                         type='outPhones'
-                        placeholder='Enter your outside phone'
+                        placeholder='enter-outside-phone'
                         text={data.outsidePhones}
                         />
                         : <ProfileSegment
-                        title='Phones outside UAE'
+                        title='outside-uae-phones'
                         type='outPhones'
-                        placeholder='Enter your outside phone'
+                        placeholder='enter-outside-phone'
                     />
                     }
                     

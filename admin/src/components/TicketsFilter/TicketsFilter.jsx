@@ -1,6 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu} from '../../components'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const TicketsFilter = ({ 
     hidden,
@@ -38,6 +40,9 @@ const TicketsFilter = ({
             filterOperationHandler()
         }
     }
+
+    const {t} = useTranslation()
+    const lang = i18next.language
     
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
@@ -46,7 +51,7 @@ const TicketsFilter = ({
                 <Input
                 name='code'
                 type='text'
-                placeholder='ticket id...'
+                placeholder='code'
                 value={searchFilter['code']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -57,7 +62,7 @@ const TicketsFilter = ({
                 <Input
                 name='title'
                 type='text'
-                placeholder='title...'
+                placeholder='title'
                 value={searchFilter['title']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -68,7 +73,7 @@ const TicketsFilter = ({
                 <Input
                 name='name'
                 type='text'
-                placeholder='Name...'
+                placeholder='name'
                 value={searchFilter['name']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -79,7 +84,7 @@ const TicketsFilter = ({
                 <Input
                 name='username'
                 type='text'
-                placeholder='Username...'
+                placeholder='username'
                 value={searchFilter['username']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -90,7 +95,7 @@ const TicketsFilter = ({
                 <Input
                 name='email'
                 type='text'
-                placeholder='E-mail...'
+                placeholder='email'
                 value={searchFilter['email']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -101,7 +106,7 @@ const TicketsFilter = ({
                 <Input
                 name='phone'
                 type='text'
-                placeholder='Phone...'
+                placeholder='phone'
                 value={searchFilter['phone']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -114,10 +119,10 @@ const TicketsFilter = ({
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({isOpen:value})}
                 data={{
-                    label: 'Status',
+                    label: 'status',
                     items:[
-                        {text:'Open', value:true},
-                        {text:'Solved', value:false}, 
+                        {text:'open', value:true},
+                        {text:'closed', value:false}, 
                     ]
                 }}
                 />
@@ -126,11 +131,11 @@ const TicketsFilter = ({
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
                     onClick={filterOperationHandler}>
-                        SEARCH
+                        {t('search')}
                 </button>
                 <button className={style.filter__btn}
                     onClick={resetFilterHandler}>
-                        RESET
+                        {t('reset')}
                 </button>
             </div>
             

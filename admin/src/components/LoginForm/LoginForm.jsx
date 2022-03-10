@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 import style from './style.module.scss'
 import {Modal, Alert} from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import {Loader} from '../../components'
 import {Lock, AtSymbol} from '../../icons'
 import actions from '../../actions'
@@ -14,8 +16,8 @@ const LoginForm = () => {
     const [resetLink, setResetLink] = useState('')
     const {loading, error} = useSelector(state => state.login)
     const {loading:reset_loading, error:reset_error, message} = useSelector(state => state.sendResetLink)
-    
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
     const dispatch = useDispatch()
     
     
@@ -42,9 +44,9 @@ const LoginForm = () => {
     return (
         <>
             <Modal show={isForget} onHide={() => setIsForget(false)}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <h3 className={style.loginForm__reset_header}>
-                        Enter Your Email to Reset Your Password
+                    {t('enter-email-reset-pass')}
                     </h3>
                 </Modal.Header>
 
@@ -64,7 +66,7 @@ const LoginForm = () => {
                     style={{color:'#590202', backgroundColor:'#f8d0d0'}}>
                         {reset_error}
                     </p>}
-                    <div className={style.loginForm__reset_input}>
+                    <div className={`${style.loginForm__reset_input} ${lang === 'ar' ? style.loginForm__reset_input_ar :''}`}>
                         <span>
                             <AtSymbol/>
                         </span>
@@ -72,7 +74,7 @@ const LoginForm = () => {
                         type="email"
                         name='email'
                         onChange={(e) => setResetLink(e.target.value)}
-                        placeholder='Enter Your E-mail'/>
+                        placeholder={t('enter-email')}/>
                     </div>
                 </Modal.Body>
 
@@ -80,7 +82,7 @@ const LoginForm = () => {
                     <button className={style.loginForm__reset_btn}
                     disabled={reset_loading}
                     onClick={submitResetPasswordEmail}>
-                        Send Link
+                        {t('send-reset-pass-btn')}
                     </button>
                 </Modal.Footer>
 
@@ -93,23 +95,23 @@ const LoginForm = () => {
             }
             <div className={style.loginForm}
             onKeyDown={submitLoginOnKeyHandler}>
-                <div className={style.loginForm__group}>
+                <div className={`${style.loginForm__group} ${lang === 'ar' ? style.loginForm__group_ar :''}`}>
                     <span>
                         <AtSymbol/>
                     </span>
                     <input 
                     type="email" 
                     name='email'
-                    placeholder='Enter Your E-mail'
+                    placeholder={t('enter-email')}
                     onChange={(e) => setEmail(e.target.value)}/>
                 </div>
-                <div className={style.loginForm__group}>
+                <div className={`${style.loginForm__group} ${lang === 'ar' ? style.loginForm__group_ar :''}`}>
                     <span>
                         <Lock/>
                     </span>
                     <input 
                     type="password" 
-                    placeholder='Enter Your Password'
+                    placeholder={t('enter-pass')}
                     onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button 
@@ -117,12 +119,12 @@ const LoginForm = () => {
                 onClick={submitLoginHandler}>
                    {loading 
                    ? <Loader size='4' options={{animation:'border'}}/> 
-                   : 'submit'}
+                   :t('login-submit')}
                 </button>
                 <button 
                 className={style.loginForm__forget}
                 onClick={() => setIsForget(true)}>
-                    forget password
+                    {t('forget-pass')}
                 </button>
             </div>
         </>

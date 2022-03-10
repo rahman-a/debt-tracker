@@ -31,6 +31,10 @@
         
         &_info {
             margin-left: 1.5rem;
+            &_ar {
+                margin-left:unset;
+                margin-right:1.5rem;
+            }
         }
         
         
@@ -122,6 +126,18 @@
                 border: 1px solid;
                 border-color: inherit;
                 height: 100%;
+            }
+
+            &_ar {
+                &::after {
+                    left:unset;
+                    right:3px
+                }
+                & > div {
+                    margin-right:unset;
+                    margin-left:1rem;
+                    transform: translate(1px);
+                }
             }
         }
         &_dot {

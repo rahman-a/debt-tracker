@@ -3,12 +3,14 @@ import notificationReducer from './notifications.reducer'
 import operationsReducer from './operations.reducer'
 import reportsReducer from './reports.reducer'
 import ticketsReducer from './ticket.reducer'
+import chatReducer from './chat.reducer'
 
 export const globalReducer = {
     ...adminReducer,
     ...notificationReducer,
     ...operationsReducer,
     ...reportsReducer,
-    ...ticketsReducer
+    ...ticketsReducer,
+    ...chatReducer
 }
 

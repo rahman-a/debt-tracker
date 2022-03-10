@@ -1,7 +1,11 @@
 import React from 'react'
 import {Modal, Button} from 'react-bootstrap'
+import {useTranslation} from 'react-i18next'
 
 const Description = ({isDescribeOn, setIsDescribeOn, note}) => {
+    
+    const {t} = useTranslation()
+    
     return (
         <Modal
             show={isDescribeOn}
@@ -11,7 +15,7 @@ const Description = ({isDescribeOn, setIsDescribeOn, note}) => {
             >
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Operation Description
+                    {t('note')}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -20,7 +24,7 @@ const Description = ({isDescribeOn, setIsDescribeOn, note}) => {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant='danger' onClick={() => setIsDescribeOn(false)}>Close</Button>
+                <Button variant='danger' onClick={() => setIsDescribeOn(false)}>{t('close')}</Button>
             </Modal.Footer>
         </Modal>
     )

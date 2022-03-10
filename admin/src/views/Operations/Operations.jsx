@@ -12,6 +12,7 @@ import {
 } from '../../components'
 import actions from '../../actions'
 import Row from './Row'
+import { useTranslation } from 'react-i18next'
 
 const Operations = () => {
     const [isFilterModal, setIsFilterModal] = useState(false)
@@ -26,7 +27,7 @@ const Operations = () => {
         dueDate:'',
     })
     const dispatch = useDispatch()
-    
+    const {t} = useTranslation()
     const {loading, error, count, operations} = useSelector(state => state.listAllOperations)
   
     const initiateOperationFiltration = (skip) => {
@@ -55,7 +56,7 @@ const Operations = () => {
     <>
 
     <div className={style.operations}>
-        <h1 className='main-header'>Operations List</h1>
+        <h1 className='main-header'>{t('operations-records')}</h1>
 
         <FilterModal
             isFilter={isFilterModal}
@@ -83,15 +84,15 @@ const Operations = () => {
      <Table>
          <thead>
              <th>#</th>
-             <th>Operation Id</th>
-             <th>First Party</th>
-             <th>Second Party</th>
-             <th>Operation Value</th>
-             <th>Operation Note</th>
-             <th>Currency</th>
-             <th>State</th>
-             <th>Due Date</th>
-             <th>Created At</th>
+             <th>{t('operation-code')}</th>
+             <th>{t('first-party')}</th>
+             <th>{t('second-party')}</th>
+             <th>{t('operation-value')}</th>
+             <th>{t('note')}</th>
+             <th>{t('operation-currency')}</th>
+             <th>{t('status')}</th>
+             <th>{t('due-date')}</th>
+             <th>{t('createdAt')}</th>
          </thead>
          <tbody  style={{position:'relative'}}>
              {loading 

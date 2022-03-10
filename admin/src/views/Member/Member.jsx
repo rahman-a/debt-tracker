@@ -10,15 +10,16 @@ import Phone from './Phone'
 import Documents from './Documents'
 import Company from './Company'
 import Actions from './Actions'
-
-
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
     const {loading, error, member} = useSelector(state => state.member)
     const {staff} = useSelector(state => state.login)
     const dispatch = useDispatch()
     const {id} = useParams()
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
     useEffect(() => {
         id && dispatch(actions.admin.member(id))
     },[id])
@@ -30,6 +31,7 @@ const Profile = () => {
                 
                 <BackButton
                 page='members'
+                text={t('back-to', {page:lang === 'ar' ? 'صفحة الأعضاء' :'Members'})}
                 />    
            } 
             <div className="container">
@@ -74,8 +76,7 @@ const Profile = () => {
                                     isActive:member.isAccountConfirmed
                                 }}
                                 />
-                        }
-                        
+                        }       
                     </div>   
                 } 
             </div>

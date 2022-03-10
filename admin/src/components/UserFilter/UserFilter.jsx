@@ -1,6 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu} from '../../components'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Filter = ({ 
     hidden,
@@ -51,6 +53,9 @@ const Filter = ({
             filterOperationHandler()
         }
     }
+
+    const {t} = useTranslation()
+    const lang = i18next.language
     
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
@@ -59,7 +64,7 @@ const Filter = ({
                 <Input
                 name='code'
                 type='text'
-                placeholder='code...'
+                placeholder='code'
                 value={searchFilter['code']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -70,7 +75,7 @@ const Filter = ({
                 <Input
                 name='username'
                 type='text'
-                placeholder='Username...'
+                placeholder='username'
                 value={searchFilter['username']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -81,7 +86,7 @@ const Filter = ({
                 <Input
                 name='email'
                 type='text'
-                placeholder='E-mail...'
+                placeholder='email'
                 value={searchFilter['email']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -92,7 +97,7 @@ const Filter = ({
                 <Input
                 name='phone'
                 type='text'
-                placeholder='Phone...'
+                placeholder='phone'
                 value={searchFilter['phone']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -103,40 +108,47 @@ const Filter = ({
                 <Input
                 name='color'
                 type='text'
-                placeholder='Color...'
+                placeholder='color'
                 value={searchFilter['color']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
                 />
             </div>
             
-            <div className={style.filter__input}>
-                <Input
-                name='arabicName'
-                type='text'
-                placeholder='Name ar'
-                value={searchFilter['arabicName']}
-                className={style.filter__input_value}
-                onChange={(e) => searchFilterHandler(e)}
-                />
-            </div>
+             {
+                 lang === 'ar' 
+                 ? 
+                 <div className={style.filter__input}>
+                    <Input
+                    name='arabicName'
+                    type='text'
+                    placeholder='name'
+                    value={searchFilter['arabicName']}
+                    className={style.filter__input_value}
+                    onChange={(e) => searchFilterHandler(e)}
+                    />
+                </div>
+                : <div className={style.filter__input}>
+                    <Input
+                    name='englishName'
+                    type='text'
+                    placeholder='name'
+                    value={searchFilter['englishName']}
+                    className={style.filter__input_value}
+                    onChange={(e) => searchFilterHandler(e)}
+                    />
+                </div>
+             }
+             
+             
             
-            <div className={style.filter__input}>
-                <Input
-                name='englishName'
-                type='text'
-                placeholder='Name en'
-                value={searchFilter['englishName']}
-                className={style.filter__input_value}
-                onChange={(e) => searchFilterHandler(e)}
-                />
-            </div>
+            
 
             <div className={style.filter__input}>
                 <Input
                 name='country'
                 type='text'
-                placeholder='Country...'
+                placeholder='country'
                 value={searchFilter['country']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -148,10 +160,10 @@ const Filter = ({
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({isProvider:value})}
                 data={{
-                    label: 'Provider',
+                    label: 'provider',
                     items:[
-                        {text:'YES', value:true},
-                        {text:'NO', value:false}, 
+                        {text:'yes', value:'true'},
+                        {text:'no', value:'false'}, 
                     ]
                 }}
                 />
@@ -162,10 +174,10 @@ const Filter = ({
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({isActive:value})}
                 data={{
-                    label: 'Active',
+                    label:'active',
                     items:[
-                        {text:'YES', value:true},
-                        {text:'NO', value:false}, 
+                        {text:'yes', value:'true'},
+                        {text:'no', value:'false'}, 
                     ]
                 }}
                 />
@@ -174,11 +186,11 @@ const Filter = ({
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
                     onClick={filterOperationHandler}>
-                        SEARCH
+                        {t('search')}
                 </button>
                 <button className={style.filter__btn}
                     onClick={resetFilterHandler}>
-                        RESET
+                        {t('reset')}
                 </button>
             </div>
             

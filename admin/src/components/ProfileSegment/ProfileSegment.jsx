@@ -7,9 +7,11 @@ import {Loader} from '../../components'
 import labels from '../../config/label'
 import messages from '../../config/messages'
 import actions from '../../actions'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Country = ({country}) => {
-    console.log({country});
+    const {t} = useTranslation()
     return (
         <span style={{flexDirection:'row'}}>
           {
@@ -22,7 +24,7 @@ const Country = ({country}) => {
                 style={{marginRight:'1rem'}}/>
                 {`${country.abbr} ${country.name}`}
               </>
-              : <Badge bg='danger'>Not Provided</Badge>
+              : <Badge bg='danger'>{t('not-provided')}</Badge>
           }  
         </span>
     )
@@ -32,24 +34,33 @@ const ToggleAccount = ({isActive, setIsActive, memberId}) => {
     
     const dispatch = useDispatch()
     const {loading, isConfirmed} = useSelector(state => state.toggleUser)
-    
+    const {t} = useTranslation()
+
     const setMemberActivation = e => {
         dispatch(actions.admin.toggleUser(memberId))
     }
+   
+    const lang = i18next.language
     
     useEffect(() => {
     setIsActive(isConfirmed)
+
     }, [isConfirmed])
 
     return (
         <div className={style.segment__toggle}>
            {loading && <Loader size='5' center options={{animation:'border'}}/>} 
-            <strong style={{color:'red'}}> <i>  Not Active </i> </strong>
+            <strong style={{color:'red'}}> <i>  {t('account-not-active')} </i> </strong>
             
-            <div className={style.segment__toggle_state}>
+            <div className={`${style.segment__toggle_state} 
+            ${(lang === 'ar' && !isActive) ? style.segment__toggle_state_ar : ''}`}>
+                
                 <label htmlFor="state">
                     {loading && <span className={style.segment__toggle_backdrop}></span> }
-                    <span className={isActive ? style.segment__toggle_active :''}></span>
+                    <span 
+                    className={isActive ? `${style.segment__toggle_active} 
+                    ${lang === 'ar' && style.segment__toggle_active_ar}`:''}
+                    ></span>
                 </label>
 
                 <input 
@@ -61,7 +72,7 @@ const ToggleAccount = ({isActive, setIsActive, memberId}) => {
 
             </div>
 
-            <strong style={{color:'green'}}> <i> Active </i>  </strong>
+            <strong style={{color:'green'}}> <i> {t('account-active')} </i>  </strong>
 
         </div>
     )
@@ -75,6 +86,8 @@ const MemberColorCode = ({color, memberId}) => {
     const [reportId, setReportId] = useState('')
     const dispatch = useDispatch()
     const {loading, error, message} = useSelector(state => state.userColorCode)
+    const {t} = useTranslation()
+    const lang = i18next.language
 
     const colorCodes = {
         red:'#EC4A0D',
@@ -121,7 +134,7 @@ const MemberColorCode = ({color, memberId}) => {
     return (
         <>
            <Modal show={colorToggle} onHide={() => setColorToggle(false)}> 
-                <Modal.Header> Change Member Color Code </Modal.Header>
+                <Modal.Header> {t('change-member-color-code')} </Modal.Header>
                 
                 <Modal.Body>
                    
@@ -141,27 +154,27 @@ const MemberColorCode = ({color, memberId}) => {
 
                     <div className={style.segment__color_change}>
                         <div className={style.segment__color_types}>
-                            <h3>Select Color</h3>
+                            <h3>{t('select-color')}</h3>
                             
                             <span onClick={() => setCode('green')}
                             className={code === 'green' ? style.segment__color_types_select :''}> 
-                                Green 
+                                {t('green')} 
                             </span>
                             
                             <span onClick={() => setCode('yellow')}
                             className={code === 'yellow' ? style.segment__color_types_select :''}>
-                                Yellow
+                                 {t('yellow')} 
                             </span>
                             
                             <span onClick={() => setCode('red')}
                             className={code === 'red' ? style.segment__color_types_select :''}>
-                                Red
+                                 {t('red')} 
                             </span>
 
                         </div>
                         
                         <div className={style.segment__color_state}>
-                            <h3> Reason Of Color Change </h3> 
+                            <h3>{t('reason-change-color-code')}</h3> 
                             <select name="label" id="label"
                             onChange={(e) => setLabelValue(e)}
                             style={{fontSize:'1.4rem'}}>
@@ -171,7 +184,7 @@ const MemberColorCode = ({color, memberId}) => {
                                         <option 
                                         key={label.label} 
                                         value={label.label}> 
-                                            {label.en} 
+                                            {lang === 'ar' ? label.ar : label.en} 
                                         </option>
                                     ))
                                 }
@@ -181,11 +194,11 @@ const MemberColorCode = ({color, memberId}) => {
                       {
                         isReport && 
                             <div className={style.segment__color_state}>
-                                <h3> Enter The Related Report Id </h3>  
+                                <h3> {t('enter-related-report-id')} </h3>  
                                 <input 
                                 type="text"  
                                 name='report' 
-                                placeholder='Enter The Report Id'
+                                placeholder={t('enter-related-report-id')}
                                 value={reportId}
                                 onChange={(e) => setReportId(e.target.value)}
                                 className={style.segment__color_report}/>
@@ -197,23 +210,23 @@ const MemberColorCode = ({color, memberId}) => {
                 <Modal.Footer>   
                     <Button variant='success' size='lg'
                     onClick={changeColorHandler}> 
-                        YES, Change Color 
+                      {t('confirm-change-color-code')}
                     </Button>
 
                     <Button variant='danger' size='lg'
                     onClick={() => setColorToggle(false)}> 
-                        NO, Close 
+                        {t('cancel-change-color-code')}
                     </Button>
 
                 </Modal.Footer>
             </Modal>
 
-            <div className={style.segment__color}>
+            <div className={`${style.segment__color} ${lang === 'ar' ? style.segment__color_ar :''}`}>
                 <div className={style.segment__color_block}
                 style={{backgroundColor:color}}></div>
 
                 <Button variant='warning'
-                onClick={() => setColorToggle(true)}> Change Color </Button>
+                onClick={() => setColorToggle(true)}> {t('change-color-code')} </Button>
             </div>
         </>
     )
@@ -232,18 +245,21 @@ const ProfileSegment = ({
     
     const [isActive, setIsActive] = useState(false)
 
+    const {t} = useTranslation()
+    const lang = i18next.language
+    
     useEffect(() => {
         setIsActive(isConfirmed)
     },[isConfirmed])
 
     
     return (
-        <div className={style.segment}>  
-            <h3> {title} </h3>
+        <div className={`${style.segment} ${lang === 'ar' ? style.segment_ar :''}`}>  
+            <h3> {t(title)} </h3>
             <p style={{display: placeholder ? 'block' : 'flex'}}>
                 {
                   placeholder 
-                  ? <Badge bg='danger'>Not Provided</Badge>
+                  ? <Badge bg='danger'>{t('not-provided')}</Badge>
                   : (type === 'email' || type === 'phones')
                   ? text.map(t => <span key={t._id}>{t.email || t.phone}</span>)
                   : type === 'outPhones' && text

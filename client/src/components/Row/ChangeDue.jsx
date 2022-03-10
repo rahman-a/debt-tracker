@@ -5,12 +5,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import actions from '../../actions'
 import {DateInput, Loader} from '../../components'
 import { Calendar } from '../../icons'
+import { useTranslation } from 'react-i18next'
 
 const ChangeDue = ({isDueChange, setIsDueChange, id, op}) => {
   const [dueDateChange, setDueDateChange] = useState(null)
   const {loading, error, message} = useSelector(state => state.updateDueDate)
   const dispatch = useDispatch()
-  
+  const {t} = useTranslation()
+
   const changeDueDateHandler = _ => {
       if(!op && dueDateChange) {
           console.log({id});
@@ -23,7 +25,7 @@ return (
             <Modal.Header>
                 <p>
                     <span> <Calendar/> </span>
-                    <span> Change Due Date </span>
+                    <span> {t('change-due-date')} </span>
                 </p>
             </Modal.Header>
             <Modal.Body>
@@ -33,7 +35,7 @@ return (
                     { error   && <Alert variant='danger'>{error}</Alert> }
                     { loading && <Loader size='8' center options={{animation:'border'}} custom={{zIndex:'999'}}/> }
                     
-                    <h2>Choose the New Due Date</h2>
+                    <h2>{t('choose-new-due-date')}</h2>
                     <DateInput 
                         name='dueDate' 
                         getExpiryDate={(date) => setDueDateChange(date)}
@@ -49,7 +51,7 @@ return (
                     variant='success' 
                     onClick={changeDueDateHandler}
                     disabled={loading ? true : false}> 
-                        YES,Change Due Date 
+                        {t('confirm-change')}
                     </Button>
                     
                     <Button 
@@ -57,7 +59,7 @@ return (
                     variant='danger' 
                     onClick={() => setIsDueChange(false)}
                     disabled={loading ? true : false}>
-                        NO, Close
+                        {t('cancel-change')}
                     </Button>
             </Modal.Footer>
         </Modal>

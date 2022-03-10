@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import chalk from 'chalk'
 
-const databaseConnection = async _ => {
+export const Database = async _ => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser:true,
@@ -13,4 +13,3 @@ const databaseConnection = async _ => {
     }
 }  
 
-export default databaseConnection

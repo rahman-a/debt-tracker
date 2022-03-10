@@ -48,6 +48,16 @@
     
     &__filter {
         margin-right:0.5rem;
+        &_ar  {
+            margin-right: unset;
+            margin-left: 0.5rem;
+            button {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                border-top-right-radius: 1rem;
+                border-bottom-right-radius: 1rem;
+            }
+        }
         &_active {
             background-color: var.$full-light-color !important;
             box-shadow: inset 0px 0px 7px 0px rgb(0 0 0 / 30%) !important;
@@ -116,6 +126,21 @@
                 width:4.5rem;
                 height: 4.5rem;
                 border-radius: 50%;
+            }
+        }
+
+        &_ar {
+            button {
+                margin-left:unset;
+                margin-right: 0.5rem;
+                border-top-left-radius: 1rem;
+                border-bottom-left-radius: 1rem;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            img {
+                margin-right: unset;
+                margin-left:2rem;
             }
         }
     }

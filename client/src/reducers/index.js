@@ -11,5 +11,5 @@ export const globalReducer = {
     ...currenciesReducer,
     ...notificationReducer,
     ...reportsReducer,
-    ...ticketsReducer
+    ...ticketsReducer,
 }

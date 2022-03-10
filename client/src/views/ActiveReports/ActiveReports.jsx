@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import {Modal} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import {useTranslation} from 'react-i18next'
 import {Pagination, Table, Filter, Loader, HeaderAlert} from '../../components'
 import {FilterSearch, Times} from '../../icons'
 import actions from '../../actions'
@@ -24,6 +25,7 @@ const Reports = () => {
 
     const {loading, error, count, reports} = useSelector(state => state.listAllReports)
 
+    const {t} = useTranslation()
 
     const listReportsWithDueDate = _ => {
         dispatch(actions.reports.listAllReports())
@@ -74,24 +76,24 @@ const Reports = () => {
             {/* <button className={style.reports__end}>
                 close report
             </button> */}
-            <h1>Active Reports Records</h1>
+            <h1>{t('active-reports-records')}</h1>
             <div className={style.reports__wrapper}
             style={{textAlign: !isDueDate ? '-webkit-center' :'unset'}}>
                 <div className={style.reports__actions}>
                     <button className={isDueDate ? style.reports__actions_active :''}
                     onClick={listReportsWithDueDate}>
-                        Reports with Due Date
+                        {t('reports-due-date')}
                     </button>
                     
                     <button className={!isDueDate ? style.reports__actions_active :''}
                     onClick={listReportsWithoutDueDate}>
-                        Reports without Due Date
+                         {t('reports-no-due-date')}
                     </button>
                     
                     <button className={style.reports__filter}
                     onClick={() => setIsFilter(true)}>
                         <span> <FilterSearch/> </span>
-                        <span> Filter </span>
+                        <span> {t('filter')} </span>
                     </button>
                 </div>
                 

@@ -49,6 +49,12 @@
                 }
             }
         }
+        &_ar {
+            span:first-child {
+                margin-right:unset;
+                margin-left:1rem;
+            }
+        }
     }
 
 
@@ -102,6 +108,13 @@
 
             &:hover {
                 background-color: #fff;
+            }
+
+            &_ar {
+                & > div {
+                    margin-left:unset;
+                    margin-right:1rem;
+                }
             }
         }
 

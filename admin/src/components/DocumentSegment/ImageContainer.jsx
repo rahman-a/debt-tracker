@@ -2,10 +2,13 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {Modal, Button, Badge} from 'react-bootstrap'
 import {Loader} from '../../components'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const ImageContainer = ({img, document, setImageContainer, imageContainer}) => {
   const [isLoading, setIsLoading] = useState(true)
-  
+  const {t} = useTranslation()
+  const lang = i18next.language
 
   useEffect(() => {
     img && setIsLoading(false)
@@ -14,7 +17,11 @@ const ImageContainer = ({img, document, setImageContainer, imageContainer}) => {
   return (
     <Modal show={imageContainer} onHide={() => setImageContainer(false)}>
         <Modal.Header>
-           <Badge bg='dark'> {document} Document </Badge> 
+           <Badge bg='dark'> {
+             lang === 'ar'
+             ? `${t('document')} ${t(document)}`
+             : `${t(document)} ${t('document')}`  
+           } </Badge> 
         </Modal.Header>
         <Modal.Body>
           {
@@ -28,7 +35,7 @@ const ImageContainer = ({img, document, setImageContainer, imageContainer}) => {
         </Modal.Body>
         <Modal.Footer>
             <Button onClick={() => setImageContainer(false)}
-            variant='danger' size='lg'> Close  </Button>
+            variant='danger' size='lg'> {t('close')}  </Button>
         </Modal.Footer>
     </Modal>
   )

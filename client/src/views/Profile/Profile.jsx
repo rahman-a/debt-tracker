@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import style from './style.module.scss'
 
 import Personal from './Personal'

@@ -12,6 +12,7 @@ import {
 } from '../../components'
 import actions from '../../actions'
 import Row from './Row'
+import { useTranslation } from 'react-i18next'
 
 const Support = () => {
   const [isFilterModal, setIsFilterModal] = useState(false)
@@ -27,6 +28,7 @@ const Support = () => {
   })
   const {loading, error, tickets, count} = useSelector(state => state.listTickets)
   const dispatch = useDispatch()
+  const {t} = useTranslation()
   
   const initiateUsersFiltration = (skip) => {
     
@@ -54,7 +56,7 @@ const Support = () => {
   
   return (
     <div className={style.support}>
-      <h1 className='main-header'> Members Tickets List </h1>
+      <h1 className='main-header'> {t('member-ticket-list')} </h1>
       
       <FilterModal
       isFilter={isFilterModal}
@@ -81,13 +83,13 @@ const Support = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Ticket Id</th>
-            <th style={{width:'25rem'}}>Member</th>
-            <th style={{width:'25rem'}}>Ticket Summery</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Last updated At</th>
-            <th>close the Ticket</th>
+            <th>{t('ticket-id')}</th>
+            <th style={{width:'25rem'}}>{t('member')}</th>
+            <th style={{width:'25rem'}}>{t('ticket-summery')}</th>
+            <th>{t('status')}</th>
+            <th>{t('createdAt')}</th>
+            <th>{t('last-updated')}</th>
+            <th>{t('close-ticket')}</th>
           </tr>
         </thead>
         <tbody 

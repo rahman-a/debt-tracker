@@ -47,6 +47,12 @@
         height: 2.5rem;
       }
     }
+
+    &_ar {
+      span:first-child {
+        margin-left:2rem;
+      }
+    }
   }
 
   &__bars {
@@ -75,6 +81,10 @@
       }
       @include media.mq(md){
         display: none;
+      }
+      &_ar {
+        margin-right: unset;
+        margin-left:4rem;
       }
     }
 
@@ -121,6 +131,13 @@
         font-family: var.$second-font;
       }
 
+      &_ar {
+        img {
+          margin-left:1rem;
+          margin-right: 0;
+        }
+      }
+
     }
   }
 
@@ -154,6 +171,13 @@
           font-size:1.4rem;
           padding:0.3rem 2rem;
         }
+    }
+
+    &_ar {
+      a:first-child {
+        margin-right: unset;
+        margin-left: 2rem;
+      }
     }
   }
 

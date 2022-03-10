@@ -2,9 +2,12 @@ import React from 'react'
 import style from './style.module.scss'
 import {Form} from 'react-bootstrap'
 import flags from 'country-flag-emoji-json'
+import { useTranslation } from 'react-i18next'
 
 const Personal = ({getInfoValues, setCountry}) => {
   
+    const {t} = useTranslation()
+    
     const countries = _ => {
         return flags.map(flag => (
             {
@@ -22,28 +25,28 @@ const Personal = ({getInfoValues, setCountry}) => {
   
     return (
     <div className={style.provider__segment}>
-        <h2>Personal Information</h2>
+        <h2>{t('personal-info')}</h2>
         <Form.Group className="mb-3" controlId="formBasicArabic">
-            <Form.Label>Arabic Name</Form.Label>
+            <Form.Label>{t('full-name-in-arabic')}</Form.Label>
             <Form.Control 
             size='lg' 
             type="text"
             name='fullNameInArabic' 
-            placeholder="Enter arabic name" 
+            placeholder={t('full-name-in-arabic')}
             onChange={(e) => getInfoValues(e)}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEnglish">
-            <Form.Label>English Name</Form.Label>
+            <Form.Label>{t('full-name-in-english')}</Form.Label>
             <Form.Control 
             size='lg' 
             type="text"
             name='fullNameInEnglish' 
-            placeholder="Enter english name" 
+            placeholder={t('full-name-in-english')} 
             onChange={(e) => getInfoValues(e)}/>
         </Form.Group>
         
         <Form.Group>
-            <Form.Label>Choose Your Country</Form.Label>
+            <Form.Label>{t('choose-provider-country')}</Form.Label>
             <Form.Select size='lg'
             onChange={(e) => selectProviderCountry(e.target.value)}>
                 {
@@ -55,12 +58,12 @@ const Personal = ({getInfoValues, setCountry}) => {
         </Form.Group>
         
         <Form.Group className="mb-3" controlId="formBasicCompany">
-            <Form.Label>Company Name</Form.Label>
+            <Form.Label>{t('company-name')}</Form.Label>
             <Form.Control 
             size='lg' 
             type="text"
             name='company' 
-            placeholder="Enter company name" 
+            placeholder={t('company-name')} 
             onChange={(e) => getInfoValues(e)}/>
         </Form.Group>
     </div>

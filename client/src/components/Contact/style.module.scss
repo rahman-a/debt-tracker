@@ -58,6 +58,17 @@
             text-align: center;
             margin-bottom: 2rem;
         }
+        &_ar {
+            margin-right: unset;
+            margin-left: 15rem;
+            @include media.mq(md){
+                margin-left: 5rem;
+            }
+            
+            @include media.mq(sm) {
+                margin-left: unset;
+            }
+        }
     }
 
     &__text {

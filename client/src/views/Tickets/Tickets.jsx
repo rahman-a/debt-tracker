@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {useSelector, useDispatch} from 'react-redux'
+import {useTranslation} from 'react-i18next'
+
 import {
   AltTable, 
   Pagination, 
@@ -32,10 +34,12 @@ const Tickets = () => {
     const {loading, error, count, tickets} = useSelector(state => state.listTickets)
     
     const dispatch = useDispatch()
-  
+    
+    const {t} = useTranslation()
+    
     const initiateUsersFiltration = (skip) => {
     
-      let query = {...filter}
+    let query = {...filter}
       
       if(skip?.skip || skip?.skip === 0) {
         setSkipValue(skip.skip)
@@ -60,17 +64,17 @@ const Tickets = () => {
     return (
     <>
       <div className={style.tickets}>
-          <h1>Tickets Records</h1>
+          <h1>{t('tickets-records')}</h1>
 
           <div className={style.tickets__wrapper}>
               <div className={style.tickets__actions}>
                   <button onClick={() => setIsEditor(true)}>
-                      New Tickets
+                      {t('new-ticket')}
                   </button>
                   <button className={style.tickets__filter}
                   onClick={() => setIsFilterModal(true)}>
                       <span> <FilterSearch/> </span>
-                      <span> Filter </span>
+                      <span> {t('filter')} </span>
                   </button>
               </div>
           </div>
@@ -103,12 +107,12 @@ const Tickets = () => {
           <thead>
             <tr>
               <th>#</th>
-              <th>Ticket Id</th>
-              <th style={{width:'25rem'}}>Ticket Summery</th>
-              <th>Status</th>
-              <th>Created At</th>
-              <th>Last updated At</th>
-              <th>close the Ticket</th>
+              <th>{t('ticket-id')}</th>
+              <th style={{width:'25rem'}}>{t('ticket-summery')}</th>
+              <th>{t('status')}</th>
+              <th>{t('createdAt')}</th>
+              <th>{t('last-updated')}</th>
+              <th>{t('close-ticket')}</th>
             </tr>
           </thead>
           <tbody 

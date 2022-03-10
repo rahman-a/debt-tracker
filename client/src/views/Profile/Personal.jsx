@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {CopyToClipboard} from 'react-copy-to-clipboard'
+import {useTranslation} from 'react-i18next'
 import {ProfileContainer, ProfileSegment} from '../../components'
 import {Copy, Check} from '../../icons'
 
 const Personal = ({data}) => {
     const [isCopied, setIsCopied] = useState(false)
-
+    const {t} = useTranslation()
     const copyIdHandler = _ => {
         setIsCopied(true)
         setTimeout(() => {
@@ -15,7 +16,7 @@ const Personal = ({data}) => {
     }
     return (
         <div className={style.profile__personal}>
-            <ProfileContainer title='personal info' 
+            <ProfileContainer title='personal-info' 
             ribbon={{color:data.color.code, states:data.color.state}}>
                     <div className={style.profile__personal_info}>
                         <img src={
@@ -23,10 +24,10 @@ const Personal = ({data}) => {
                         } alt="" />
                         <h2>{data.fullName}</h2>
                         <p>
-                            <span>username</span>: <span>{data.username}</span>
+                            <span>{t('username')}</span>: <span>{data.username}</span>
                         </p>
                         <p>
-                            <span>Id</span>: <span>{data.code}</span> 
+                            <span>{t('id')}</span>: <span>{data.code}</span> 
                             &nbsp;
                             <CopyToClipboard text={data.code} onCopy={copyIdHandler}>
                                 <span> {isCopied ? <Check/> : <Copy/>} </span> 
@@ -35,7 +36,7 @@ const Personal = ({data}) => {
                     </div>
                    
                    <ProfileSegment 
-                   title='e-mail address'
+                   title='email'
                    type='email'
                    text={data.emails}/>
                    
@@ -43,7 +44,7 @@ const Personal = ({data}) => {
                    title='password' 
                    text='*************' 
                    type='password'
-                   placeholder='type the new password'/>
+                   placeholder='type-new-pass'/>
 
             </ProfileContainer>
         </div>

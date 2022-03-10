@@ -6,7 +6,7 @@ import {ArrowRight} from '../../icons'
 const BackButton = ({page, position, text}) => {
   
     const navigate = useNavigate()
-    
+
     const getStyle = _ => {
         let style = { 
         top:'2rem',
@@ -36,14 +36,14 @@ const BackButton = ({page, position, text}) => {
 
     const arrowStyle = _ => {
         let style = {
-            transform: 'rotate(180deg) translate(0, -2px)'
+            transform: 'rotate(180deg) translate(0, -2px)',
         }
         if(position === 'right') {
             style = {
                 transform:'translate(0px, -2px)',
                 position:'absolute',
                 right:'-2rem',
-                top: '1px'
+                top: '1px',
             }
         }
         return style
@@ -55,7 +55,7 @@ const BackButton = ({page, position, text}) => {
             <span style={arrowStyle()}> 
                 <ArrowRight/> 
             </span>
-            <span> back to {text || 'members'} </span>
+            <span> {text} </span>
         </button>
   )
 }

@@ -2,13 +2,13 @@ import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import i18next, { t } from 'i18next'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
 import { Loader,SideNavbar, NotificationContainer, PushNotification } from '../../components'
 import actions from '../../actions'
 
 
 const Header = () => {
-    const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
     const [navbarColor, setNavbarColor] = useState('rgba(26, 55, 77, 0.7)')
@@ -20,6 +20,7 @@ const Header = () => {
     const {isAuth} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
+    const language = i18next.language
     const navigate = useNavigate()
     const page = useLocation().pathname
 
@@ -49,7 +50,8 @@ const Header = () => {
         e.stopPropagation()
         setLoadingState(true)
         setTimeout(() => {
-            setLanguage(lang)
+            dispatch({type:'CHANGE_LANGUAGE_HANDLER', payload:lang})
+            i18next.changeLanguage(lang)
             setLangDropDown(prev => !prev)
             setLoadingState(false)
         },500)
@@ -107,6 +109,12 @@ const Header = () => {
         return () => clearTimeout(initNotifications)
     },[page, isAuth])
 
+    useEffect(() => {
+      language === 'ar' 
+      ? document.body.classList.add('arabic-language')
+      : document.body.classList.remove('arabic-language')
+    },[language])
+
     return (
         <>
             
@@ -121,7 +129,7 @@ const Header = () => {
             ref={headerBgRef}
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
             
-            <div className={style.header}
+            <div className={`${style.header} ${language === 'ar' ? style.header__ar : ''}`}
             style={{
                 backgroundColor:navbarColor,
                 display: (page === '/login' || page === '/register') ?'none' :'block'
@@ -131,7 +139,7 @@ const Header = () => {
                     <div className={style.header__wrapper}>
                         
                         {/* display the main icon */}
-                        <div className={style.header__icon}>
+                        <div className={`${style.header__icon} ${language === 'ar' ? style.header__icon_ar : ''}`}>
                             <span onClick={() => navigate('/')}>
                                 <HandDollar/>
                             </span>
@@ -146,7 +154,6 @@ const Header = () => {
                         {/* display side menu */}
                         {isAuth && 
                         <SideNavbar 
-                        language={language}
                         changeLanguageHandler={changeLanguageHandler}
                         loadingState={loadingState}
                         showSideMenu={showSideMenu}
@@ -158,31 +165,34 @@ const Header = () => {
                         <div className={style.header__actions}>
                             {/* display the main languages */}
                             <div className={style.header__language}>
-                            {/* display the other main language */}
-                            <div className={style.header__language_flag}
-                            onClick={showLanguageHandler}>
-                            {language === 'en' 
-                            ? <img src="/images/usa-flag.jpg" alt="usa flag" />
-                            : <img src="/images/uae-flag.png" alt="uae flag" />}
-                            </div>
-                            
-                            {/* the dropdown to select the language */}
-                            <div className={style.header__language_menu}
-                            style={{display: langDropDown ? 'block' :'none'}}>
-                                {loadingState && <div className={style.header__language_loader}
-                                    onClick={(e) => e.stopPropagation()}>
-                                    <Loader center size='4' 
-                                    options={{animation:"border"}}/>
-                                </div>}
-                                <figure onClick={(e) => changeLanguageHandler(e, 'ar')}>
-                                    <img src="/images/uae-flag.png" alt="uae flag" />
-                                    <p>العربية</p>
-                                </figure>
-                                <figure onClick={(e) => changeLanguageHandler(e, 'en')}>
-                                    <img src="/images/usa-flag.jpg" alt="usa flag" />
-                                    <p>English</p>
-                                </figure>
-                            </div>
+                                {/* display the other main language */}
+                                <div className={`${style.header__language_flag} 
+                                ${language === 'ar' ? style.header__language_flag_ar :''}`}
+                                onClick={showLanguageHandler}>
+                                    {language === 'ar' 
+                                    ? <img src="/images/uae-flag.png" alt="uae flag" />
+                                    : <img src="/images/usa-flag.jpg" alt="usa flag" />}
+                                </div>
+                                
+                                {/* the dropdown to select the language */}
+                                <div className={`${style.header__language_menu} 
+                                ${language === 'ar' ? style.header__language_menu_ar : ''}`}
+
+                                style={{display: langDropDown ? 'block' :'none'}}>
+                                    {loadingState && <div className={style.header__language_loader}
+                                        onClick={(e) => e.stopPropagation()}>
+                                        <Loader center size='4' 
+                                        options={{animation:"border"}}/>
+                                    </div>}
+                                    <figure onClick={(e) => changeLanguageHandler(e, 'ar')}>
+                                        <img src="/images/uae-flag.png" alt="uae flag" />
+                                        <p>العربية</p>
+                                    </figure>
+                                    <figure onClick={(e) => changeLanguageHandler(e, 'en')}>
+                                        <img src="/images/usa-flag.jpg" alt="usa flag" />
+                                        <p>English</p>
+                                    </figure>
+                                </div>
                             </div>
                             
                             
@@ -198,7 +208,7 @@ const Header = () => {
                                     </span> }
                                     <Bell/>
                                 </span>
-                                {/* <span onClick={() => toggleNotifyData('messages')}>
+                                {/* <span onClick={() => setToggleMessage(true)}>
                                     <span className={style.header__notify_num}>''</span>
                                     <Envelope/>
                                 </span> */}
@@ -227,18 +237,18 @@ const Header = () => {
                                 data={notifications}/>}
                                 
                                 {/* Messages List */}
-                                {/* {toggleMessages 
+                                {/* {toggleMessage 
                                 && <NotificationContainer 
                                 setToggleNotification={setToggleNotification}
-                                setToggleMessages={setToggleMessages}
+                                setToggleMessages={setToggleMessage}
                                 title='Messages'
                                 data={notifyData}/>} */}
                             </div>
                             
                             :// display the credential buttons [login - sign up] 
-                            <div className={style.header__credential}>
-                                <Link to='register'>Sign up</Link>
-                                <Link to='login'>Login</Link>
+                            <div className={`${style.header__credential} ${language === 'ar' ? style.header__credential_ar : ''}`}>
+                                <Link to='register'>{t('signup')}</Link>
+                                <Link to='login'>{t('login')}</Link>
                             </div>
                             }
                         </div>

@@ -1,11 +1,17 @@
 import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {Badge} from 'react-bootstrap'
+import {useNavigate} from 'react-router-dom'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 
-const Segment = ({value, title, icon, type}) => {
+const Segment = ({value, title, icon, type, page}) => {
     const [count, setCount] = useState(0)
     const increaseCount = useRef(null);
+    const navigate = useNavigate()
+    const {t} = useTranslation()
+    const lang = i18next.language 
 
     const mainColor = {
         primary: '#007bff',
@@ -32,12 +38,13 @@ const Segment = ({value, title, icon, type}) => {
   return (
  
     <div className={style.dashboard__segment}
-    style={{color:mainColor[type]}}>
+    style={{color:mainColor[type]}}
+    onClick={() => navigate(page)}>
         <span>
             {icon}
         </span>
-        <div className={style.dashboard__segment_info}>
-            <h3>{title}</h3>
+        <div className={`${style.dashboard__segment_info} ${lang === 'ar' ? style.dashboard__segment_info_ar :''}`}>
+            <h3>{t(title)}</h3>
             <p>
                 <Badge bg={type}> {count} </Badge>
             </p>

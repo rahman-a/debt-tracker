@@ -10,10 +10,10 @@ export const login = async (req, res, next) => {
     const {email, password} = req.body 
     
     try {
-        const staff = await User.AuthUser(email, password, res)
+        const staff = await User.AuthUser(email, password, res, req.t)
         if(!staff.roles.length){
             res.status(401)
-            throw new Error('Not Authorized to Access The Dashboard')
+            throw new Error(req.t('not_authorized_to_access_dashboard'))
         }
 
         const tokenExpiry = '7 days'
@@ -68,21 +68,21 @@ export const createProviderAccount = async(req, res, next ) => {
         const isUsernameFound = await User.findOne({username})
         if(isUsernameFound) {
             res.status(400)
-            throw new Error('username already found, please choose another one')
+            throw new Error(req.t('username_already_found'))
         }
 
         const primaryEmail = newProvider.emails.find(email => email.isPrimary === true)
         const isEmailFound = await User.findOne({"emails.email": primaryEmail.email}) 
         if(isEmailFound) {
             res.status(400)
-            throw new Error('email already found, please choose another one')
+            throw new Error(req.t('email-already-exist', {email:isEmailFound}))
         }
         
         const primaryPhone = newProvider.insidePhones.find(phone => phone.isPrimary === true)
         const isPhoneFound = await User.findOne({"insidePhones.phone": primaryPhone.phone}) 
         if(isPhoneFound) {
             res.status(400)
-            throw new Error('phone already found, please choose another one')
+            throw new Error(req.t('phone_already_exist'))
         }
 
         for(let key in req.files) {
@@ -108,7 +108,7 @@ export const createProviderAccount = async(req, res, next ) => {
         res.send({
             success:true,
             code:201,
-            message:'Provider Account has been Created'
+            message:req.t('provider_account_created')
         })
     } catch (error) {
         console.log(error);
@@ -119,26 +119,28 @@ export const createProviderAccount = async(req, res, next ) => {
 export const changeUserRole = async (req, res, next) => {
     const {id} = req.params
     const {role} = req.query 
+    const lang = req.headers['accept-language']
     const roles = {
-        user:'Member',
-        manager:'Panel Manager',
-        cs:'Complains Administrator',
-        hr:'Members Administrator'
+        user:{en:'Member', ar:'عضو'},
+        manager:{en:'Panel Manager', ar:'مدير'},
+        cs:{en:'Complains Administrator', ar:'أخصائى شكاوى'},
+        hr:{en:'Members Administrator', ar:'مختص شئون الإعضاء'}
     }
+    console.log({lang});
     try {
         if(!role) {
             res.status('400')
-            throw new Error('please define role first')
+            throw new Error(req.t('define_role_first'))
         }
         const user = await User.findById(id) 
         if(!user) {
             res.status(404) 
-            throw new Error('No User Found')
+            throw new Error(req.t('no_user_found'))
         }
-        
+        console.log(roles[role][lang]);
         if(user.roles.includes(role)) {
             res.status(400)
-            throw new Error(`Member Already set as ${roles[role]}`)
+            throw new Error(req.t('member_already_set_as', {role:roles[role][lang]}))
         }
         user.roles = role === 'user'
         ? []
@@ -149,7 +151,7 @@ export const changeUserRole = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:`User has been set as ${roles[role]}`
+            message:req.t('user_has_set_as', {role:roles[role][lang]})
         })
     } catch (error) {
         next(error)

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Alert } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import {Input, Button} from '../../components'
 import {User, Building} from '../../icons'
@@ -11,6 +12,7 @@ const Personal = ({setStep, setInfo, info}) => {
     const [errors, setErrors] = useState(null)
     const [toggleAlert, setToggleAlert] = useState(true)
     const {isDone} = useSelector(state => state.registerInfo)
+    const {t} = useTranslation()
 
     const moveNextHandler = _ => {
         const data = {
@@ -33,12 +35,12 @@ const Personal = ({setStep, setInfo, info}) => {
     const isFormValid = _ => {
         setToggleAlert(true)
         if(!englishName) {
-            setErrors('Please type your full name in english')
+            setErrors(t('provide-full-name-english'))
             return false
         }
 
         if(!arabicName) {
-            setErrors('Please type your full name in arabic')
+            setErrors(t('provide-full-name-arabic'))
             return false
         }
 
@@ -58,9 +60,9 @@ const Personal = ({setStep, setInfo, info}) => {
             }
             <Input
             type='text'
-            placeholder='Full Name in English'
+            placeholder='full-name-in-english'
             name='fullNameInEnglish'
-            label='Full Name in English'
+            label='full-name-in-english'
             icon={<User/>}
             value={englishName}
             onChange={(e) => setEnglishName(e.target.value)}
@@ -69,9 +71,9 @@ const Personal = ({setStep, setInfo, info}) => {
 
             <Input
             type='text'
-            placeholder='الإسم كاملاً بالعربى'
+            placeholder='full-name-in-arabic'
             name='fullNameInArabic'
-            label='الإسم كاملاً بالعربى'
+            label='full-name-in-arabic'
             icon={<User/>}
             value={arabicName}
             onChange={(e) => setArabicName(e.target.value)}
@@ -81,16 +83,16 @@ const Personal = ({setStep, setInfo, info}) => {
             
             <Input
             type='text'
-            placeholder='Company You Worked for'
+            placeholder='company-name'
             name='Company'
-            label='Company You Worked for'
+            label='company-name'
             icon={<Building/>}
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             custom={{marginBottom:'3rem'}}
             />
 
-            <Button value='next' handler={moveNextHandler}/>
+            <Button value={t('next')} handler={moveNextHandler}/>
 
         </>
     )

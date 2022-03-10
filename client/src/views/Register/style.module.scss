@@ -7,6 +7,12 @@
     padding:5rem;
     min-height: 100vh;
     &__wrapper {
+        
+        &_ar {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        
         position: relative;
         box-shadow: 1px 0px 3px 2px rgb(0 0 0 / 30%);
         border: 1px solid rgba(var.$full-light-color, 30%);

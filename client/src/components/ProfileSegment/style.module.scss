@@ -72,5 +72,31 @@
             width:-moz-fit-content;
         }
 
+        &_ar {
+            input {
+                margin-right: unset;
+                margin-left:1rem;
+            }
+            span {
+                margin-right: 1rem;
+                margin-left:unset;
+            }
+        }
+
+    }
+
+    &_ar {
+        p {
+            span {
+                &::after {
+                    left:'unset';
+                    right:-11px
+                }
+                &::before {
+                    left:'unset';
+                    right:-12px
+                }
+            }
+        }
     }
 }

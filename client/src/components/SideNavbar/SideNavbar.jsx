@@ -2,12 +2,14 @@ import React, {useState, useRef, useEffect} from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import actions from '../../actions'
 import {Loader} from '../../components'
 import {
     Cogs, 
     File, 
-    Logout, 
+    RightLogout, 
     AddressCard, 
     Globe,
     CashRegister,
@@ -18,22 +20,34 @@ import {
 const SideNavbar = ({
     showSideMenu, 
     loadingState,
-    language, 
     changeLanguageHandler,
     setSideMenu 
     }) => {
+    const {t} = useTranslation()
     const navigate = useNavigate()
     const [isReportMenu, setIsReportMenu] = useState(false)
     const reportRef = useRef(null)
     const {loading, error, isLogout}  = useSelector(state => state.logout)
-    const dispatch = useDispatch()
+    const language = i18next.language
 
+    const dispatch = useDispatch()
 
     const logoutHandler = e => {
         e.stopPropagation()
         if(!loading) {
             dispatch(actions.users.logout())
         }
+    }
+
+    const toggleMenuStyle = () => {
+       let style = {
+            left: showSideMenu ? 0 :'-30rem'
+        }
+        if(language === 'ar') {
+            style = {right:showSideMenu ? 0 :'-30rem'}
+        }
+
+        return style
     }
     
     useEffect(() => {
@@ -60,11 +74,11 @@ const SideNavbar = ({
         {error 
         && <div className={style.navbar__logout_alert}
         style={{left:error ?'1rem':'-25rem'}}>
-            <p>This is Error From Server</p>
+            <p>{error}</p>
         </div> }
 
         <div className={style.navbar__menu}
-        style={{left: showSideMenu ? '0' : '-30rem'}}>
+        style={toggleMenuStyle()}>
             <ul className={style.navbar__menu_list}>
                 <li className={style.navbar__menu_item}
                 >
@@ -73,7 +87,7 @@ const SideNavbar = ({
                             <Cogs/>
                         </span>
                         <span>
-                            Operation
+                           {t('operation')}
                         </span>
                     </div>
                 </li>
@@ -84,7 +98,7 @@ const SideNavbar = ({
                             <File/>
                         </span>
                         <span>
-                            Reports
+                        {t('reports')}
                         </span>
                     </div>
                     {/* ///////////////////////////////////// */}
@@ -96,7 +110,7 @@ const SideNavbar = ({
                                     <CashRegister/>
                                 </span>
                                 <span>
-                                    Active Reports
+                                {t('active-reports')}
                                 </span>
                             </li>
                             <li className={style.navbar__menu_reports_item}
@@ -105,7 +119,7 @@ const SideNavbar = ({
                                     <HandshakeSlash/>
                                 </span>
                                 <span>
-                                    closed Reports
+                                {t('closed-reports')}
                                 </span>
                             </li>
                         </div>
@@ -119,7 +133,7 @@ const SideNavbar = ({
                             <AddressCard/>
                         </span>
                         <span>
-                            Profile
+                        {t('profile')}
                         </span>
                    </div>
                 </li>
@@ -130,7 +144,7 @@ const SideNavbar = ({
                             <AddressCard/>
                         </span>
                         <span>
-                            Tickets
+                        {t('support')}
                         </span>
                    </div>
                 </li>
@@ -140,11 +154,12 @@ const SideNavbar = ({
                        {loading && <span className={style.navbar__menu_item_loading}>
                             <Loader center size='5' options={{animation:'border'}}/>
                         </span>} 
-                        <span className={style.navbar__menu_item_logout}>
-                            <Logout/>
+                        <span 
+                        className={`${style.navbar__menu_item_logout} ${language === 'ar' ? style.navbar__menu_item_logout_ar :''}`}>
+                             <RightLogout/> 
                         </span>
                         <span>
-                            Logout
+                        {t('logout')}
                         </span>
                     </div>
                 </li>

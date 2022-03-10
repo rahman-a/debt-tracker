@@ -24,10 +24,10 @@
         }
     }
     &__input {
-        margin-right:2rem;
+        margin-right:1rem;
         display: flex;
         align-items:center;
-        width:15%;
+        width:18%;
         @include media.mq(md){
             width:50%;
             margin-bottom: 2rem;
@@ -78,6 +78,7 @@
         box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
         border-radius: 1rem;
         cursor: pointer;
+        width:10rem;
         @include media.mq(sm){
             margin-left: 0;
          }

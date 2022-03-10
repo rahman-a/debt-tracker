@@ -1,0 +1,225 @@
+@use '../../sass/media' as media;
+
+@font-face {
+    font-family: 'Segoe Normal';
+    src: url(../../asset/fonts/Segoe-UI.ttf);
+}
+
+@font-face {
+    font-family: 'Segoe Bold';
+    src: url(../../asset/fonts/Segoe-UI-Bold.ttf);
+}
+
+.sidebar {
+    width:30%;
+    @include media.mq(sm) {
+        // width:100%;
+        display: none;
+    }
+    header {
+        background-color: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:0.3rem;
+
+        img {
+            width:3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            margin:1rem;
+            object-fit: cover;
+        }
+
+        button {
+            all:unset;
+            cursor: pointer;
+            margin:1rem;
+            span {
+                background-color: none;
+                display: grid;
+                display: -ms-grid;
+                place-items: center;
+                width:3.2rem;
+                height: 3.2rem;
+                border-radius: 50%;
+            }
+
+            svg {
+                width:2rem;
+                height: 2rem;
+            }
+
+            &:active span {
+                background-color:#d0d0d0;
+            }
+        }
+    }
+
+    &__search {
+        background-color: #ffffff;
+        padding:0.5rem;
+        border-bottom: 1px solid #ccc;
+        & > div {
+            position: relative;
+        }
+
+        input {
+            all:unset;
+            width:100%;
+            background-color: #f0f2f5;
+            padding:0.5rem 5rem;
+            border-radius: 0.3rem;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            &::placeholder {
+                font-size: 1.3rem;
+            }
+        }
+
+        span {
+            position: absolute;
+            top:50%;
+            left:1.5rem;
+            transform: translateY(-50%);
+
+            svg {
+                width:1.5rem;
+                height:1.5rem;
+            }
+        }
+    }
+
+    &__body {
+        font-family: 'League Spartan', sans-serif;
+        &_chat {
+            display: flex;
+            height: 8rem;
+            padding:2rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            align-items: center;
+            border-bottom:1px solid #dbdbdb;
+            font-family:"League Spartan", sans-serif;
+
+            &:hover {
+                background-color: #f7f7f7;
+            }
+
+            &:active {
+                background-color: #7070701c;
+                box-shadow: unset;
+            }
+
+            figure {
+                width:4rem;
+                height: 4rem;
+               clip-path: circle();
+                overflow: hidden;
+                margin-right: 1rem;
+                @include media.mq(xl) {
+                    width:3rem;
+                    height: 3rem;
+                }
+            }
+
+            img {
+                width:100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            & > div {
+                @include media.mq(sm) {
+                    width:100%;
+                }
+            }
+
+            h3 {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+
+                span:first-child {
+                    position: absolute;
+                    right: 59%;
+                    top: -0.2rem;
+                    width:0.8rem;
+                    height: 0.8rem;
+                    border-radius: 50%;
+                    background-color:#06a906;
+                }
+
+                span:nth-child(2) {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    color:#333;
+
+                    @include media.mq(xl) {
+                        font-size: 1rem;
+                    }
+                    @include media.mq(md) {
+                        font-size: 0.8rem;
+                    }
+                }
+                
+                span:last-child {
+                    font-size: 1.2rem;
+                    color:rgb(87, 87, 87);
+                    font-weight: 500;
+                }
+            }
+
+            p {
+                font-size: 1.2rem;
+                line-height: 1.8;
+                font-weight: 400;
+                font-family: 'Segoe Normal', Tahoma, Geneva, Verdana, sans-serif;
+                @include media.mq(xl) {
+                    font-size: 0.7rem;
+                }
+                @include media.mq(md) {
+                    font-size: 0.6rem;
+                }
+                @include media.mq(sm) {
+                    margin-top: 0.5rem;
+                }
+            }
+            
+        }
+    }
+
+    &__room {
+        &_members {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            overflow-y: auto;
+        }
+        &_member {
+            background-color: #ededed;
+            padding: 0.3rem;
+            width: fit-content;
+            width: -moz-fit-content;
+            border-radius: 0.5rem;
+            margin: 0.5rem;
+            img {
+                width: 3.5rem;
+                height: 3.5rem;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            span:first-of-type {
+                margin:0 0.5rem;
+            }
+
+            span:last-of-type {
+                margin-right:0.5rem;
+                cursor: pointer;
+            }
+        }
+    }
+}
+ 

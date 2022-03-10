@@ -4,6 +4,7 @@
 .back {
     all: unset;
     position: absolute;
+    direction: ltr;
     @include media.mq(md) {
         font-size: 1.4rem;
     }

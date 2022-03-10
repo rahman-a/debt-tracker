@@ -8,7 +8,6 @@
         color:var.$white-color;
         height: 100vh;
         top:5.6rem;
-        left:-18rem;
         z-index:999;
         transition: all 0.3s ease-in-out;
         width:25rem;
@@ -29,6 +28,7 @@
     
         &_item {
           position: relative;
+          text-transform: capitalize;
           & > div {
             padding: 3.5rem 3.5rem 3rem 1rem;
             border-bottom: 1px solid var.$full-light-color;
@@ -46,6 +46,11 @@
           &_logout {
             svg {
               transform:rotate(180deg)
+            }
+            &_ar {
+              svg {
+                transform: unset;
+              }
             }
           }
     

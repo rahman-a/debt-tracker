@@ -24,13 +24,13 @@ export const register = async (req, res, next) => {
         const isUsernameFound = await User.findOne({username})
         if(isUsernameFound) {
             res.status(400)
-            throw new Error('username already found, please choose another username')
+            throw new Error(req.t('username_already_found'))
         }
         for(const email of emails) {
             const isFound = await User.findOne({"emails.email":email.email})
             if(isFound) {
                 res.status(400)
-                throw new Error(`${email.email} already exist please choose another email`)
+                throw new Error(req.t('email-already-exist', {email:email.email}))
             }
         }
         const user = await newUser.save()    
@@ -55,7 +55,7 @@ export const completeRegistration = async (req, res, next) => {
 
         if(Object.keys(userData).length === 0) {
             res.status(400)
-            throw new Error('Please Provide the Required Data')
+            throw new Error(req.t('provide_required_data'))
         }
         
         const user  = await User.findById(id)
@@ -63,7 +63,7 @@ export const completeRegistration = async (req, res, next) => {
         for(let key in userData) {
             if(!(allowedKeys.includes(key))) {
                 res.status(400)
-                throw new Error(`${key} is not recognized`)
+                throw new Error(req.t('value_not_recognized', {value:key}))
             }
             user[key] = userData[key]
         }
@@ -94,6 +94,7 @@ export const completeRegistration = async (req, res, next) => {
 export const registerDocument = async (req, res, next) => {
     const {id} = req.params 
     const {snapshot} = req.query
+    const lang = req.headers['accept-language']
     try {
         let expireAt = null
         if(snapshot === 'not_taken') {
@@ -152,7 +153,7 @@ export const registerDocument = async (req, res, next) => {
         } 
         await user.save()
         
-        await takeAction(user._id, 'green')  
+        await takeAction(user._id, 'green', lang)  
         
         if(snapshot === 'not_taken') {
             await sendConfirmCodeToPhone(user._id) 
@@ -184,7 +185,7 @@ export const sendConfirmCodeToPhoneHandler = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Code has been sent to your phone'
+            message:req.t('phone_code_sent')
         })
     } catch (error) {
         next(error)
@@ -204,7 +205,7 @@ export const verifyConfirmPhoneCodeHandler = async (req, res, next) => {
         }
         if(user.phoneCode !== code) {
             res.status(400)
-            throw new Error('Code isn\'t valid please type a valid one or click sent code again')
+            throw new Error(req.t('phone_code_not_valid'))
         }
         user.isPhoneConfirmed = true 
         await user.save()
@@ -212,7 +213,7 @@ export const verifyConfirmPhoneCodeHandler = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Your Phone has been verified'
+            message:req.t('phone_verification_success')
         })
     } catch (error) {
         next(error)
@@ -227,7 +228,7 @@ export const sendEmailVerificationLink = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Verification Link has been sent to your E-mail'
+            message:req.t('verification_link_sent_to_email')
         })
     } catch (error) {
         next(error)
@@ -242,12 +243,12 @@ export const login = async (req, res, next) => {
     const {email, password} = req.body 
     
     try {
-      const user = await User.AuthUser(email, password, res) 
+      const user = await User.AuthUser(email, password, res, req.t) 
       res.send({
           success:true,
           code:200,
           user:user._id,
-          message:'A code has been sent to your E-mail'
+          message:req.t('login_code_sent_to_email')
       })
     } catch (error) {
         next(error)
@@ -276,7 +277,7 @@ export const sendPasswordResetLink = async (req, res, next) => {
         
         if(!user) {
             res.status(404)
-            throw new Error('This E-mail isn\'t connected with any account')
+            throw new Error(req.t('email_not_connected_with_account'))
         }
         
         await sendAuthLink(user, req, 'reset')
@@ -284,7 +285,7 @@ export const sendPasswordResetLink = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'The Link has been sent to Your E-mail'
+            message:req.t('pass_reset_link_sent_to_email')
         })
     } catch (error) {
         next(error)
@@ -299,7 +300,7 @@ export const sendLoginCodeHandler = async (req, res, next) => {
       res.send({
           success:true,
           code:200,
-          message:'A code has been sent to your E-mail'
+          message:req.t('login_code_sent_to_email')
       })
     } catch (error) {
         next(error)
@@ -319,7 +320,7 @@ export const findUserHandler = async (req, res, next) => {
             users = await User.find({"insidePhones.phone": phone})
             if(users.length === 0) {
                 res.status(404)
-                throw new Error('no users found, search again')
+                throw new Error(req.t('no_user_found_search_again'))
             }
         }else {
             let searchFilter = {}
@@ -334,13 +335,14 @@ export const findUserHandler = async (req, res, next) => {
             users = await User.find({...searchFilter})
             if(users.length === 0) {
                 res.status(404)
-                throw new Error('no users found, search again')
+                throw new Error(req.t('no_user_found_search_again'))
             }  
         }
         const allUsers = users.map(user => (
             {
                 _id:user._id,
                 name:user.fullNameInEnglish,
+                arabicName:user.fullNameInArabic,
                 image:user.avatar
             }
         ))
@@ -361,7 +363,7 @@ export const verifyAuthLink = async (req, res, next) => {
         // decode the token to extract user id
         const decode = jwt.verify(token, process.env.RESET_TOKEN, (err, decode) => {
             if(err){
-                throw new Error('The Link is Invalid')
+                throw new Error(req.t('link_invalid'))
             }
             return decode
         })
@@ -369,13 +371,13 @@ export const verifyAuthLink = async (req, res, next) => {
         const user = await User.findOne({_id:decode.id})
         
         // if not user send error
-        if(!user) throw new Error('No User Found')
+        if(!user) throw new Error(req.t('no_user_found'))
        
         // check if reset code == the user reset code
         const isResetCodeMatch = await bcrypt.compare(decode.code, user.authString)
         
         // if not send error
-        if(!isResetCodeMatch) throw new Error('The Link is Invalid')
+        if(!isResetCodeMatch) throw new Error(req.t('link_invalid'))
         
         if(type === 'activate') {
             user.isEmailConfirmed = true
@@ -383,7 +385,7 @@ export const verifyAuthLink = async (req, res, next) => {
             res.json({
                 success:true,
                 code:200,
-                message:'E-mail has been Verified'
+                message:req.t('email_verification_success')
             })
         }else if(type ==='reset') {
             user.password = password
@@ -392,7 +394,7 @@ export const verifyAuthLink = async (req, res, next) => {
             res.json({
                 success:true,
                 code:200,
-                message:'Password has been reset'
+                message:req.t('pass_reset_success')
             })
         }
     } catch (error) {
@@ -409,7 +411,7 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
         const user = await User.findById(id)
         if(user.emailCode !== code) {
             res.status(400)
-            throw new Error('The Code isn\'t valid, please type the right code or send it again')
+            throw new Error(req.t('login_code_not_valid'))
         }
         if(!(user.isEmailConfirmed)) {
             user.isEmailConfirmed = true 
@@ -502,7 +504,7 @@ export const updateUserPassword = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Password has been updated'
+            message:req.t('pass_update_success')
         })
     } catch (error) {
         next(error)
@@ -608,6 +610,7 @@ export const listAllUsers = async (req, res, next) => {
           code:1, 
           colorCode:1,
           fullNameInEnglish:1,
+          fullNameInArabic:1,
           createdAt:1,
           avatar:1,
           isAccountConfirmed:1,
@@ -616,7 +619,7 @@ export const listAllUsers = async (req, res, next) => {
         
         if(!users.length) {
             res.status(404)
-            throw new Error('No Users Found in the Database')
+            throw new Error(req.t('no_users_found'))
         }
         
         const count = await User.count({...searchFilter})
@@ -636,18 +639,21 @@ export const listAllUsers = async (req, res, next) => {
 // DELETE USER ROUTER 
 export const deleteUser = async (req, res, next) => {
     const {id} = req.params 
-
+    const lang = req.headers['accept-language']
     try {
         const user = await User.findById(id) 
         if(!user) {
             res.status(404)
-            throw new Error('No User Found to Delete')
+            throw new Error(req.t('no_user_found'))
         }
         await user.remove()
+        
+        const name = lang === 'ar' ? user.fullNameInArabic : user.fullNameInEnglish
+        
         res.send({
             code:200,
             success:true,
-            message:`${user.fullNameInEnglish} has been deleted`
+            message:req.t('user_deletion_success', {name})
         })
     } catch (error) {
         next(error)
@@ -664,7 +670,7 @@ export const toggleUserActivation = async (req, res, next) => {
         const user = await User.findById(id) 
         if(!user) {
             res.status(404) 
-            throw new Error('No User Found')
+            throw new Error(req.t('no_user_found'))
         }
         user.isAccountConfirmed = !user.isAccountConfirmed
         await user.save() 
@@ -689,7 +695,7 @@ export const changeUserColorCode = async (req, res, next) => {
         
         if(!user) {
             res.status(404)
-            throw new Error('No User Found')
+            throw new Error(req.t('no_user_found'))
         }
         
         console.log({code}, {state});
@@ -711,7 +717,7 @@ export const changeUserColorCode = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Color Code has been changed'
+            message:req.t('color_code_change_success')
         })
 
     } catch (error) {
@@ -737,7 +743,7 @@ async function sendConfirmCodeToPhone(id, email) {
         }
         if(!user) {
             res.status(404)
-            throw new Error('No User Found')
+            throw new Error(req.t('no_user_found'))
         }
         const phone = user.insidePhones.find(phone => phone.isPrimary === true).phone
         const code = generateRandomCode(6)
@@ -932,7 +938,7 @@ const documentExpiredHandler  = async (id, document, action) => {
     const expiryDate = DateTime.fromJSDate(expiryDateObject).setZone('Asia/Dubai').ts 
     
     if (now > expiryDate) {
-       await takeAction(user._id, 'yellow', action)
+       await takeAction(user._id, 'yellow', action, 'en')
     } else {
         
         const now = DateTime.now().setZone('Asia/Dubai')
@@ -980,7 +986,7 @@ const documentMissingHandler = async (id, document, action) => {
     const sinceRegistrationInDays = diff.values.days 
     
     if(sinceRegistrationInDays > 29 && sinceRegistrationInDays < 31) {
-        await takeAction(user._id, 'yellow', action)
+        await takeAction(user._id, 'yellow', action, 'en')
     }else if(sinceRegistrationInDays < 30){
         const operationCount = await Operation.count({
             $or:[

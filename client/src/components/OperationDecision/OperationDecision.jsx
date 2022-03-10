@@ -6,6 +6,8 @@ import {CheckDouble, Times} from '../../icons'
 import {Currency, Loader, HeaderAlert} from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const OperationDecision = ({show, onHide, id, notificationId}) => {
     const dispatch = useDispatch()
@@ -16,10 +18,19 @@ const OperationDecision = ({show, onHide, id, notificationId}) => {
         message
     } = useSelector(state => state.updateOperationState)
     
+    const lang = i18next.language
+    const {t} = useTranslation()
+
     const stateName = {
-        '#037A12':'Accredited',
-        '#C7E81D':'Warning',
-        '#EC4A0D':'Danger',
+        '#037A12':lang === 'ar' ? 'مؤهل' : 'Accredited',
+        '#C7E81D':lang === 'ar' ? 'تحذير' : 'Warning',
+        '#EC4A0D':lang === 'ar' ? 'خطر' : 'Danger',
+    }
+
+    const textColor = {
+        '#037A12':'#fff',
+        '#C7E81D':'#000',
+        '#EC4A0D':'#fff',
     }
 
     const declineOperationHandler = _ => {
@@ -73,7 +84,7 @@ const OperationDecision = ({show, onHide, id, notificationId}) => {
             }
 
             { operation && 
-            <> <h2>Operation Details</h2>
+            <> <h2>{t('operation-details')}</h2>
                 
                 <div className={style.decision__peers}>
                     <div className={style.decision__peer}>
@@ -81,10 +92,17 @@ const OperationDecision = ({show, onHide, id, notificationId}) => {
                             <span style={{backgroundColor:operation.initiator.user.colorCode.code}}></span>
                             <img src={`/api/files/${operation.initiator.user.avatar}`} alt="peer"/>
                         </div>
-                        <h3>{operation.initiator.user.fullNameInEnglish}</h3>
+                        <h3>{
+                       lang === 'ar' 
+                       ?  operation.initiator.user.fullNameInArabic
+                       :  operation.initiator.user.fullNameInEnglish
+                        }</h3>
                          <p>
-                             <span> {operation.initiator.type.toLocaleUpperCase()} </span>
-                             <span> {stateName[operation.initiator.user.colorCode.code]} </span>
+                             <span> {t(operation.initiator.type).toLocaleUpperCase()} </span>
+                             <span style={{
+                                  backgroundColor:operation.initiator.user.colorCode.code,
+                                  color:textColor[operation.initiator.user.colorCode.code]
+                            }}> {stateName[operation.initiator.user.colorCode.code]} </span>
                          </p>
                     </div>
                     <div className={style.decision__peer}>
@@ -92,23 +110,30 @@ const OperationDecision = ({show, onHide, id, notificationId}) => {
                             <span style={{backgroundColor:operation.peer.user.colorCode.code}}></span>
                             <img src={`/api/files/${operation.peer.user.avatar}`} alt="peer"/>
                         </div>
-                        <h3> {operation.peer.user.fullNameInEnglish}</h3>
+                        <h3> {
+                         lang === 'ar' 
+                         ?  operation.peer.user.fullNameInArabic
+                         :  operation.peer.user.fullNameInEnglish
+                        }</h3>
                         <p>
-                             <span> {operation.peer.type.toLocaleUpperCase()} </span>
-                             <span> {stateName[operation.peer.user.colorCode.code]} </span>
+                             <span> {t(operation.peer.type).toLocaleUpperCase()} </span>
+                             <span style={{
+                                 backgroundColor:operation.peer.user.colorCode.code,
+                                 color:textColor[operation.peer.user.colorCode.code]
+                            }}> {stateName[operation.peer.user.colorCode.code]} </span>
                          </p>
                     </div>
                 </div>
 
-                <ul className={style.decision__details}>
+                <ul className={`${style.decision__details} ${lang === 'ar' ? style.decision__details_ar :''}`}>
                     <li>
-                        <span>Operation Value:</span> <span>{operation.peer.value}</span>
+                        <span>{t('operation-value')}:</span> <span>{operation.peer.value}</span>
                     </li>
                     <li>
-                        <span>Value Currency:</span> <Currency currency={operation.currency}/>
+                        <span>{t('operation-currency')}:</span> <Currency currency={operation.currency}/>
                     </li>
                     <li>
-                        <span>Due Date:</span> 
+                        <span>{t('due-date')}:</span> 
                         <span> 
                             {
                                 operation.dueDate 
@@ -119,14 +144,14 @@ const OperationDecision = ({show, onHide, id, notificationId}) => {
                     </li>
                 </ul>
 
-                <div className={style.decision__actions}>
+                <div className={`${style.decision__actions} ${lang === 'ar' ? style.decision__actions_ar :''}`}>
                     <button onClick={approveOperationHandler}>
                         <span> <CheckDouble/> </span>
-                         <span>Approve</span> 
+                         <span>{t('decision-approve')}</span> 
                     </button>
                     <button onClick={declineOperationHandler}>
                         <span> <Times/> </span>
-                        <span>Decline</span>
+                        <span>{t('decision-decline')}</span>
                     </button>
                 </div>
 

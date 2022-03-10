@@ -42,12 +42,12 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
 
     try {
         const {data} = await api.notifications.updateState(id)
-        
+        console.log({notificationUpdate:data});
         let {notifications, nonRead, count} = getState().listNotifications
                 
         if(notifications) {
             
-            const copiedNotifications = [...notifications] 
+            const copiedNotifications = JSON.parse(JSON.stringify(notifications))
             
             copiedNotifications.forEach(notification => {
                 if(notification._id === id) {

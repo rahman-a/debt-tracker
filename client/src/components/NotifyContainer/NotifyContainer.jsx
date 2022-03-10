@@ -1,7 +1,9 @@
 import React from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import i18next from 'i18next'
 import {Loader} from '../../components'
+import { useTranslation } from 'react-i18next'
 
 const NotifyContainer = ({
     title, 
@@ -13,6 +15,7 @@ const NotifyContainer = ({
 }) => {
     
     const navigate = useNavigate()
+    const {t} = useTranslation()
 
     const navigateToPage = () => {
         
@@ -26,8 +29,13 @@ const NotifyContainer = ({
         && '/messages')
     }
 
+    const lang = i18next.language
+
+
     return (
-        <div className={style.notify__container}>
+        <div className={`${style.notify__container} 
+        ${lang === 'ar' ? style.notify__container_ar :''}`}>
+            
             <h4>{title}</h4>
             <ul className={style.notify__list}
             style={{height:(loading || error) && '15rem'}}>
@@ -52,7 +60,7 @@ const NotifyContainer = ({
                 }
                 
             </ul>
-            { data && <button onClick={navigateToPage}>show all...</button> }
+            { data && <button onClick={navigateToPage}>{t("show-all")}</button> }
         </div>
     )
 }

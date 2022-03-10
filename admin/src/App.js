@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import {useSelector} from 'react-redux'
 import { Routes, Route, Navigate} from 'react-router-dom'
-import {Header, Footer} from './components'
+import {Header, Footer, Message} from './components'
 import {
   Dashboard, 
   Login, 
@@ -17,8 +17,10 @@ import {
   Notifications,
   Provider,
   Support,
-  Ticket
+  Ticket,
+  Chat
 } from './views'
+
 
 
 function App() {
@@ -36,7 +38,7 @@ function App() {
             <Route path='/operations' element={isAuth ? <Operations/> : <Navigate to='/login'/>}/>
             <Route path='/reports/active' element={isAuth ? <ActiveReports/> : <Navigate to='/login'/>}/>
             <Route path='/reports/closed' element={isAuth ? <ClosedReports/> : <Navigate to='/login'/>}/>
-            <Route path='/messages' element={isAuth ? <Messages/> : <Navigate to='/login'/>}/>
+            <Route path='/chat' element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
             <Route path='/notifications' element={isAuth ? <Notifications/> : <Navigate to='/login'/>}/>
             <Route path='/provider' element={isAuth ? <Provider/> : <Navigate to='/login'/>}/>
             <Route path='/support' element={isAuth ? <Support/> : <Navigate to='/login'/>}/>

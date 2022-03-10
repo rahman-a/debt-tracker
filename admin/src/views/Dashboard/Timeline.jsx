@@ -1,8 +1,13 @@
+import i18next from 'i18next'
 import React, {useState, useEffect} from 'react'
+import { useTranslation } from 'react-i18next'
 import style from './style.module.scss'
 
-const Timeline = ({name, date, type}) => {
+const Timeline = ({englishName,arabicName, ticket ,date, type}) => {
   const [color, setColor] = useState('#25221B')
+  const lang = i18next.language 
+  const {t} = useTranslation()
+  
   const dateOptions = {
     weekDay:'long',
     month:'short',
@@ -30,19 +35,23 @@ const Timeline = ({name, date, type}) => {
   },[])
   
   return (
-    <div className={style.dashboard__timeline_item}
+    <div className={`${style.dashboard__timeline_item} ${lang === 'ar' ? style.dashboard__timeline_item_ar :''}`}
     style={{color}}>
         <div className={style.dashboard__timeline_dot}
         style={{backgroundColor:color}}></div>
         <div className={style.dashboard__timeline_content}>
             <h3 className={style.dashboard__timeline_name}>
               <span style={{color:'#333', fontStyle:'italic', fontSize:'1.3rem'}}>
-                {type === 'ticket' ? 'New Ticket:' : 'New Member:'}
+                {type === 'ticket' ? t('new-ticket'): t('new-member')}
                 </span>  
-                <span>  {name} </span>
+                <span>  {
+                ticket ? ticket 
+                :lang === 'ar' 
+                ? arabicName 
+                : englishName} </span>
             </h3>
             <p className={style.dashboard__timeline_date}>
-              Registered at: {new Date(date).toLocaleDateString('en-US', dateOptions)}
+              {t('registered-at', {date:new Date(date).toLocaleDateString('en-US', dateOptions)})}
             </p>
         </div>
     </div>

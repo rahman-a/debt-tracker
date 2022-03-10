@@ -34,7 +34,7 @@ const Documents = ({data}) => {
     
     return (
         <div className={style.profile__documents}>
-            <ProfileContainer title='verification documents'>
+            <ProfileContainer title='verification-document'>
                 <div className={style.profile__documents_wrapper}>
                     {documents}
                 </div>

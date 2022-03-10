@@ -2,6 +2,7 @@ import React from 'react'
 import style from './style.module.scss'
 import {Form} from 'react-bootstrap'
 import {DateInput} from '../../components'
+import { useTranslation } from 'react-i18next'
 
 const Documents = ({
     getInfoValues, 
@@ -13,12 +14,14 @@ const Documents = ({
     residential
 }) => {
 
+    const {t} = useTranslation()
+
   return (
     <div className={style.provider__segment}>
-    <h2>Member Required Documents</h2>
+    <h2>{t('provider-documents')}</h2>
         <div style={{marginBottom:'1rem', borderBottom:'1px solid #ccc'}}>
             <Form.Group controlId="formFilePersonal" className="mb-3">
-                <Form.Label>Upload Personal image</Form.Label>
+                <Form.Label>{t('upload-provider-photo')}</Form.Label>
                 <Form.Control 
                 type="file" 
                 size='lg'
@@ -29,7 +32,7 @@ const Documents = ({
         
         <div style={{marginBottom:'1rem', borderBottom:'1px solid #ccc'}}>
             <Form.Group controlId="formFileIdentity" className="mb-3">
-                <Form.Label>Upload Identity Document</Form.Label>
+                <Form.Label>{t('upload-provider-identity')}</Form.Label>
                 <Form.Control 
                 type="file" 
                 size='lg'
@@ -43,7 +46,7 @@ const Documents = ({
     
         <div style={{marginBottom:'1rem', borderBottom:'1px solid #ccc'}}>
             <Form.Group controlId="formFilePassport" className="mb-3">
-                <Form.Label>Upload Passport Document</Form.Label>
+                <Form.Label>{t('upload-provider-passport')}</Form.Label>
                 <Form.Control 
                 type="file" 
                 size='lg'
@@ -56,7 +59,7 @@ const Documents = ({
         
         <div style={{marginBottom:'1rem', borderBottom:'1px solid #ccc'}}>
             <Form.Group controlId="formFileResidential" className="mb-3">
-                <Form.Label>Upload Residential Document</Form.Label>
+                <Form.Label>{t('upload-provider-residential')}</Form.Label>
                 <Form.Control 
                 type="file" 
                 size='lg'

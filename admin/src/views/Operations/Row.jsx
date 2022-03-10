@@ -4,12 +4,16 @@ import {Badge} from 'react-bootstrap'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {Currency, Note} from '../../components'
 import {Check, Copy, Reader} from '../../icons'
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 const Row = ({operation, idx}) => {
     const [isCopied, setIsCopied] = useState(false)
     const [isNoteOn, setIsNoteOn] = useState(false)
     const [copyCode, setCopyCode] = useState(null)
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
+
     const dateFormat = {
         day:'2-digit',
         month:'short',
@@ -29,8 +33,7 @@ const Row = ({operation, idx}) => {
             setCopyCode(null)
         },500)
     }
-    
-
+        
     const getStateColor = state => { 
         const states = {
             pending:'#FBFCD4',
@@ -40,8 +43,6 @@ const Row = ({operation, idx}) => {
         return states[state]
     }
     
-
-  
     return (
     <>
         
@@ -72,10 +73,14 @@ const Row = ({operation, idx}) => {
                     ?'#198754'
                     :'#1a374d'
                 }}>
-                    {operation.initiator.type} 
+                    {t(operation.initiator.type)} 
                 </span>
                     <span> 
-                        {operation.initiator.user.fullNameInEnglish} 
+                        {
+                            lang === 'ar' 
+                            ? operation.initiator.user.fullNameInArabic
+                            : operation.initiator.user.fullNameInEnglish
+                        } 
                     </span>  
                     <span> 
                        <Badge bg='dark'> 
@@ -83,7 +88,7 @@ const Row = ({operation, idx}) => {
                        </Badge>   
                         <CopyToClipboard text={operation.initiator.user.code} 
                         onCopy={() => copyCodeHandler(operation.initiator.user.code)}>
-                            <span className={style.operations__code}>
+                            <span className={`${style.operations__code} ${lang === 'ar' ? style.operations__code_ar :''}`}>
                                 {
                                     copyCode === operation.initiator.user.code
                                     ? <Check/> 
@@ -103,17 +108,21 @@ const Row = ({operation, idx}) => {
                         ?'#198754'
                         :'#1a374d'
                     }}>
-                        {operation.peer.type}
+                        {t(operation.peer.type)}
                     </span>
                     <span> 
-                        {operation.peer.user.fullNameInEnglish}
+                        {
+                            lang === 'ar' 
+                            ? operation.peer.user.fullNameInArabic
+                            : operation.peer.user.fullNameInEnglish
+                        }
                     </span>  
                     <span>    
                        <Badge bg='dark'> 
                             {operation.peer.user.code} 
                         </Badge>   
                         <CopyToClipboard text={operation.peer.user.code} onCopy={() => copyCodeHandler(operation.peer.user.code)}>
-                            <span className={style.operations__code}>
+                            <span className={`${style.operations__code} ${lang === 'ar' ? style.operations__code_ar :''}`}>
                             {
                                 copyCode === operation.peer.user.code 
                                 ? <Check/> 
@@ -155,7 +164,7 @@ const Row = ({operation, idx}) => {
                 backgroundColor:getStateColor(operation.state),
                 textTransform:'uppercase'
                 }}>
-                {operation.state}
+                {t(operation.state)}
             </td>
             
             <td> 

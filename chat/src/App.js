@@ -1,11 +1,14 @@
-import './App.css';
+import style from './App.module.scss';
+import {Chat, Sidebar} from './components'
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-          <h1>Welcome to chat app</h1>
-      </header>
+    <div className={style.App}>
+      <div className={style.App__container}>
+        <Sidebar/>
+        <Chat/>
+      </div>
     </div>
   );
 }

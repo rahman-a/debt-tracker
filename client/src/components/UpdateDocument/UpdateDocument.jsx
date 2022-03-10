@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import style from './style.module.scss'
 import {Modal, Alert, Button} from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux';
+import {useTranslation} from 'react-i18next' 
 import actions from '../../actions';
 import {Times, Plus} from '../../icons'
 import {DateInput} from '../../components'
@@ -16,7 +17,8 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
     const dispatch = useDispatch()
     const {user} = useSelector(state => state.userProfile)
     const {loading, error, isDone} = useSelector(state => state.updateDocuments)
-    
+    const {t} = useTranslation()
+
     const chooseAnotherImageHandler = _ => {
         setImgSrc(null)
         setDocName(null)
@@ -41,12 +43,12 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
     const uploadDocHandler = (e) => {
 
         if(!expiryDate) {
-            setErrors('Please Provide the Expiry Date')
+            setErrors(t('provide-expiry-date'))
             return
         }
 
         if(!doc) {
-            setErrors(`Please Provide The ${document} Document`)
+            setErrors(t('provide-document', {document:t(document)}))
             return
         }
         
@@ -80,7 +82,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
             {
                 isDone && 
                 <Alert variant='success'>
-                    {`${[document]} has been uploaded`}
+                    {t('success-upload', {document:t(document)})}
                 </Alert>
             }
             
@@ -107,8 +109,8 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
             <h3 style={{fontWeight:'300'}}>
                {
                     expiryDate 
-                    ? `Expiry Date: ${expiryDate.toDateString()}` 
-                    : 'Choose The Expiry Date'
+                    ? t('expiry-date', {date:expiryDate.toDateString()}) 
+                    : t('choose-expiry-date')
                } 
             </h3>
             
@@ -120,7 +122,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
             
             <h3 
                 style={{ marginTop: '3rem', fontWeight:'300' }}>
-                { docName ? docName :`Upload the ${document}`}
+                { docName ? docName :t('upload-document', {document:t(document)})}
             </h3>
 
            
@@ -138,7 +140,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
                         {' '}
                         <Plus />{' '}
                         </span>
-                        <span>{`click to upload the ${document}`}</span>
+                        <span>{t('click-upload-document', {document:t(document)})}</span>
                     </label>
                 
                     <input
@@ -158,7 +160,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
                 className='mt-2' 
                 variant='dark' 
                 onClick={chooseAnotherImageHandler}>
-                choose another image
+                {t('choose-another-image')}
                 </Button>
             }
            
@@ -168,7 +170,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
                 size='lg'
                 className='mt-4'
                 onClick={uploadDocHandler}>
-                Upload the Document
+                {t('upload-document-btn')}
             </Button>
           </div>
         </div>

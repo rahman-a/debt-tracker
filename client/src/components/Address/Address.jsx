@@ -3,6 +3,7 @@ import {Alert} from 'react-bootstrap'
 import flags from 'country-flag-emoji-json'
 import {Input, Button, DropdownMenu} from '../../components'
 import {Map, Globe} from '../../icons'
+import { useTranslation } from 'react-i18next'
 
 
 const Address = ({setStep, setInfo, info}) => {
@@ -11,7 +12,7 @@ const Address = ({setStep, setInfo, info}) => {
     const [country, setCountry] = useState(null)
     const [error, setError] = useState('')
     const [toggleAlert, setToggleAlert] = useState(true)
-    
+    const {t} = useTranslation()
     
     const countries = _ => {
         return flags.map(flag => (
@@ -29,11 +30,11 @@ const Address = ({setStep, setInfo, info}) => {
         setToggleAlert(true)
         
         if(!insideAddress) {
-            setError('Please Provide Your Address in UAE')
+            setError(t('provide-address-in-uae'))
             return false
         }
         if(!country) {
-            setError('Please Choose Your Country')
+            setError(t('provide-country'))
             return false
         }
         
@@ -68,8 +69,8 @@ const Address = ({setStep, setInfo, info}) => {
             }
           <Input
           name='address'
-          placeholder='Address inside UAE'
-          label='Address inside UAE'
+          placeholder='address-in-uae'
+          label='address-in-uae'
           type='text'
           icon={<Map/>}
           value={insideAddress}
@@ -79,8 +80,8 @@ const Address = ({setStep, setInfo, info}) => {
 
           <Input
           name='address'
-          placeholder='Address outside UAE'
-          label='Address outside UAE'
+          placeholder='address-out-uae'
+          label='address-out-uae'
           type='text'
           icon={<Map/>}
           value={outsideAddress}
@@ -91,7 +92,7 @@ const Address = ({setStep, setInfo, info}) => {
         <DropdownMenu
             countries
             data={{
-                label:'Choose Your Country',
+                label:'choose-country',
                 icon:<Globe/>,
                 items:countries()
             }}
@@ -100,7 +101,7 @@ const Address = ({setStep, setInfo, info}) => {
         />
 
           <Button 
-          value='next' 
+          value={t('next')} 
           handler={moveNextHandler}
           /> 
         </>

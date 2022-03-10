@@ -14,6 +14,7 @@ import {
 import actions from '../../actions';
 import constants from '../../constants';
 import Row from './Row'
+import { useTranslation } from 'react-i18next';
 
 
 const Members = () => {
@@ -34,7 +35,8 @@ const Members = () => {
   const dispatch = useDispatch()
   const {loading, error, members, count}  = useSelector(state => state.members)
   const {error:delete_error, message} = useSelector(state => state.deleteUser)
-
+  const {t} = useTranslation()
+  
   const initiateUsersFiltration = (skip) => {
     
     let query = {...filter}
@@ -76,7 +78,7 @@ const Members = () => {
       /> 
 
   <div className={style.members}>
-      <h1 className='main-header'>Members List</h1>
+      <h1 className='main-header'>{t('member-list')}</h1>
 
       <FilterModal
       isFilter={isFilterModal}
@@ -104,11 +106,11 @@ const Members = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Code</th>
-            <th>Full Name</th>
-            <th>Photo</th>
-            <th>Registration Date</th>
-            <th>Color Code</th>
+            <th>{t('code')}</th>
+            <th>{t('full-name')}</th>
+            <th>{t('photo')}</th>
+            <th>{t('registration-date')}</th>
+            <th>{t('color-code')}</th>
             <th></th>
           </tr>
         </thead>

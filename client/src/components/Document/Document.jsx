@@ -6,6 +6,7 @@ import actions from '../../actions'
 import constants from '../../constants'
 import {Input, Button, DateInput} from '../../components'
 import {AddressCard} from '../../icons'
+import { useTranslation } from 'react-i18next'
 
 const Documents = ({setStep}) => {
     const [errors, setErrors] = useState(null)
@@ -17,10 +18,10 @@ const Documents = ({setStep}) => {
     })
     
     const [files, setFiles] = useState({
-        avatar:'Personal Photo',
-        identity:'Identity Document',
-        passport:'Passport Document',
-        residential:'Residential Document'
+        avatar:'personal-image',
+        identity:'identity-image',
+        passport:'passport-image',
+        residential:'residential-image'
     })
     
     const dispatch = useDispatch()
@@ -28,7 +29,8 @@ const Documents = ({setStep}) => {
     const {userId} = useSelector(state => state.registerCredential)
 
     const [expireAt, setExpiryAt] = useState({})
-
+    const {t} = useTranslation()
+    
     const uploadFileHandler = e => {        
         let fileName = e.target.files[0].name
         if(fileName.length > 20) {
@@ -44,28 +46,28 @@ const Documents = ({setStep}) => {
 
     const moveNextHandler = _ => {
       if(!images.avatar) {
-          setErrors('Please upload Your Personal Image')
+          setErrors(t('provide-personal-image'))
           return
       }
       if(!images.identity) {
-          setErrors('Please upload Your Identity')
+          setErrors(t('provide-identity'))
           return
       }
       if(images.identity) {
         if(!expireAt.identity) {
-            setErrors('Please choose your identity expiry date')
+            setErrors(t('provide-identity-expiry'))
             return
         }
       }
       if(images.passport) {
         if(!expireAt.passport) {
-            setErrors('Please choose your passport expiry date')
+            setErrors(t('provide-passport-expiry'))
             return
         }
       }
       if(images.residential) {
         if(!expireAt.residential) {
-            setErrors('Please choose your residential expiry date')
+            setErrors(t('provide-residential-expiry'))
             return
         }
       }
@@ -104,8 +106,8 @@ const Documents = ({setStep}) => {
         {/* UPLOAD PERSONAL PHOTO */}
           <Input
             name='avatar'
-            label={files.avatar}
-            placeholder='Personal Photo'
+            label={t(files.avatar)}
+            placeholder='personal-image'
             type='file'
             icon={<AddressCard/>}
             onChange={(e) => uploadFileHandler(e)}
@@ -118,7 +120,7 @@ const Documents = ({setStep}) => {
             <Input
                 name='identity'
                 label={files.identity}
-                placeholder='Identity Document'
+                placeholder='identity-image'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
@@ -134,7 +136,7 @@ const Documents = ({setStep}) => {
             <Input
                 name='passport'
                 label={files.passport}
-                placeholder='Passport Document'
+                placeholder='passport-image'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
@@ -151,7 +153,7 @@ const Documents = ({setStep}) => {
             <Input
                 name='residential'
                 label={files.residential}
-                placeholder='Residential Document'
+                placeholder='residential-image'
                 type='file'
                 onChange={(e) => uploadFileHandler(e)}
                 icon={<AddressCard/>}
@@ -162,7 +164,7 @@ const Documents = ({setStep}) => {
             <hr/>
         </div>
 
-        <Button value='next' handler={moveNextHandler} loading={loading && loading}/> 
+        <Button value={t('next')} handler={moveNextHandler} loading={loading && loading}/> 
 
         </>
     )

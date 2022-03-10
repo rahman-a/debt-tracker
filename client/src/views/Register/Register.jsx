@@ -13,12 +13,15 @@ import {
     Done
 } from '../../components'
 import {ArrowRight} from '../../icons'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const Register = () => {
     const [step, setStep] = useState(1)
     const [info, setInfo] = useState({})
     const navigate = useNavigate()
-    
+    const lang = i18next.language
+    const {t} = useTranslation()
     const Component = {
         1: <Credential setStep={setStep}/>,
         2: <Personal setStep={setStep} setInfo={setInfo} info={info}/>,
@@ -31,14 +34,14 @@ const Register = () => {
 
     return (
         <div className={style.register}>
-            <button className={style.register__back} onClick={() => navigate('/')}>
+            <button style={{direction:'ltr'}} className={style.register__back} onClick={() => navigate('/')}>
                 <span>
                     <ArrowRight/>
                 </span>
-                back to home
+               {t('back-home')}
             </button>
             <div className="container" style={{paddingTop:'5rem'}}>
-                <div className={style.register__wrapper}>
+                <div className={`${style.register__wrapper} ${lang === 'ar' ? style.register__wrapper_ar :''}`}>
                     {step === 7
                     ? <Done/>
                     :<>

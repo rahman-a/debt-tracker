@@ -7,6 +7,7 @@ import {PaperPlane} from '../../icons'
 import {Loader, SideAlert} from '../../components'
 import actions from '../../actions';
 import constants from '../../constants';
+import { useTranslation } from 'react-i18next';
 
 const Replay = ({setIsEditor, id}) => {
     const [title, setTitle]  = useState('')
@@ -16,23 +17,24 @@ const Replay = ({setIsEditor, id}) => {
     const attachRef = useRef()
     const dispatch = useDispatch()
     const {loading, error, message} = useSelector(state => state.addTicketReplay)
-  
+    const {t} = useTranslation() 
+    
     const toolbarConfig = {
         display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS','BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
         INLINE_STYLE_BUTTONS: [
-          {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
-          {label: 'Italic', style: 'ITALIC'},
-          {label: 'Underline', style: 'UNDERLINE'}
+          {label: t('bold'), style: 'BOLD', className: 'custom-css-class'},
+          {label: t('italic'), style: 'ITALIC'},
+          {label: t('underline'), style: 'UNDERLINE'}
         ],
         BLOCK_TYPE_DROPDOWN: [
-          {label: 'Normal', style: 'unstyled'},
-          {label: 'Heading Large', style: 'header-one'},
-          {label: 'Heading Medium', style: 'header-two'},
-          {label: 'Heading Small', style: 'header-three'}
+          {label: t('normal'), style: 'unstyled'},
+          {label: t('large'), style: 'header-one'},
+          {label: t('medium'), style: 'header-two'},
+          {label: t('small'), style: 'header-three'}
         ],
         BLOCK_TYPE_BUTTONS: [
-          {label: 'UL', style: 'unordered-list-item'},
-          {label: 'OL', style: 'ordered-list-item'}
+          {label: t('ul'), style: 'unordered-list-item'},
+          {label: t('ol'), style: 'ordered-list-item'}
         ]
     };
 
@@ -45,11 +47,11 @@ const Replay = ({setIsEditor, id}) => {
   
       const sendResponseHandler = _ => {
           if(!title) {
-            setErrors('title is required...')
+            setErrors(t('title-required'))
             return 
           }
           if(response.toString('html').length < 50) {
-            setErrors('minimum length required of replay is 50 characters')
+            setErrors(t('minimum-length'))
             return
           }
           const data = new FormData()
@@ -93,14 +95,14 @@ const Replay = ({setIsEditor, id}) => {
                 className='mb-3'
                 size='lg'
                 style={{margin:'1rem 0'}}
-                placeholder='Enter the Title here...'
+                placeholder={t('enter-ticket-title')}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}/>
             </Form.Group>
             
             <div className={style.ticket__edit_area}>
                 <RichTextEditor
-                placeholder='Enter the Replay here....'
+                placeholder={t('enter-ticket-body')}
                 toolbarConfig={toolbarConfig}
                 value={response}
                 onChange={(value) => setResponse(value)} 
@@ -109,7 +111,7 @@ const Replay = ({setIsEditor, id}) => {
 
             <div className={style.ticket__edit_footer}>
             
-            <Button variant='dark' onClick={discardEditorHandler}> Discard </Button>
+            <Button variant='dark' onClick={discardEditorHandler}> {t('ticket-discard')} </Button>
             
             <Form.Group controlId="formFile">
                 <Form.Control 
@@ -122,7 +124,7 @@ const Replay = ({setIsEditor, id}) => {
             variant='success'
             onClick={sendResponseHandler}>
                 <span> <PaperPlane/> </span>
-                Send
+                {t('ticket-send')}
             </Button>
             {loading && <Loader size='4' options={{animation:'border'}}/> }
             </div>

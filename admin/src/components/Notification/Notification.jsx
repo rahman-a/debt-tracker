@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import {OperationDecision} from '../../components'
 import actions from '../../actions'
 import {renderStateMessage} from '../../config/stateMessage'
@@ -8,6 +10,8 @@ import {renderStateMessage} from '../../config/stateMessage'
 const Notification = ({data}) => {
     const [isStateOn, setIsStateOn] = useState(false)
     const dispatch = useDispatch()
+    const {t} = useTranslation()
+    const lang = i18next.language 
 
     const stateColorStyle = _ => {
         const color = 
@@ -40,7 +44,7 @@ const Notification = ({data}) => {
             notificationId={data.id}
             /> }
             
-            <div className={style.notification}
+            <div className={`${style.notification} ${lang === 'ar' ? style.notification_ar : ''}`}
                 onClick={takeDecisionHandler}
                 style={{backgroundColor: data.isRead ? '#fff':'#e7f5ff'}}>
                 <img src={data.image} alt={data.title}/>
@@ -52,7 +56,7 @@ const Notification = ({data}) => {
                 <div className={style.notification__state}
                 style={{backgroundColor:stateColorStyle()}}>
                     <p style={{color: data.state ? '#406882' : '#fff'}}>
-                        {data.state || 'Notice'}
+                        {t(data.state) || t('notice')}
                     </p>
                 </div>
             </div>

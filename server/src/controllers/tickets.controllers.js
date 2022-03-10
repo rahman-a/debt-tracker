@@ -5,12 +5,12 @@ import ObjectId from 'mongoose/lib/types/objectid.js'
 
 export const createNewTicket = async (req, res, next) => {
     const {title} = req.body 
-
+    const lang = req.headers['accept-language']
     try {
         const isFound = await Ticket.findOne({title})
         if(isFound) {
             res.status(401)
-            throw new Error('This title already exist, please choose another title')
+            throw new Error(req.t('title_already_exist'))
         }
         const newTicket = new Ticket(req.body)
         newTicket.member = req.user._id
@@ -21,14 +21,20 @@ export const createNewTicket = async (req, res, next) => {
         const ticket = await newTicket.save() 
 
         const adminNotification = {
-            title:`Ticket has initiated by ${req.user.fullNameInEnglish}`,
-            body:`${req.user.fullNameInEnglish} has initiate new ticket #{{${ticket.code}}} related to ${ticket.title}`
+            title:req.t('ticket_creation', {
+                name:lang === 'ar' ? req.user.fullNameInArabic :req.user.fullNameInEnglish
+            }),
+            body:req.t('ticket_creation_body', {
+                name:lang === 'ar' ? req.user.fullNameInArabic :req.user.fullNameInEnglish,
+                code:ticket.code,
+                title:ticket.title
+            })
         }
         await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
             success:true,
             code:201,
-            message:'ticket has been created and sent to support center',
+            message:req.t('ticket_created'),
             ticket
         })
     } catch (error) {
@@ -72,7 +78,7 @@ export const listAllMemberTickets = async (req, res, next) => {
         
         if(tickets.length === 0) {
             res.status(404)
-            throw new Error('No Tickets Created Yet')
+            throw new Error(req.t('no_tickets_created'))
         }
         const count = await Ticket.count({...searchFilter})
         res.send({
@@ -216,7 +222,7 @@ export const listAllTickets = async (req, res, next) => {
         
         if(tickets.length === 0) {
             res.status(404)
-            throw new Error('No Tickets Listed Yet')
+            throw new Error(req.t('no_tickets_listed'))
         }
         
         const documentCount = await Ticket.aggregate([
@@ -242,24 +248,27 @@ export const listAllTickets = async (req, res, next) => {
 
 export const updateTicketStatus = async (req, res, next) => {
     const {id} = req.params 
-
+    const lang = req.headers['accept-language']
     try {
         const ticket = await Ticket.findById(id).populate('member', 'fullNameInEnglish')
         if(!ticket) {
             res.status(404)
-            throw new Error('Ticket Not Found') 
+            throw new Error(req.t('ticket_not_found')) 
         }
         ticket.isOpen = false
         await ticket.save()
         const adminNotification = {
-            title:'Ticket has closed',
-            body:`ticket with code #{{${ticket.code}}} related to ${ticket.member.fullNameInEnglish} has marked as solved and is now closed`
+            title:req.t('ticket_closed'),
+            body:req.t('ticket_closed_body', {
+                code:ticket.code,
+                name: lang === 'ar' ? ticket.member.fullNameInArabic :ticket.member.fullNameInEnglish,
+            })
         }
         await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
             success:true,
             code:200,
-            message:'Ticket has marked as closed'
+            message:req.t('ticket_closed')
         })
     } catch (error) {
         next(error)
@@ -273,7 +282,7 @@ export const addTicketResponse = async (req, res, next) => {
         const ticket = await Ticket.findById(id) 
         if(!ticket) {
             res.status(404)
-            throw new Error('Ticket Not Found') 
+            throw new Error(req.t('ticket_not_found')) 
         } 
         const newResponse = {title, body, sender} 
         if(req.file) {
@@ -288,7 +297,7 @@ export const addTicketResponse = async (req, res, next) => {
             ticket:ticket._id,
             updatedAt:updatedTicket.updatedAt,
             response:newResponse,
-            message:'Reply has been sent'
+            message:req.t('replay_sent')
         })
     } catch (error) {
         next(error)
@@ -342,7 +351,7 @@ export const getTicketInformation = async (req, res, next) => {
         
         if(!ticket) {
             res.status(404)
-            throw new Error('Ticket Not Found') 
+            throw new Error(req.t('ticket_not_found')) 
         }
 
         res.send({

@@ -2,13 +2,13 @@ import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import i18next from 'i18next'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
 import { Loader,SideNavbar, NotificationContainer, PushNotification } from '../../components'
 import actions from '../../actions'
 
 
 const Header = () => {
-    const [language, setLanguage] = useState('en')
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
     const [showSideMenu, setSideMenu] = useState(false)
@@ -21,7 +21,8 @@ const Header = () => {
     const {nonRead} = useSelector(state => state.listNotifications)
     const navigate = useNavigate()
     const page = useLocation().pathname
-
+    const language = i18next.language
+    
     const {
         loading:notify_loading, 
         error:notify_error, 
@@ -44,7 +45,7 @@ const Header = () => {
         e.stopPropagation()
         setLoadingState(true)
         setTimeout(() => {
-            setLanguage(lang)
+            i18next.changeLanguage(lang)
             setLangDropDown(prev => !prev)
             setLoadingState(false)
         },500)
@@ -86,6 +87,12 @@ const Header = () => {
     },[pushNotifications])
 
     useEffect(() => {
+        language === 'ar' 
+        ? document.body.classList.add('arabic-language')
+        : document.body.classList.remove('arabic-language')
+      },[language])
+
+    useEffect(() => {
         const initNotifications = isAuth && setTimeout(() => {
             dispatch(actions.notifications.pushNotification())      
         }, 5000);
@@ -109,14 +116,14 @@ const Header = () => {
             ref={headerBgRef}
             style={{display: showSideMenu ? 'block' : 'none'}}></div>
             
-            <div className={style.header}
+            <div className={`${style.header} ${language === 'ar' ? style.header__ar : ''}`}
             style={{ display:page === '/login' ?'none' :'block' }}>
                
                 <div className="container">
                     <div className={style.header__wrapper}>
                         
                         {/* display the main icon */}
-                        <div className={style.header__icon}>
+                        <div className={`${style.header__icon} ${language === 'ar' ? style.header__icon_ar : ''}`}>
                             <span onClick={() => navigate('/')}>
                                 <HandDollar/>
                             </span>
@@ -144,7 +151,8 @@ const Header = () => {
                             {/* display the main languages */}
                             <div className={style.header__language}>
                             {/* display the other main language */}
-                            <div className={style.header__language_flag}
+                            <div className={`${style.header__language_flag} 
+                                ${language === 'ar' ? style.header__language_flag_ar :''}`}
                             onClick={showLanguageHandler}>
                             {language === 'en' 
                             ? <img src="/images/usa-flag.jpg" alt="usa flag" />
@@ -152,7 +160,8 @@ const Header = () => {
                             </div>
                             
                             {/* the dropdown to select the language */}
-                            <div className={style.header__language_menu}
+                            <div className={`${style.header__language_menu} 
+                                ${language === 'ar' ? style.header__language_menu_ar : ''}`}
                             style={{display: langDropDown ? 'block' :'none'}}>
                                 {loadingState && <div className={style.header__language_loader}
                                     onClick={(e) => e.stopPropagation()}>
@@ -221,7 +230,7 @@ const Header = () => {
                             </div>
                             
                             :// display the credential buttons [login - sign up] 
-                            <div className={style.header__credential}>
+                            <div className={`${style.header__credential} ${language === 'ar' ? style.header__credential_ar : ''}`}>
                                 <Link to='register'>Sign up</Link>
                                 <Link to='login'>Login</Link>
                             </div>

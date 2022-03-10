@@ -1,6 +1,7 @@
 import React from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu, DateInput} from '../../components'
+import i18next, { t } from 'i18next'
 
 const Filter = ({ 
     hidden,
@@ -41,6 +42,8 @@ const Filter = ({
         }
     }
 
+    const lang = i18next.language 
+
     const filterDateHandler = date => {
         if(closed) {
             setSearchFilter({...searchFilter, paymentDate:date})
@@ -57,40 +60,44 @@ const Filter = ({
                     <Input
                     name='code'
                     type='text'
-                    placeholder='code...'
+                    placeholder='code'
                     value={searchFilter['code']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
                     />
                 </div>
             
-                <div className={style.filter__input}>
+              {
+              lang === 'ar'
+              ? <div className={style.filter__input}>
                     <Input
                     name='arabicName'
                     type='text'
-                    placeholder='Name ar'
+                    placeholder='name'
                     value={searchFilter['arabicName']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
                     />
                 </div>
-            
-                <div className={style.filter__input}>
+              : <div className={style.filter__input}>
                     <Input
                     name='englishName'
                     type='text'
-                    placeholder='Name en'
+                    placeholder='name'
                     value={searchFilter['englishName']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
                     />
                 </div>
+              }  
+            
+                
                 
                 <div className={style.filter__input}>
                     <Input
                     name='value'
                     type='text'
-                    placeholder='value range ex 100:200...'
+                    placeholder='value-range'
                     value={searchFilter['value']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
@@ -113,7 +120,7 @@ const Filter = ({
                     className={style.filter__input_dropdown}
                     onSelectHandler={(value) => selectSearchFilterHandler({currency:value})}
                     data={{
-                        label: 'Currency',
+                        label: 'currency',
                         items:[
                             {text:'USD', value:'USD'},
                             {text:'EURO', value:'EUR'}, 
@@ -126,11 +133,11 @@ const Filter = ({
                 <div className={style.filter__input}>
                     <button className={style.filter__btn}
                         onClick={filterOperationHandler}>
-                            SEARCH
+                            {t('search')}
                     </button>
                     <button className={style.filter__btn}
                         onClick={resetFilterHandler}>
-                            RESET
+                            {t('reset')}
                     </button>
                 </div>
             

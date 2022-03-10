@@ -17,6 +17,8 @@ import {
     Help,
     Wrench
 } from '../../icons'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 
 const SideNavbar = ({
@@ -32,7 +34,8 @@ const SideNavbar = ({
     const {loading, error, isLogout}  = useSelector(state => state.logout)
     const {staff}  = useSelector(state => state.login)
     const dispatch = useDispatch()
-
+    const lang = i18next.language
+    const {t} = useTranslation()
 
     const logoutHandler = e => {
         e.stopPropagation()
@@ -40,6 +43,17 @@ const SideNavbar = ({
             dispatch(actions.admin.logout())
         }
     }
+
+    const toggleMenuStyle = () => {
+        let style = {
+             left: showSideMenu ? 0 :'-30rem'
+         }
+         if(lang === 'ar') {
+             style = {right:showSideMenu ? 0 :'-30rem'}
+         }
+ 
+         return style
+     }
     
     useEffect(() => {
         if(isLogout) {
@@ -65,11 +79,11 @@ const SideNavbar = ({
         {error 
         && <div className={style.navbar__logout_alert}
         style={{left:error ?'1rem':'-25rem'}}>
-            <p>This is Error From Server</p>
+            <p>{error}</p>
         </div> }
 
         <div className={style.navbar__menu}
-        style={{left: showSideMenu ? '0' : '-30rem'}}>
+        style={toggleMenuStyle()}>
             <ul className={style.navbar__menu_list}>
                 <li className={style.navbar__menu_item}
                 >
@@ -78,7 +92,7 @@ const SideNavbar = ({
                             <Dashboard/>
                         </span>
                         <span>
-                            Dashboard
+                            {t('dashboard')}
                         </span>
                     </div>
                 </li>
@@ -90,7 +104,7 @@ const SideNavbar = ({
                                 <Cogs/>
                             </span>
                             <span>
-                                Operations
+                                {t('operation')}
                             </span>
                         </div>
                     </li>
@@ -103,7 +117,7 @@ const SideNavbar = ({
                                 <File/>
                             </span>
                             <span>
-                                Reports
+                                {t('reports')}
                             </span>
                         </div>
                     {/* ///////////////////////////////////// */}
@@ -115,7 +129,7 @@ const SideNavbar = ({
                                         <CashRegister/>
                                     </span>
                                     <span>
-                                        Active Reports
+                                        {t('active-reports')}
                                     </span>
                                 </li>
                                 <li className={style.navbar__menu_reports_item}
@@ -124,7 +138,7 @@ const SideNavbar = ({
                                         <HandshakeSlash/>
                                     </span>
                                     <span>
-                                        closed Reports
+                                        {t('closed-reports')}
                                     </span>
                                 </li>
                             </div>
@@ -142,7 +156,7 @@ const SideNavbar = ({
                                     <AddressCard/>
                                 </span>
                                 <span>
-                                    Members
+                                    {t('members')}
                                 </span>
                             </div>
                         </li>
@@ -152,7 +166,7 @@ const SideNavbar = ({
                                     <Wrench/>
                                 </span>
                                 <span>
-                                    Provider
+                                    {t('provider')}
                                 </span>
                             </div>
                         </li>  
@@ -166,7 +180,7 @@ const SideNavbar = ({
                                 <Help/>
                             </span>
                             <span>
-                                Support
+                                {t('support')}
                             </span>
                         </div>
                     </li>  
@@ -177,11 +191,11 @@ const SideNavbar = ({
                        {loading && <span className={style.navbar__menu_item_loading}>
                             <Loader center size='5' options={{animation:'border'}}/>
                         </span>} 
-                        <span className={style.navbar__menu_item_logout}>
+                        <span className={`${style.navbar__menu_item_logout} ${language === 'ar' ? style.navbar__menu_item_logout_ar :''}`}>
                             <Logout/>
                         </span>
                         <span>
-                            Logout
+                            {t('logout')}
                         </span>
                     </div>
                 </li>

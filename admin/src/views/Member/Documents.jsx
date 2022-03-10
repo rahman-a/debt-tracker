@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {ProfileContainer, DocumentSegment} from '../../components'
+import i18next from 'i18next'
 
 const Documents = ({data}) => {
     const [documents, setDocuments] = useState([])
-    
+    const lang = i18next.language
+
     const createDocuments = _ => {
         const allDocuments = []
         for(let d in data) {
@@ -36,8 +38,8 @@ const Documents = ({data}) => {
     },[data])
     
     return (
-        <div className={style.profile__documents}>
-            <ProfileContainer title='verification documents'>
+        <div className={`${style.profile__documents} ${lang === 'ar' ? style.profile__documents_ar :''}`}>
+            <ProfileContainer title='verification-document'>
                 <div className={style.profile__documents_wrapper}>
                     {documents}
                     {

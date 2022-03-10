@@ -1,7 +1,10 @@
 import React from 'react'
 import {Modal, Button} from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 const Note = ({isNoteOn, setIsNoteOn, note}) => {
+    
+    const {t} = useTranslation()
     return (
         <Modal
             show={isNoteOn}
@@ -11,7 +14,7 @@ const Note = ({isNoteOn, setIsNoteOn, note}) => {
             >
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Operation Note
+                    {t('note')}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -20,7 +23,9 @@ const Note = ({isNoteOn, setIsNoteOn, note}) => {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant='danger' onClick={() => setIsNoteOn(false)}>Close</Button>
+                <Button variant='danger' onClick={() => setIsNoteOn(false)}>
+                    {t('close')}
+                </Button>
             </Modal.Footer>
         </Modal>
     )

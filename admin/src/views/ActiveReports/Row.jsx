@@ -7,6 +7,8 @@ import { Currency, Note, DateInput, Loader} from '../../components'
 import {Check, Copy, Reader, Calendar} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const Row = ({report, idx, due}) => {
     const [isDueChange, setIsDueChange] = useState(false)
@@ -16,7 +18,9 @@ const Row = ({report, idx, due}) => {
     const [copyCode, setCopyCode] = useState(null)
     const dispatch = useDispatch() 
     const {loading, error, message} = useSelector(state => state.updateReport)
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
+
     const dateFormat = {
         day:'2-digit',
         month:'short',
@@ -50,8 +54,6 @@ const Row = ({report, idx, due}) => {
         } 
     }, [message])
     
-    
-  
     return (
     <>
         
@@ -65,7 +67,7 @@ const Row = ({report, idx, due}) => {
             <Modal.Header>
                 <p>
                     <span> <Calendar/> </span>
-                    <span> Change Due Date </span>
+                    <span> {t('change-due-date')} </span>
                 </p>
             </Modal.Header>
             <Modal.Body>
@@ -75,7 +77,7 @@ const Row = ({report, idx, due}) => {
                     { error   && <Alert variant='danger'>{error}</Alert> }
                     { loading && <Loader size='8' center options={{animation:'border'}}/> }
                     
-                    <h2>Choose the New Due Date</h2>
+                    <h2>{t('choose-new-due-date')}</h2>
                     <DateInput 
                         name='dueDate' 
                         getExpiryDate={(date) => setDueDateChange(date)}
@@ -91,7 +93,7 @@ const Row = ({report, idx, due}) => {
                     variant='success' 
                     onClick={changeDueDateHandler}
                     disabled={loading ? true : false}> 
-                        YES,Change Due Date 
+                       {t('confirm-change')}
                     </Button>
                     
                     <Button 
@@ -99,7 +101,7 @@ const Row = ({report, idx, due}) => {
                     variant='danger' 
                     onClick={() => setIsDueChange(false)}
                     disabled={loading ? true : false}>
-                        NO, Close
+                        {t('cancel-change')}
                     </Button>
             </Modal.Footer>
         </Modal>
@@ -128,12 +130,19 @@ const Row = ({report, idx, due}) => {
                     ?'#198754'
                     :'#1a374d'
                 }}>
-                    {report.operation.initiator.type} 
+                    {t(report.operation.initiator.type)} 
                 </span>
                     <span> 
                         {
-                        report.operation.initiator.fullNameInEnglish ||
-                        report.operation.initiator.user?.fullNameInEnglish
+                        lang === 'ar' 
+                        ?(
+                            report.operation.initiator.fullNameInArabic ||
+                            report.operation.initiator.user?.fullNameInArabic
+                        )
+                        : (
+                            report.operation.initiator.fullNameInEnglish ||
+                            report.operation.initiator.user?.fullNameInEnglish
+                        )
                         } 
                     </span>  
                     <span> 
@@ -151,7 +160,7 @@ const Row = ({report, idx, due}) => {
                             report.operation.initiator.code ||
                             report.operation.initiator.user?.code
                         )}>
-                            <span className={style.reports__code}>
+                            <span className={`${style.reports__code} ${lang === 'ar' ? style.reports__code_ar: ''}`}>
                                 {
                                     copyCode === 
                                     (report.operation.initiator.code ||
@@ -173,12 +182,20 @@ const Row = ({report, idx, due}) => {
                         ?'#198754'
                         :'#1a374d'
                     }}>
-                        {report.operation.peer.type}
+                        {t(report.operation.peer.type)}
                     </span>
                     <span> 
                         {
-                        report.operation.peer.fullNameInEnglish || 
-                        report.operation.peer.user?.fullNameInEnglish 
+                        lang === 'ar' 
+                        ? (
+                            report.operation.peer.fullNameInArabic || 
+                            report.operation.peer.user?.fullNameInArabic
+                        )
+                        : (
+                            report.operation.peer.fullNameInEnglish || 
+                            report.operation.peer.user?.fullNameInEnglish
+                        )
+                         
                         }
                     </span>  
                     <span>    
@@ -196,7 +213,7 @@ const Row = ({report, idx, due}) => {
                             report.operation.peer.code ||
                             report.operation.peer.user?.code
                         )}>
-                            <span className={style.reports__code}>
+                            <span className={`${style.reports__code} ${lang === 'ar' ? style.reports__code_ar: ''}`}>
                             {
                                 copyCode === 
                                 (report.operation.peer.code ||

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
+import { useTranslation } from 'react-i18next'
 
 
 let pageValue = 1
@@ -11,7 +12,8 @@ const Pagination = ({count,moveToPageHandler, resetPagination}) => {
     const [pages, setPages] = useState(pagesSerial)
     const [isNextOff, setIsNextOff] = useState(false)
     const [isPrevOff, setIsPrevOff] = useState(true)
-    
+    const {t} = useTranslation()
+
     const currentPageHandler = page => {
         setCurrentPage(page)
         pageValue = page
@@ -97,7 +99,7 @@ const Pagination = ({count,moveToPageHandler, resetPagination}) => {
             disabled={isPrevOff}
             className={isPrevOff ? style.pagination__off :''}
             onClick={() => paginateHandler('prev')}>
-                Prev
+                {t('prev')}
             </button>
             {
                 pages.map(page => {
@@ -115,7 +117,7 @@ const Pagination = ({count,moveToPageHandler, resetPagination}) => {
             disabled={isNextOff}
             className={isNextOff ? style.pagination__off :''}
             onClick={() => paginateHandler('next')}>
-                Next
+                {t('next')}
             </button>
         </div>
     )

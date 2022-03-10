@@ -8,13 +8,16 @@ import actions from '../../actions'
 import {Replay} from '../../icons'
 import ReplayResponse from './Replay'
 import TicketResponse from './TicketResponse'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Ticket = () => {
   const [isEditor, setIsEditor] = useState(false)
   const dispatch = useDispatch()
   const {loading, error, ticket} = useSelector(state => state.getTicket)
   const {id} = useParams()
-  
+  const {t} = useTranslation()
+  const lang = i18next.language
   
   const initiateReplayProcess = _ => {
       if(ticket.isOpen) {
@@ -29,9 +32,9 @@ const Ticket = () => {
 return (
   <>
     <div className={style.ticket}>
-        <h1 className='main-header'> Ticket Handling Panel</h1>
+        <h1 className='main-header'>{t('ticket-handling')}</h1>
         
-        <BackButton page='support' text='support'/>
+        <BackButton page='support' text={t('back-to', {page:lang === 'ar' ? 'قائمة تذاكر الأعضاء' :'Support'})}/>
         
         <div className='container'>
           {
@@ -41,15 +44,15 @@ return (
             ? <HeaderAlert type='danger' size='4' text={error}/> 
             : ticket && 
             <div className={style.ticket__wrapper}>
-              <div className={style.ticket__header}>
+              <div className={`${style.ticket__header} ${lang === 'ar' ? style.ticket__header_ar :''}`}>
                   <span>
                     {
-                     `last updated ${msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime())} ago`
+                     t('ticket-last-updated', {date:msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime(), lang)})
                     }
                   </span>
                   <button onClick={initiateReplayProcess} disabled={!ticket.isOpen}>
                     <span> <Replay/> </span>
-                    <span> Replay </span> 
+                    <span> {t('ticket-replay')} </span> 
                   </button>
               </div>
               <div className={style.ticket__response}>

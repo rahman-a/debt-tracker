@@ -10,11 +10,15 @@ import {PieChart} from './Pie'
 import Timeline from './Timeline';
 import LoadingSegment from './loadingSegment'
 import LoadingTimeLine from './LoadingTimeLine';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 const Home = () => {
   const dispatch = useDispatch()
   const {loading, info} = useSelector(state => state.appInfo)
-  
+  const {t} = useTranslation()
+ 
+
   const {
     loading:members_loading,
     members 
@@ -38,48 +42,56 @@ const Home = () => {
   const segments = [
     {
       id:uuidv4(),
-      title:'Pending Operation',
+      title:'pending-operation',
       icon:<Cogs/>,
       type:'primary',
+      page:'/operations?state=pending',
       value:info?.pending
     },
     {
       id:uuidv4(),
-      title:'Declined Operation',
+      title:'declined-operation',
       icon:<Times/>,
       type:'danger',
+      page:'/operations?state=decline',
       value:info?.declined
     },
     {
       id:uuidv4(),
-      title:'Active Reports',
+      title:'active-reports',
       icon:<CashRegister/>,
       type:'success',
+      page:'/reports/active',
       value:info?.active
     },
     {
       id:uuidv4(),
-      title:'Closed Reports',
+      title:'closed-reports',
       icon:<HandshakeSlash/>,
       type:'dark',
+      page:'/reports/closed',
       value:info?.closed
     },
     {
       id:uuidv4(),
-      title:'Active Members',
+      title:'active-members',
       icon:<AddressCard/>,
       type:'info',
+      page:'/members',
       value:info?.members
     },
     {
       id:uuidv4(),
-      title:'Open Tickets',
+      title:'open-tickets',
       icon:<Help/>,
       type:'warning',
+      page:'/support',
       value:info?.tickets
     },
     
   ]
+
+  const testValues = [2,6,4,6,3,2,5]
   
   useEffect(() => {
     dispatch(actions.admin.appInfo())
@@ -98,12 +110,13 @@ const Home = () => {
          ? [...Array(segments.length)].map(_ => (
            <LoadingSegment key={uuidv4()}/>
          ))
-         : info && segments.map(({id, type,value,title,icon}) => (
+         : info && segments.map(({id, type,page, value,title,icon}) => (
             <Segment
             key={id} 
             type={type}
             value={value} 
-            title={title} 
+            title={title}
+            page={page}
             icon={icon} />
          ))
        }
@@ -113,7 +126,7 @@ const Home = () => {
       <div className={style.dashboard__container}>
         <div className={style.dashboard__info}>
           <div className={style.dashboard__pie}>
-            <h2>Last Week Listed Operations</h2>
+            <h2>{t('latest-operations')}</h2>
             {
                 operations_loading 
                 ? <Loader size='8' options={{animation:'border'}}/>
@@ -121,7 +134,7 @@ const Home = () => {
               }
           </div>
           <div className={style.dashboard__timeline}>
-                <h2>Latest Registered Members</h2>
+                <h2>{t('latest-members')}</h2>
                 
                 {
                   members_loading 
@@ -131,7 +144,8 @@ const Home = () => {
                   : members && members.map(member => (
                     <Timeline 
                     key={member._id} 
-                    name={member.fullNameInEnglish}
+                    englishName={member.fullNameInEnglish}
+                    arabicName={member.fullNameInArabic}
                     date={member.createdAt}
                    />
                   ))
@@ -140,7 +154,7 @@ const Home = () => {
         </div>
         <div className={style.dashboard__info}>
             <div className={style.dashboard__pie}>
-              <h2>Last Week Listed Reports</h2>
+              <h2>{t('latest-reports')}</h2>
               {
                 reports_loading 
                 ? <Loader size='8' options={{animation:'border'}}/>
@@ -149,7 +163,7 @@ const Home = () => {
               
             </div>
             <div className={style.dashboard__timeline}>
-                <h2>Latest Issued Tickets</h2>
+                <h2>{t('latest-tickets')}</h2>
                 
                 {
                   tickets_loading 
@@ -159,7 +173,7 @@ const Home = () => {
                   : tickets && tickets.map(ticket => (
                     <Timeline 
                     key={ticket._id} 
-                    name={ticket.title}
+                    ticket={ticket.title}
                     date={ticket.createdAt}
                     type='ticket'
                    />

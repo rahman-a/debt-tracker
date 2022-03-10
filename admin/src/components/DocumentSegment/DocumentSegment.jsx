@@ -3,10 +3,13 @@ import style from './style.module.scss'
 import {Badge} from 'react-bootstrap'
 import ExpiredImageContainer from './ExpiredImageContainer'
 import ImageContainer from './ImageContainer'
+import {useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const DocumentSegment = ({ img, document, isExpired }) => {
   const [imageContainer, setImageContainer] = useState(false)
-
+  const {t} = useTranslation()
+  const lang = i18next.language
   return (
     <>
      {
@@ -24,7 +27,11 @@ const DocumentSegment = ({ img, document, isExpired }) => {
           <div className={style.segment__doc}
           onClick={() => setImageContainer(true)}>
             <img src={img} alt={document} />
-            <p>{document} document</p>
+            <p>{
+            lang === 'ar'
+            ? `${t('document')} ${t(document)}`
+            : `${t(document)} ${t('document')}`  
+            }</p>
           </div>
         ) : (
           <div className={style.segment__block} >
@@ -32,10 +39,14 @@ const DocumentSegment = ({ img, document, isExpired }) => {
             {
               isExpired 
               ?  <ExpiredImageContainer img={img} document={document}/>
-              :  <Badge bg='danger'> Not Provided </Badge>
+              :  <Badge bg='danger'> {t('not-provided')} </Badge>
             }
            
-            <p>{document} document</p>
+            <p>{
+               lang === 'ar'
+               ? `${t('document')} ${t(document)}`
+               : `${t(document)} ${t('document')}`
+              }</p>
           </div>
         )}
       </div>

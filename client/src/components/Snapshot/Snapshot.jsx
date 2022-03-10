@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {Alert} from 'react-bootstrap'
 import actions from '../../actions'
 import {Loader} from '../../components'
+import { useTranslation } from 'react-i18next'
 
 const VerificationSnapshot = ({setStep}) => {
     const [imgSrc, setImgSrc] = useState('')
@@ -16,6 +17,7 @@ const VerificationSnapshot = ({setStep}) => {
     const dispatch = useDispatch()
     const {loading, error, isDone} = useSelector(state => state.registerDocuments)
     const {userId} = useSelector(state => state.registerCredential)
+    const {t} = useTranslation()
 
     const takeVerificationPhotoHandler = useCallback(
         () => {
@@ -61,8 +63,8 @@ const VerificationSnapshot = ({setStep}) => {
     return (
         <div className={style.snapshot}>
            {error && <Alert variant='danger'>{error}</Alert> }
-            <h3>Take The Photo of your self with your identity</h3>
-            <p>Your Face and Identity must be clear in the photo</p>
+            <h3>{t('snapshot-instruction-1')}</h3>
+            <p>{t('snapshot-instruction-2')}</p>
             {/* <button onClick={accessCameraHandler}>
                 <span></span>
                 <p>Click to open the camera</p>
@@ -86,10 +88,10 @@ const VerificationSnapshot = ({setStep}) => {
                 {mediaError &&
                 <>
                     <h3>{mediaError}</h3> 
-                    <h3>Please Enable Access to your Webcam</h3> 
+                    <h3>{t('enable-access')}</h3> 
                 </>}
                 <button disabled={mediaError} onClick={takeVerificationPhotoHandler}> 
-                    {isTaken ? 'take photo again':'take photo'}
+                    {isTaken ? t('take-snapshot-again'):t('take-snapshot')}
                 </button>
                 {imgSrc && <img src={imgSrc} alt="verification" />}
                 <button 
@@ -102,7 +104,7 @@ const VerificationSnapshot = ({setStep}) => {
                 }}>
                     {loading 
                     ? <Loader size='4' center options={{animation:'border'}}/>
-                    : 'Done'}
+                    : t('done')}
                 </button>
             </div>
 

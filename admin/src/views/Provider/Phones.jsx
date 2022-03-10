@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {Form} from 'react-bootstrap'
 import {Plus, Minus} from '../../icons'
+import { useTranslation } from 'react-i18next'
 
 const Phones = ({
     insidePhones, 
@@ -11,6 +12,8 @@ const Phones = ({
     setOutsidePhones
 }) => {
     
+    const {t} = useTranslation()
+
     const setInsidePhoneHandler = (id, value) => {
         const phones = [...insidePhones]
         phones.forEach((phone, idx) => {
@@ -52,7 +55,7 @@ const Phones = ({
   
     return (
     <div className={style.provider__segment}>
-        <h2>Phones Information</h2> 
+        <h2>{t('phone-information')}</h2> 
         
         {/* //////////// INSIDE PHONES /////////////////// */}
         <div>
@@ -61,11 +64,11 @@ const Phones = ({
                 <div className={style.provider__multiple} key={val.id}> 
                     <Form.Group controlId="formBasicInsidePhone"
                     className={`mb-3 ${style.provider__multiple_single}`}>
-                        <Form.Label>Phone inside UAE</Form.Label>
+                        <Form.Label>{t('phone-in-uae')}</Form.Label>
                         <Form.Control 
                         size='lg' 
                         type="text" 
-                        placeholder="Enter phone inside UAE" 
+                        placeholder={t('enter-phone-in-uae')} 
                         onChange={(e) => setInsidePhoneHandler(val.id, e.target.value)}/>
                     </Form.Group>
                     {
@@ -93,11 +96,11 @@ const Phones = ({
                 <div className={style.provider__multiple} key={val.id}> 
                     <Form.Group controlId="formBasicOutsidePhone"
                     className={`mb-3 ${style.provider__multiple_single}`}>
-                        <Form.Label>Phone outside UAE</Form.Label>
+                        <Form.Label>{t('phone-out-uae')}</Form.Label>
                         <Form.Control 
                         size='lg' 
                         type="text" 
-                        placeholder="Enter phone outside UAE" 
+                        placeholder={t('enter-phone-out-uae')} 
                         onChange={(e) => setOutsidePhoneHandler(val.id, e.target.value)}/>
                     </Form.Group>
                     {

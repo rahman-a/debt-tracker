@@ -11,6 +11,8 @@ import Phones from './Phones'
 import Address from './Address'
 import Personal from './Personal'
 import Credential from './Credential'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Provider = () => {
     const [info, setInfo] = useState({
@@ -49,7 +51,9 @@ const Provider = () => {
 
     const dispatch = useDispatch()
     const {loading, error, message} = useSelector(state => state.createProvider)
-  
+    const {t} = useTranslation()
+    const lang = i18next.language
+    
     const getInfoValues = e => {
         let value = null 
         if(e.target.name === 'avatar') {
@@ -63,59 +67,59 @@ const Provider = () => {
     const checkFormValidation = _ => {
         
         const infoValues = {
-            username:'user name',
-            password:'password',
-            fullNameInArabic:'full name in arabic',
-            fullNameInEnglish:'full name in english',
-            company:'company',
-            insideAddress:'address inside UAE',
-            outsideAddress:'address outside UAE',
-            avatar:'personal image'
+            username:t('username'),
+            password:t('password'),
+            fullNameInArabic:t('full-name-in-arabic'),
+            fullNameInEnglish:t('full-name-in-english'),
+            company:t('company-name'),
+            insideAddress:t('uae-addresses'),
+            outsideAddress:t('outside-uae-addresses'),
+            avatar:t('personal-image')
         }
         
         for(let key in info) {
             if(!info[key]) {
-                setErrors(`${infoValues[key]} is required, please provide it`)
+                setErrors(t('provide-data', {data:infoValues[key]}))
                 return false
             }
         }
 
         if(!country) {
-            setErrors('please choose your country')
+            setErrors(t('choose-provider-country'))
             return false
         }
 
         for(let key in emailValues) {
             if(!(emailValues[key].email)) {
-                setErrors('Done\'t leave email input empty')
+                setErrors(t('enter-provider-email'))
                 return false
             }
         }
 
         for(let key in insidePhones) {
             if(!(insidePhones[key].phone)) {
-                setErrors('Done\'t leave phone inside UAE input empty')
+                setErrors(t('enter-provider-phone-uae'))
                 return false
             }
         }
 
         if(Object.keys(identity).length === 0) {
-            setErrors('please upload identity document')
+            setErrors(t('upload-provider-identity'))
             return false
         }
 
         if(identity.image && !identity.expireAt) {
-            setErrors('please select expiry date of identity')
+            setErrors(t('select-provider-identity-expiry'))
             return false
         }
 
         if(passport.image && !passport.expireAt) {
-            setErrors('please select expiry date of passport')
+            setErrors(t('select-provider-passport-expiry'))
             return false
         }
 
         if(residential.image && !residential.expireAt) {
-            setErrors('please select expiry date of residential')
+            setErrors(t('select-provider-residential-expiry'))
             return false
         }
         
@@ -209,7 +213,7 @@ return (
           isOn={message ? true : false}
           type='success'
         />
-        <h1 className='main-header'> Create Provider Account </h1>
+        <h1 className='main-header'> {t('create-provider-account')} </h1>
         <div className="container">
             <div className={style.provider__wrapper}>
                 <Form>
@@ -256,7 +260,7 @@ return (
                                     variant='success' 
                                     size='lg'
                                     onClick={createProviderAccount}> 
-                                    Save 
+                                    {t('save')} 
                                 </Button>
                               {loading && <Loader size='4' options={{animation:'border'}}/> }  
                            </div>

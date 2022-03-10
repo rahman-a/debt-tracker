@@ -4,6 +4,7 @@ import {BrowserRouter as Router, HashRouter} from 'react-router-dom'
 import {Provider} from 'react-redux'
 import store from './store'
 import App from './App';
+import './i18next'
 
 ReactDOM.render(
   <React.StrictMode>

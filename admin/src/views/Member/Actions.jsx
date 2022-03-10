@@ -5,6 +5,8 @@ import {useSelector, useDispatch} from 'react-redux'
 import {ProfileContainer, ProfileSegment, Loader, SideAlert} from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Actions = ({data}) => {
   const [userRole, setUserRole] = useState(null)
@@ -12,6 +14,8 @@ const Actions = ({data}) => {
   const {member} = useSelector(state => state.member)
   const {loading, error, message} = useSelector(state => state.changeUserRole)
   const dispatch = useDispatch()
+  const {t} = useTranslation()
+  const lang = i18next.language
 
   const changeUserRoleHandler = _ => {
       dispatch(actions.admin.changeUserRole(member._id, userRole))
@@ -37,16 +41,16 @@ const Actions = ({data}) => {
     />
 
       <div className={style.profile__actions}>
-          <ProfileContainer title='Actions'>
+          <ProfileContainer title='profile-setting'>
               <ProfileSegment
-              title='Account State'
+              title='account-state'
               type='toggle'
               isConfirmed={data.isActive}
               memberId={data._id}
               />
 
               <ProfileSegment
-              title='Account Color Code'
+              title='account-color-code'
               type='color'
               color={data.color}
               memberId={data._id}
@@ -57,7 +61,7 @@ const Actions = ({data}) => {
                 <div className={style.profile__role}
                 style={{marginTop:'1rem'}}>
                     
-                    Set Member As 
+                    {t('set-member-as')}
                     
                     <select 
                     name="role" 
@@ -65,10 +69,10 @@ const Actions = ({data}) => {
                     style={{margin:'0 1rem'}}
                     onChange={(e) => setUserRole(e.target.value)}>
                       <option value="">......</option>
-                      <option value="user">Member</option>
-                      <option value="manager">Admin</option>
-                      <option value="hr">Members Administrator</option>
-                      <option value="cs">Complains Administrator</option>
+                      <option value="user">{t('member')}</option>
+                      <option value="manager">{t('admin')}</option>
+                      <option value="hr">{t('members-admin')}</option>
+                      <option value="cs">{t('complains-admin')}</option>
                     </select>
                    
                    {
@@ -79,7 +83,7 @@ const Actions = ({data}) => {
                         options={{animation:'border'}} 
                         custom={{display:'inline-block'}}/>
                      :  <Button variant='dark' onClick={changeUserRoleHandler}>
-                          Set
+                          {t('set')}
                         </Button>
                    }
                     

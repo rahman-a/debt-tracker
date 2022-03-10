@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {Notification, Pagination, DropdownMenu, Loader, HeaderAlert} from '../../components'
 import {Spinner, CheckDouble, Times, Redo} from '../../icons'
 import actions from '../../actions'
+import { useTranslation } from 'react-i18next'
 
 const Notifications = () => {
     const [filter, setFilter] = useState(null)
@@ -11,7 +12,7 @@ const Notifications = () => {
     const [resetPagination, setResetPagination] = useState(false)
     const dispatch = useDispatch()
     const {loading, error, count, notifications} = useSelector(state => state.listNotifications)
-    const {message} = useSelector(state => state.updateOperationState)
+    const {t} = useTranslation()
 
     const selectItemHandler = state => {
         !state && setResetPagination(true)
@@ -27,24 +28,18 @@ const Notifications = () => {
     }
     
     const dropdownData = {
-        label:'operation state',
+        label:'operation-status',
         items: [
-            {text:'All',     icon:<Redo/>,        value:''},
-            {text:'Pending', icon:<Spinner/>,     value:'pending'},
-            {text:'Active',  icon:<CheckDouble/>, value:'active'},
-            {text:'Decline', icon:<Times/>,      value:'decline'},
+            {text:'all',     icon:<Redo/>,        value:''},
+            {text:'pending', icon:<Spinner/>,     value:'pending'},
+            {text:'active',  icon:<CheckDouble/>, value:'active'},
+            {text:'decline', icon:<Times/>,      value:'decline'},
         ]
     }
 
     useEffect(() => {
     notifications && setResetPagination(false)
     },[notifications])
-
-    useEffect(() => {
-        message && setTimeout(() => {
-            dispatch(actions.notifications.listNotification())
-        },2000);
-    },[message])
 
     useEffect(() => {
         dispatch(actions.notifications.listNotification({skip}))
@@ -55,7 +50,7 @@ const Notifications = () => {
             <div className="container">
                 <div className={style.notifications__wrapper}>
                     <div className={style.notifications__header}>
-                      <h1>Notifications</h1>
+                      <h1>{t('notifications')}</h1>
                       <div className={style.notifications__dropdown}>
                         {loading && <Loader size='4' options={{animation:'border'}}/>}
                         <div className={style.notifications__dropdown_menu}>
@@ -73,7 +68,7 @@ const Notifications = () => {
                             { (error || notifications?.length < 1)
                             &&  <HeaderAlert size='2'
                                 type='danger' 
-                                text={error || 'No Notifications Found'}/> 
+                                text={error || t('no-notifications')}/> 
                             }
                             {
                                notifications && notifications.length > 0 &&

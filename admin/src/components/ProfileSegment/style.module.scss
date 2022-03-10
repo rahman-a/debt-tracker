@@ -3,6 +3,20 @@
 
 .segment {
     margin-top:3rem;
+    &_ar {
+        p {
+            span {
+                &::after {
+                    left:'unset';
+                    right:-11px
+                }
+                &::before {
+                    left:'unset';
+                    right:-12px
+                }
+            }
+        }
+    }
     h3 {
         color:var.$main-color;
         font-weight: 400;
@@ -107,11 +121,23 @@
             input {
                 display: none;
             }
+
+            &_ar {
+                span:last-child {
+                    right: 2px;
+                    left:unset;
+                }
+            }
+
         }
 
         &_active {
             background-color:var.$code-green-color !important;
             left:3.8rem !important;
+            &_ar {
+                left:unset;
+                right:3.8rem;
+            }
         }
 
         &_backdrop {
@@ -141,7 +167,7 @@
             h3 {
                 font-size: 1.4rem;
                 font-weight: 400;
-                margin:0.5rem 0;
+                margin:1.5rem 0;
             }
         }
         &_types {
@@ -188,6 +214,13 @@
             &::placeholder {
                 font-size: 1.4rem;
                 font-weight: 400;
+            }
+        }
+
+        &_ar {
+            & > div {
+                margin-left: 2rem;
+                margin-right:unset;
             }
         }
     }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {useSelector} from 'react-redux'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import { Plus} from '../../icons'
 import {UpdateDocument, Loader} from '../../components'
 
@@ -8,6 +10,8 @@ const DocumentSegment = ({ img, document, isExpired }) => {
   const [isEdit, setIsEdit] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
   const {isDone} = useSelector(state => state.updateDocuments)
+  const {t} = useTranslation()  
+  const lang = i18next.language
 
   useEffect(() => {
     isDone && setLoadingState(false)
@@ -25,7 +29,11 @@ const DocumentSegment = ({ img, document, isExpired }) => {
         {img && !isExpired ? (
           <div className={style.segment__doc}>
             <img src={img} alt={document} />
-            <p>{document} document</p>
+            <p>{
+              lang === 'ar'
+              ? `${t('document')} ${t(document)}`
+              : `${t(document)} ${t('document')}`
+              }</p>
           </div>
         ) : (
           <div 
@@ -41,12 +49,16 @@ const DocumentSegment = ({ img, document, isExpired }) => {
                 {' '}
                 <Plus />{' '}
                 </span>
-                <span>{`upload your ${document}`}</span>
+                <span>{t('upload')} {t(document)}</span>
               </>
             }
                
             </div>
-            <p>{document} document</p>
+            <p>{
+              lang === 'ar'
+              ? `${t('document')} ${t(document)}`
+              : `${t(document)} ${t('document')}`
+              }</p>
           </div>
         )}
       </div>

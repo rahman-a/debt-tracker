@@ -6,6 +6,8 @@ import {Loader} from '../../components'
 import {Lock, AtSymbol} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const LoginForm = () => {
     const [isForget, setIsForget] = useState(false)
@@ -16,6 +18,8 @@ const LoginForm = () => {
     const [phoneCode, setPhoneCode] = useState('')
     const {loading, error} = useSelector(state => state.loginInit)
     const {loading:reset_loading, error:reset_error, message} = useSelector(state => state.sendResetLink)
+    const {t} = useTranslation()
+    const lang = i18next.language
     
     const {
         loading:phone_loading, 
@@ -46,7 +50,6 @@ const LoginForm = () => {
     }
 
     const verifyPhoneCodeHandler = _ => {
-        console.log('Phone Code', phoneCode);
        dispatch(actions.users.verifyPhoneCode(undefined, phoneCode, confirmCodeEmail))
     }
     
@@ -75,9 +78,9 @@ const LoginForm = () => {
     return (
         <>
             <Modal show={isForget} onHide={() => setIsForget(false)}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <h3 className={style.loginForm__reset_header}>
-                        Enter Your Email to Reset Your Password
+                        {t('enter-email-reset-pass')}
                     </h3>
                 </Modal.Header>
 
@@ -97,7 +100,7 @@ const LoginForm = () => {
                     style={{color:'#590202', backgroundColor:'#f8d0d0'}}>
                         {reset_error}
                     </p>}
-                    <div className={style.loginForm__reset_input}>
+                    <div  className={`${style.loginForm__reset_input} ${lang === 'ar' ? style.loginForm__reset_input_ar :''}`}>
                         <span>
                             <AtSymbol/>
                         </span>
@@ -105,7 +108,7 @@ const LoginForm = () => {
                         type="email"
                         name='email'
                         onChange={(e) => setResetLink(e.target.value)}
-                        placeholder='Enter Your E-mail'/>
+                        placeholder={t('enter-email')}/>
                     </div>
                 </Modal.Body>
 
@@ -113,7 +116,7 @@ const LoginForm = () => {
                     <button className={style.loginForm__reset_btn}
                     disabled={reset_loading}
                     onClick={submitResetPasswordEmail}>
-                        Send Link
+                        {t('send-reset-pass-btn')}
                     </button>
                 </Modal.Footer>
 
@@ -143,7 +146,7 @@ const LoginForm = () => {
                     <input 
                     type="number" 
                     name='otp' 
-                    placeholder='Enter the code here'
+                    placeholder={t('enter-code')}
                     onChange={(e) => setPhoneCode(e.target.value)}/>
                     
                     <Button 
@@ -154,7 +157,7 @@ const LoginForm = () => {
                      {
                          verify_loading
                          ? <Loader size='4' options={{animation:'border'}}/>
-                         : 'verify'
+                         : t('phone-verify')
                      }
                     </Button>
                 </div>
@@ -162,15 +165,15 @@ const LoginForm = () => {
            
            {!phone_message
            && error
-           && error === 'phone not confirmed'
+           && error === ('phone not confirmed' || 'الهاتف غير مفعل')
            ? <Alert variant='light' onClose={clearAlert} dismissible>
-               <Alert.Heading>Phone Not Confirmed</Alert.Heading>
-               <p>type your primary E-mail and click the button to send code to your phone</p>
+               <Alert.Heading>{t('phone-not-confirmed')}</Alert.Heading>
+               <p>{t('email-send-code-phone')}</p>
                
                <input 
                type="email" 
                name='email' 
-               placeholder='type your primary E-mail'
+               placeholder={t('type-primary-email')}
                style={{
                    display:'block',
                    margin:'1.5rem 0',
@@ -188,7 +191,7 @@ const LoginForm = () => {
                size='lg'
                disabled={phone_loading ? true : false}
                onClick={sendPhoneCodeHandler}>
-                   send code
+                   {t('send-phone-code')}
                 </Button>
 
               {phone_loading && <Loader size='10' center options={{animation:'border'}}/>} 
@@ -205,23 +208,23 @@ const LoginForm = () => {
 
             <div className={style.loginForm}
             onKeyDown={submitLoginOnKeyHandler}>
-                <div className={style.loginForm__group}>
+                <div className={`${style.loginForm__group} ${lang === 'ar' ? style.loginForm__group_ar :''}`}>
                     <span>
                         <AtSymbol/>
                     </span>
                     <input 
                     type="email" 
                     name='email'
-                    placeholder='Enter Your E-mail'
+                    placeholder={t('enter-email')}
                     onChange={(e) => setEmail(e.target.value)}/>
                 </div>
-                <div className={style.loginForm__group}>
+                <div className={`${style.loginForm__group} ${lang === 'ar' ? style.loginForm__group_ar :''}`}>
                     <span>
                         <Lock/>
                     </span>
                     <input 
                     type="password" 
-                    placeholder='Enter Your Password'
+                    placeholder={t('enter-pass')}
                     onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button 
@@ -229,12 +232,12 @@ const LoginForm = () => {
                 onClick={submitLoginHandler}>
                    {loading 
                    ? <Loader size='4' options={{animation:'border'}}/> 
-                   : 'submit'}
+                   : t('login-submit')}
                 </button>
                 <button 
                 className={style.loginForm__forget}
                 onClick={() => setIsForget(true)}>
-                    forget password
+                    {t('forget-pass')}
                 </button>
             </div>
         </>

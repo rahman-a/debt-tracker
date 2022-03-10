@@ -29,7 +29,11 @@
 
     &__toggle{
         position: absolute;
-        right:0.5rem
+        right:0.5rem;
+        &_ar {
+            left:0.5rem;
+            right:unset;
+        }
     }
    
     &__list {
@@ -76,6 +80,13 @@
         &_icon {
             li {
                 padding:2rem 0
+            }
+        }
+
+        &_ar {
+            span {
+                margin-left:1rem;
+                margin-right:unset;
             }
         }
     }

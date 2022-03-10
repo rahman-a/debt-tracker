@@ -7,6 +7,7 @@ const listAllOperations = query => async dispatch => {
 
     try {
         const {data} = await api.operations.index(query) 
+        console.log({data});
         dispatch({
             type:constants.operations.LIST_OPERATIONS_SUCCESS,
             operations:data.operations,

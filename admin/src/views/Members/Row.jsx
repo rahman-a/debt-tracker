@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import {Loader} from '../../components'
 import {Edit, Trash, Wrench} from '../../icons'
 import actions from '../../actions';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 const Row = ({user, idx}) => {
     
@@ -15,11 +17,12 @@ const Row = ({user, idx}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {message, error} = useSelector(state => state.deleteUser)
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
     const variant = {
-        "#037A12":{color:'success', text:'OK'},
-        "#C7E81D":{color:'warning', text:'WARNING'},
-        "#EC4A0D":{color:'danger', text:'DANGER'}
+        "#037A12":{color:'success', text:lang === 'ar' ? 'مؤهل' :'OK'},
+        "#C7E81D":{color:'warning', text:lang === 'ar' ? 'تحذير' :'WARNING'},
+        "#EC4A0D":{color:'danger', text:lang === 'ar' ? 'خطر' :'DANGER'}
     }
 
     const dateFormat = {
@@ -50,9 +53,9 @@ const Row = ({user, idx}) => {
     <Modal show={toggleDelete} onHide={() => setToggleDelete(false)}>
         <Modal.Body>
             <div className={style.members__delete}>
-              <h2>Are You Sure?</h2>
-              <p>Do you really want to delete the member?</p>
-              <p>This Process can't be undone.</p>
+              <h2>{t('are-you-sure')}</h2>
+              <p>{t('confirm-delete-notice', {asset:lang === 'ar' ? 'العضو' :'member'})}</p>
+              <p>{t('undone-process')}</p>
             </div>
         </Modal.Body>
         <Modal.Footer>
@@ -60,13 +63,13 @@ const Row = ({user, idx}) => {
                 onClick={() => setToggleDelete(false)} 
                 variant='success' 
                 size='lg'>
-                NO, DON'T DELETE
+                {t('cancel-btn')}
               </Button>
               <Button 
                 variant='danger' 
                 size='lg'
                 onClick={confirmDeleteUser}>
-                YES, DELETE THE MEMBER
+                {t('confirm-btn', {asset:lang === 'ar' ? 'العضو' :'member'})}
               </Button>
         </Modal.Footer>
     </Modal>
@@ -85,7 +88,7 @@ const Row = ({user, idx}) => {
         <td style={{position:'relative'}}> 
             <div className={style.members__provider}>
                {user.isProvider && <span> <Wrench/> </span>} 
-                <p> {user.fullNameInEnglish}  </p>
+                <p> {lang === 'ar' ? user.fullNameInArabic : user.fullNameInEnglish}  </p>
             </div>
         </td>
         

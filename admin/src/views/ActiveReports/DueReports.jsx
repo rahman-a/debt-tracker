@@ -12,6 +12,7 @@ import {
 } from '../../components'
 import actions from '../../actions'
 import Row from './Row'
+import { useTranslation } from 'react-i18next'
 
 const Operations = () => {
     const [isFilterModal, setIsFilterModal] = useState(false)
@@ -33,6 +34,8 @@ const Operations = () => {
     
     const {loading, error, count, reports} = useSelector(state => state.listAllReports)
   
+    const {t} = useTranslation()
+    
     const initiateReportsFiltration = (skip) => {
     
         let query = {...filter}
@@ -83,14 +86,14 @@ const Operations = () => {
      <Table>
          <thead>
              <th>#</th>
-             <th>Report Id</th>
-             <th>First Party</th>
-             <th>Second Party</th>
-             <th>Operation Value</th>
-             <th>Operation Note</th>
-             <th>Currency</th>
-             <th>Due Date</th>
-             <th>Created At</th>
+             <th>{t('report-code')}</th>
+             <th>{t('first-party')}</th>
+             <th>{t('second-party')}</th>
+             <th>{t('operation-value')}</th>
+             <th>{t('note')}</th>
+             <th>{t('currency')}</th>
+             <th>{t('due-date')}</th>
+             <th>{t('createdAt')}</th>
          </thead>
          <tbody style={{position:'relative'}}>
             {

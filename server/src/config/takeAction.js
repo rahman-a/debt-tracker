@@ -4,14 +4,11 @@ import Notification from '../models/notifications.model.js'
 import {code} from './code.js'
 import {labels} from './labels.js'
 import {messages} from './messages.js'
-import mongoDB from '../../database.connection.js'
+import {Database} from '../../database.connection.js'
 
-mongoDB()
+Database()
 
-export const takeAction = async (id, state, messageState, report) => {
-    
-    
-    const lang = 'en'
+export const takeAction = async (id, state, messageState, report, lang) => {
     const color = code[state]
     let newNotification = null
     let adminNotification = null
@@ -51,12 +48,12 @@ export const takeAction = async (id, state, messageState, report) => {
             body:adminMessage[lang]
         }
 
-        // info = {
-        //     name:user.fullNameInEnglish,
-        //     email:user.emails.find(email => email.isPrimary === true).email,
-        //     message: message[lang],
-        //     label:label[lang]
-        // }
+        info = {
+            name:lang === 'en' ? user.fullNameInEnglish : user.fullNameInArabic,
+            email:user.emails.find(email => email.isPrimary === true).email,
+            message: message[lang],
+            label:label[lang]
+        }
     }
 
     if(state === 'green') {
@@ -117,8 +114,8 @@ export const takeAction = async (id, state, messageState, report) => {
 
                 await sendNotificationToAdminPanel(['manager','hr'], adminNotification)
                 
-                 // send email to inform the user
-                // await sendEmail(info, 'notice')
+                //  send email to inform the user
+                await sendEmail(info, 'notice')
             }
         }
     }

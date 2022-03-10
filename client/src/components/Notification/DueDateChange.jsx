@@ -1,24 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import {Modal, Button, Alert, Table} from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import actions from '../../actions'
 import {Loader} from '../../components'
 import { Calendar } from '../../icons'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
-const ChangeDue = ({isDueChange, setIsDueChange,date, name, report}) => {
+const ChangeDue = ({isDueChange, setIsDueChange,date, englishName, arabicName, report, id}) => {
+  const [changeState, setChangeState] = useState(false)
   const {loading, error, message} = useSelector(state => state.approveDueDate)
   const dispatch = useDispatch()
+  const {t} = useTranslation()
+  const lang = i18next.language
   
   const changeDueDateHandler = _ => {
+        setChangeState(true)
         dispatch(actions.reports.approveDueDate(report, {date}))
   }
-return (
+    useEffect(() =>{
+    message && changeState && dispatch(actions.notifications.updateNotificationState(id))
+   },[message])
+
+   return (
     <Modal show={isDueChange} onHide={() => setIsDueChange(false)}>
             <Modal.Header>
                 <p>
                     <span> <Calendar/> </span>
-                    <span> Due Date Change</span>
+                    <span>{t('due-date-change')}</span>
                 </p>
             </Modal.Header>
             <Modal.Body>
@@ -28,21 +38,21 @@ return (
                     { error   && <Alert variant='danger'>{error}</Alert> }
                     { loading && <Loader size='8' center options={{animation:'border'}} custom={{zIndex:'999'}}/> }
                     
-                    <h2 style={{fontSize:'1.6rem', padding:'2rem 0'}}>Approve Due Date Change</h2>
+                    <h2 style={{fontSize:'1.6rem', padding:'2rem 0'}}>{t('approve-due-date-change')}</h2>
                     <Table>
                         <tbody>
                             <tr>
-                                <td>Request to Change</td>
-                                <td>{name}</td>
+                                <td>{t('request-to-change')}</td>
+                                <td>{lang === 'ar' ? arabicName : englishName}</td>
                             </tr>
                             <tr>
-                                <td>Report</td>
+                                <td>{t('due-date-report')}</td>
                                 <td>
                                  <span className={style.notification__dueDate}> {report} </span>   
                                 </td>
                             </tr>
                             <tr>
-                                <td>New Due Date</td>
+                                <td>{t('new-due-date')}</td>
                                 <td>{new Date(date).toLocaleDateString('en-US', {day:'numeric', month:'short', year:'numeric'})}</td>
                             </tr>
                         </tbody>
@@ -57,7 +67,7 @@ return (
                     variant='success' 
                     onClick={changeDueDateHandler}
                     disabled={loading ? true : false}> 
-                        YES,Change Due Date 
+                        {t('confirm-change')}
                     </Button>
                     
                     <Button 
@@ -65,7 +75,7 @@ return (
                     variant='danger' 
                     onClick={() => setIsDueChange(false)}
                     disabled={loading ? true : false}>
-                        NO, Close
+                        {t('cancel-change')}
                     </Button>
             </Modal.Footer>
         </Modal>

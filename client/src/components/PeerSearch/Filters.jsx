@@ -2,8 +2,9 @@ import React from 'react'
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
 import constants from '../../constants'
+import { t } from 'i18next'
 
-const Filters = ({filter, setFilter, setSearchValue}) => {
+const Filters = ({filter, setFilter, setSearchValue, lang}) => {
     const dispatch = useDispatch()
 
     const setFilterHandler = filter => {
@@ -13,18 +14,18 @@ const Filters = ({filter, setFilter, setSearchValue}) => {
     }
 
     return (
-        <div className={style.search__filter}>
+        <div className={`${style.search__filter} ${lang === 'ar' ? style.search__filter_ar : ''}`}>
             <button className={filter === 'username' ? style.search__filter_active :''}
             onClick={() => setFilterHandler('username')}> 
-                username
+                {t('username')}
             </button>
             <button className={filter === 'mobile' ? style.search__filter_active :''}
             onClick={() => setFilterHandler('mobile')}>
-                mobile
+               {t('mobile')}
             </button>
             <button className={filter === 'code' ? style.search__filter_active :''}
             onClick={() => setFilterHandler('code')}>
-                user code
+                {t('user-code')}
             </button>
         </div>
     )

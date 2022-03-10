@@ -2,18 +2,21 @@ import React, {useEffect, useState} from 'react'
 import style from './style.module.scss'
 import {useParams} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import {HeaderAlert, Loader,BackButton, Replay as ReplayResponse} from '../../components'
+import {HeaderAlert, Loader,Replay as ReplayResponse} from '../../components'
 import msToTime from '../../config/msToTime'
 import actions from '../../actions'
 import {Replay} from '../../icons'
 import TicketResponse from './TicketResponse'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Ticket = () => {
   const [isEditor, setIsEditor] = useState(false)
   const dispatch = useDispatch()
   const {loading, error, ticket} = useSelector(state => state.getTicket)
   const {id} = useParams()
-  
+  const {t} = useTranslation()
+  const lang = i18next.language
   
   const initiateReplayProcess = _ => {
       if(ticket.isOpen) {
@@ -28,7 +31,7 @@ const Ticket = () => {
 return (
   <>
     <div className={style.ticket}>
-        <h1> Ticket Handling Panel</h1>
+        <h1>{t('ticket-handling')}</h1>
                 
         <div className='container'>
           {
@@ -38,15 +41,15 @@ return (
             ? <HeaderAlert type='danger' size='4' text={error}/> 
             : ticket && 
             <div className={style.ticket__wrapper}>
-              <div className={style.ticket__header}>
+              <div className={`${style.ticket__header} ${lang === 'ar' ? style.ticket__header_ar :''}`}>
                   <span>
                     {
-                     `last updated ${msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime())} ago`
+                     t('ticket-last-updated', {date:msToTime(new Date().getTime() - new Date(ticket.updatedAt).getTime(), lang)})
                     }
                   </span>
                   <button onClick={initiateReplayProcess} disabled={!ticket.isOpen}>
                     <span> <Replay/> </span>
-                    <span> Replay </span> 
+                    <span> {t('ticket-replay')} </span> 
                   </button>
               </div>
               <div className={style.ticket__response}>

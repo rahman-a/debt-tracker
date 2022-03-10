@@ -1,5 +1,5 @@
 export const notFound = async (req, res, next) => {
-    const error = new Error(`${req.originalUrl} Not Found`)
+    const error = new Error(req.t('url_not_found', {url:req.originalUrl}))
     res.status(404)
     next(error)
 }

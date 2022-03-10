@@ -2,11 +2,15 @@ import React, {useState} from 'react'
 import style from './style.module.scss'
 import parser from 'html-react-parser'
 import {Badge} from 'react-bootstrap'
+import {useTranslation} from 'react-i18next'
 import {Certificate} from '../../icons'
 import filePlaceholder from '../../config/filePlaceholder'
+import i18next from 'i18next'
 
 const TicketBody = ({data}) => {
     const [isTicketBody, setIsTicketBody] = useState(false)
+    const {t} = useTranslation()
+    const lang = i18next.language
     
     const displayAsset = file => {
         const anchor = document.createElement('a')
@@ -15,11 +19,10 @@ const TicketBody = ({data}) => {
         anchor.click()
     }
 
-   
 
     return (
         <div className={style.ticket__response_block}>
-            <div className={style.ticket__response_header}
+            <div className={`${style.ticket__response_header} ${lang === 'ar' ? style.ticket__response_header_ar :''}`}
             onClick={() => setIsTicketBody(prev => !prev)}>
                 <figure>
                     {
@@ -33,11 +36,11 @@ const TicketBody = ({data}) => {
                     { data.title }
                 </h3>
                 <span> 
-                    <strong>from:</strong>
+                    <strong>{t('ticket-from')}:</strong>
                     {
                         data.sender === 'member'
                         ? <i> {data.email} </i>
-                        : <i>support@debttracker.com</i>
+                        : <i>support@swtle.com</i>
                     }
                     
                 </span>
@@ -49,7 +52,7 @@ const TicketBody = ({data}) => {
             {
                 data.file 
                 ? <div className={style.ticket__response_attachment}>
-                    <p>Attachment</p>
+                    <p>{t('ticket-attachment')}</p>
                     <div className={style.ticket__response_attachment_block}
                     onClick={() => displayAsset(data.file)}>
                         <span></span>
@@ -58,7 +61,7 @@ const TicketBody = ({data}) => {
                         </figure>
                     </div>
                 </div>
-                : <Badge bg='primary'> No Attachment </Badge>
+                : <Badge bg='primary'>{t('ticket-no-attachment')}</Badge>
             }
             <div className={style.ticket__response_replay}>
                {parser(data.body)}

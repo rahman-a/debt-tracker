@@ -1,6 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import {Input, DropdownMenu, DateInput} from '../../components'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const Filter = ({ 
     hidden,
@@ -40,6 +42,9 @@ const Filter = ({
             filterOperationHandler()
         }
     }
+
+    const lang = i18next.language
+    const {t} = useTranslation()
     
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
@@ -48,40 +53,44 @@ const Filter = ({
                     <Input
                     name='code'
                     type='text'
-                    placeholder='code...'
+                    placeholder='code'
                     value={searchFilter['code']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
                     />
                 </div>
             
-                <div className={style.filter__input}>
-                    <Input
-                    name='arabicName'
-                    type='text'
-                    placeholder='Name ar'
-                    value={searchFilter['arabicName']}
-                    className={style.filter__input_value}
-                    onChange={(e) => searchFilterHandler(e)}
-                    />
-                </div>
+               {
+                   lang === 'ar' 
+                   ? <div className={style.filter__input}>
+                        <Input
+                        name='arabicName'
+                        type='text'
+                        placeholder='name'
+                        value={searchFilter['arabicName']}
+                        className={style.filter__input_value}
+                        onChange={(e) => searchFilterHandler(e)}
+                        />
+                    </div>
+                   :<div className={style.filter__input}>
+                        <Input
+                        name='englishName'
+                        type='text'
+                        placeholder='name'
+                        value={searchFilter['englishName']}
+                        className={style.filter__input_value}
+                        onChange={(e) => searchFilterHandler(e)}
+                        />
+                    </div>
+               } 
             
-                <div className={style.filter__input}>
-                    <Input
-                    name='englishName'
-                    type='text'
-                    placeholder='Name en'
-                    value={searchFilter['englishName']}
-                    className={style.filter__input_value}
-                    onChange={(e) => searchFilterHandler(e)}
-                    />
-                </div>
+                
                
                 <div className={style.filter__input}>
                     <Input
                     name='value'
                     type='text'
-                    placeholder='value range ex 100:200...'
+                    placeholder='value-range'
                     value={searchFilter['value']}
                     className={style.filter__input_value}
                     onChange={(e) => searchFilterHandler(e)}
@@ -99,7 +108,7 @@ const Filter = ({
                     className={style.filter__input_dropdown}
                     onSelectHandler={(value) => selectSearchFilterHandler({currency:value})}
                     data={{
-                        label: 'Currency',
+                        label: 'currency',
                         items:[
                             {text:'USD', value:'USD'},
                             {text:'EURO', value:'EUR'}, 
@@ -114,10 +123,10 @@ const Filter = ({
                     className={style.filter__input_dropdown}
                     onSelectHandler={(value) => selectSearchFilterHandler({state:value})}
                     data={{
-                        label: 'State',
+                        label: 'status',
                         items:[
-                            {text:'Pending', value:'pending'},
-                            {text:'Decline', value:'decline'}, 
+                            {text:'pending', value:'pending'},
+                            {text:'decline', value:'decline'}, 
                         ]
                     }}
                     />
@@ -126,11 +135,11 @@ const Filter = ({
                 <div className={style.filter__input}>
                     <button className={style.filter__btn}
                         onClick={filterOperationHandler}>
-                            SEARCH
+                            {t('search')}
                     </button>
                     <button className={style.filter__btn}
                         onClick={resetFilterHandler}>
-                            RESET
+                            {t('reset')}
                     </button>
                 </div>
             

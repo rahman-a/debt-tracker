@@ -25,6 +25,9 @@ export const findMutualOperations = async (req, res, next) => {
 
 export const createOperation = async (req, res, next) => {
     const newOperation = new Operation(req.body) 
+    
+    const lang = req.headers['accept-language']
+    
     try {
         let operation = await newOperation.save()
         operation = await Operation.findById(operation._id).populate('currency', 'name')
@@ -71,19 +74,27 @@ export const createOperation = async (req, res, next) => {
         const notification = {
             user:operation.peer.user,
             operation:operation._id,
-            title:'New Operation has created',
-            body:`you have been set as (${operation.peer.type}) 
-            and the value is (${operation.peer.value}) in (${operation.currency.name}) currency`
+            title:req.t('new_operation_created'),
+            body:req.t('operation_creation_body_for_member', {
+                peerType:req.t(operation.peer.type),
+                peerValue:operation.peer.value,
+                currency:operation.currency.name
+            })
         }
 
         const pushNotification = new Notification(notification)
         await pushNotification.save()
 
         const adminNotification = {
-            title:'New Operation has created',
-            body:`operation has created #{{${operation._id}}} between ${operation.initiator.user.fullNameInEnglish} 
-            as ${operation.initiator.type} and ${operation.initiator.user.fullNameInEnglish} as ${operation.peer.type} 
-            and operation value is ${operation.peer.value}`
+            title:req.t('new_operation_created'),
+            body:req.t('operation_creation_body_for_admin', {
+                operationId:operation._id,
+                initiatorName:lang === 'en' ? operation.initiator.user.fullNameInEnglish : operation.initiator.user.fullNameInArabic,
+                initiatorType:req.t(operation.initiator.type),
+                peerName:lang === 'en' ? operation.peer.user.fullNameInEnglish : operation.peer.user.fullNameInArabic,
+                peerType:req.t(operation.peer.typ),
+                operationValue:operation.peer.value
+            })
         }
 
         await sendNotificationToAdminPanel(['manager'], adminNotification)
@@ -92,7 +103,7 @@ export const createOperation = async (req, res, next) => {
             success:true,
             code:201,
             id:operation._id,
-            message:'Operation has been created'
+            message:req.t('operation_created')
         })
     } catch (error) {
         next(error)
@@ -132,7 +143,7 @@ export const listAllMemberOperations = async (req, res, next) => {
 
             if(!operation) {
                 res.status(404)
-                throw new Error('No Operations Found')
+                throw new Error(req.t('no_operation_found'))
             }
 
             res.send({
@@ -308,7 +319,7 @@ export const listAllMemberOperations = async (req, res, next) => {
 
         if(operations.length === 0) {
             res.status(404)
-            throw new Error('No Operations Found')
+            throw new Error(req.t('no_operations_found'))
         }
 
         res.send({
@@ -330,19 +341,19 @@ export const getOneOperation = async (req, res, next) => {
             path:'initiator',
             populate:{
                 path:'user',
-                select:'fullNameInEnglish avatar colorCode'
+                select:'fullNameInEnglish fullNameInArabic avatar colorCode'
             }
         }).populate({
             path:'peer',
             populate:{
                 path:'user',
-                select:'fullNameInEnglish avatar colorCode'
+                select:'fullNameInEnglish fullNameInArabic avatar colorCode'
             }
         }).populate('currency', 'name image abbr')
         
         if(!operation) {
             res.status(404) 
-            throw new Error('No Operation Found')
+            throw new Error(req.t('no_operation_found'))
         }
         res.send({
             success:true,
@@ -359,14 +370,14 @@ export const updateOperationState = async (req, res, next) => {
     const {state, isAdmin} = req.query 
     
     const {id, notification} = req.params 
-    
+    const lang = req.headers['accept-language']
     try {
         
         const operation = await Operation.findById(id) 
         
         if(!operation) {
             res.status(404)
-            throw new Error('No Operation Found')
+            throw new Error(req.t('no_operation_found'))
         }
 
         const initiator = await User.findById(operation.initiator.user)
@@ -412,25 +423,29 @@ export const updateOperationState = async (req, res, next) => {
             user:initiator._id,
             operation:operation._id,
             title:state === 'decline' 
-            ? 'Operation has been declined' 
-            : 'Operation is Active and Running',
-            body:`Operation with ${peer.fullNameInEnglish} 
-            ${state === 'decline' 
-            ? 'has been declined and closed' 
-            : 'is Active and moved to Reports Documents'}`
+            ? req.t('operation_declined') 
+            : req.t('operation_approve_and_active'),
+            body:req.t('operation_decision_body', {
+                name:lang === 'ar' ? peer.fullNameInArabic :peer.fullNameInEnglish,
+                decision:state === 'decline'
+                ? req.t('operation_decision_decline')
+                : req.t('operation_decision_approve')
+            })
         }
 
         const adminNotification = {
             user:initiator._id,
             title:state === 'decline' 
-            ? 'Operation has been declined' 
-            : 'Operation is Active and Running',
-            body:`operation #{{${operation._id}}} between ${initiator.fullNameInEnglish} and ${peer.fullNameInEnglish}
-            ${
-                state === 'decline'
-                ? 'has been declined and closed'
-                : 'is Active and moved to Reports Records'
-            }`
+            ? req.t('operation_declined') 
+            : req.t('operation_approve_and_active'),
+            body:req.t('operation_decision_for_admin', {
+                operationId:operation._id,
+                initiatorName:lang === 'ar' ? initiator.fullNameInArabic :initiator.fullNameInEnglish,
+                peerName:lang === 'ar' ? peer.fullNameInArabic :peer.fullNameInEnglish,
+                decision:state === 'decline'
+                ? req.t('operation_decision_decline')
+                : req.t('operation_decision_approve')
+            })
         }
 
         
@@ -441,7 +456,7 @@ export const updateOperationState = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:`operation has been set as ${state}`
+            message:req.t('operation_set_as', {state})
         })
     } catch (error) {
         next(error)
@@ -461,7 +476,6 @@ export const listAllOperation = async(req, res, next) => {
         skip,
         page
     } = req.query
-    console.log('List All Operations');
     try {
         if(code) {
             const operation = await Operation.findById(code)
@@ -481,7 +495,7 @@ export const listAllOperation = async(req, res, next) => {
 
             if(!operation) {
                 res.status(404)
-                throw new Error('No Operations Found')
+                throw new Error(req.t('no_operation_found'))
             }
 
             res.send({
@@ -636,7 +650,6 @@ export const listAllOperation = async(req, res, next) => {
             },
         ]
 
-        console.log(searchFilter);
         
         const operations = await Operation.aggregate([
             ...aggregateOptions,
@@ -645,7 +658,6 @@ export const listAllOperation = async(req, res, next) => {
             {$limit: parseInt(page) || 5},
         ])
 
-        console.log('Operations Length', operations.length);
 
         const documentCount = await Operation.aggregate([
            ...aggregateOptions,
@@ -660,7 +672,7 @@ export const listAllOperation = async(req, res, next) => {
 
         if(operations.length === 0) {
             res.status(404)
-            throw new Error('No Operations Found')
+            throw new Error(req.t('no_operations_found'))
         }
 
         res.send({

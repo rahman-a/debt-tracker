@@ -1,5 +1,6 @@
 import React from 'react'
 import style from './style.module.scss'
+import { useTranslation } from 'react-i18next'
 import {Input, DropdownMenu} from '../../components'
 
 const TicketsFilter = ({ 
@@ -9,7 +10,7 @@ const TicketsFilter = ({
     searchFilter,
     setSearchFilter
 }) => {
-    
+    const {t} = useTranslation()
     const searchFilterHandler = e => {
         const value = {[e.target.name]: e.target.value}
         setSearchFilter({...searchFilter, ...value})
@@ -42,7 +43,7 @@ const TicketsFilter = ({
                 <Input
                 name='ticket'
                 type='text'
-                placeholder='ticket id...'
+                placeholder={t('ticket-id')}
                 value={searchFilter['ticket']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -53,7 +54,7 @@ const TicketsFilter = ({
                 <Input
                 name='title'
                 type='text'
-                placeholder='title...'
+                placeholder={t('ticket-title')}
                 value={searchFilter['title']}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -65,10 +66,10 @@ const TicketsFilter = ({
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({isOpen:value})}
                 data={{
-                    label: 'Status',
+                    label: 'status',
                     items:[
-                        {text:'Open', value:true},
-                        {text:'Solved', value:false}, 
+                        {text:'open', value:true},
+                        {text:'closed', value:false}, 
                     ]
                 }}
                 />
@@ -77,11 +78,11 @@ const TicketsFilter = ({
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
                     onClick={filterOperationHandler}>
-                        SEARCH
+                       {t('search')}
                 </button>
                 <button className={style.filter__btn}
                     onClick={resetFilterHandler}>
-                        RESET
+                        {t('reset')}
                 </button>
             </div>
             

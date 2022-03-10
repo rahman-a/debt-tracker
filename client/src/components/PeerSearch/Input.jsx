@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
+import {useTranslation} from 'react-i18next'
 import actions from '../../actions'
 import constants from '../../constants'
 import {Loader} from '..'
@@ -9,16 +10,18 @@ const Input = ({
     filter, 
     setPeerInfo, 
     searchValue, 
-    setSearchValue
+    setSearchValue,
+    lang
 }) => { 
     
     const {loading, error, users} = useSelector(state => state.searchUsers)
     const dispatch = useDispatch()
-
+    const {t} = useTranslation()
+    
     const placeholder = {
-        username:'search by username',
-        mobile:'search by mobile number',
-        code:'search by user code'
+        username:t('search-username'),
+        mobile:t('search-mobile'),
+        code:t('search-user-code')
     }
 
     const searchPeersHandler = _ => {
@@ -33,7 +36,7 @@ const Input = ({
     },[])
 
     return (
-        <div className={style.search__input}>
+        <div className={`${style.search__input} ${lang === 'ar' ? style.search__input_ar : ''}`}>
             
             <input 
             type="text" 
@@ -44,7 +47,7 @@ const Input = ({
             
             <button 
             onClick={searchPeersHandler}>
-                SEARCH
+               {t('search')}
             </button>
             
             {(loading || error) 
@@ -63,7 +66,11 @@ const Input = ({
                     <li key={user._id}
                     onClick={() => setPeerInfo(user)}>
                         <img src={`/api/files/${user.image}`} alt="second peer" />
-                        <p>{user.name}</p>
+                        <p>{
+                            lang === 'ar' 
+                            ? user.arabicName 
+                            : user.name
+                        }</p>
                     </li>
                     ))
                } 

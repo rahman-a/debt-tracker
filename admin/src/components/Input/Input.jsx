@@ -1,5 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
+import i18next from 'i18next'
+import {useTranslation} from 'react-i18next'
+
 
 const Input = ({
     icon, 
@@ -20,9 +23,13 @@ const Input = ({
     disabled
 }) => {
  
+    const lang = i18next.language
+    const {t} = useTranslation()
+    
     return (
         <div className={`
-        ${style.input} 
+        ${style.input}
+        ${lang === 'ar' ? style.input_ar : ''} 
         ${direction === 'right' ? style.input__right :''}
         ${type === 'file' ? style.input__upload :''}
         ${className}
@@ -33,11 +40,11 @@ const Input = ({
                {icon}
            </span>}
            
-           {type === 'file' && <p className={style.input__upload_label}>{placeholder}</p>}
-           <label htmlFor={id ||name}>{label}</label>
+           {type === 'file' && <p className={style.input__upload_label}>{t(placeholder)}</p>}
+           <label htmlFor={id ||name}>{t(label)}</label>
            
            <input 
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 name={name}
                 type={type}
                 id={id || name}

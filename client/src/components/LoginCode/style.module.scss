@@ -66,13 +66,32 @@
             all:unset;
             font-weight: 900;
             text-transform: uppercase;
-            padding:1.6rem;
+            padding:2.5rem;
             border-radius: 1.2rem;
             margin-left: 1.6rem;
             background-color: var.$white-color;
             color:var.$full-light-color;
             letter-spacing: 1px;
             cursor: pointer;
+        }
+
+        &_ar {
+            span {
+                border-top-left-radius: unset;
+                border-bottom-left-radius: unset;
+                border-top-right-radius: 1.2rem;
+                border-bottom-right-radius: 1.2rem;
+            }
+            input {
+                border-top-right-radius: unset;
+                border-bottom-right-radius: unset;
+                border-top-left-radius: 1.2rem;
+                border-bottom-left-radius: 1.2rem;
+            }
+            button {
+                margin-left: unset;
+                margin-right: 0.5rem;
+            }
         }
     }
 
@@ -116,6 +135,13 @@
                     color: var.$main-color !important;
                     border: 1px solid #8bc34a !important;
                 }
+            }
+        }
+
+        &_ar {
+            label {
+                margin-left:unset;
+                margin-right:0.5rem;
             }
         }
     }

@@ -4,7 +4,7 @@ import {ProfileContainer} from '../../components'
 const Company = ({company}) => {
     return (
         <div className={style.profile__company}>
-            <ProfileContainer title='Companies work with'>
+            <ProfileContainer title='company-works-with'>
                     <div className={style.profile__company_name}>
                         <p>{company}</p>
                     </div>

@@ -116,6 +116,10 @@
         display: inline-block;
         cursor: pointer;
         margin-left: 1rem;
+        &_ar {
+            margin-left: unset;
+            margin-right: 1rem;
+        }
     }
 
     &__select {

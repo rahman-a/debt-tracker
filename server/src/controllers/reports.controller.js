@@ -14,13 +14,13 @@ export const createReport = async (req, res, next) => {
         const isFound = await Report.findOne({operation})
         if(isFound) {
             res.status(400)
-            throw new Error('Report already Exist with this operation')
+            throw new Error(req.t('report_already_exist'))
         }
         const targetedOperation = await Operation.findById(operation)
         
         if(!targetedOperation) {
             res.status(404)
-            throw new Error('This Operation isn\'t Exist, please choose another operation')
+            throw new Error(req.t('operation_not_exist'))
         }
         
         const newReport = {
@@ -44,7 +44,7 @@ export const createReport = async (req, res, next) => {
         res.status(201).send({
             success:true,
             code:201,
-            message:'The Report has been created'
+            message:req.t('report_created')
         })
     } catch (error) {
         next(error)
@@ -74,7 +74,7 @@ export const listAllMemberReports = async (req, res, next) => {
                     path:'initiator',
                     populate:{
                         path:'user',
-                        select:'fullNameInEnglish avatar'
+                        select:'fullNameInEnglish fullNameInArabic avatar'
                     }
                 },
             })
@@ -84,7 +84,7 @@ export const listAllMemberReports = async (req, res, next) => {
                     path:'peer',
                     populate:{
                         path:'user',
-                        select:'fullNameInEnglish avatar'
+                        select:'fullNameInEnglish fullNameInArabic avatar'
                     }
                 },
             }).populate('currency', 'name abbr image')
@@ -224,6 +224,7 @@ export const listAllMemberReports = async (req, res, next) => {
                                     {
                                         $project: {
                                             fullNameInEnglish:1,
+                                            fullNameInArabic:1,
                                             avatar:1,
                                             type:"$$type"
                                         }
@@ -241,6 +242,7 @@ export const listAllMemberReports = async (req, res, next) => {
                                     {
                                         $project: {
                                             fullNameInEnglish:1,
+                                            fullNameInArabic:1,
                                             avatar:1,
                                             type:"$$type"
                                         }
@@ -259,10 +261,12 @@ export const listAllMemberReports = async (req, res, next) => {
                             $project:{
                                 "initiator._id":1,
                                 "initiator.fullNameInEnglish":1,
+                                "initiator.fullNameInArabic":1,
                                 "initiator.avatar":1,
                                 "initiator.type":1,
                                 "peer._id":1,
                                 "peer.fullNameInEnglish":1,
+                                "peer.fullNameInArabic":1,
                                 "peer.avatar":1,
                                 "peer.type":1,
                                 note:1
@@ -304,7 +308,7 @@ export const listAllMemberReports = async (req, res, next) => {
  
          if(reports.length === 0) {
              res.status(404)
-             throw new Error('No Reports Found')
+             throw new Error(req.t('no_reports_found'))
          }
 
         res.send({
@@ -323,11 +327,11 @@ export const updateReportValues = async (req, res, next) => {
     const {id} = req.params 
     const updatedValue = req.query
     try {
-        console.log(updatedValue);
+        
         const report = await Report.findById(id)
         if(!report) {
             res.status(404)
-            throw new Error('No Report Found')
+            throw new Error(req.t('no_report_found'))
         }
         const allowedProps = ['credit', 'debt', 'dueDate']
 
@@ -340,7 +344,7 @@ export const updateReportValues = async (req, res, next) => {
                 }
             }else  {
                 res.status(400)
-                throw new Error(`${value} isn't recognized, please choose another one`)
+                throw new Error(req.t('value_not_recognized', {value}))
             }
         }
 
@@ -370,7 +374,7 @@ export const updateReportValues = async (req, res, next) => {
             success:true,
             code:200,
             report:populatedReport,
-            message:'report has been updated'
+            message:req.t('report_updated')
         })
     } catch (error) {
         next(error)
@@ -379,15 +383,16 @@ export const updateReportValues = async (req, res, next) => {
 
 export const closeReportHandler = async(req, res, next) => {
     const {id} = req.params 
+    const lang = req.headers['accept-language']
     try {
         const report = await Report.findById(id) 
         if(!report) {
             res.status(404)
-            throw new Error('No Report Found, make sure report exist')
+            throw new Error(req.t('no_report_found'))
         }
         if(!report.isActive) {
             res.status(400)
-            throw new Error('Operation Already Closed')
+            throw new Error(req.t('operation_already_closed'))
         }
         const operation = await Operation.findById(report.operation)
         const userId = operation.initiator.type === 'debt'
@@ -396,7 +401,7 @@ export const closeReportHandler = async(req, res, next) => {
         const debtor = await User.findById(userId)
         if(!debtor) {
             res.status(404)
-            throw new Error('The Debtor may be deleted or not found')
+            throw new Error(req.t('debtor_may_deleted'))
         }
 
         const color = debtor.colorCode.code 
@@ -408,7 +413,7 @@ export const closeReportHandler = async(req, res, next) => {
             res.send({
                 success:true,
                 code:200,
-                message:'Report has been closed'
+                message:req.t('report_closed')
             })
             
             return
@@ -423,11 +428,11 @@ export const closeReportHandler = async(req, res, next) => {
                 st => st.report.toString() !== report._id.toString()
             )
             await debtor.save()
-            await takeAction(debtor._id, 'green', 'doneLatePayment', report._id)
+            await takeAction(debtor._id, 'green', 'doneLatePayment', report._id, lang)
             res.send({
                 success:true,
                 code:200,
-                message:'Report has been closed'
+                message:req.t('report_closed')
             })
             return
         }   
@@ -445,11 +450,11 @@ export const closeReportHandler = async(req, res, next) => {
                 st => st.report.toString() !== report._id.toString()
             )
             await debtor.save()
-            await takeAction(debtor._id, 'yellow', 'doneExpiredPayment', report._id)
+            await takeAction(debtor._id, 'yellow', 'doneExpiredPayment', report._id, lang)
             res.send({
                 success:true,
                 code:200,
-                message:'Report has been closed'
+                message:req.t('report_closed')
             })
             return
         }
@@ -462,20 +467,19 @@ export const closeReportHandler = async(req, res, next) => {
 export const requestDueDateChange = async (req, res, next) => {
     const {id} = req.params 
     const {date} = req.body 
-    console.log({id});
-    console.log({date});
+    const lang = req.headers['accept-language']
     try {
         const report = await Report.findById(id) 
         
         if(!report) {
             res.status(404)
-            throw new Error('No Report Found to Change')
+            throw new Error(req.t('no_report_found'))
         }
         
         const operation = await Operation.findById(report.operation) 
         if(!operation) {
             res.status(404)
-            throw new Error('No Operation connected to this report')
+            throw new Error(req.t('no_operation_connected_to_reports'))
         }
         
         const creditUser = operation.initiator.type === 'credit' 
@@ -483,7 +487,7 @@ export const requestDueDateChange = async (req, res, next) => {
         : operation.peer.user
         if(req.user._id.toString() !== creditUser.toString()) {
             res.status(401)
-            throw new Error('you must be credit to request due date change')
+            throw new Error(req.t('must_be_credit_to_change_date'))
         }
         
         const debtUser = operation.initiator.type === 'debt' 
@@ -494,12 +498,17 @@ export const requestDueDateChange = async (req, res, next) => {
         
         const notificationData = {
             user:debtUser,
-            title:'Request Due Date Change',
-            body:`${userData.fullNameInEnglish} change Dua Date of report #{{${id}}} to ${new Date(date).toDateString()}`,
+            title:req.t('request_due_date_change'),
+            body:req.t('request_due_date_change_body', {
+                name:lang === 'en' ? userData.fullNameInEnglish : userData.fullNameInArabic,
+                id,
+                date:new Date(date).toDateString()
+            }),
             report:id,
             payload:{
                 date,
-                name:userData.fullNameInEnglish
+                englishName:userData.fullNameInEnglish,
+                arabicName:userData.fullNameInArabic
             }
         }
 
@@ -509,7 +518,7 @@ export const requestDueDateChange = async (req, res, next) => {
         res.send({
             success:true, 
             code:200,
-            message:'Change has been requested and waiting for debtor approve'
+            message:req.t('change_due_date_request_and_wait_approve')
         })
 
     } catch (error) {
@@ -521,18 +530,18 @@ export const requestDueDateChange = async (req, res, next) => {
 export const approveDueDateChange = async (req, res, next) => {
     const {id} = req.params 
     const {date} = req.body 
-
+    const lang = req.headers['accept-language']
     try {
         const report = await Report.findById(id) 
         if(!report) {
             res.status(404)
-            throw new Error('No Report Found to Change')
+            throw new Error(req.t('no_reports_found'))
         }
         
         const operation = await Operation.findById(report.operation) 
         if(!operation) {
             res.status(404)
-            throw new Error('No Operation connected to this report')
+            throw new Error(req.t('no_operation_connected_to_reports'))
         }
         
         const debtUser = operation.initiator.type === 'debt' 
@@ -541,7 +550,7 @@ export const approveDueDateChange = async (req, res, next) => {
         
         if(req.user._id.toString() !== debtUser.toString()) {
             res.status(401)
-            throw new Error('you must be debtor to approve this change')
+            throw new Error(req.t('must_be_debt_to_approve_change_date'))
         }
         
         const creditUser = operation.initiator.type === 'credit' 
@@ -556,8 +565,11 @@ export const approveDueDateChange = async (req, res, next) => {
         
         const notificationData = {
             user:creditUser,
-            title:'Request Due Date Change',
-            body:`${userData.fullNameInEnglish} approve the due Date Change of report #{{${id}}}`,
+            title:req.t('approve_due_date_change'),
+            body:req.t('approve_due_date_change_body', {
+                name:lang === 'ar' ? userData.fullNameInArabic :userData.fullNameInEnglish,
+                id
+            })
         }
 
         const newNotification = new Notification(notificationData)
@@ -566,7 +578,7 @@ export const approveDueDateChange = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:'Due Date has Changed Successfully'
+            message:req.t('due_date_change_success')
         })
     } catch (error) {
         next(error)
@@ -857,7 +869,7 @@ export const listAllReports = async (req, res, next) => {
  
          if(reports.length === 0) {
              res.status(404)
-             throw new Error('No Reports Found')
+             throw new Error(req.t('no_reports_found'))
          }
 
         res.send({
@@ -905,13 +917,13 @@ const scanReportsDueDate = async () => {
                     if(debtor) {
 
                         if( now <= weekAfterDueDate) {
-                            await takeAction(debtor._id, 'yellow', 'payLate', report._id)
+                            await takeAction(debtor._id, 'yellow', 'payLate', report._id, 'en')
                         }else {
                             debtor.colorCode.state = debtor.colorCode.state.filter(
                                 st => st.report?.toString() !== report._id.toString()
                             )
                             await debtor.save()
-                            await takeAction(debtor._id, 'red', 'payExpired', report._id)
+                            await takeAction(debtor._id, 'red', 'payExpired', report._id, 'en')
                         }
                     }
                 }
@@ -946,7 +958,7 @@ const scanReportsDueDate = async () => {
                             st => st.report?.toString() !== report._id.toString()
                         )
                         await debtor.save()
-                        await takeAction(debtor._id, 'green', 'clear', report._id)
+                        await takeAction(debtor._id, 'green', 'clear', report._id, 'en')
                     }
                     
                 }

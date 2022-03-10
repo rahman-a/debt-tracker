@@ -1,27 +1,30 @@
 import React from 'react'
 import style from './style.module.scss'
 import {ProfileContainer, ProfileSegment} from '../../components'
+import i18next from 'i18next'
 
 const Phone = ({data}) => {
+    
+    const lang = i18next.language
     return (
-        <div className={style.profile__phones}>
-            <ProfileContainer title='Phones'>
+        <div className={`${style.profile__phones} ${lang === 'ar' ? style.profile__phones_ar :''}`}>
+            <ProfileContainer title='phones'>
                     <ProfileSegment
-                        title='Phones inside UAE'
+                        title='uae-phones'
                         type='phones'
                         text={data.insidePhones}
                     />
                     {
                         data.outsidePhones.length > 0
                         ? <ProfileSegment
-                        title='Phones outside UAE'
+                        title='outside-uae-phones'
                         type='outPhones'
                         text={data.outsidePhones}
                         />
                         : <ProfileSegment
-                        title='Phones outside UAE'
+                        title='outside-uae-phones'
                         type='outPhones'
-                        placeholder='Enter your outside phone'
+                        placeholder='enter-outside-phone'
                     />
                     }
             </ProfileContainer>

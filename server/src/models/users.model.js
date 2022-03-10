@@ -134,26 +134,26 @@ userSchema.methods.toJSON = function(){
     return user
 }
 
-userSchema.statics.AuthUser = async function (email, password, res) {
+userSchema.statics.AuthUser = async function (email, password, res, t) {
     const user = await User.findOne({"emails.email":email})
     if(!user) {
         res.status(401)
-        throw new Error('invalid login or password')
+        throw new Error(t('invalid_login'))
     }
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch) {
         res.status(401)
-        throw new Error('invalid login or password')
+        throw new Error(t('invalid_login'))
     }
     
     if(!(user.isPhoneConfirmed)) {
         res.status(401)
-        throw new Error('phone not confirmed')
+        throw new Error(t('phone_not_confirmed'))
     }
 
     if(!(user.isAccountConfirmed)) {
         res.status(401)
-        throw new Error('please wait, until you account approved by adminstration')
+        throw new Error(t('account_not_approved'))
     }
     
     return user

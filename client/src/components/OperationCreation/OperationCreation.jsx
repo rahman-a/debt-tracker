@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
+import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import style from './style.module.scss'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import {Input, DropdownMenu, Currency, Loader, DateInput} from '../../components'
 import {Info, Coins,FunnelDollar, HandDollar, HandPlus, Note} from '../../icons'
 import actions from '../../actions'
@@ -16,6 +18,8 @@ const Details = ({peerInfo}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {user} = useSelector(state => state.login)
+    const {t} = useTranslation()
+    const lang = i18next.language
     const {
         loading:curr_loading, 
         error:curr_error, 
@@ -101,46 +105,49 @@ const Details = ({peerInfo}) => {
                 <img src={
                     `/api/files/${peerInfo.image}`
                 } alt={peerInfo.name} />
-                <h2>{peerInfo.name}</h2>
+                <h2>{lang === 'ar' 
+                ? peerInfo.arabicName
+                : peerInfo.name
+            }</h2>
            </div>
            <div className={style.details__data}>
                 
-                <p className={style.details__data_label}>Peer Type</p>
+                <p className={style.details__data_label}>{t('peer-type')}</p>
                 <DropdownMenu
                 onSelectHandler={(value) => setPeerType(value)}
                 data={{
-                    label:'Click to Select Peer Type',
+                    label:'peer-select-type',
                     icon:<Info/>,
                     items:[
-                        {icon:<HandDollar/>, text:'Creditor', value:'credit'}, 
-                        {icon:<HandPlus/>, text:'Debtor', value:'debt'}
+                        {icon:<HandDollar/>, text:'credit', value:'credit'}, 
+                        {icon:<HandPlus/>, text:'debt', value:'debt'}
                     ]
                 }}/>
 
                 <Input
                 icon={<FunnelDollar/>}
-                placeholder='Type Operation Value'
+                placeholder={t('operation-value')}
                 type='number'
-                label='Operation Value'
+                label={t('operation-value')}
                 name='value'
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 className={style.details__data_value}
                 />
                 
-                <p className={style.details__data_label}>Operation Currency</p>
+                <p className={style.details__data_label}>{t('operation-currency')}</p>
                 
                 <DropdownMenu
                 onSelectHandler={(value) => setCurrency(value)}
                 loading={curr_loading}
                 error={curr_error}
                 data={{
-                    label:'Select Operation Currency',
+                    label:'operation-currency-select',
                     icon:<Coins/>,
                     items:listCurrenciesHandler()
                 }}/>
                 
-                <p className={style.details__data_label}>Operation Due Date</p>
+                <p className={style.details__data_label}>{t('operation-due-date')}</p>
                 <DateInput
                 name='dueDate'
                 getExpiryDate={(date) => setDueDate(date)}
@@ -149,7 +156,7 @@ const Details = ({peerInfo}) => {
 
                <div className={style.details__note}>
                    <span> <Note/> </span>
-                   <label htmlFor="note">Operation Note</label>
+                   <label htmlFor="note">{t('operation-note')}</label>
                    <textarea 
                    name="note" 
                    id="note"
@@ -160,6 +167,7 @@ const Details = ({peerInfo}) => {
                 <div style={{
                     display:'flex', 
                     justifyContent:'flex-end',
+                    direction:'ltr',
                     alignItems:'center'
                 }}>
                    {error && <p style={{marginRight:'2rem', color:'red'}}>{error}</p> } 
@@ -169,7 +177,7 @@ const Details = ({peerInfo}) => {
                     onClick={CreateOperationHandler}>
                     {loading 
                     ? <Loader center size='4' options={{animation:'border'}}/>
-                    : <span> Execute </span>}
+                    : <span> {t('execute')} </span>}
                     </button>
                 </div>
            </div>

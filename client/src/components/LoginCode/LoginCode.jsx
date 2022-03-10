@@ -6,6 +6,8 @@ import {Alert} from 'react-bootstrap'
 import actions from '../../actions'
 import constants from '../../constants'
 import {Loader} from '../../components'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const LoginCode = ({userId, setIsLoginCode}) => {
     const [isRememberOn, setIsRememberOn] = useState(false)
@@ -15,7 +17,8 @@ const LoginCode = ({userId, setIsLoginCode}) => {
     const {loading:login_loading, error:login_error, isAuth} = useSelector(state => state.login)
     const navigate = useNavigate() 
     const dispatch = useDispatch()
-    
+    const {t} = useTranslation()
+    const lang = i18next.language
     const defineRememberDays = days => {
         setRememberDays(days)
     }
@@ -55,7 +58,7 @@ const LoginCode = ({userId, setIsLoginCode}) => {
                 size='20' 
                 center 
                 options={{animation:'border'}} 
-                text='sending login code....'/>
+                text={t('sending-login-code')}/>
            : error 
            ? <Alert 
                 variant='danger' 
@@ -74,54 +77,56 @@ const LoginCode = ({userId, setIsLoginCode}) => {
             </Alert>
            } 
 
-            <p>A code has been sent to your E-mail</p>
-            <p>Please Type this code to login</p>
-            <div className={style.loginCode__group}>
+            <p>{t('code-sent')}</p>
+            <p>{t('type-code')}</p>
+            <div className={`${style.loginCode__group} 
+            ${lang === 'ar' ? style.loginCode__group_ar : ''}`}>
                 <div className={style.loginCode__group_input}>
                     <span>
-                        CODE
+                       {t('login-code')}
                     </span>
                     <input 
                     type="text" 
-                    placeholder='enter the code sent to your E-mail'
+                    placeholder={t('enter-code-sent-email')}
                     onChange={(e) => setLoginCode(e.target.value)}/>
                 </div>
                 <button onClick={loginHandler}>
                     {
                         login_loading 
                         ? <Loader size='4' options={{animation:'border'}}/>
-                        : 'verify'
+                        : t('phone-verify')
                     }
                 </button>
             </div>
             
-            <div className={style.loginCode__remember}>
+            <div className={`${style.loginCode__remember} 
+            ${lang === 'ar' ? style.loginCode__remember_ar : ''}`}>
                 <input 
                 type="checkbox" 
                 id='remember'
                 onChange={rememberPanelHandler}
                 />
-                <label htmlFor="remember">Remember me</label>
+                <label htmlFor="remember">{t('remember-me')}</label>
             </div>
             </>}
             {isRememberOn && <div className={style.loginCode__remember_panel}>
-                <p>Please make this choice if you login from a computer you trust.</p>
-                <p>Remember my credential for</p>
+                <p>{t('choice-if-trust-pc')}</p>
+                <p>{t('remember-credential')}</p>
                 <div className={style.loginCode__remember_panel_period}>
                     <button 
                     className={rememberDays === 7 ? style.loginCode__remember_panel_period_select : ''}
                     onClick={() => defineRememberDays(7)}>
-                        7 days
+                       {t('remember-7')}
                     </button>
                     <button 
                     className={rememberDays === 15 ? style.loginCode__remember_panel_period_select : ''}
                     onClick={() => defineRememberDays(15)}>
-                        15 days
+                        {t('remember-15')}
                     </button>
                     <button 
                     className={rememberDays === 30 ? style.loginCode__remember_panel_period_select : ''}
                     onClick={() => defineRememberDays(30)}>
-                        30 day
+                        {t('remember-30')}
                     </button>
                 </div>
             </div>}

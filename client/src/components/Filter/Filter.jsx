@@ -1,5 +1,7 @@
 import React from 'react'
 import style from './style.module.scss'
+import {useTranslation} from 'react-i18next'
+import i18next from 'i18next'
 import {Input, DropdownMenu} from '../../components'
 
 const Filter = ({
@@ -13,6 +15,8 @@ const Filter = ({
     setSearchFilter
 }) => {
     
+    const {t} = useTranslation()
+    const lang = i18next.language
 
     const searchFilterHandler = e => {
         const value = {[e.target.name]: e.target.value}
@@ -42,6 +46,7 @@ const Filter = ({
             filterOperationHandler()
         }
     }
+
     
     return (
         <div className={`${style.filter} ${hidden ? style.filter__hidden :''}`}
@@ -52,7 +57,7 @@ const Filter = ({
                 <Input
                 name='code'
                 type='text'
-                placeholder='code'
+                placeholder={t('code')}
                 value={searchFilter.code}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -63,7 +68,7 @@ const Filter = ({
                 <Input
                 name='name'
                 type='text'
-                placeholder='name'
+                placeholder={t('name')}
                 value={searchFilter.name}
                 className={style.filter__input_value}
                 onChange={(e) => searchFilterHandler(e)}
@@ -76,8 +81,8 @@ const Filter = ({
                 data={{
                     label:'type',
                     items:[
-                        {text:'Credit', value:'credit'},
-                        {text:'Debt', value:'debt'}
+                        {text:'credit', value:'credit'},
+                        {text:'debt', value:'debt'}
                     ]
                 }}
                 />
@@ -103,10 +108,10 @@ const Filter = ({
                 className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({state:value})}
                 data={{
-                    label:'state',
+                    label:'status',
                     items:[
-                        {text:'Pending', value:'pending'},
-                        {text:'Decline', value:'decline'}]
+                        {text:'pending', value:'pending'},
+                        {text:'decline', value:'decline'}]
                 }}
                 />
             </div> }
@@ -118,10 +123,10 @@ const Filter = ({
                     closed ? {paymentDate:value} : {dueDate:value}
                     )}
                 data={{
-                    label: closed ? 'payment date' : 'due date',
+                    label: closed ? 'payment-date' : 'due-date',
                     items:[
-                        {text:'Ascending', value:-1},
-                        {text:'Descending', value:1}, 
+                        {text:'asc', value:-1},
+                        {text:'desc', value:1}, 
                     ]
                 }}
                 />
@@ -130,11 +135,11 @@ const Filter = ({
             <div className={style.filter__input}>
                 <button className={style.filter__btn}
                     onClick={filterOperationHandler}>
-                        SEARCH
+                       {t('search')}
                 </button>
                 <button className={style.filter__btn}
                     onClick={resetFilterHandler}>
-                        RESET
+                        {t('reset')}
                 </button>
             </div>
             

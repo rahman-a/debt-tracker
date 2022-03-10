@@ -8,7 +8,7 @@ export const createNewNotification = async (req, res, next) => {
         const isFound = await Notification.findOne({user, operation, isRead:false})
         if(isFound) {
             res.status(400)
-            throw new Error('Notification already has been sent')
+            throw new Error(req.t('notification_already_sent'))
         }
         const notification = await newNotification.save()
 
@@ -16,7 +16,7 @@ export const createNewNotification = async (req, res, next) => {
             success:true,
             code:201,
             id:notification._id,
-            message:'Notification has been sent'
+            message:req.t('notification_sent')
         })
 
     } catch (error) {
@@ -114,7 +114,7 @@ export const listAllUserNotifications = async (req, res, next) => {
     
         if(notifications.length === 0){
             res.status(404)
-            throw new Error('No Notifications Found')
+            throw new Error(req.t('no_notifications_found'))
         }
         
         res.send({
@@ -135,7 +135,7 @@ export const updateNotificationReadState = async (req, res, next) => {
         const notification = await Notification.findById(id)
         if(!notification) {
             res.status(404)
-            throw new Error('Notification Not Found')
+            throw new Error(req.t('no_notification_found'))
         }
         notification.isRead = !notification.isRead 
         let message;

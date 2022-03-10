@@ -6,15 +6,18 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import path from 'path'
 import {fileURLToPath} from 'url'
-import databaseConnection from './server/database.connection.js'
+import {Database} from './server/database.connection.js'
 import {notFound, errorHandler} from './server/src/middlewares/errorhandler.js'
 import {verifyAPIKey} from './server/src/middlewares/auth.js' 
+import i18nextMiddleware from 'i18next-http-middleware'
+import i18next from './server/src/i18next.js';
 import userRouter from './server/src/routers/users.router.js'
 import operationRouter from './server/src/routers/operations.router.js'
 import reportsRouter from './server/src/routers/reports.router.js'
 import currenciesRouter from './server/src/routers/currencies.router.js'
 import notificationsRouter from './server/src/routers/notifications.router.js'
 import ticketsRouter from './server/src/routers/tickets.router.js'
+import chatRouter from './server/src/routers/chat.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
 dotenv.config()
@@ -23,14 +26,14 @@ dotenv.config()
 const app = express()
 
 // Database connection
-databaseConnection()
-
+Database()
 // middlewares
 app.use(express.json())
 app.use(cors())
 app.use(helmet())
 app.use(cookieParser())
 app.use(morgan('dev'))
+app.use(i18nextMiddleware.handle(i18next))
 
 if(process.env.NODE_ENV === 'production') {
     
@@ -47,14 +50,19 @@ if(process.env.NODE_ENV === 'production') {
     })
 }
 
+// Endpoints
 app.use('/api/users',verifyAPIKey, userRouter)
 app.use('/api/operations',verifyAPIKey, operationRouter)
 app.use('/api/reports',verifyAPIKey, reportsRouter)
 app.use('/api/currencies',verifyAPIKey, currenciesRouter)
 app.use('/api/notifications',verifyAPIKey, notificationsRouter)
 app.use('/api/tickets', verifyAPIKey, ticketsRouter)
+app.use('/api/chat', verifyAPIKey, chatRouter)
 
+// Serving Assets
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
+
+// Error Handler
 app.use(notFound)
 app.use(errorHandler)
 

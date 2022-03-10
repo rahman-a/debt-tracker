@@ -23,6 +23,7 @@
         display: -ms-grid;
         place-items: center;
         position: relative;
+        direction: ltr;
         h3 {
             font-size: 1.3rem;
             color:var.$second-color;
@@ -39,8 +40,8 @@
             margin-bottom: 1.6rem;
             span {
                 position: absolute;
-                top: -10px;
-                left: -11px;
+                top: -11px;
+                left: -12px;
                 width: 10rem;
                 height: 10rem;
                 z-index: 1;
@@ -57,6 +58,7 @@
         p {
             font-size: 1.3rem;
             color:var.$second-color;
+            margin-top:0.5rem;
             span {
                 margin-right:1rem;
                 @include media.mq(xxs){
@@ -65,7 +67,7 @@
             }
             span:first-child {
                 color:var.$white-color;
-                background-color: var.$code-green-color;
+                background-color: var.$main-color;
                 padding: 0.5rem;
                 border-radius: 1rem;
             }
@@ -93,6 +95,15 @@
             }
             span:last-child {
                 color:var.$second-color;
+            }
+        }
+
+        &_ar {
+            li {
+                span:first-child {
+                    margin-right:unset;
+                    margin-left: 1rem;
+                }
             }
         }
     }
@@ -139,6 +150,15 @@
             background-color: var.$state-red-color;
             span:first-child {
                 color: red;
+            }
+        }
+
+        &_ar {
+            button {
+                span:first-child {
+                    margin-right:unset;
+                    margin-left:1rem;
+                }
             }
         }
     }

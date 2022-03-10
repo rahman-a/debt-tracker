@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import i18next from 'i18next';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -8,8 +9,19 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const PieChart = ({values, title}) => {
     
-    const data = {
-        labels: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+  const lang = i18next.language
+    
+  const chatLabels = _ => {
+    if(lang === 'ar') {
+      return ['السبت', 'الأحد', 'الأثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة']
+    }
+    
+    return ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+  }
+  
+  
+  const data = {
+        labels: chatLabels(),
         datasets: [
           {
             label: `# of ${title}`,

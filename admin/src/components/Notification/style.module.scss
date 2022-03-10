@@ -93,6 +93,17 @@
         }
     }
 
+    &_ar {
+        div:first-of-type {
+            margin-right: 2rem;
+            margin-left: unset;
+        }
+        div:last-of-type {
+            left:0;
+            right:unset;
+        }
+    }
+
     &__report {
         background-color: #1f1e1e;
         padding:0.3rem;

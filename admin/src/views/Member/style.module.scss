@@ -79,6 +79,9 @@
     &__social {
         width:50rem;
         margin:0 3rem 4rem 0;
+        &_ar {
+            margin:0 0 4rem 3rem;
+        }
         @include media.mq(xxl) {
             width: 50rem !important;
         }
