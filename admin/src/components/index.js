@@ -32,3 +32,5 @@ export {default as OperationDecision} from './OperationDecision/OperationDecisio
 export {default as Conversation} from './Conversation/Conversation'
 export {default as ChatMessage} from './ChatMessage/ChatMessage'
 export {default as ChatSidebar} from './ChatSidebar/ChatSidebar'
+export {default as ChatRoomCreation} from './ChatRoomCreation/ChatRoomCreation'
+export {default as ChatRoomUpdate} from './ChatRoomUpdate/ChatRoomUpdate'

@@ -1,3 +1,4 @@
+import { createServer } from 'http'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -6,6 +7,9 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import path from 'path'
 import {fileURLToPath} from 'url'
+import {Server} from 'socket.io'
+import {v4} from 'uuid'
+import chatFunctions from './server/src/socket.io.js'
 import {Database} from './server/database.connection.js'
 import {notFound, errorHandler} from './server/src/middlewares/errorhandler.js'
 import {verifyAPIKey} from './server/src/middlewares/auth.js' 
@@ -20,16 +24,31 @@ import ticketsRouter from './server/src/routers/tickets.router.js'
 import chatRouter from './server/src/routers/chat.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
-dotenv.config()
 
-// initiate express app
-const app = express()
+dotenv.config()
 
 // Database connection
 Database()
+
+// initiate app
+const app = express()
+
+const httpServer = createServer(app)
+
+const io = new Server(httpServer, {
+    cors:{
+        origin:'http://localhost:3000'
+    }
+})
+
+// chat socket api
+// chatFunctions(io)
+
 // middlewares
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin:'http://localhost:3000'
+}))
 app.use(helmet())
 app.use(cookieParser())
 app.use(morgan('dev'))
@@ -67,8 +86,68 @@ app.use(notFound)
 app.use(errorHandler)
 
 
-// initiate server
-const port = process.env.PORT || 5000
-app.listen(port, () => {
-    console.log('port is running at 5000');
+////////////////////////////////////////////////////////
+/////////////// CHAT FUNCTIONS START //////////////////
+import {
+    addUser, 
+    removeUserBySocketId, 
+    removeUserById, 
+    getUser, 
+    getUsers 
+} from './chatUsers.js'
+
+io.on('connection', (socket) => {
+    socket.on('join', (_id, callback) => {
+        addUser({_id, socketId:socket.id})
+        io.emit('online', getUsers())
+        callback()
+    })
+
+    socket.on('join-room', ({_id, room}, callback) => {
+        socket.join(room)
+        addUser({_id, room, socketId:socket.id})
+        callback()
+    })
+
+    socket.on('sendMessage', (message, callback) => {
+        
+        if(message.isRoom) {
+            socket.broadcast.to(message.conversation).emit('getMessage', message)
+            callback()
+        } else {
+            const user = getUser(message.receiver) 
+            if(user) {
+              io.to(user.socketId).emit('getMessage', message)
+                callback()
+            }
+        }
+    })
+
+    socket.on('inform-message-has-read', (id) => {
+        console.log('inform message', id);
+        const user = getUser(id) 
+        if(user) {
+            io.to(user.socketId).emit('message-has-read')
+        }
+    })
+
+    socket.on('left', id => {
+        removeUserById(id)
+        io.emit('online', getUsers())
+    })
+
+    socket.on('disconnect', _ => {
+        removeUserBySocketId(socket.id)
+        io.emit('online', getUsers())
+    })
+})
+
+////////////////////////////////////////////////////////
+/////////////// CHAT FUNCTIONS END //////////////////
+
+// start app 
+const port = process.env.PORT || 5000 
+
+httpServer.listen(port, () => {
+    console.log(`Server start at port ${port}`);
 })

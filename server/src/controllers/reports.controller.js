@@ -974,6 +974,6 @@ const scanReportsDueDate = async () => {
 }
 
 
-cron.schedule('* 8 * * *', scanReportsDueDate, {
-    timezone:'Asia/Dubai'
-})
+// cron.schedule('* 18 * * *', scanReportsDueDate, {
+//     timezone:'Asia/Dubai'
+// })

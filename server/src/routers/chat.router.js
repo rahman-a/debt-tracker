@@ -6,15 +6,15 @@ import {
     createConversation, 
     createConversationRoom,
     updateConversation,
-    addMemberToRoom,
-    removeMemberFromRoom,
     listUserConversation,
     removeConversationRoom,
     // messages
     createMessage,
     listConversationMessages,
     // users
-    findConversationsByName
+    findConversationsByName,
+    markMessageAsReceived,
+    listLatestMessage
 } from '../controllers/chat.controllers.js'
 
 import {
@@ -41,8 +41,6 @@ router.patch('/:id', isAuth,
             chatRoomImageHandler.single('image'), 
             updateConversation
         )
-router.patch('/:id/members', isAuth, checkRoles('manager', 'cs', 'hr'), addMemberToRoom)
-router.delete('/:id/members', isAuth, checkRoles('manager', 'cs', 'hr'), removeMemberFromRoom)
 router.get('/', isAuth, checkRoles('manager', 'cs', 'hr'), listUserConversation)
 
 
@@ -53,5 +51,9 @@ router.get('/:conversationId/messages', isAuth, listConversationMessages)
 
 // User Router
 router.get('/users', isAuth, findConversationsByName)
+router.patch('/messages/bulk', isAuth, markMessageAsReceived)
+router.patch('/messages/:id?', isAuth, markMessageAsReceived)
+router.get('/latest', isAuth, listLatestMessage)
+
 
 export default router

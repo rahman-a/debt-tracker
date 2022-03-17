@@ -4,8 +4,8 @@
     width:70%;
     font-family: 'League Spartan', sans-serif;
     @include media.mq(sm) {
-        // display: none;
-        width:100%;
+        display: none;
+        // width:100%;
     }
     header {
         display: flex;
@@ -17,7 +17,7 @@
 
         span {
             display: none;
-            margin-right: 0.5rem;
+            margin-right: 1rem;
             cursor: pointer;
             @include media.mq(sm) {
                 display: inline;
@@ -29,7 +29,7 @@
             height: 4rem;
             border-radius: 50%;
             overflow: hidden;
-            margin-right: 1rem;
+            margin-bottom: 0;
         }
 
         img {
@@ -50,6 +50,13 @@
         p {
             font-size: 1rem;
             color: #606060;
+        }
+
+        &_ar {
+            figure {
+                margin-left:1rem;
+                margin-right: unset;
+            }
         }
     }
 
@@ -157,6 +164,21 @@
                     border-radius: 0.5rem
                 }
             }
+        }
+    }
+
+    &__loading {
+        width: 100%;
+        height: calc(100vh - 30rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__on {
+        @include media.mq(sm) {
+            display: block;
+            width:100%;
         }
     }
 

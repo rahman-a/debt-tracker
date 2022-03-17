@@ -2,37 +2,35 @@ import React, {useEffect, useState} from 'react';
 import style from './style.module.scss'
 import {Info, Check} from '../../icons'
 
-
-
-const SideAlert = ({type, text, isOn, reset}) => {
+const SideAlert = ({type, text, isOn, position, time, reset}) => {
     const [isToggle, setIsToggle] = useState(false)
-    const [progressWidth, setProgressWidth] = useState(0)
+  
+  const getStyle = _ => {
+    let style = {
+      backgroundColor: type === 'danger' ? '#ffc6c6' : '#9ff9a0',
+      right: isToggle ? '2rem' : '-50rem'
+    }
+    if(position === 'left') {
+      style.right = 'unset'
+      style.left = isToggle ? '2rem' : '-50rem'
+    }
 
-  useEffect(() => {
-    let toggleSideAlert;
-      
-    if(isOn) {
-        
+    return style
+  }
+  
+    useEffect(() => {
+      const period = time ? time : 10000
+      if(isOn) {
         setIsToggle(true)
-        
-        const progressInterval = setInterval(() => {
-            setProgressWidth(prev => prev + 1)
-        },100)
-       
-        toggleSideAlert =  setTimeout(() => {
-          clearInterval(progressInterval)
-          setProgressWidth(0)
+        setTimeout(() => {
           setIsToggle(false)
-          reset()
-        },10000)
+        },period)
+        reset && setTimeout(() => reset(), period + 500)
       }
-      return () => clearTimeout(toggleSideAlert)
   },[isOn])
   
   return <div className={style.alert} 
-          style={{
-            backgroundColor: type === 'danger' ? '#ffc6c6' : '#9ff9a0',
-            right: isToggle ? '2rem' : '-50rem'}}>
+          style={getStyle()}>
       
       <p style={{color: type === 'danger' ? '#700202' : '#065601'}}>
         <span>
@@ -44,11 +42,7 @@ const SideAlert = ({type, text, isOn, reset}) => {
         </span>
         <i> {text} </i>
       </p>
-       <div className={style.alert__progress}
-       style={{
-         width:`${progressWidth}%`,
-         backgroundColor: type === 'danger' ? 'red' : 'green'
-         }}></div>
+
   </div>;
 };
 

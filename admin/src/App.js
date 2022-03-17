@@ -13,7 +13,6 @@ import {
   Operations,
   ActiveReports,
   ClosedReports,
-  Messages,
   Notifications,
   Provider,
   Support,
@@ -38,7 +37,10 @@ function App() {
             <Route path='/operations' element={isAuth ? <Operations/> : <Navigate to='/login'/>}/>
             <Route path='/reports/active' element={isAuth ? <ActiveReports/> : <Navigate to='/login'/>}/>
             <Route path='/reports/closed' element={isAuth ? <ClosedReports/> : <Navigate to='/login'/>}/>
-            <Route path='/chat' element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
+            <Route path='/chat'>
+              <Route index element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
+              <Route path=":id" element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
+            </Route>
             <Route path='/notifications' element={isAuth ? <Notifications/> : <Navigate to='/login'/>}/>
             <Route path='/provider' element={isAuth ? <Provider/> : <Navigate to='/login'/>}/>
             <Route path='/support' element={isAuth ? <Support/> : <Navigate to='/login'/>}/>

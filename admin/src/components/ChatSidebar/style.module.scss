@@ -1,4 +1,5 @@
 @use '../../sass/media' as media;
+@use '../../sass/variables' as var;
 
 @font-face {
     font-family: 'Segoe Normal';
@@ -11,10 +12,13 @@
 }
 
 .sidebar {
+    position: relative;
     width:30%;
+    @include media.mq(md) {
+        width:40%;
+    }
     @include media.mq(sm) {
-        // width:100%;
-        display: none;
+        width:100%;
     }
     header {
         background-color: #f0f2f5;
@@ -88,11 +92,23 @@
                 height:1.5rem;
             }
         }
+
+        &_ar {
+            span {
+                left:unset;
+                right:1.5rem;
+            }
+        }
     }
 
     &__body {
         font-family: 'League Spartan', sans-serif;
+        &_overview {
+            width:100%;
+        }
         &_chat {
+            position: relative;
+            width:100%;
             display: flex;
             height: 8rem;
             padding:2rem;
@@ -112,20 +128,28 @@
             }
 
             figure {
+                position: relative;
                 width:4rem;
                 height: 4rem;
-               clip-path: circle();
-                overflow: hidden;
                 margin-right: 1rem;
                 @include media.mq(xl) {
                     width:3rem;
                     height: 3rem;
+                }
+
+                span{
+                    position: absolute;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    border-radius: 50%;
+                    background-color: #06a906;
                 }
             }
 
             img {
                 width:100%;
                 height: 100%;
+                border-radius: 50%;
                 object-fit: cover;
             }
 
@@ -142,26 +166,9 @@
                 position: relative;
 
                 span:first-child {
-                    position: absolute;
-                    right: 59%;
-                    top: -0.2rem;
-                    width:0.8rem;
-                    height: 0.8rem;
-                    border-radius: 50%;
-                    background-color:#06a906;
-                }
-
-                span:nth-child(2) {
                     font-size: 1.2rem;
                     font-weight: 700;
                     color:#333;
-
-                    @include media.mq(xl) {
-                        font-size: 1rem;
-                    }
-                    @include media.mq(md) {
-                        font-size: 0.8rem;
-                    }
                 }
                 
                 span:last-child {
@@ -172,26 +179,55 @@
             }
 
             p {
-                font-size: 1.2rem;
+                font-size: 1rem;
                 line-height: 1.8;
                 font-weight: 400;
                 font-family: 'Segoe Normal', Tahoma, Geneva, Verdana, sans-serif;
-                @include media.mq(xl) {
-                    font-size: 0.7rem;
-                }
-                @include media.mq(md) {
-                    font-size: 0.6rem;
-                }
-                @include media.mq(sm) {
-                    margin-top: 0.5rem;
+            }
+
+            &_delete {
+                display: none;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                right: 0.3rem;
+                top: 0rem;
+                color:rgb(185, 0, 0);
+                background-color: #fff;
+                width: 3rem;
+                height: 3rem;
+                box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 50%);
+                border-radius: 0.3rem;
+                cursor: pointer;
+                z-index:99999;
+            }
+
+            &:hover &_delete {
+                display: flex;
+            }
+            &_ar {
+                figure {
+                    margin-right: unset;
+                    margin-left: 1rem;
                 }
             }
             
         }
+
     }
 
     &__room {
+        position: relative;
+        &_overlay {
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.3);
+        }
         &_members {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -220,6 +256,72 @@
                 cursor: pointer;
             }
         }
+    }
+
+    &__loading, 
+    &__fallback {
+        min-height: calc(100vh - 30rem);
+        display: flex;
+        align-items: center;
+    }
+
+    &__fallback {
+        flex-direction: column;
+        justify-content: center;
+        span {
+            color:#ddd;
+            margin-bottom: 0.5rem;
+            svg {
+                width:3rem;
+                height: 3rem;
+            }
+        }
+
+        p {
+         font-size: 1.4rem;
+         color:#b8b8b8;
+        }
+    }
+
+    &__delete {
+        text-align: center;
+        h2 {
+            font-weight: 400;
+            color:var.$code-red-color
+        }
+        p {
+            font-weight: 300;
+            padding: 0.5rem 0;
+        }
+    }
+
+    &__overlay {
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.3);
+    }
+
+    &__loading {
+        display: none;
+        width:100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.308);
+        z-index:9999;
+        @include media.mq(sm) {
+            display: block;
+        } 
+    }
+
+    &__off {
+        @include media.mq(sm) {
+           display: none;
+        } 
     }
 }
  

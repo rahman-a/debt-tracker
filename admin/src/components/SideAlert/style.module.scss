@@ -5,7 +5,7 @@
     border-radius: 0.2rem;
     max-width: 50rem;
     transition: all 0.3s ease-in;
-    box-shadow: -1px 1px 6px 1px rgb(0 0 0 / 30%);
+    box-shadow: inset -1px 1px 6px 1px rgb(0 0 0 / 30%);
     z-index:999999;
     p {
         display: flex;
@@ -25,12 +25,8 @@
         transform: translateY(3px);
         margin-left:0.5rem;
     }
-
-    &__progress {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        transition: width 0.1s ease-in-out;
-    }
 }
+/**
+    color:#065601
+    bg:#9ff9a0
+*/

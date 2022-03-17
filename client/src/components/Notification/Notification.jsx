@@ -33,9 +33,9 @@ const Notification = ({data}) => {
     const takeDecisionHandler = _ => {
         if(data.state === 'pending') {
             setIsStateOn(true)
-        } else if(data.report) {
+        } else if(data.report && !data.isRead) {
             setIsDueChange(true)
-        } else {
+        } else if(!data.report) {
             dispatch(actions.notifications.updateNotificationState(data.id))
         }
     }

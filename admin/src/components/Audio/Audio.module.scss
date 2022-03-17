@@ -1,15 +1,19 @@
+@use '../../sass/variables' as var;
+
 .audio {
     display: flex;
     align-items: center;
-
+    width: 28rem;
+    margin-top:0.5rem;
     &__actions {
         span {
-            color:#ccc;
+            color:var.$main-color;
+            margin-right:1rem;
             cursor: pointer;
         }
         svg {
-            width:1.5rem;
-            height: 1.5rem;
+            width:2.5rem;
+            height: 2.5rem;
         }
     }
 
@@ -19,7 +23,7 @@
         position: relative;
         background-color: #ccc;
         height: 5px;
-        width:12rem;
+        width:100%;
         margin-left:1rem;
         span {
             display: flex;
@@ -42,9 +46,17 @@
         }
         em {
             position: absolute;
-            bottom: -1rem;
-            font-size: 0.7rem;
-            color: #8f8f8f;
+            bottom: -2rem;
+            font-size: 1rem;
+            color:var.$main-color;
+        }
+    }
+
+    &_ar {
+        flex-direction: row-reverse;
+
+        & > div:last-child {
+            flex-direction: row-reverse;
         }
     }
 }

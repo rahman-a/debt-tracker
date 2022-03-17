@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './Conversation.module.scss'
+import style from './style.module.scss'
 import {Paperclip, ImagePlaceholder, FilePlaceholder} from '../../icons'
 
 const Upload = ({isFile, setIsFile}) => {

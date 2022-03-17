@@ -43,6 +43,7 @@ export const fileUploadHandler = multer({
 })
 
 export const chatRoomImageHandler = multer({
+    storage,
     limits:{
         fileSize:500000
     },

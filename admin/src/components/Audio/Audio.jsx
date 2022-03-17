@@ -1,59 +1,88 @@
 import React, {useState, useEffect} from 'react'
 import style from './Audio.module.scss'
+import {Spinner} from 'react-bootstrap'
+import getBlobDuration from 'get-blob-duration'
 import {Play, Pause} from '../../icons'
-import sample from './sample.mp3'
+import i18next from 'i18next'
 
-const AudioFile = ({url}) => {
+const AudioFile = ({url,loading}) => {
   
   const [isPlaying, setIsPlaying] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
   const [progressWidth, setProgressWidth] = useState(0)
+  const [duration, setDuration] = useState(null)
+  const lang = i18next.language
 
   const controlTheAudioHandler = action => {
     
     if(action === 'play' && !isPlaying) {
-        
-        audioFile.addEventListener('timeupdate', e => {
-            const progress = (audioFile.currentTime  / audioFile.duration) * 100
-            console.log({duration:audioFile.duration});
-            setProgressWidth(progress)
-            if(progress >= 99.95) {
-                setIsPlaying(false)
-            }
-        })
         audioFile.play()
         setIsPlaying(true)
-
-    }
-    
-    if(action === 'pause' && isPlaying) {
+        audioFile.addEventListener('timeupdate',async e => {
+            const currentTime = Math.round(audioFile.currentTime)
+            const progress = Math.ceil((currentTime  / duration) * 100)
+            console.log('Duration', duration);
+            console.log('Current Time', currentTime);
+            setDuration(duration -currentTime)
+            setProgressWidth(progress)
+            if(currentTime >= duration) {
+                setIsPlaying(false)
+                setDuration(Math.round(audioFile.duration))
+            }
+        })
+    }else if(action === 'pause' && isPlaying) {
         audioFile.pause()
         setIsPlaying(false)
     }
   }
 
+  const createAudioFile = () => {
+    const audio = new Audio()
+    audio.setAttribute('controls', true)
+    audio.setAttribute('preload', 'metadata')
+    const source = document.createElement('source')
+    source.setAttribute('src', url)
+    source.setAttribute('type', 'audio/mp3')
+    audio.appendChild(source)
+    setAudioFile(audio)
+  }
+
+    const getFileDuration = async _ => {
+        const duration = !isNaN(audioFile.duration) && audioFile.duration !== Infinity
+        ? audioFile.duration 
+        : await getBlobDuration(url)
+        setDuration(Math.round(duration))
+    }  
+
     useEffect(() => {
         if(url) {
-            const file = new Audio(sample) 
-            setAudioFile(file)
+           createAudioFile()
         }
     },[url]) 
+
+
+    useEffect(() => {
+        if(audioFile) {
+            getFileDuration()
+        } 
+    },[audioFile])
 return (
-    <div className={style.audio}>
+    <div className={`${style.audio} ${lang === 'ar' ? style.audio_ar :''}`}>
         <div className={style.audio__actions}>
             {
-                isPlaying 
+                loading ? <div style={{marginRight:'1rem'}}> <Spinner size='md' animation='border'/> </div>
+                : isPlaying 
                 ? <span onClick={() => controlTheAudioHandler('pause')}> <Pause/> </span>
                 : <span onClick={() => controlTheAudioHandler('play')}> <Play/> </span>
             }
         </div>
         <div className={style.audio__progress}>
             <span style={{width:`${progressWidth}%`}}>  </span>
-           {/* {
+           {
                duration ?
-               <em> {`0:${Math.round(audioFile.duration)}`} </em>
+               <em> {`0:${duration}`} </em>
                : ' '
-           }  */}
+           } 
         </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './Conversation.module.scss'
+import style from './style.module.scss'
 import {v4} from 'uuid'
 import Scrollbar from 'simplebar-react'
 import {FaceSmile} from '../../icons'

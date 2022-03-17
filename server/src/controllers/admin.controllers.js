@@ -21,11 +21,17 @@ export const login = async (req, res, next) => {
         const token = staff.generateToken(tokenExpiry)
         
         res.cookie('tkid', token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
-        
+        const staffData = {
+            _id:staff._id,
+            fullNameInEnglish:staff.fullNameInEnglish,
+            fullNameInArabic:staff.fullNameInArabic,
+            avatar:staff.avatar, 
+            roles:staff.roles
+        }
         res.json({
             success:true, 
             code:200,
-            staff: {_id:staff._id, avatar:staff.avatar, roles:staff.roles},
+            staff:staffData,
             expiryAdAt: expireAt(7),
         })
 

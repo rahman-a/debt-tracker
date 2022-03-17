@@ -14,6 +14,7 @@ export const takeAction = async (id, state, messageState, report, lang) => {
     let adminNotification = null
     let label = null 
     let message = null
+    let info = null
     
     const user = await User.findById(id) 
     if(!user) {
@@ -34,8 +35,8 @@ export const takeAction = async (id, state, messageState, report, lang) => {
         }
         
         const adminMessage = report 
-        ? message[messageState](report, 'admin', userInfo)
-        : message[messageState]('admin', userInfo)
+        ? messages[messageState](report, 'admin', userInfo)
+        : messages[messageState]('admin', userInfo)
 
         newNotification = {
             user:user._id, 
@@ -48,7 +49,7 @@ export const takeAction = async (id, state, messageState, report, lang) => {
             body:adminMessage[lang]
         }
 
-        info = {
+         info = {
             name:lang === 'en' ? user.fullNameInEnglish : user.fullNameInArabic,
             email:user.emails.find(email => email.isPrimary === true).email,
             message: message[lang],
@@ -79,8 +80,9 @@ export const takeAction = async (id, state, messageState, report, lang) => {
         if(report) {
             const isReportIssueFound = user.colorCode.state.find(
                 st => st.label['en'] ===  label['en'] 
-                && st.report.toString() === report.toString()
+                && st.report.toString() === report
             )
+            console.log({isReportIssueFound});
             if(!isReportIssueFound) {
                 
                 // change color code and push the message to state

@@ -45,17 +45,18 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
         let {notifications, count, nonRead} = getState().listNotifications 
         
         if(notifications) {       
-            let targetNotification = notifications.find(notification => notification._id === id) 
-            targetNotification.isRead = data.isRead 
-            let filteredNotifications = notifications.filter(notification => notification._id !== id) 
-            filteredNotifications = [targetNotification, ...filteredNotifications]
-            let countNonRead = data.isRead ? nonRead - 1 : nonRead + 1 
+            const copiedNotifications = JSON.parse(JSON.stringify(notifications))
             
+            copiedNotifications.forEach(notification => {
+                if(notification._id === id) {
+                    notification.isRead = data.isRead
+                }
+            })
             dispatch({
                 type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
-                notifications: filteredNotifications,
+                notifications: copiedNotifications,
                 count,
-                nonRead:countNonRead
+                nonRead:data.isRead ? nonRead - 1 : nonRead + 1
             })
         }   
         

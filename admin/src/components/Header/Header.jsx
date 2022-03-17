@@ -13,12 +13,14 @@ const Header = () => {
     const [loadingState, setLoadingState] = useState(false)
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
+    const [toggleMessages, setToggleMessages] = useState(false)
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
     const dispatch = useDispatch()
     const {isAuth, staff} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
+    const {loading:latest_loading, error:latest_error, count, messages} = useSelector(state => state.latestMessages)
     const navigate = useNavigate()
     const page = useLocation().pathname
     const language = i18next.language
@@ -36,8 +38,12 @@ const Header = () => {
                 !toggleNotification && 
                 dispatch(actions.notifications.listNotification())
             }
-        }else {
-            setToggleNotification(false)
+        }else if (type === 'messages'){
+            if(page !== '/chat') {
+                setToggleMessages(prev => !prev)
+                !toggleMessages &&
+                dispatch(actions.chat.latestMessages())
+            }
         }
     }
 
@@ -76,15 +82,17 @@ const Header = () => {
         document.body.style.overflow = 'unset'
     })
 
-    useEffect(() => {
-        let intervalNotificationsRequest;
-        if(pushNotifications) {
-            intervalNotificationsRequest = setTimeout(() => {
-              dispatch(actions.notifications.pushNotification())
-             },1000 * 30)
-        }
-        return () => clearTimeout(intervalNotificationsRequest)
-    },[pushNotifications])
+    // useEffect(() => {
+    //     let intervalNotificationsRequest;
+    //     if(pushNotifications) {
+    //         intervalNotificationsRequest = setTimeout(() => {
+    //           dispatch(actions.notifications.pushNotification())
+    //          },1000 * 30)
+    //     }
+    //     return () => clearTimeout(intervalNotificationsRequest)
+    // },[pushNotifications])
+
+   
 
     useEffect(() => {
         language === 'ar' 
@@ -94,10 +102,11 @@ const Header = () => {
 
     useEffect(() => {
         const initNotifications = isAuth && setTimeout(() => {
-            dispatch(actions.notifications.pushNotification())      
+            dispatch(actions.notifications.pushNotification())
         }, 5000);
         
         !nonRead && dispatch(actions.notifications.listNotification())
+        !count && dispatch(actions.chat.latestMessages())
     
         return () => clearTimeout(initNotifications)
     },[page, isAuth])
@@ -186,22 +195,26 @@ const Header = () => {
 
                                 <div className={style.header__notify_list}></div>
                                 <span onClick={() => toggleNotifyData('notification')}>
-                                   {nonRead > 0
+                                {nonRead > 0
                                    && <span className={style.header__notify_num}>
-                                        {nonRead}
+                                        {nonRead < 100 ? nonRead : `99+`}
                                     </span> }
                                     <Bell/>
                                 </span>
-                                {/* <span onClick={() => toggleNotifyData('messages')}>
-                                    <span className={style.header__notify_num}>''</span>
-                                    <Envelope/>
-                                </span> */}
-                                
-                                {/* FOR TEST */}
-                                <span>
+                              
+                                <span onClick={() => toggleNotifyData('messages')}>
+                                    {count > 0
+                                   && <span className={style.header__notify_num}>
+                                        {count}
+                                    </span> }
                                     <Envelope/>
                                 </span>
-                                {/* FOR TEST */}
+                                
+                                 {/* FOR TEST  */}
+                                {/* <span onClick={() => navigate('/chat')}>
+                                    <Envelope/>
+                                </span> */}
+                                {/* FOR TEST
 
                                 <span>
                                     <img src={
@@ -221,12 +234,14 @@ const Header = () => {
                                 data={notifications}/>}
                                 
                                 {/* Messages List */}
-                                {/* {toggleMessages 
+                                {toggleMessages 
                                 && <NotificationContainer 
                                 setToggleNotification={setToggleNotification}
                                 setToggleMessages={setToggleMessages}
+                                loading={latest_loading}
+                                error={latest_error}
                                 title='Messages'
-                                data={notifyData}/>} */}
+                                data={messages}/>}
                             </div>
                             
                             :// display the credential buttons [login - sign up] 

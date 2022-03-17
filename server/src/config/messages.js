@@ -4,15 +4,15 @@ export const messages = {
        
         if(type === 'admin') {
            return {
-               en:`member ${user.englishName} with code #{{${user.code}}} has passed the Due Date of operation number #{{${report}}} without payment`,
-               ar:`العضو ${user.arabicName} بكود رقم #{{${user.code}}} تجاوز تاريخ الاستحقاق لعملية رقم #{{${report}}} بدون دقع`
+               en:`member ${user.englishName} with code #${user.code}# has passed the Due Date of operation number #${report}# without payment`,
+               ar:`العضو ${user.arabicName} بكود رقم #${user.code}# تجاوز تاريخ الاستحقاق لعملية رقم #${report}# بدون دقع`
            }
        }
         
        return {
-            en:`Due Date Passed, Please Complete Your Payment for payment operation number #{{${report}}}, 
+            en:`Due Date Passed, Please Complete Your Payment for payment operation number #${report}#, 
             you have one week before your badge turn into red`,
-            ar:`قد تجاوزت تاريخ الاستحقاق لعميلة الدفع رقم #{{${report}}} من فضلك اكمل عملية الدفع أمامك اسبوع من الآن 
+            ar:`قد تجاوزت تاريخ الاستحقاق لعميلة الدفع رقم #${report}# من فضلك اكمل عملية الدفع أمامك اسبوع من الآن 
             قبل ان تتحول شارة الحساب الى اللون الأحمر`
        }
     },
@@ -21,15 +21,15 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`${user.englishName} with code #{{${user.code}}}, his account badge has turned into red`,
-                ar:`شارة حساب العضو ${user.arabicName} بكود رقم #{{${user.code}}} قد تحولت اللى اللون الاحمر لمرور اسبوع على تاريخ الاستحقاق ولم يتم الدفع`
+                en:`${user.englishName} with code #${user.code}#, his account badge has turned into red`,
+                ar:`شارة حساب العضو ${user.arabicName} بكود رقم #${user.code}# قد تحولت اللى اللون الاحمر لمرور اسبوع على تاريخ الاستحقاق ولم يتم الدفع`
             }
         }
         
         return {
             en:`You account badge has turned into red because one week passed from the due date of 
-            payment operation number #{{${report}}} and you didn't complete you payment`,
-            ar:`لقد تحولت شارة الحساب الى اللون الاحمر, قد مر اسبوع على تاريخ الاستحقاق لعملية الدفع رقم #{{${report}}} ولم تتم عملية الدفع`
+            payment operation number #${report}# and you didn't complete you payment`,
+            ar:`لقد تحولت شارة الحساب الى اللون الاحمر, قد مر اسبوع على تاريخ الاستحقاق لعملية الدفع رقم #${report}# ولم تتم عملية الدفع`
         }
     },
 
@@ -37,15 +37,15 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`${user.englishName} with code #{{${user.code}}} has complete the payment process of operation #{{${report}}}`,
-                ar:`العضو ${user.arabicName} بكود رقم #{{${user.code}}} قد أكمل عملية الدفع لعملية رقم #{{${report}}}`
+                en:`${user.englishName} with code #${user.code}# has complete the payment process of operation #${report}#`,
+                ar:`العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report}#`
             }
         }
        
         return {
-            en:`Confirmation of payment process number #{{${report}}}, if your state has no other issues, 
+            en:`Confirmation of payment process number #${report}#, if your state has no other issues, 
                 the badge will change to green`,
-            ar:`تاكيد عملية الدفع رقم #{{${report}}}, وفى حالة عدم وجود اى مشاكل آخرى ستتحول الشارة الى اللون الأخضر`
+            ar:`تاكيد عملية الدفع رقم #${report}#, وفى حالة عدم وجود اى مشاكل آخرى ستتحول الشارة الى اللون الأخضر`
         }
     },
 
@@ -53,15 +53,15 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`${user.englishName} with code #{{${user.code}}} has complete the payment process of operation #{{${report}}}`,
-                ar:`العضو ${user.arabicName} بكود رقم #{{${user.code}}} قد أكمل عملية الدفع لعملية رقم #{{${report}}}`
+                en:`${user.englishName} with code #${user.code}# has complete the payment process of operation #${report}#`,
+                ar:`العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report}#`
             }
         }
         
         return {
-            en:`Confirmation of payment process number #{{${report}}}, your account badge has turned into yellow and it will turned into
+            en:`Confirmation of payment process number #${report}#, your account badge has turned into yellow and it will turned into
             green after one month of payment date`,
-            ar:`تاكيد عملية الدفع رقم #{{${report}}}, شارة الحساب تحولت الى اللون الأصفر وستتحول الى اللون الخضر بعد شهر من تاريخ الدفع`
+            ar:`تاكيد عملية الدفع رقم #${report}#, شارة الحساب تحولت الى اللون الأصفر وستتحول الى اللون الخضر بعد شهر من تاريخ الدفع`
         }
     },
 
@@ -69,14 +69,14 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`month restriction of account ${user.englishName} with code #{{${user.code}}} has over since last payment of operation #{{${report}}}`,
-                ar:`انتهت فترة الشهر لحساب ${user.arabicName} بكود رقم #{{${user.code}}} منذ آخر عملية الدفع لعملية رقم #{{${report}}}`
+                en:`month restriction of account ${user.englishName} with code #${user.code}# has over since last payment of operation #${report}#`,
+                ar:`انتهت فترة الشهر لحساب ${user.arabicName} بكود رقم #${user.code}# منذ آخر عملية الدفع لعملية رقم #${report}#`
             }
         }
         
         return {
-            en:`A month has over since last payment date of operation #{{${report}}} and if there's no other issues, the badge will turn into green`,
-            ar:`لقد مر شهر منذ آخر عملية دفع لعملية رقم #{{${report}}}, وفى حالة عدم وجود مشاكل آخرى سيتم تحويل شارة الحساب الى اللون الأخضر`
+            en:`A month has over since last payment date of operation #${report}# and if there's no other issues, the badge will turn into green`,
+            ar:`لقد مر شهر منذ آخر عملية دفع لعملية رقم #${report}#, وفى حالة عدم وجود مشاكل آخرى سيتم تحويل شارة الحساب الى اللون الأخضر`
         }
     },
 
@@ -84,7 +84,7 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`identity of ${user.englishName} with code #{{${user.code}}} has expired`,
+                en:`identity of ${user.englishName} with code #${user.code}# has expired`,
                 ar:`انتهت صلاحية بطاقة الهوية للعضو ${user.arabicName} بكود رقم ${user.code}`
             }
         }
@@ -98,7 +98,7 @@ export const messages = {
     passExpired(type, user){
         if(type === 'admin') {
             return {
-                en:`Passport Document of ${user.englishName} with code #{{${user.code}}} has expired`,
+                en:`Passport Document of ${user.englishName} with code #${user.code}# has expired`,
                 ar:`انتهت صلاحية جواز السفر للعضو ${user.arabicName} بكود رقم ${user.code}`
             }
         }
@@ -112,7 +112,7 @@ export const messages = {
     resiExpired(type, user){
         if(type === 'admin') {
             return {
-                en:`Residential Document of ${user.englishName} with code #{{${user.code}}} has expired`,
+                en:`Residential Document of ${user.englishName} with code #${user.code}# has expired`,
                 ar:`انتهت صلاحية جواز السفر للعضو ${user.arabicName} بكود رقم ${user.code}`
             }
         }
@@ -126,8 +126,8 @@ export const messages = {
     idUpload(type, user){
         if(type === 'admin') {
             return {
-                en:`reminder message has been sent to account ${user.englishName} with code #{{${user.code}}} to upload identity card`,
-                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #{{${user.code}}} لرفع بطاقة الهوية`
+                en:`reminder message has been sent to account ${user.englishName} with code #${user.code}# to upload identity card`,
+                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #${user.code}# لرفع بطاقة الهوية`
             }
         }
         return {
@@ -139,8 +139,8 @@ export const messages = {
     passUpload(type, user){
         if(type === 'admin') {
             return {
-                en:`reminder message has been sent to account ${user.englishName} with code #{{${user.code}}} to upload passport document`,
-                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #{{${user.code}}} لرفع جواز السفر`
+                en:`reminder message has been sent to account ${user.englishName} with code #${user.code}# to upload passport document`,
+                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #${user.code}# لرفع جواز السفر`
             }
         }
         
@@ -154,8 +154,8 @@ export const messages = {
         
         if(type === 'admin') {
             return {
-                en:`reminder message has been sent to account ${user.englishName} with code #{{${user.code}}} to upload residential document`,
-                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #{{${user.code}}} لرفع بطاقة الاقامة`
+                en:`reminder message has been sent to account ${user.englishName} with code #${user.code}# to upload residential document`,
+                ar:`تم ارسال رسالة تذكير للعضو ${user.arabicName} بكود رقم #${user.code}# لرفع بطاقة الاقامة`
             }
         }
         

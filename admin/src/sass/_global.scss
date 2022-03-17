@@ -132,6 +132,11 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+}
+
+.sidebar__room_scroll .simplebar-content  {
+    justify-content: flex-start;
 }
 
 

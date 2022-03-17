@@ -10,17 +10,11 @@ const chatAPI = {
     updateRoom(conversationId, data){
         return service().patch(`chat/${conversationId}`, data)
     },
-    addMemberToRoom(conversationId, data) {
-        return service().patch(`chat/${conversationId}`, data)
-    },
-    removeMemberFromRoom(conversationId, data) {
-        return service().delete(`chat/${conversationId}`, data)
-    },
     deleteRoom(conversationId) {
         return service().delete(`chat/${conversationId}`)
     },
     listConversations() {
-        return service().get()
+        return service().get('chat')
     },
     createMessage(conversationId,data) {
         return service().post(`chat/${conversationId}/messages/new`, data)
@@ -30,6 +24,15 @@ const chatAPI = {
     },
     searchConversations(search){
         return service().get(`chat/users?search=${search}`)
+    },
+    latest() {
+        return service().get('chat/latest')
+    },
+    markAsReceived(id, data) {
+        const url = id 
+        ? `chat/messages/${id}`
+        : 'chat/messages/bulk?isBulk=true'
+        return service().patch(url, data)
     }
 }
 

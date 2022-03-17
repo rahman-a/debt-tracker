@@ -48,8 +48,10 @@
     "node-cron": "^3.0.0",
     "node-schedule": "^2.1.0",
     "randomstring": "^1.2.1",
+    "socket.io": "^4.4.1",
     "twilio": "^3.73.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "concurrently": "^7.0.0",

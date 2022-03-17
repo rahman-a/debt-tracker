@@ -1,9 +1,11 @@
 import React from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
 import {Loader} from '../../components'
 import { useTranslation } from 'react-i18next'
+import actions from '../../actions'
 
 const NotifyContainer = ({
     title, 
@@ -13,21 +15,22 @@ const NotifyContainer = ({
     loading,
     error
 }) => {
-    
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const {t} = useTranslation()
     const lang = i18next.language
 
-    const navigateToPage = () => {
-        
-        title === 'Notification'
-        ? setToggleNotification(false)
-        : title === 'Messages' && setToggleMessages(false)
-        
-        navigate(title === 'Notification'
-        ? '/notifications'
-        : title === 'Messages'
-        && '/messages')
+    const navigateToPage = (data) => { 
+        if(title === 'Notification') { 
+            setToggleNotification(false)
+            navigate('/notifications')
+        } else {
+            setToggleMessages(false)
+            data?.conversation 
+            ? navigate(`/chat/${data.conversation}`)
+            : navigate(`/chat`)
+            dispatch(actions.chat.markAsReceived(data.message))
+        }
     }
 
 
@@ -43,7 +46,10 @@ const NotifyContainer = ({
                    ? data.map(notify => {
                         return <li 
                         key={notify._id}
-                        onClick={navigateToPage}
+                        onClick={() => navigateToPage({
+                            conversation:notify.conversation, 
+                            message:notify.message
+                        })}
                         className={style.notify__item}
                         style={{backgroundColor: !notify.isRead ? '#dff5ff' : 'unset'}}>
                             <h3>{notify.title}</h3>

@@ -5,10 +5,12 @@ const messageSchema = new mongoose.Schema({
 
     conversation:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:'Conversation',
         required:true
     },
     sender:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
         required:true
     },
     
@@ -16,11 +18,18 @@ const messageSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-
-    text:String,
-    file:String,
-    image:String,
-    audio:String
+    isSent:{
+        type:Boolean,
+        default:true
+    },
+    content:{
+        type:String,
+        required:true
+    },
+    type:{
+        type:String,
+        required:true
+    }
 },{timestamps:true})
 
 export default mongoose.model('Message', messageSchema)

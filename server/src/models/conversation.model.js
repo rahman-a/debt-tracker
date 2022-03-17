@@ -7,11 +7,10 @@ const conversationSchema = new mongoose.Schema ({
         type:Boolean,
         default:false
     },
-    image:{
-        data:{
-            type:Buffer
-        },
-        mimeType:String
+    image:String,
+    lastMessage:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Message'
     },
     members:[{
         type:mongoose.Schema.Types.ObjectId,
