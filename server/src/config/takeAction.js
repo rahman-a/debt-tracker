@@ -8,7 +8,7 @@ import {Database} from '../../database.connection.js'
 
 Database()
 
-export const takeAction = async (id, state, messageState, report, lang) => {
+export const takeAction = async (id, state, messageState, report) => {
     const color = code[state]
     let newNotification = null
     let adminNotification = null
@@ -20,7 +20,7 @@ export const takeAction = async (id, state, messageState, report, lang) => {
     if(!user) {
         throw new Error('id passed isn\'t valid at (takeAction Function)')
     }
-    
+
     if(messageState) {
         
         label = labels[messageState] 
@@ -40,20 +40,20 @@ export const takeAction = async (id, state, messageState, report, lang) => {
 
         newNotification = {
             user:user._id, 
-            title:label[lang],
-            body:message[lang]
+            title:label,
+            body:message
         }
 
         adminNotification = {
-            title:label[lang],
-            body:adminMessage[lang]
+            title:label,
+            body:adminMessage
         }
 
          info = {
-            name:lang === 'en' ? user.fullNameInEnglish : user.fullNameInArabic,
+            name:user.fullNameInEnglish,
             email:user.emails.find(email => email.isPrimary === true).email,
-            message: message[lang],
-            label:label[lang]
+            message: message['en'],
+            label:label['en']
         }
     }
 
@@ -80,9 +80,9 @@ export const takeAction = async (id, state, messageState, report, lang) => {
         if(report) {
             const isReportIssueFound = user.colorCode.state.find(
                 st => st.label['en'] ===  label['en'] 
-                && st.report.toString() === report
+                && st.report.toString() === report.toString()
             )
-            console.log({isReportIssueFound});
+            
             if(!isReportIssueFound) {
                 
                 // change color code and push the message to state
@@ -106,7 +106,9 @@ export const takeAction = async (id, state, messageState, report, lang) => {
             if(!isLabelFound) {
                 
                 // change color code and push the message to state
-                user.colorCode.code = color
+                if(user.colorCode.code !== '#EC4A0D') {
+                    user.colorCode.code = color
+                }
                 user.colorCode.state = user.colorCode.state.concat({label, message})
                 await user.save()
                 
@@ -117,7 +119,7 @@ export const takeAction = async (id, state, messageState, report, lang) => {
                 await sendNotificationToAdminPanel(['manager','hr'], adminNotification)
                 
                 //  send email to inform the user
-                await sendEmail(info, 'notice')
+                // await sendEmail(info, 'notice')
             }
         }
     }

@@ -11,7 +11,6 @@ import Timeline from './Timeline';
 import LoadingSegment from './loadingSegment'
 import LoadingTimeLine from './LoadingTimeLine';
 import { useTranslation } from 'react-i18next';
-import i18next from 'i18next';
 
 const Home = () => {
   const dispatch = useDispatch()

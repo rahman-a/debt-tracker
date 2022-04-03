@@ -27,6 +27,8 @@ export const createNewNotification = async (req, res, next) => {
 export const listAllUserNotifications = async (req, res, next) => {
     
     const {skip, state} = req.query
+
+    const lang = req.headers['accept-language']
     
     let searchFilter = {'user':req.user._id}
     
@@ -116,6 +118,21 @@ export const listAllUserNotifications = async (req, res, next) => {
             res.status(404)
             throw new Error(req.t('no_notifications_found'))
         }
+
+        notifications = notifications.map(notification => (
+            {
+                _id:notification._id,
+                user:notification.user,
+                title:notification.title[lang],
+                body:notification.body[lang],
+                operation:notification.operation,
+                report:notification.report,
+                payload:notification.payload,
+                isRead:notification.isRead,
+                isSent:notification.isSent,
+                createdAt:notification.createdAt
+            }
+        ))
         
         res.send({
             success:true,
@@ -161,8 +178,9 @@ export const updateNotificationReadState = async (req, res, next) => {
 }
 
 export const pushNotificationToClient = async (req, res, next) => {
+    const lang = req.headers['accept-language']
     try {
-        const notifications = await Notification.find({user:req.user._id, isSent:false})
+         let notifications = await Notification.find({user:req.user._id, isSent:false})
         .populate('user', 'avatar')
         .sort({createdAt:-1})
         
@@ -172,6 +190,21 @@ export const pushNotificationToClient = async (req, res, next) => {
                 await notification.save()
             }
         }
+
+        notifications = notifications.map(notification => (
+            {
+                _id:notification._id,
+                user:notification.user,
+                title:notification.title[lang],
+                body:notification.body[lang],
+                operation:notification.operation,
+                report:notification.report,
+                payload:notification.payload,
+                isRead:notification.isRead,
+                isSent:notification.isSent,
+                createdAt:notification.createdAt
+            }
+        ))
 
         res.send({
             success:true,

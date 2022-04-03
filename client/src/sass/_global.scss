@@ -112,6 +112,18 @@ body {
     }
 }
 
+
+.simplebar-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar__room_scroll .simplebar-content  {
+    justify-content: flex-start;
+}
+
 @media (min-width:576px) {
     .modal-dialog {
         min-width:65rem;

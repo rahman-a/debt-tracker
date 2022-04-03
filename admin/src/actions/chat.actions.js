@@ -81,7 +81,7 @@ const updateRoom = (id, info) => async (dispatch, getState) => {
 
     try {
         const {data} = await api.chat.updateRoom(id, info)
-        console.log('members: ', data);
+        
 
         const {conversations} = getState().listConversations
         const {conversation} = getState().listMessages
@@ -235,11 +235,11 @@ const markAsReceived = (id) => async (dispatch, getState) => {
 
 const markPeerMessagesAsReceived = (info) => async (dispatch, getState) => {
     dispatch({type:constants.chat.MARK_PEER_MESSAGES_AS_RECEIVED_REQUEST})
-    console.log('markPeerMessagesAsReceived');
+    
     try {
         const {data} = await api.chat.markAsReceived(undefined, info)
         const {conversation} = getState().listMessages
-        console.log('conversation: ', conversation);
+        
         
         if(conversation) {
             const copiedConversation = JSON.parse(JSON.stringify(conversation)) 
@@ -248,7 +248,7 @@ const markPeerMessagesAsReceived = (info) => async (dispatch, getState) => {
                     message.isReceived = true
                 }
             }) 
-            console.log('copiedConversation: ', copiedConversation);
+            
             
             dispatch({
                 type:constants.chat.LIST_CONVERSATION_MESSAGES_SUCCESS,
@@ -273,7 +273,7 @@ const createMessage = (id, info) => async (dispatch, getState) => {
 
     try {
         const {data} = await api.chat.createMessage(id, info) 
-        console.log('Create Message', data);
+        
         dispatch({
             type:constants.chat.CREATE_MESSAGE_SUCCESS,
             payload:data.success
@@ -298,7 +298,7 @@ const searchConversations = search => async dispatch => {
             payload:data.output
         })
     } catch (error) {
-        console.log({error});
+        
         dispatch({
             type:constants.chat.SEARCH_CONVERSATIONS_FAIL,
             payload:error.response && error.response.data.message 
@@ -316,7 +316,7 @@ const membersSearch = search => async dispatch => {
             payload:data.output
         })
     } catch (error) {
-        console.log({error});
+        
         dispatch({
             type:constants.chat.SEARCH_MEMBERS_FAIL,
             payload:error.response && error.response.data.message 

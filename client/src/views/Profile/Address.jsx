@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import {ProfileContainer, ProfileSegment} from '../../components'
 
 const Address = ({data}) => {
-    
+        
     return (
         <div className={style.profile__address}>
             <ProfileContainer title='addresses'>

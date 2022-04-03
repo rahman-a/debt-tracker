@@ -112,7 +112,7 @@ const Reports = () => {
                     reports && 
                     <>
 
-                        <Table records={reports} due={isDueDate}/>
+                        <Table records={reports} due={isDueDate} reports/>
                         <Pagination 
                         count={Math.ceil(count / 5)} 
                         moveToPageHandler={(skip) => filterOperationHandler(skip)}/>

@@ -5,10 +5,11 @@ import {HeaderAlert} from '../../components'
 import {Info} from '../../icons'
 import {v4 as uuidv4} from 'uuid'
 import {renderStateMessage} from '../../config/stateMessage'
+import i18next from 'i18next'
 
 const Ribbon = ({color, states}) => {
     const [isStates, setIsStates] = useState(false) 
-    
+    const lang = i18next.language
     return (
         <>
             <Modal show={isStates} onHide={() => setIsStates(false)}>
@@ -16,7 +17,7 @@ const Ribbon = ({color, states}) => {
                     {
                         states.length > 0
                         ? states.reverse().map(state => <li key={uuidv4()}>
-                            {renderStateMessage(state.message['en'], style.ribbon__report)}
+                            {renderStateMessage(state.message[lang], style.ribbon__report)}
                         </li>)
                         : <HeaderAlert size='2' text='Every things is OK'/>
                     }

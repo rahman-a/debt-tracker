@@ -9,7 +9,8 @@ const Loader = ({size, text, center, custom, options}) => {
                 position:'absolute',
                 left:'50%',
                 top:'50%',
-                transform:'translate(-50%, -50%)'
+                transform:'translate(-50%, -50%)',
+                zIndex:'999999999999'
             }
         }
         if(custom) {
@@ -25,7 +26,12 @@ const Loader = ({size, text, center, custom, options}) => {
     }
     return (
         <div style={getStyle()}>
-           <Spinner {...options} style={{width:'100%', height:'100%'}}/>
+           <Spinner {...options} style={{
+               border:'.18em solid currentColor',
+               borderRightColor:'transparent',
+               width:'100%', 
+               height:'100%'
+            }}/>
            {text ? <p>{text}</p> : ''}
         </div>
     )

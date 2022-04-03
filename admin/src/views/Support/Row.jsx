@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import parser from 'html-react-parser'
 import {Loader, SideAlert} from '../../components'
-import {Lock, Check, Copy} from '../../icons'
+import {Lock, Check, Copy, LockOpen} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
 import msToTime from '../../config/msToTime'
@@ -144,8 +144,8 @@ return (
             <td className={style.support__status}>
                 {
                     ticket.isOpen 
-                    ? <Badge bg='danger'>{t('open')}</Badge>
-                    : <Badge bg='success'>{t('closed')}</Badge>
+                    ? <Badge bg='success'>{t('open')}</Badge>
+                    : <Badge bg='danger'>{t('closed')}</Badge>
                 } 
             </td>
             <td>
@@ -163,7 +163,9 @@ return (
             {
                 isClosing 
                 ? <Loader size='4' options={{animation:'border'}}/>
-                : <span onClick={initiateCloseTicket}> <Lock/> </span>
+                : <span onClick={initiateCloseTicket}>
+                      {ticket.isOpen ? <LockOpen fill='green'/> : <Lock/>} 
+                    </span>
             }
             </div>
         </td>

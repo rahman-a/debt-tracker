@@ -37,6 +37,7 @@
     "invalid_login":"invalid login or password",
     "phone_not_confirmed":"phone not confirmed",
     "account_not_approved":"please wait, until you account approved by adminstration",
+    "user_language_changed":"Language Changed Successfully",
     
     "/2":"///////// CURRENCY ///////////",
     "currency_already_exist":"The Currency Already Exist",
@@ -80,7 +81,9 @@
     "operation_created":"Operation has been created",
     "no_operations_found":"No Operations Found",
     "no_operation_found":"No Operation Found",
-    "operation_set_as":"operation has been set as {{state}}",
+    "operation_active":"Operation is Now Active and Running",
+    "operation_decline":"Operation Declined and Closed",
+    "operation_decision_made":"Operation Decision already made, no Action Required",
 
     "/6":"///////// REPORTS ///////////",
     "report_already_exist":"Report already Exist with this operation",
@@ -97,6 +100,7 @@
     "change_due_date_request_and_wait_approve":"Change has been requested and waiting for debtor approve",
     "must_be_debt_to_approve_change_date":"you must be debtor to approve this change",
     "due_date_change_success":"Due Date has Changed Successfully",
+    "must_be_credit_to_close_report":"Must Be Credit To Close The Report",
 
     "/7":"///////// CHAT ///////////",
     "room_require_at_least_two":"Rooms Require at least two members",
@@ -113,9 +117,15 @@
     "member_not_found_in_room":"member doesn't already found in the room",
     "member_removed":"Member has removed from Room",
     "no_match":"No Match Found",
+    "no_active_chat":"No Active Chat",
 
     "/8":"///////// GENERAL ///////////",
     "url_not_found":"{{url}} Not Found",
     "debt":"Debt",
-    "credit":"Credit"
+    "credit":"Credit",
+    "name_is_required":"Name is Required",
+    "phone_is_required":"Phone is Required",
+    "email_is_required":"E-mail is Required",
+    "message_is_required":"Message is Required",
+    "contact_message_sent":"Your Message has been sent Successfully"
 }

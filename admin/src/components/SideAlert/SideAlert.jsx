@@ -17,6 +17,11 @@ const SideAlert = ({type, text, isOn, position, time, reset}) => {
 
     return style
   }
+
+  const closeSideAlert = _ => {
+    setIsToggle(false)
+    reset && setTimeout(() => reset(),250)
+  }
   
     useEffect(() => {
       const period = time ? time : 10000
@@ -30,7 +35,8 @@ const SideAlert = ({type, text, isOn, position, time, reset}) => {
   },[isOn])
   
   return <div className={style.alert} 
-          style={getStyle()}>
+          style={getStyle()}
+          onClick={closeSideAlert}>
       
       <p style={{color: type === 'danger' ? '#700202' : '#065601'}}>
         <span>

@@ -71,11 +71,7 @@ const Tickets = () => {
                   <button onClick={() => setIsEditor(true)}>
                       {t('new-ticket')}
                   </button>
-                  <button className={style.tickets__filter}
-                  onClick={() => setIsFilterModal(true)}>
-                      <span> <FilterSearch/> </span>
-                      <span> {t('filter')} </span>
-                  </button>
+                  <FilterButton onClick={() => setIsFilterModal(true)}/>
               </div>
           </div>
           
@@ -90,9 +86,9 @@ const Tickets = () => {
             resetFilterOperations : resetFilterOperation,
             filterOperationHandler: initiateUsersFiltration
             }}
-            />
-      
-            <TicketsFilter
+          />
+          
+          <TicketsFilter
             hidden
             searchFilter={filter}
             setSearchFilter={setFilter}
@@ -100,9 +96,6 @@ const Tickets = () => {
             filterOperationHandler={initiateUsersFiltration}
           />
       
-          <FilterButton onClick={() => setIsFilterModal(true)}/>
-    
-
           <AltTable>
           <thead>
             <tr>

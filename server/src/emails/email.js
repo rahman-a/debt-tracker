@@ -8,10 +8,10 @@ const mg = mailgun({
   domain:process.env.MG_DOMAIN
 })
 
-const sendEmail = async (info, type) => {
+const sendEmail = async (info, type, email) => {
  const data = {
-    from: 'noreplay@debttracker.com',
-    to: info.email,
+    from: 'SWTLE <noreplay@swtle.com>',
+    to: email ? email : info.email,
     
     subject: type === 'activate' 
     ?'Email Verification'
@@ -20,7 +20,9 @@ const sendEmail = async (info, type) => {
     :type === 'code' 
     ? 'Login Code'
     :type === 'notice'
-    && 'Important Message from Debt Tracker Panel',
+    ? 'Important Message from SWTLE Panel'
+    : type === 'contact'
+    && 'New Contact Message',
     
     html: type === 'activate' 
     ? template.activate(info) 
@@ -29,8 +31,12 @@ const sendEmail = async (info, type) => {
     : type === 'code' 
     ? template.code(info)
     : type === 'notice'
-    && template.notice(info)
+    ? template.notice(info)
+    : type === 'contact'
+    && template.receiveContact(info),
+
   };
+
   mg.messages().send(data, function (error, body) {
     if(error){
       console.log(error);

@@ -1,0 +1,64 @@
+.audio {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.audio__actions span {
+  color: #ccc;
+  cursor: pointer;
+}
+
+.audio__actions svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.audio__progress {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  background-color: #ccc;
+  height: 5px;
+  width: 12rem;
+  margin-left: 1rem;
+}
+
+.audio__progress span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  width: 0;
+  height: 100%;
+  background-color: #3f51b5;
+}
+
+.audio__progress span::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 0.8rem;
+  height: 0.8rem;
+  background-color: #3f51b5;
+  -webkit-clip-path: circle();
+          clip-path: circle();
+}
+
+.audio__progress em {
+  position: absolute;
+  bottom: -1rem;
+  font-size: 0.7rem;
+  color: #8f8f8f;
+}
+/*# sourceMappingURL=Audio.module.css.map */

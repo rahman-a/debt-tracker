@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import {Button, Form, Alert} from 'react-bootstrap'
 import {useLocation} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
+import {useTranslation} from 'react-i18next'
 import {Loader} from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
@@ -16,6 +17,7 @@ const ResetEmail = () => {
     const location = useLocation()
     const params = new URLSearchParams(location.search)
     const token = params.get('TOKEN')
+    const {t} = useTranslation()
     
     const clearAlert = () => {
         dispatch({type: constants.users.VERIFY_AUTH_LINK_RESET})
@@ -24,11 +26,19 @@ const ResetEmail = () => {
     const submitFormData = e => {
         e.preventDefault()
         if(!token) {
-            setErrorMessage('The Token is Invalid')
+            setErrorMessage(t('link-not-valid'))
+            return
+        }
+        if(!resetPassword) {
+            setErrorMessage(t('enter-new-pass'))
+            return
+        }
+        if(!confirmPassword) {
+            setErrorMessage(t('enter-new-pass-again'))
             return
         }
         if(resetPassword !== confirmPassword) {
-            setErrorMessage('The Password doesn\'t match')
+            setErrorMessage(t('pass-not-match'))
             return
         }
         dispatch(actions.users.verifyAuthLink({type:'reset', token, password:resetPassword}))
@@ -65,7 +75,7 @@ const ResetEmail = () => {
                     && <Alert 
                     variant='success' 
                     style={{textAlign:'center'}}>
-                       Congratulation, Password has been Reset
+                       {t('success_reset_pass')}
                     </Alert> 
                 }
             </div>
@@ -76,27 +86,29 @@ const ResetEmail = () => {
                     maxWidth:'50rem', 
                     margin:'2rem auto', 
                 }}>
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Enter Your Password</Form.Label>
+                    <Form.Group className="mb-5" controlId="formBasicPassword">
+                        <Form.Label>{t('enter-new-pass')}</Form.Label>
                         <Form.Control
                         onChange={(e) => setResetPassword(e.target.value)}
                         size='lg' 
                         type="password" 
-                        placeholder='Enter Your Password' />
+                        placeholder='Enter Your Password' 
+                        className='p-3'/>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-                        <Form.Label>Enter Your Password Again</Form.Label>
+                    <Form.Group className="mb-5" controlId="formBasicConfirmPassword">
+                        <Form.Label>{t('enter-new-pass-again')}</Form.Label>
                         <Form.Control
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                         size='lg' 
                         type="password" 
-                        placeholder='Enter Your Password Again' />
+                        placeholder='Enter Your Password Again' 
+                        className='p-3'/>
                     </Form.Group>
                     <Button disabled={loading ? true : false} 
                     variant="light" 
                     type="submit" 
                     size='lg'>
-                       'submit'
+                       {t('submit')}
                     </Button>
                 </Form>
             </div>       

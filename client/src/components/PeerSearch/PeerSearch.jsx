@@ -8,6 +8,8 @@ const Search = ({setPeerInfo}) => {
     const [filter, setFilter] = useState('username')
     const [searchValue, setSearchValue] = useState('')
     const lang = i18next.language
+    
+    
     return (
         <div className={style.search}>
             

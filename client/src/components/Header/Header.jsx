@@ -2,10 +2,11 @@ import React, {useState, useEffect, useRef} from 'react'
 import style from './style.module.scss'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import i18next, { t } from 'i18next'
+import i18next from 'i18next'
 import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
 import { Loader,SideNavbar, NotificationContainer, PushNotification } from '../../components'
 import actions from '../../actions'
+import { useTranslation } from 'react-i18next'
 
 
 const Header = () => {
@@ -14,13 +15,16 @@ const Header = () => {
     const [navbarColor, setNavbarColor] = useState('rgba(26, 55, 77, 0.7)')
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
+    const [toggleMessages, setToggleMessages] = useState(false)
     const headerBgRef = useRef(null)
     const sideMenuRef = useRef(null)
     const dispatch = useDispatch()
     const {isAuth} = useSelector(state => state.login)
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
+    const {loading:latest_loading, error:latest_error, count, messages} = useSelector(state => state.latestMessages)
     const language = i18next.language
+    const {t} = useTranslation()
     const navigate = useNavigate()
     const page = useLocation().pathname
 
@@ -41,8 +45,12 @@ const Header = () => {
                 !toggleNotification && 
                 dispatch(actions.notifications.listNotification())
             }
-        }else {
-            setToggleNotification(false)
+        }else if (type === 'messages'){
+            if(page !== '/chat') {
+                setToggleMessages(prev => !prev)
+                !toggleMessages &&
+                dispatch(actions.chat.latestMessages())
+            }
         }
     }
 
@@ -99,7 +107,8 @@ const Header = () => {
         }, 5000);
         
         !nonRead && dispatch(actions.notifications.listNotification())
-        
+        !count && dispatch(actions.chat.latestMessages())
+
         page === '/' 
         ? setNavbarColor('rgba(26, 55, 77, 0.7)')
         : setNavbarColor('#1A374D')
@@ -141,7 +150,7 @@ const Header = () => {
                         {/* display the main icon */}
                         <div className={`${style.header__icon} ${language === 'ar' ? style.header__icon_ar : ''}`}>
                             <span onClick={() => navigate('/')}>
-                                <HandDollar/>
+                                <img src="/debt.ico" alt="logo" />
                             </span>
                             
                             {isAuth && 
@@ -205,20 +214,19 @@ const Header = () => {
                                    {nonRead > 0
                                    && <span className={style.header__notify_num}>
                                         {nonRead}
+                                        {/* {nonRead > 100 ? '99+' : nonRead} */}
                                     </span> }
                                     <Bell/>
                                 </span>
-                                {/* <span onClick={() => setToggleMessage(true)}>
-                                    <span className={style.header__notify_num}>''</span>
-                                    <Envelope/>
-                                </span> */}
                                 
-                                {/* FOR TEST */}
-                                <span>
+                                <span onClick={() => toggleNotifyData('messages')}>
+                                    {count > 0
+                                   && <span className={style.header__notify_num}>
+                                        {count}
+                                    </span> }
                                     <Envelope/>
                                 </span>
-                                {/* FOR TEST */}
-
+                        
                                 <span>
                                     <img src={
                                         avatar 
@@ -237,12 +245,14 @@ const Header = () => {
                                 data={notifications}/>}
                                 
                                 {/* Messages List */}
-                                {/* {toggleMessage 
+                                {toggleMessages 
                                 && <NotificationContainer 
                                 setToggleNotification={setToggleNotification}
-                                setToggleMessages={setToggleMessage}
+                                setToggleMessages={setToggleMessages}
+                                loading={latest_loading}
+                                error={latest_error}
                                 title='Messages'
-                                data={notifyData}/>} */}
+                                data={messages}/>}
                             </div>
                             
                             :// display the credential buttons [login - sign up] 

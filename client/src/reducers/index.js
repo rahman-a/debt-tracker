@@ -4,6 +4,7 @@ import currenciesReducer  from './currencies.reducer'
 import notificationReducer from './notifications.reducer'
 import reportsReducer from './reports.reducer'
 import ticketsReducer from './tickets.reducer'
+import chatReducer from './chat.reducer'
 
 export const globalReducer = {
     ...userReducers,
@@ -12,4 +13,5 @@ export const globalReducer = {
     ...notificationReducer,
     ...reportsReducer,
     ...ticketsReducer,
+    ...chatReducer
 }

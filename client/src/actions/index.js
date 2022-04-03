@@ -4,13 +4,16 @@ import currenciesActions from './currencies.action'
 import notificationsActions from './notifications.actions'
 import reportsActions from './reports.actions' 
 import ticketsActions from './tickets.actions'
+import chatActions from './chat.actions'
+
 const actions = {
     users:userActions,
     operations:operationActions,
     currencies:currenciesActions,
     notifications:notificationsActions,
     reports: reportsActions,
-    tickets:ticketsActions
+    tickets:ticketsActions,
+    chat:chatActions
 }
 
 export default actions

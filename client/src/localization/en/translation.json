@@ -57,7 +57,10 @@
     "request-to-change":"Request to change",
     "new-due-date":"New Due Date",
     "due-date-report":"Report",
-    
+    "close-report":"close Report",
+    "confirm-report-close":"do you really want to close the report?",
+    "not-close-report":"Don't Close",
+    "undone-report-process":"Note: Closing Report can't be undone",
     
     "/5":"////////// OPERATION CREATION///////",
     "peer-type":"Peer Type",
@@ -73,7 +76,7 @@
     "phones":"phones",
     "addresses":"addresses",
     "verification-document":"verification documents",
-    "company-works-with":"company-works-with",
+    "company-works-with":"company works with",
     "social-media":"social media",
     "email":"E-mail Address",
     "password":"password",
@@ -181,8 +184,13 @@
     "enter-phone":"Enter Your Phone here",
     "enter-message":"Type your message here",
     "contact-send":"send",
-
-    "/13":"////////// REGISTER ///////",
+    "link-not-valid":"The Link is Invalid, please resend it again",
+    "success_reset_pass":"Congratulation, Password has been Reset",
+    "enter-new-pass":"Enter Your New Password",
+    "enter-new-pass-again":"Enter Your New Password Again",
+    "submit":"Submit",
+    
+    "/10":"////////// REGISTER ///////",
     "credential-info":"Credential Info",
     "new-personal-info":"Personal Info",
     "new-addresses":"Addresses",
@@ -205,7 +213,7 @@
     "provide-full-name-english":"Please type your full name in english",
     "provide-full-name-arabic":"Please type your full name in arabic",
     "full-name-in-english":"Full Name in English",
-    "full-name-in-arabic":"الإسم كاملاً بالعربى",
+    "full-name-in-arabic":"Full Name In Arabic",
     "company-name":"Company You Worked for",
     "provide-address-in-uae":"Please Provide Your Address in UAE",
     "provide-country":"Please Choose Your Country",
@@ -232,7 +240,6 @@
     "take-snapshot":"take photo",
     "take-snapshot-again":"take photo again",
     "done":"Done",
-    
     "code-sent-phone":"A Code has been sent to your Phone",
     "type-code-activate":"Please type this code to activate your Phone",
     "type-code-sent-phone":"type the code sent to your phone",
@@ -241,6 +248,22 @@
     "send-activation-link":"A link has been sent to your E-mail, please click on it to activate your E-mail",
     "congratulation":"Congratulation",
     "account-created":"Your Account has been Created",
+    
+    "/11":"/////////// CHAT //////////",
+    "start-search-for-chat":"search for members and groups to start a chat",
+    "invalid-search":"search didn't find any thing",
+    "start-new-chat":"search for member or group",
+    "last-seen":"last seen at {{date}}",
+    "type-message":"Type a message",
+    "send":"send",
+    "select-members":"Select Members",
+    "cant-sent-empty-message":"you can't send empty message?!",
+    "image-not-supported":"image not supported, upload those extension jpg | png | jpeg",
+    "image-corrupted":"image corrupted, upload another image",
+    "document-not-supported":"document not supported, upload those extension pdf | docx | xlsx | pptx",
+    "document-corrupted":"document corrupted, upload another document",
+    "chat_closed":"The Chat is Closed",
+    
     
     "/12":"////////// GENERAL ///////",
     "close":"close",
@@ -254,5 +277,9 @@
     "search-mobile":"search by mobile number",
     "search-user-code":"search by user code",
     "next":"Next",
-    "prev":"Prev"
+    "prev":"Prev",
+    "name_is_required":"Name is Required",
+    "phone_is_required":"Phone is Required",
+    "email_is_required":"E-mail is Required",
+    "message_is_required":"Message is Required"
 }

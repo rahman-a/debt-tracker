@@ -30,6 +30,7 @@
     &__id {
         position: relative;
         cursor: pointer;
+        direction: ltr;
         span {
             display: none !important;
             position: absolute;
@@ -90,6 +91,31 @@
         cursor: pointer;
         &:hover {
             border-bottom: 1px solid #fd7e14; 
+        }
+    }
+
+    &__close {
+        color:darkred;
+        cursor: pointer;
+        svg {
+            width:1.8rem;
+            height: 1.8rem;
+        }
+        &_confirm {
+            text-align: center;
+            h2 {
+                font-weight: 400;
+                color:var.$code-red-color
+            }
+            p {
+                font-weight: 300;
+                padding: 0.5rem 0;
+            }
+        }
+
+        &_disabled {
+            color:#ccc;
+            cursor: not-allowed;
         }
     }
 }

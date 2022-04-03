@@ -21,8 +21,8 @@ const AudioFile = ({url,loading}) => {
         audioFile.addEventListener('timeupdate',async e => {
             const currentTime = Math.round(audioFile.currentTime)
             const progress = Math.ceil((currentTime  / duration) * 100)
-            console.log('Duration', duration);
-            console.log('Current Time', currentTime);
+            
+            
             setDuration(duration -currentTime)
             setProgressWidth(progress)
             if(currentTime >= duration) {

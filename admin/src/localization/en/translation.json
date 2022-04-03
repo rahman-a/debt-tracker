@@ -136,7 +136,6 @@
     "cancel-change-color-code":"Cancel",
     "change-color-code":"Change Color",
 
-
     
     "/7":"////////// SUPPORT ///////",
     "member":"Member",
@@ -294,6 +293,7 @@
     "registration-date":"Registration Date",
     "photo":"Personal Photo",
     "color-code":"Color Code",
+    "active-member":"Active Member",
     
     "/13":"/////////// PROVIDER //////////",
     "create-provider-account":"Create Provider Account",
@@ -341,6 +341,7 @@
     "image-size-large":"Image size is larger than 500KB",
     "group-require-least-2member":"Group Requires at least two members",
     "enter-room-name":"Enter Room name",
+    "chat_closed":"The Chat is closed!!",
 
     "/15":"////////// GENERAL ///////",
     "are-you-sure":"are you sure",

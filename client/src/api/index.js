@@ -4,6 +4,7 @@ import currenciesAPI from './currencies'
 import notificationsAPI from "./notifications"
 import reportsAPI from './reports'
 import ticketsAPI from './tickets'
+import chatAPI from './chat.api'
 
 const api = {
     users:userAPI,
@@ -11,7 +12,8 @@ const api = {
     currencies:currenciesAPI,
     notifications: notificationsAPI,
     reports:reportsAPI,
-    tickets:ticketsAPI
+    tickets:ticketsAPI,
+    chat:chatAPI
 }
 
 export default api

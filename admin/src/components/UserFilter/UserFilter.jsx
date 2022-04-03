@@ -104,17 +104,6 @@ const Filter = ({
                 />
             </div>
 
-            <div className={style.filter__input}>
-                <Input
-                name='color'
-                type='text'
-                placeholder='color'
-                value={searchFilter['color']}
-                className={style.filter__input_value}
-                onChange={(e) => searchFilterHandler(e)}
-                />
-            </div>
-            
              {
                  lang === 'ar' 
                  ? 
@@ -140,10 +129,6 @@ const Filter = ({
                 </div>
              }
              
-             
-            
-            
-
             <div className={style.filter__input}>
                 <Input
                 name='country'
@@ -172,9 +157,24 @@ const Filter = ({
             <div className={style.filter__input}>
                 <DropdownMenu
                 className={style.filter__input_dropdown}
+                onSelectHandler={(value) => selectSearchFilterHandler({color:value})}
+                data={{
+                    label: 'color',
+                    items:[
+                        {text:'green', value:colorCode['green']},
+                        {text:'yellow', value:colorCode['yellow']}, 
+                        {text:'red', value:colorCode['red']}, 
+                    ]
+                }}
+                />
+            </div>
+
+            <div className={style.filter__input}>
+                <DropdownMenu
+                className={style.filter__input_dropdown}
                 onSelectHandler={(value) => selectSearchFilterHandler({isActive:value})}
                 data={{
-                    label:'active',
+                    label:'active-member',
                     items:[
                         {text:'yes', value:'true'},
                         {text:'no', value:'false'}, 

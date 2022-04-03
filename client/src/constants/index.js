@@ -4,6 +4,7 @@ import currencies from './currencies.constants'
 import notifications from './notifications.constants'
 import reports from './reports.constants'
 import tickets from './tickets.constants'
+import chat from './chat.constants'
 
 const constants = {
     users, 
@@ -11,7 +12,8 @@ const constants = {
     currencies, 
     notifications, 
     reports, 
-    tickets
+    tickets,
+    chat
 }
 
 export default constants

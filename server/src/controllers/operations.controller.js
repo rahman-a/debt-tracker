@@ -4,6 +4,12 @@ import Notification from '../models/notifications.model.js'
 import User from '../models/users.model.js'
 
 
+const peerTypeInArabic = {
+    debt:'مدين',
+    credit:'دائن'
+}
+
+
 
 export const findMutualOperations = async (req, res, next) => {
     const {initiator, peer} = req.params
@@ -74,28 +80,30 @@ export const createOperation = async (req, res, next) => {
         const notification = {
             user:operation.peer.user,
             operation:operation._id,
-            title:req.t('new_operation_created'),
-            body:req.t('operation_creation_body_for_member', {
-                peerType:req.t(operation.peer.type),
-                peerValue:operation.peer.value,
-                currency:operation.currency.name
-            })
+            title:{
+                en:"New Operation has created",
+                ar:"إنشاء عملية جديدة"
+            },
+            body: {
+                en:`you have been set as ${operation.peer.type} and the value is ${operation.peer.value} in ${operation.currency.name} currency`,
+                ar:`تم تعيينك كــ ${peerTypeInArabic[operation.peer.type]} فى عملية قيمتها ${operation.peer.value} وعملتها هى ${operation.currency.name}`
+            }
         }
 
         const pushNotification = new Notification(notification)
         await pushNotification.save()
-
+                
         const adminNotification = {
-            title:req.t('new_operation_created'),
-            body:req.t('operation_creation_body_for_admin', {
-                operationId:operation._id,
-                initiatorName:lang === 'en' ? operation.initiator.user.fullNameInEnglish : operation.initiator.user.fullNameInArabic,
-                initiatorType:req.t(operation.initiator.type),
-                peerName:lang === 'en' ? operation.peer.user.fullNameInEnglish : operation.peer.user.fullNameInArabic,
-                peerType:req.t(operation.peer.typ),
-                operationValue:operation.peer.value
-            })
+            title:{
+                en:"New Operation has created",
+                ar:"إنشاء عملية جديدة"
+            },
+            body: {
+                en:`operation has created #${operation._id}# between ${operation.initiator.user.fullNameInEnglish} as ${operation.initiator.type} and ${operation.peer.user.fullNameInEnglish} as ${operation.peer.type} and operation value is ${operation.peer.value}`,
+                ar:` تم إنشاء عملية بكود #${operation._id}# بين ${operation.initiator.user.fullNameInArabic} كــ ${peerTypeInArabic[operation.initiator.type]} و ${operation.peer.user.fullNameInArabic} كــ ${peerTypeInArabic[operation.peer.type]} وقيمتها هى ${operation.peer.value}`
+            }
         }
+
 
         await sendNotificationToAdminPanel(['manager'], adminNotification)
 
@@ -206,6 +214,14 @@ export const listAllMemberOperations = async (req, res, next) => {
                     },
                     {
                         'initiator.user.fullNameInEnglish' : { $regex:name,  $options:'i'},
+                        'peer.user._id' : req.user._id 
+                    },
+                    {
+                        'peer.user.fullNameInArabic' : { $regex:name,  $options:'i'},
+                        'initiator.user._id' : req.user._id 
+                    },
+                    {
+                        'initiator.user.fullNameInArabic' : { $regex:name,  $options:'i'},
                         'peer.user._id' : req.user._id 
                     }
                 ]
@@ -370,7 +386,7 @@ export const updateOperationState = async (req, res, next) => {
     const {state, isAdmin} = req.query 
     
     const {id, notification} = req.params 
-    const lang = req.headers['accept-language']
+
     try {
         
         const operation = await Operation.findById(id) 
@@ -378,6 +394,13 @@ export const updateOperationState = async (req, res, next) => {
         if(!operation) {
             res.status(404)
             throw new Error(req.t('no_operation_found'))
+        }
+
+        const reportIsFound = await Report.findOne({operation:operation._id}) 
+
+        if(reportIsFound) {
+            res.status(400)
+            throw new Error(req.t('operation_decision_made'))
         }
 
         const initiator = await User.findById(operation.initiator.user)
@@ -421,31 +444,43 @@ export const updateOperationState = async (req, res, next) => {
 
         const notificationData = {
             user:initiator._id,
-            operation:operation._id,
-            title:state === 'decline' 
-            ? req.t('operation_declined') 
-            : req.t('operation_approve_and_active'),
-            body:req.t('operation_decision_body', {
-                name:lang === 'ar' ? peer.fullNameInArabic :peer.fullNameInEnglish,
-                decision:state === 'decline'
-                ? req.t('operation_decision_decline')
-                : req.t('operation_decision_approve')
-            })
+            title:{
+                en:state === 'decline' 
+                ?`Operation has been declined`
+                :`Operation is Active and Running`,
+                ar: state === 'decline'
+                ?`العملية تم رفضها`
+                :`العملية تم الموافقة عليها وهى قيد التنفيذ الآن`
+            },
+            body:{
+                en:state === 'decline'
+                ? `Operation with ${peer.fullNameInEnglish} has been declined and closed`
+                : `Operation with ${peer.fullNameInEnglish} is Active and moved to Reports Documents`,
+                ar: state === 'decline'
+                ? `العملية مع ${peer.fullNameInArabic} تم رفضها وغلقها الآن`
+                : `العملية مع ${peer.fullNameInArabic} تم الموافقة عليها ونقلها الى سجل التقارير`
+            }
         }
+        
 
         const adminNotification = {
             user:initiator._id,
-            title:state === 'decline' 
-            ? req.t('operation_declined') 
-            : req.t('operation_approve_and_active'),
-            body:req.t('operation_decision_for_admin', {
-                operationId:operation._id,
-                initiatorName:lang === 'ar' ? initiator.fullNameInArabic :initiator.fullNameInEnglish,
-                peerName:lang === 'ar' ? peer.fullNameInArabic :peer.fullNameInEnglish,
-                decision:state === 'decline'
-                ? req.t('operation_decision_decline')
-                : req.t('operation_decision_approve')
-            })
+            title:{
+                en:state === 'decline' 
+                ?`Operation has been declined`
+                :`Operation is Active and Running`,
+                ar: state === 'decline'
+                ?`العملية تم رفضها`
+                :`العملية تم الموافقة عليها وهى قيد التنفيذ الآن`
+            },
+            body:{
+                en:state === 'decline'
+                ? `Operation #${operation._id}# between ${initiator.fullNameInEnglish} and ${peer.fullNameInEnglish} has been declined and closed`
+                : `Operation #${operation._id}# between ${initiator.fullNameInEnglish} and ${peer.fullNameInEnglish} is Active and moved to Reports Documents`,
+                ar: state === 'decline'
+                ? `العملية بكود #${operation._id}# بين ${initiator.fullNameInArabic} و ${peer.fullNameInArabic} تم رفضها وغلقها الآن`
+                : `العملية بكود #${operation._id}# بين ${initiator.fullNameInArabic} و ${peer.fullNameInArabic} تم الموافقة عليها ونقلها الى سجل التقارير`
+            }
         }
 
         
@@ -456,7 +491,7 @@ export const updateOperationState = async (req, res, next) => {
         res.send({
             success:true,
             code:200,
-            message:req.t('operation_set_as', {state})
+            message: state === 'decline' ? req.t('operation_decline') : req.t('operation_active')
         })
     } catch (error) {
         next(error)

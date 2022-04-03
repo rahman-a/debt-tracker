@@ -122,12 +122,16 @@
         }
         button {
             all:unset;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: var.$white-color;
             padding:1rem 0.5rem;
             color:var.$main-color;
             border-radius: 2.5rem;
             width:15rem;
-            text-align: center;
+            height: 3.8rem;
             cursor: pointer;
             transition: all 0.3s ease;
             &:hover {

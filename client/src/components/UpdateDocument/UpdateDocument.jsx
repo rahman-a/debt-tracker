@@ -61,7 +61,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
         data.append([document], doc)
         data.append('expireAt', JSONDate)
         setTimeout(() => {
-            dispatch(actions.users.updateDocuments(user._id, data))
+            dispatch(actions.users.updateDocuments(user._id, data, document))
         }, 100);
     }
 
@@ -95,17 +95,7 @@ const UpdateDocument = ({isEdit, setIsEdit, setLoadingState, document}) => {
                         {errors}
                 </Alert> 
             }
-            
-            {/* {
-                loading && 
-                <Loader
-                size='15'
-                center
-                options={{ animation: 'border' }}
-                custom={{ zIndex: '9999' }}
-                /> 
-            } */}
-            
+        
             <h3 style={{fontWeight:'300'}}>
                {
                     expiryDate 

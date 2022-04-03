@@ -63,8 +63,6 @@ const Pagination = ({count,moveToPageHandler, resetPagination}) => {
 
     useEffect(() => {
         toggleButton()
-        console.log('PageValue =>', pageValue);
-        console.log('current page =>', currentPage);
     },[currentPage])
     
     const changeCurrentPage = type => {

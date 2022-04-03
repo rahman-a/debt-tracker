@@ -21,14 +21,14 @@ export const createNewTicket = async (req, res, next) => {
         const ticket = await newTicket.save() 
 
         const adminNotification = {
-            title:req.t('ticket_creation', {
-                name:lang === 'ar' ? req.user.fullNameInArabic :req.user.fullNameInEnglish
-            }),
-            body:req.t('ticket_creation_body', {
-                name:lang === 'ar' ? req.user.fullNameInArabic :req.user.fullNameInEnglish,
-                code:ticket.code,
-                title:ticket.title
-            })
+            title:{
+                en:`Ticket has initiated by ${req.user.fullNameInEnglish}`,
+                ar:`تم إنشاء تذكرة للدعم الفنى من قبل ${req.user.fullNameInArabic}`
+            },
+            body:{
+                en:`${req.user.fullNameInEnglish} has initiated new Ticket #${ticket.code}# related to ${ticket.title}`,
+                ar:`${req.user.fullNameInArabic} أنشأ تذكرة جديدة للدعم الفنى بكود رقم #${ticket.code}# متعلقة بــ ${ticket.title}`
+            }
         }
         await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
@@ -250,7 +250,7 @@ export const updateTicketStatus = async (req, res, next) => {
     const {id} = req.params 
     const lang = req.headers['accept-language']
     try {
-        const ticket = await Ticket.findById(id).populate('member', 'fullNameInEnglish')
+        const ticket = await Ticket.findById(id).populate('member', 'fullNameInEnglish fullNameInArabic')
         if(!ticket) {
             res.status(404)
             throw new Error(req.t('ticket_not_found')) 
@@ -258,11 +258,14 @@ export const updateTicketStatus = async (req, res, next) => {
         ticket.isOpen = false
         await ticket.save()
         const adminNotification = {
-            title:req.t('ticket_closed'),
-            body:req.t('ticket_closed_body', {
-                code:ticket.code,
-                name: lang === 'ar' ? ticket.member.fullNameInArabic :ticket.member.fullNameInEnglish,
-            })
+            title:{
+                en:'Ticket has been closed',
+                ar:'تم غلق التذكرة بنجاح'
+            },
+            body: {
+                en:`ticket with code #${ticket.code}# related to ${ticket.member.fullNameInEnglish} has marked as solved and is now closed`,
+                ar:`تذكرة الدعم الفنى بكود رقم #${ticket.code}# المتعلقة بــ ${ticket.member.fullNameInArabic} تم حلها وغلقها الآن`
+            }
         }
         await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
         res.send({
@@ -279,7 +282,9 @@ export const addTicketResponse = async (req, res, next) => {
     const {id} = req.params 
     const {title, body, sender} = req.body 
     try {
-        const ticket = await Ticket.findById(id) 
+        const ticket = await Ticket.findById(id)
+        .populate('member', 'fullNameInEnglish fullNameInArabic')
+        
         if(!ticket) {
             res.status(404)
             throw new Error(req.t('ticket_not_found')) 
@@ -290,6 +295,34 @@ export const addTicketResponse = async (req, res, next) => {
         }
         ticket.response = ticket.response.concat(newResponse)
         const updatedTicket = await ticket.save() 
+
+        if(sender === 'member') {
+            const adminNotification = {
+                title:{
+                    en:'Member Replied to Ticket',
+                    ar:'العضو رد على التذكرة'
+                },
+                body: {
+                    en:`${ticket.member.fullNameInEnglish} replied to ticket with code #${ticket.code}#`,
+                    ar:`${ticket.member.fullNameInArabic} وضع رد على تذكرة الدعم الفنى بكود رقم #${ticket.code}#`
+                }
+            }
+            await sendNotificationToAdminPanel(['manager', 'cs'], adminNotification)
+        } else {
+            const newNotification = {
+                user:ticket.member._id,
+                title:{
+                    en:'Support Replied to your Ticket',
+                    ar:'الدعم الفنى وضع رداً على تذكرتك'
+                },
+                body: {
+                    en:`Support replied to your ticket with code #${ticket.code}#`,
+                    ar:`الدعم الفنى وضع ردا على تذكرتك بكود رقم #${ticket.code}#`
+                }
+            }
+
+            await Notification.create(newNotification)
+        }
         
         res.send({
             success:true,
@@ -380,6 +413,7 @@ const sendNotificationToAdminPanel = async (roles, data) => {
        throw new Error(error)
     }
 }
+
 
 
 function createTicketCode () {

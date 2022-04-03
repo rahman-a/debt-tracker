@@ -44,6 +44,9 @@
             font-size: 1.4rem;
             color:var.$main-color;
             margin:0;
+            @include media.mq(sm) {
+                width:25rem;
+            }
         }
         span {
             font-size: 1.2rem;
@@ -95,8 +98,9 @@
 
     &__report {
         background-color: #1f1e1e;
-        padding:0.3rem;
+        padding: 0.1rem 0.5rem;
         border-radius: 0.5rem;
+        font-size: 1.1rem !important;
     }
 
     &__dueDate {

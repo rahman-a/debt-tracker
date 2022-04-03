@@ -74,10 +74,16 @@ const Phones = ({setStep, info}) => {
         }
     }
 
-    const removeMorePhoneHandler = where => {
+    const removeMorePhoneHandler = (where, idx) => {
         if(where === 'inside') {
+            const phones = [...insidePhones]
+            phones.splice(idx, 1)
+            setInsidePhones(phones)
             setMoreInsidePhone(prev => prev - 1)
         }else {
+            const phones = [...outsidePhones]
+            phones.splice(idx, 1)
+            setOutsidePhones(phones)
             setMoreOutsidePhone(prev => prev - 1)
         }
     }
@@ -131,7 +137,7 @@ const Phones = ({setStep, info}) => {
                         {moreInsidePhone === (idx + 1) 
                         && <SideButton text={t('another-phone')} handler={() => addMorePhoneHandler('inside')}/>}
                         {moreInsidePhone === (idx + 1) && moreInsidePhone > 1 
-                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('inside')}/>}
+                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('inside', idx)}/>}
                         </div>
                     
                 }) 
@@ -162,7 +168,7 @@ const Phones = ({setStep, info}) => {
                         }
                         {
                         moreOutsidePhone === (idx + 1) && moreOutsidePhone > 1
-                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('outside')}/> 
+                        && <SideButton minus text={t('remove-phone')} handler={() => removeMorePhoneHandler('outside', idx)}/> 
                         }
                     </div>
                 })

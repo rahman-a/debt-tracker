@@ -25,6 +25,7 @@ const Input = ({
     }
 
     const searchPeersHandler = _ => {
+        
         dispatch(actions.users.SearchForUsers({[filter]:searchValue}))
         setSearchValue('')
     }

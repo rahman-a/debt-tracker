@@ -20,7 +20,11 @@ import {
     listAllUsers,
     deleteUser,
     toggleUserActivation,
-    changeUserColorCode
+    changeUserColorCode,
+    updateUserPreferredLanguage,
+    updatePhoneAndAddress,
+    updateDocuments,
+    sendContactEmail
 } from '../controllers/users.controller.js'
 
 import {
@@ -65,6 +69,10 @@ router.get('/me/:id?', isAuth, sendUserData)
 router.post('/logout', isAuth, logoutHandler)
 router.patch('/password/update',isAuth,  updateUserPassword)
 router.get('/search',isAuth,  findUserHandler)
+router.patch('/language', isAuth, updateUserPreferredLanguage)
+router.patch('/:id/update', isAuth, updatePhoneAndAddress)
+router.patch('/:id/documents', isAuth, uploadHandler.fields(imagesFields), updateDocuments)
+router.post('/contact', sendContactEmail)
 
 // DASHBOARD ROUTERS
 router.post('/staff/login', staffLogin)

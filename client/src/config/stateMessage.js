@@ -11,15 +11,31 @@
 //         return [textArray[0], <span className={className}>{value}</span>, textArray[1]]
 //     } else return text
 // }
+// export const renderStateMessage = (text, className) => {
+//     const regex = /#\S+#/g
+//     const match = text.match(regex)
+//     if(match) {
+//         const matchText = match[0].split('') /// [#, p, t,t,e,r,n,#]
+//         const value = matchText.splice(1, matchText.length - 2).join('')
+//         const replacedString = text.match(regex)[0]
+//         const finalText = text.replace(replacedString, `${value}`)
+//         const textArray = finalText.split(value)
+//         return [textArray[0], <span className={className}>{value}</span>, textArray[1]]
+//     } else return text
+// }
+
 export const renderStateMessage = (text, className) => {
     const regex = /#\S+#/g
-    const match = text.match(regex)
-    if(match) {
-        const matchText = match[0].split('') /// [#, p, t,t,e,r,n,#]
-        const value = matchText.splice(1, matchText.length - 2).join('')
-        const replacedString = text.match(regex)[0]
-        const finalText = text.replace(replacedString, `${value}`)
-        const textArray = finalText.split(value)
-        return [textArray[0], <span className={className}>{value}</span>, textArray[1]]
-    } else return text
+    const splittedText = text.split(' ')
+    const fullText = []
+    splittedText.forEach(tx => {
+        const match = tx.match(regex)
+        if(match) {
+            const matchText = match[0].split('') /// [#, p, t,t,e,r,n,#]
+            const value = matchText.splice(1, matchText.length - 2).join('')
+            fullText.push(<span className={className}>{value}</span>)
+        } else fullText.push(` ${tx} `)
+    });
+    
+    return fullText
 }

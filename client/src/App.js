@@ -19,7 +19,9 @@ import {
   EmailActivation,
   ResetPassword,
   Tickets,
-  Ticket
+  Ticket,
+  Chat, 
+  TermsAndConditions
 } from './views'
 
 function App() {
@@ -48,8 +50,13 @@ function App() {
               <Route index element={isAuth ? <Tickets/> : <Navigate to='/login'/>}/>
               <Route path=':id' element={isAuth ? <Ticket/> : <Navigate to='/login'/>}/>
             </Route>
+            <Route path='/chat'>
+              <Route index element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
+              <Route path=":id" element={isAuth ? <Chat/> : <Navigate to='/login'/>}/>
+            </Route>
             <Route path='/activate' element={<EmailActivation/>}/>
             <Route path='/reset' element={<ResetPassword/>}/>
+            <Route path='/terms-conditions' element={<TermsAndConditions/>}/>
           </Routes>
         <Footer/>
     </div>

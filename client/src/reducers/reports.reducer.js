@@ -62,6 +62,36 @@ const updateReport = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const closeReport = (state, action) => {
+    
+    const cases = {
+        [constants.reports.CLOSE_REPORT_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.reports.CLOSE_REPORT_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            message:action.payload
+        },
+        [constants.reports.CLOSE_REPORT_FAIL]: 
+        {
+            loading:false,
+            error:action.payload,
+        },
+        [constants.reports.CLOSE_REPORT_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const updateDueDate = (state, action) => {
     
     const cases = {
@@ -126,7 +156,8 @@ const reducer = {
     listAllReports,
     updateReport,
     updateDueDate,
-    approveDueDate
+    approveDueDate,
+    closeReport
 }
 
 export default reducer

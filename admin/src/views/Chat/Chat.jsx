@@ -8,9 +8,11 @@ import constants from '../../constants';
 const socket = io('http://localhost:5000')
 
 function Chat() {
+  const [unSeenMessage, setUnSeenMessage] = useState(null)
   const {staff} = useSelector(state => state.login)
   const {conversation} = useSelector(state => state.listMessages)
   const dispatch = useDispatch()
+  
   useEffect(() => {
 
     socket.emit('join',staff._id, error => {
@@ -18,7 +20,7 @@ function Chat() {
     })
   
     return () => {
-      console.log('USER LEFT ROOM!!!');
+      
       socket.emit('left', staff._id);
       socket.off();
       dispatch({type:constants.chat.LIST_CONVERSATION_MESSAGES_RESET})
@@ -36,13 +38,16 @@ function Chat() {
    error => {
       if(error) alert(error)
     })
-  },[conversation])
+  },[conversation, staff._id])
 
   return (
     <div className={style.chat}>
       <div className={style.chat__container}>
-        <ChatSidebar socket={socket}/>
-        <Conversation socket={socket}/>
+        <ChatSidebar 
+        socket={socket}
+        unSeenMessage={unSeenMessage}
+        setUnSeenMessage={setUnSeenMessage}/>
+        <Conversation socket={socket} setUnSeenMessage={setUnSeenMessage}/>
       </div>
     </div>
   );

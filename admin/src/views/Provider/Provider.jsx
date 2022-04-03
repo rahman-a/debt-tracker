@@ -180,8 +180,8 @@ const Provider = () => {
                 }
             }
 
-            console.log(data);
-            console.log(providerData);
+            
+            
             dispatch(actions.admin.createProvider(providerData))
       
         }

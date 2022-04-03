@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {Alert} from 'react-bootstrap'
 import {v4 as uuidv4} from 'uuid'
+import {Link} from 'react-router-dom'
 import {Input, SideButton, Button} from '../../components'
 import {EnvelopOpen, Key, Fingerprint} from '../../icons'
 import constants from '../../constants'
@@ -96,7 +97,10 @@ const Credential = ({setStep}) => {
         setMoreEmail(prev => prev + 1)
     }
 
-    const removeMoreEmailHandler = where => {
+    const removeMoreEmailHandler = idx => {
+        const emailsValues = [...emails]
+        emailsValues.splice(idx, 1)
+        setEmails(emailsValues)
         setMoreEmail(prev => prev - 1)
     }
 
@@ -151,7 +155,7 @@ const Credential = ({setStep}) => {
                         <Input
                             name='email'
                             id={`email-${idx + 1}`}
-                            placeholder={idx > 0 ? 'add-another-emaill' :'main-email'}
+                            placeholder={idx > 0 ? 'add-another-email' :'main-email'}
                             label={idx > 0 ? 'add-another-email' :'main-email'}
                             type='email'
                             icon={<EnvelopOpen/>}
@@ -170,7 +174,7 @@ const Credential = ({setStep}) => {
                         && <SideButton 
                         minus 
                         text={t('remove-email')} 
-                        handler={removeMoreEmailHandler}/>}
+                        handler={() => removeMoreEmailHandler(idx)}/>}
                     </div>
                     
                 }) 
@@ -215,7 +219,15 @@ const Credential = ({setStep}) => {
                 onChange={(e) => setIsAgree(!isAgree)}/>
                 <label style={{
                     fontSize:'1.4rem',
-                }} htmlFor="terms">{t('i-agree')} <a href="#" style={{color:'#B1D0E0'}}>{t("condition&terms")}</a></label>
+                }} htmlFor="terms">{t('i-agree')} 
+                    <Link to="/terms-conditions" 
+                    style={{color:'#B1D0E0', 
+                    marginRight:lang === 'ar' ? '0.5rem' : 'unset',
+                    marginLeft:lang === 'en' ? '0.5rem' : 'unset',
+                    }}>
+                        {t("condition&terms")}
+                    </Link>
+                </label>
             </div>
           <Button 
           value={t('next')}

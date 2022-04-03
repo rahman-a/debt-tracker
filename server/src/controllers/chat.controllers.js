@@ -113,10 +113,22 @@ export const listUserConversation = async (req, res, next) => {
         })
         .populate('lastMessage', 'type content')
         .sort({updatedAt:-1})
+        
+        // in case of user deleted
+        for(const conversation of conversations) {
+            if(conversation.members.length < 2) {
+                conversation.members.push({
+                    _id:ObjectId(),
+                    fullNameInArabic:'مستخدم محذوف',
+                    fullNameInEnglish:"deleted user",
+                    avatar:'no-avatar.jpg'
+                })
+            }
+        }
 
         if(conversations.length === 0) {
             res.status(404)
-            throw new Error('No Active Chat')
+            throw new Error(req.t('no_active_chat'))
         }
 
         res.send({
@@ -182,6 +194,7 @@ export const updateConversation  = async (req, res, next) => {
 export const createMessage = async (req, res, next) => {
     
     const {conversationId} = req.params
+    
     const {content, type} = req.body 
 
     try {
@@ -204,12 +217,17 @@ export const createMessage = async (req, res, next) => {
         }
 
         const conversation = await Conversation.findById(conversationId)
+        
         conversation.lastMessage = messageContent._id
         await conversation.save()
 
         res.status(201).send({
-            _id:messageContent._id,
-            content:messageContent.content,
+            message:{
+                _id:messageContent._id, 
+                content:messageContent.content,
+                type:messageContent.type,
+                conversation:messageContent.conversation
+            },
             code:201,
             success:true
         })
@@ -219,7 +237,7 @@ export const createMessage = async (req, res, next) => {
 }
 
 export const markMessageAsReceived = async (req, res, next) => {
-    console.log('Mark Message...?!!!');
+    
     const {id} = req.params 
     const {conversation, sender} = req.body
     const {isBulk} = req.query
@@ -283,15 +301,28 @@ export const listConversationMessages = async (req, res, next) => {
             path:'sender',
             select:lang === 'ar' ? 'fullNameInArabic avatar' : 'fullNameInEnglish avatar'
         })
-
+        
+        // in case of deleted user
+        for(const message of messages) {
+            if(!message.sender) {
+                message.sender = {
+                    _id:ObjectId(),
+                    fullNameInArabic:'مستخدم محذوف',
+                    fullNameInEnglish:"deleted user",
+                    avatar:'no-avatar.jpg'
+                }
+            }
+        }
+        
         let metadata = {}
         if(createdConversation) {
+                
                 const userId = createdConversation.members.find(user => user.toString() !== req.user._id.toString())
                 const user = await User.findById(userId)
                 metadata._id = user._id,
                 metadata.name = lang === 'ar' ? user.fullNameInArabic  : user.fullNameInEnglish 
                 metadata.image = user.avatar,
-                metadata.conversation = conversation_id
+                metadata.conversation = createdConversation._id
         } else {
             const conversation = await Conversation.findById(conversation_id)
             .populate({
@@ -300,6 +331,8 @@ export const listConversationMessages = async (req, res, next) => {
                 ? 'fullNameInArabic avatar' 
                 : 'fullNameInEnglish avatar'
             })
+
+            
 
             if(conversation.isRoom) {
                 metadata.name = conversation.name 
@@ -313,10 +346,18 @@ export const listConversationMessages = async (req, res, next) => {
                 }))
             }else {
                 const user = conversation.members.find(user => user._id.toString() !== req.user._id.toString())
-                metadata._id = user._id,
-                metadata.name = lang === 'ar' ? user.fullNameInArabic  : user.fullNameInEnglish 
-                metadata.image = user.avatar,
-                metadata.conversation = conversation_id
+                if(user) {
+                    metadata._id = user._id,
+                    metadata.name = lang === 'ar' ? user.fullNameInArabic  : user.fullNameInEnglish 
+                    metadata.image = user.avatar,
+                    metadata.conversation = conversation_id
+                } else {
+                    metadata._id = ObjectId(),
+                    metadata.name = lang === 'ar' ? 'مستخدم محذوف'  : 'deleted user'
+                    metadata.image = 'no-avatar.jpg',
+                    metadata.conversation = conversation_id,
+                    metadata.isDeleted = true
+                }
             }
         }
 
@@ -419,7 +460,7 @@ export const listLatestMessage = async (req, res, next) => {
                 .populate('sender', 'fullNameInArabic fullNameInEnglish')
                 // check who send the message
                 // if it sent by user ==> do nothing
-                if(message && message.sender._id.toString() !== req.user._id.toString()) {
+                if(message && message.sender && message.sender._id.toString() !== req.user._id.toString()) {
                     // if sent by peer ===> check 
                     // if received ==> do nothing
                     if(!(message.isReceived)) {
@@ -427,8 +468,9 @@ export const listLatestMessage = async (req, res, next) => {
                         allNonReceivedMessage.push({
                             conversation:conversation._id,
                             message:message._id,
-                            title:`New Message from ${lang === 'ar'  
-                            ? message.sender.fullNameInArabic : message.sender.fullNameInEnglish}`,
+                            title:lang === 'en'
+                            ? `New Message from ${message.sender.fullNameInEnglish}`
+                            : `رسالة جديدة من ${message.sender.fullNameInArabic}`,
                             body:message.content,
                             isRead:message.isReceived,
                             createdAt:message.createdAt

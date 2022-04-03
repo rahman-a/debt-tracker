@@ -26,8 +26,7 @@ const Country = ({country}) => {
 
 const ProfileSegment = ({title, text, type, placeholder}) => {
     const [info, setInfo] = useState(null)
-    const [isPhoneEdit, setIsPhoneEdit]  = useState(false)
-    const [isAddressEdit, setIsAddressEdit] = useState(false)
+    const [updatedAsset, setUpdatedAsset] = useState(null)
     const [isEdit, setIsEdit] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [editError, setEditError] = useState(null)
@@ -45,19 +44,18 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
         loading:info_loading, 
         error:info_error, 
         isDone
-    } = useSelector(state => state.registerInfo)
+    } = useSelector(state => state.updateAddressAndPhone)
 
     const submitDataHandler = _ => {
-       type === 'outPhones' && setIsPhoneEdit(true)
-       type === 'outAddress' && setIsAddressEdit(true)
+       setUpdatedAsset(type)
        type === 'password' 
        ? dispatch(actions.users.updatePassword({password:info}))
        : type === 'outAddress'
-       ? dispatch(actions.users.registerInfo(
+       ? dispatch(actions.users.updateAddressAndPhone(
            user._id, {outsideAddress:info}
         ))
        : type === 'outPhones'
-       && dispatch(actions.users.registerInfo(
+       && dispatch(actions.users.updateAddressAndPhone(
            user._id, {outsidePhones:[...user.outsidePhones, info]}
         ))
     }
@@ -66,22 +64,29 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
         if(loading || info_loading ) {
             setIsSubmitting(loading || info_loading)
         }
+    },[loading, info_loading])
+
+    useEffect(() => {
         if(error || info_error) {
             setEditError(error || info_error)
         }
-        if(message ||isDone) {
-            message 
-            ? setPassSuccess(t('pass-updated'))
-            : isDone && isAddressEdit
+    },[error, info_error])
+
+    useEffect(() => {
+        message && setPassSuccess(t('pass-updated'))
+    },[message])
+
+    useEffect(() => {
+        if(isDone) {
+            updatedAsset === 'outAddress' 
             ? setAddressSuccess(t('address-added', {title:t(title)}))
-            : isDone && isPhoneEdit
+            : updatedAsset === 'outPhones' 
             && setPhoneSuccess(t('phone-added', {title:t(title)}))
-            
             setIsSubmitting(false)
             setEditError(null)
         }
-    },[loading, error,message, info_loading,info_error, isDone])
-    
+    },[isDone, updatedAsset])
+        
     return (
         <div className={`${style.segment} ${lang === 'ar' ? style.segment_ar :''}`}>
             <h3>
@@ -117,7 +122,7 @@ const ProfileSegment = ({title, text, type, placeholder}) => {
                 onChange={(e) => setInfo(e.target.value)}/>
                 
                 {
-                    isSubmitting 
+                    isSubmitting && updatedAsset === type
                     ? <Loader size='4' options={{animation:'border'}}/>
                     : <button onClick={submitDataHandler}>
                         {lang === 'ar' ? <ArrowLeft/> : <ArrowRight/> } 

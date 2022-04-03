@@ -16,17 +16,21 @@ import actions from '../../actions'
 
 const Profile = () => {
     const {loading, error, user} = useSelector(state => state.userProfile)
+
     const dispatch = useDispatch()
+
     
+
     useEffect(() => {
         dispatch(actions.users.getUserProfile())
     },[])
+
     return (
         <div className={style.profile}>
             <div className="container">
                 {
                     loading
-                    ? <Loader size='25' center options={{animation:'border'}}/>
+                    ? <Loader size='7' center options={{animation:'border'}}/>
                     : error 
                     ? <HeaderAlert type='danger' text={error}/>
                     : user
@@ -48,11 +52,11 @@ const Profile = () => {
                             outsideAddress:user.outsideAddress,
                             country:user.country
                         }}/>
-                        <Documents data={{
-                            identity:user.identity,
-                            passport:user.passport,
-                            residential:user.residential
-                        }}/>
+                        <Documents data={[
+                            {file:user.identity, type:'identity'},
+                            {file:user.passport, type:'passport'},
+                            {file:user.residential, type:'residential'}
+                        ]}/>
                         <Company company={user.company}/>
                         <Social/>
                     </div>   

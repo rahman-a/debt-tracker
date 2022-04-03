@@ -15,8 +15,8 @@ const ChangeDue = ({isDueChange, setIsDueChange, id, op}) => {
 
   const changeDueDateHandler = _ => {
       if(!op && dueDateChange) {
-          console.log({id});
-          console.log({data:dueDateChange});
+          
+          
           dispatch(actions.reports.changeDueDate(id, {date:dueDateChange}))
       }
   }

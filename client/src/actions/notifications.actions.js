@@ -42,7 +42,7 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
 
     try {
         const {data} = await api.notifications.updateState(id)
-        console.log({notificationUpdate:data});
+        
         let {notifications, nonRead, count} = getState().listNotifications
                 
         if(notifications) {

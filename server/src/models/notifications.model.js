@@ -15,12 +15,22 @@ const notificationSchema = new mongoose.Schema({
         ref:'Report'
     },
     title:{
-        type:String,
-        default:'Initiate a New Operation',
+       en:{
+           type:String
+       },
+       ar:{
+           type:String
+       }
     },
     body:{
-        type:String,
-        required:true
+        en:{
+            type:String,
+            required:true
+        },
+        ar:{
+            type:String,
+            required:true
+        }
     },
     payload:Object,
     isRead:{

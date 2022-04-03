@@ -33,8 +33,6 @@ const NotifyContainer = ({
         }
     }
 
-
-
     return (
         <div className={`${style.notify__container} 
         ${lang === 'ar' ? style.notify__container_ar :''}`}>

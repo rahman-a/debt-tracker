@@ -1,42 +1,28 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import style from './style.module.scss'
 import {v4 as uuidv4} from 'uuid'
 import {ProfileContainer, DocumentSegment} from '../../components'
 
-const Documents = ({data}) => {
-    const [documents, setDocuments] = useState([])
-    
-    const createDocuments = _ => {
-        const allDocuments = []
-        for(let d in data) {
-            data[d]?.image
-           ? allDocuments.push(
-                <DocumentSegment 
-                key={uuidv4()} 
-                img={`api/files/${data[d].image}`}
-                isExpired={data[d].isExpired ? data[d].isExpired :''}
-                document={d}/>
-            )
-           : allDocuments.push(
-                <DocumentSegment 
-                key={uuidv4()}
-                document={d}/>
-            )
-
-        }
-        setDocuments(allDocuments)
-    }
-
-
-    useEffect(() => {
-      createDocuments()
-    },[data])
-    
+const Documents = ({data}) => { 
     return (
         <div className={style.profile__documents}>
             <ProfileContainer title='verification-document'>
                 <div className={style.profile__documents_wrapper}>
-                    {documents}
+                    {data && data.map(doc => (
+                        doc.file.image 
+                        ? (
+                            <DocumentSegment 
+                                key={uuidv4()}
+                                img={`api/files/${doc.file.image}`}
+                                isExpired={doc.file.isExpired ? doc.file.isExpired :''}
+                                document={doc.type}/>
+                        )
+                        : (
+                            <DocumentSegment 
+                                key={uuidv4()}
+                                document={doc.type}/> 
+                        )
+                    ))}
                 </div>
             </ProfileContainer>
         </div>

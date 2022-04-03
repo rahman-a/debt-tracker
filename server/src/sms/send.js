@@ -7,11 +7,11 @@ dotenv.config()
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
 
 const sendSMS = (phone, code, country) => {
-    console.log('send sms',phone, code, country);
+    
    client.messages.create({
         body: template.verification(code),
         from:'+19402863101',
-        to:`+971${phone}`
+        to:`+2${phone}`
     })
     .then(message => console.log(`message sent to ${phone} with sid ${message.sid}`))
     .catch(error => {

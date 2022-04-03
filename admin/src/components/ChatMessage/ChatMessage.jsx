@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import { useTranslation } from 'react-i18next'
+import {useDispatch, useSelector} from 'react-redux'
 import style from './style.module.scss'
 import AudioFile from '../Audio/Audio'
+import constants from '../../constants'
 import {Check, DoubleCheck} from '../../icons'
 import {saveMessageToDatabase, markMessageAsReceived} from './messageAPI'
 import i18next from 'i18next'
+
+let isFetched = false
 
 const Message = ({
     message,
@@ -12,7 +16,6 @@ const Message = ({
     receiver,
     customStyle,
 }) => {
-  
   const [isMessageSent, setIsMessageSent] = useState(false)
   const [isMessageDelivered, setIsMessageDelivered] = useState(false)
   const [error, setError] = useState(null)
@@ -20,13 +23,27 @@ const Message = ({
   const [fileName, setFileName] = useState(null)
   const [fileType, setFileType] = useState(null)
   const [audioURL, setAudioURL] = useState(null)
+  const {conversations}  = useSelector(state => state.listConversations)
+  const dispatch = useDispatch()
   const {t} = useTranslation()
   const lang = i18next.language
     
+  const updateLastMessage = message => {
+    const copiedConversations = JSON.parse(JSON.stringify(conversations)) 
+    copiedConversations.forEach(conversation => {
+        if(conversation._id === message.conversation) {
+            conversation.lastMessage = message
+        }
+    })
+    dispatch({type:constants.chat.LIST_CONVERSATION_SUCCESS, payload:copiedConversations})
+  }
+  
+  
   const saveMessage = async (type, content) => {
    try {
         let response;    
         if(type === 'text') {
+            
             response  = await saveMessageToDatabase(message.conversation, {type, content})
         }else {
             const data = new FormData()
@@ -37,23 +54,25 @@ const Message = ({
 
         if(response) {
             setIsMessageSent(true);
+            // update last message in sidebar conversation
+            updateLastMessage(response.message)
         } 
         
         socket.emit('sendMessage', {
             type, 
-            content:response.content, 
+            content:response.message.content, 
             conversation:message.conversation,
             sender:message.sender,
             receiver,
             isRoom:message.isRoom,
             createdAt:new Date()
         }, async () => {
-            await markMessageAsReceived(response._id)
+            await markMessageAsReceived(response.message._id)
             setIsMessageDelivered(true)
         })
 
    } catch (error) {
-      console.log('Send Message Error', error); 
+      
    }
   }
   
@@ -115,6 +134,7 @@ const Message = ({
     const parseContent = _ => {
     
         if(message.type === 'text' && message.isNew) {
+            
            saveMessage(message.type, message.content)
         }
     
@@ -123,7 +143,7 @@ const Message = ({
             if(typeof message.content === 'string') {
                 
                 const data = fileMetadata(message.content)
-                console.log({messageFile:data});
+                
                 setFileName(data.name)
                 setFileType(data.type)
                 setFileSrc(`/api/files/${message.content}`)
@@ -142,7 +162,7 @@ const Message = ({
                 setAudioURL(`/api/files/${message.content}`)
             
             } else {
-                console.log('audio create object');
+                
                 const audioUrl = URL.createObjectURL(message.content);
                 setAudioURL(audioUrl)
                 saveMessage(message.type, message.content)
@@ -218,7 +238,13 @@ const Message = ({
     }
 
     useEffect(() => {
-        message.type === 'error' ? setError(message.content) :parseContent()
+        if(!isFetched) {
+            
+            message.type === 'error' 
+            ? setError(message.content) 
+            : parseContent()
+        }
+        return () =>  isFetched = true
     },[message.type])
 
     useEffect(() => {
@@ -226,7 +252,10 @@ const Message = ({
         message.isReceived && setIsMessageDelivered(true)
     },[message.isSent, message.isReceived])
 
-
+    useEffect(() => {
+        isFetched = false
+    },[])
+    
 return (
     <div 
     className={style.message} 

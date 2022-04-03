@@ -3,7 +3,7 @@ import service from './service'
 const reportsAPI = {
     
     index(query){
-        console.log({query});
+        
         let queryString = ''
         if(query) {
             let queryObj = {}
@@ -34,6 +34,9 @@ const reportsAPI = {
     },
     approveDueDate(id, date) {
         return service().patch(`reports/${id}/due/approve`, date)
+    },
+    close(id) {
+        return service().patch(`reports/close/${id}`)
     }
 }
 

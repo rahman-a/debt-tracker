@@ -202,6 +202,18 @@
                 z-index:99999;
             }
 
+            &_unseen {
+                background-color: #0bc40b36 !important;
+                h3 {
+                    span:first-child {
+                        font-weight: 900 !important;
+                    }
+                }
+                p {
+                    font-weight: 900 !important;
+                }
+            }
+
             &:hover &_delete {
                 display: flex;
             }

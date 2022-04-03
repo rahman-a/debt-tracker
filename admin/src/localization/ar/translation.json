@@ -294,6 +294,7 @@
     "registration-date":"تاريخ التسجيل",
     "photo":"الصورة الشخصية",
     "color-code":"اللون الخاص بالكود",
+    "active-member":"عضو نشط",
     
     "/13":"/////////// PROVIDER //////////",
     "create-provider-account":"إنشاء حساب مزود الخدمة",
@@ -341,6 +342,7 @@
     "image-size-large":"حجم الصورة أكبر من 500 كيلوبايت",
     "group-require-least-2member":"المجموعة تتطلب على الأقل عضويين",
     "enter-room-name":"أدخل إسم المجموعة",
+    "chat_closed":"تم غلق المحادثة!!",
     
     
     "/15":"////////// GENERAL ///////",

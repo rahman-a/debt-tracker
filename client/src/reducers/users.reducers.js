@@ -347,6 +347,55 @@ const searchUsers = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const updateAddressAndPhone = (state, action) => {
+    const cases = {
+
+        [constants.users.UPDATE_PHONE_AND_ADDRESS_REQUEST]
+        : {loading:true, error:null},
+
+        [constants.users.UPDATE_PHONE_AND_ADDRESS_SUCCESS]
+        : {loading:false, error:null, isDone:action.payload},
+
+        [constants.users.UPDATE_PHONE_AND_ADDRESS_FAIL]
+        : {loading:false, error:action.payload},
+
+        [constants.users.UPDATE_PHONE_AND_ADDRESS_RESET] 
+        : {loading:false, error:null, isDone:null}
+    }
+
+    return cases[action.type] || {...state}
+}
+
+const sendContactEmail = (state, action) => {
+    
+    const cases = {
+        [constants.users.SEND_CONTACT_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.users.SEND_CONTACT_SUCCESS]: 
+        {
+            loading:false,
+            error:null, 
+            message:action.payload
+        },
+        [constants.users.SEND_CONTACT_FAIL]: 
+        {
+            loading:false,
+            error:action.payload
+        },
+        [constants.users.SEND_CONTACT_RESET]: 
+        {
+            loading:false,
+            error:null,
+            message:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducers = {
     registerCredential,
     registerInfo,
@@ -363,7 +412,9 @@ const reducers = {
     updateDocuments,
     login,
     logout,
-    searchUsers
+    searchUsers,
+    updateAddressAndPhone,
+    sendContactEmail
 }
 
 export default reducers

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import {Alert} from 'react-bootstrap'
-import {CircleCheck, Verify} from '../../icons'
+import {CircleCheck} from '../../icons'
 import {Input, SideButton, Loader} from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
@@ -42,7 +42,6 @@ const OTPCode = () => {
             setCompleteCreation(true)
         }
         error && window.scrollTo(0,0)
-        error && console.log('Error Phone', error)
     },[message, error])
     return (
         <div className={style.done}>

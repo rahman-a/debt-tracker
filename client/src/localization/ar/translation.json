@@ -56,8 +56,11 @@
     "request-to-change":"طالب التغيير",
     "new-due-date":"التاريخ الجديد",
     "due-date-report":"التقرير",
-    
-    
+    "close-report":"غلق التقرير",
+    "confirm-report-close":"هل تريد فعلا غلق التقرير نهائياً",
+    "not-close-report":"عدم غلق التقرير",
+    "undone-report-process":"تنوية: هذة العملية نهائية ولايمكن التراجع عنها",
+
     "/5":"////////// OPERATION CREATION///////",
     "peer-type":"تحديد الطرف الآخر",
     "peer-select-type":"إضغط لتحديد الطرف الآخر",
@@ -181,8 +184,13 @@
     "enter-phone":"أدخل اسمك هنا",
     "enter-message":"أكتب رسالتك هنا",
     "contact-send":"إرسال",
+    "link-not-valid":"هذا الرابط غير صالح من فضلك أعد إرسالة مجدداً",
+    "success_reset_pass":"تهانيناً تم إعادة ضبط كلمة المرور بنجاح",
+    "enter-new-pass":"أدخل كلمة المرور الجديدة",
+    "enter-new-pass-again":"أدخل كلمة المرور الجديدة مرة آخرى",
+    "submit":"إرسال",
 
-    "/13":"////////// REGISTER ///////",
+    "/10":"////////// REGISTER ///////",
     "credential-info":"معلومات الدخول",
     "new-personal-info":"المعلومات الشخصية",
     "new-addresses":"العناوين",
@@ -241,6 +249,19 @@
     "congratulation":"تهانيناً",
     "account-created":"تم أنشاء حسابك بنجاح",
     
+    "/11":"/////////// CHAT //////////",
+    "start-search-for-chat":"إبحث عن الأعضاء أو المجموعات لبدء المحادثة",
+    "invalid-search":"لم يتم العثور على أى نتيجة",
+    "start-new-chat":"بحث عن عضو أو مجموعة",
+    "last-seen":"آخر تواجد {{date}}",
+    "type-message":"أُكتب رسالتك",
+    "send":"إرسل",
+    "cant-sent-empty-message":"غير مسموح بإرسال رسالة فارغة",
+    "image-not-supported":"الصورة غير مدعومة, من فضلك إرفع صورة بالامتدادات الآتية jpg | png | jpeg",
+    "image-corrupted":"الصورة غير صالحة من فضلك إرفع الصورة مجدداً",
+    "document-not-supported":"صيغة المستند غير مدعومة, من فضلك ارفع المستند بالامتدادات الآتية pdf | docx | xlsx | pptx",
+    "document-corrupted":"المستند غير صالح, من فضلك إرفع المستند مجدداً",
+    "chat_closed":"تم غلق المحادثة",
     
     "/12":"////////// GENERAL ///////",
     "close":"غلق",
@@ -254,5 +275,9 @@
     "search-mobile":"بحث برقم الجوال",
     "search-user-code":"بحث بكود المستخدم",
     "next":"التالى",
-    "prev":"السابق"
+    "prev":"السابق",
+    "name_is_required":"من فضلك أدخل الإسم",
+    "phone_is_required":"من فضلك أدخل رقم الهاتف",
+    "email_is_required":"من فضلك أدخل البريد الإلكترونى",
+    "message_is_required":"من فضلك أدخل رسالتك"
 }

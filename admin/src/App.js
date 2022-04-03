@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import {useSelector} from 'react-redux'
 import { Routes, Route, Navigate} from 'react-router-dom'
-import {Header, Footer, Message} from './components'
+import {Header, Footer} from './components'
 import {
   Dashboard, 
   Login, 

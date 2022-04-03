@@ -65,6 +65,7 @@ export const listAllMemberReports = async (req, res, next) => {
         page, 
         skip, 
     } = req.query
+    
     try {
         if(code) {
             const report = await Report.findById(code)
@@ -113,7 +114,18 @@ export const listAllMemberReports = async (req, res, next) => {
         if(type) {
             searchFilter = {
                 ...searchFilter,
-                'operation.peer.type':type
+                $or:[
+                    {
+                        'operation.peer.type':type,
+                        'operation.peer._id':{$ne: req.user._id},
+                        'operation.initiator._id': req.user._id
+                    },
+                    {
+                        'operation.initiator.type':type,
+                        'operation.initiator._id':{$ne: req.user._id},
+                        'operation.peer._id': req.user._id
+                    }
+                ]
             }
         }
         
@@ -150,6 +162,14 @@ export const listAllMemberReports = async (req, res, next) => {
                     },
                     {
                         'operation.initiator.fullNameInEnglish' : { $regex:name,  $options:'i'},
+                        'operation.peer._id' : req.user._id 
+                    },
+                    {
+                        'operation.peer.fullNameInArabic' : { $regex:name,  $options:'i'},
+                        'operation.initiator._id' : req.user._id 
+                    },
+                    {
+                        'operation.initiator.fullNameInArabic' : { $regex:name,  $options:'i'},
                         'operation.peer._id' : req.user._id 
                     }
                 ]
@@ -404,6 +424,11 @@ export const closeReportHandler = async(req, res, next) => {
             throw new Error(req.t('debtor_may_deleted'))
         }
 
+        if(debtor._id.toString() === req.user._id.toString()) {
+            res.status(404)
+            throw new Error(req.t('must_be_credit_to_close_report'))
+        }
+
         const color = debtor.colorCode.code 
 
         if(color === code['green']) {
@@ -420,15 +445,15 @@ export const closeReportHandler = async(req, res, next) => {
         }
 
         if(color === code['yellow']) {
+            debtor.colorCode.state =  debtor.colorCode.state.filter(
+                st => st.report?.toString() !== report._id.toString()
+            )
+            await debtor.save()
             report.isActive = false 
             report.paymentDate = new Date()
             await report.save()
 
-            debtor.colorCode.state =  debtor.colorCode.state.filter(
-                st => st.report.toString() !== report._id.toString()
-            )
-            await debtor.save()
-            await takeAction(debtor._id, 'green', 'doneLatePayment', report._id, lang)
+            await takeAction(debtor._id, 'green', 'doneLatePayment', report._id)
             res.send({
                 success:true,
                 code:200,
@@ -438,18 +463,16 @@ export const closeReportHandler = async(req, res, next) => {
         }   
 
         if(color === code['red']) {
-            console.log(color, code['red']);
-
+            debtor.colorCode.state =  debtor.colorCode.state.filter(
+                st => st.report?.toString() !== report._id.toString()
+            )
+            await debtor.save()
             report.isActive = false 
             report.paymentDate = new Date()
             const waitingPeriod = DateTime.now().setZone('Asia/Dubai').plus({months:1}).toISO()
             report.waitingForClear = waitingPeriod
             await report.save()
 
-            debtor.colorCode.state =  debtor.colorCode.state.filter(
-                st => st.report.toString() !== report._id.toString()
-            )
-            await debtor.save()
             await takeAction(debtor._id, 'yellow', 'doneExpiredPayment', report._id, lang)
             res.send({
                 success:true,
@@ -498,12 +521,14 @@ export const requestDueDateChange = async (req, res, next) => {
         
         const notificationData = {
             user:debtUser,
-            title:req.t('request_due_date_change'),
-            body:req.t('request_due_date_change_body', {
-                name:lang === 'en' ? userData.fullNameInEnglish : userData.fullNameInArabic,
-                id,
-                date:new Date(date).toDateString()
-            }),
+            title:{
+                en:`Request Due Date Change`,
+                ar:`طلب تغيير تاريخ الإستحقاق`
+            },
+            body:{
+                en:`${userData.fullNameInEnglish} change Due Date of report #${id}# to ${new Date(date).toDateString()}`,
+                ar:`${userData.fullNameInArabic} طلب تغيير تاريخ الإستحقاق للتقرير بكود #${id}# إلى${new Date(date).toDateString()}`
+            },
             report:id,
             payload:{
                 date,
@@ -561,15 +586,17 @@ export const approveDueDateChange = async (req, res, next) => {
         
         report.dueDate = new Date(date) 
         await report.save() 
-        
-        
+
         const notificationData = {
             user:creditUser,
-            title:req.t('approve_due_date_change'),
-            body:req.t('approve_due_date_change_body', {
-                name:lang === 'ar' ? userData.fullNameInArabic :userData.fullNameInEnglish,
-                id
-            })
+            title:{
+                en:`Approve Due Date Change`,
+                ar:`الموافقة على تغيير تاريخ الإستحقاق`
+            },
+            body:{
+                en:`${userData.fullNameInEnglish} approve the due Date Change of report #${id}#`,
+                ar:`تم الموافقة على تغيير تاريخ الإستحقاق من قبل ${userData.fullNameInArabic} للتقرير بكود #${id}#`
+            }
         }
 
         const newNotification = new Notification(notificationData)
@@ -917,13 +944,25 @@ const scanReportsDueDate = async () => {
                     if(debtor) {
 
                         if( now <= weekAfterDueDate) {
-                            await takeAction(debtor._id, 'yellow', 'payLate', report._id, 'en')
-                        }else {
-                            debtor.colorCode.state = debtor.colorCode.state.filter(
-                                st => st.report?.toString() !== report._id.toString()
+                            const isStateFound = debtor.colorCode.state.find(
+                                st => st.label.en === 'Late Payment' && st.report.toString() === report._id.toString()
                             )
-                            await debtor.save()
-                            await takeAction(debtor._id, 'red', 'payExpired', report._id, 'en')
+                            !isStateFound 
+                            && await takeAction(debtor._id, 'yellow', 'payLate', report._id)
+                        }else {
+                            const idx = debtor.colorCode.state.findIndex(
+                                st => st.label.en === 'Late Payment' &&  st.report?.toString() === report._id.toString()
+                            )
+                            if(idx !== -1) {
+                                debtor.colorCode.state.splice(idx, 1)
+                                await debtor.save()
+                            }
+                        
+                            const isStateFound = debtor.colorCode.state.find(
+                                st => st.label.en === 'Expired Payment' && st.report.toString() === report._id.toString()
+                            )
+                            !isStateFound &&
+                            await takeAction(debtor._id, 'red', 'payExpired', report._id)
                         }
                     }
                 }
@@ -958,9 +997,8 @@ const scanReportsDueDate = async () => {
                             st => st.report?.toString() !== report._id.toString()
                         )
                         await debtor.save()
-                        await takeAction(debtor._id, 'green', 'clear', report._id, 'en')
-                    }
-                    
+                        await takeAction(debtor._id, 'green', 'clear', report._id)
+                    } 
                 }
             }
         }
@@ -974,6 +1012,6 @@ const scanReportsDueDate = async () => {
 }
 
 
-// cron.schedule('* 18 * * *', scanReportsDueDate, {
-//     timezone:'Asia/Dubai'
-// })
+cron.schedule('* 6 * * *', scanReportsDueDate, {
+    timezone:'Asia/Dubai'
+})

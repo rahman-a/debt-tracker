@@ -209,13 +209,7 @@ const Header = () => {
                                     </span> }
                                     <Envelope/>
                                 </span>
-                                
-                                 {/* FOR TEST  */}
-                                {/* <span onClick={() => navigate('/chat')}>
-                                    <Envelope/>
-                                </span> */}
-                                {/* FOR TEST
-
+                        
                                 <span>
                                     <img src={
                                        staff && staff.avatar  

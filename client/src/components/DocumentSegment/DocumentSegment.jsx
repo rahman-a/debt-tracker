@@ -1,8 +1,9 @@
 import React, { useState, useEffect} from 'react'
 import style from './style.module.scss'
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {useTranslation} from 'react-i18next'
 import i18next from 'i18next'
+import constants from '../../constants'
 import { Plus} from '../../icons'
 import {UpdateDocument, Loader} from '../../components'
 
@@ -10,11 +11,17 @@ const DocumentSegment = ({ img, document, isExpired }) => {
   const [isEdit, setIsEdit] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
   const {isDone} = useSelector(state => state.updateDocuments)
+  const dispatch = useDispatch()
   const {t} = useTranslation()  
   const lang = i18next.language
 
   useEffect(() => {
-    isDone && setLoadingState(false)
+    if(isDone) {
+      setLoadingState(false)
+      setTimeout(() => {
+        dispatch({type:constants.users.DOCUMENT_UPDATE_RESET})
+      }, 250);
+    } 
   },[isDone])
   
   return (

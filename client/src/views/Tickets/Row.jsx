@@ -7,7 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import parser from 'html-react-parser'
 import {useTranslation} from 'react-i18next'
 import {Loader} from '../../components'
-import {Lock, Check, Copy} from '../../icons'
+import {Lock, Check, Copy, LockOpen} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
 import msToTime from '../../config/msToTime'
@@ -81,7 +81,7 @@ return (
             </Modal.Body>
             <Modal.Footer>
                 <Button 
-                    onClick={() => setToggleClose(false)} 
+                    onClick={confirmClose} 
                     variant='danger' 
                     size='lg'>
                     {t('close-btn')}
@@ -89,7 +89,7 @@ return (
                 <Button 
                     variant='success' 
                     size='lg'
-                    onClick={confirmClose}>
+                    onClick={() => setToggleClose(false)}>
                     {t('dont-close')}
                 </Button>
             </Modal.Footer>
@@ -115,8 +115,8 @@ return (
                 <td className={style.tickets__status}>
                     {
                         ticket.isOpen 
-                        ? <Badge bg='danger'>{t('open')}</Badge>
-                        : <Badge bg='success'>{t('closed')}</Badge>
+                        ? <Badge bg='success'>{t('open')}</Badge>
+                        : <Badge bg='danger'>{t('closed')}</Badge>
                     } 
                 </td>
                 <td>
@@ -134,7 +134,9 @@ return (
                 {
                     isClosing 
                     ? <Loader size='4' options={{animation:'border'}}/>
-                    : <span onClick={initiateCloseTicket}> <Lock/> </span>
+                    : <span onClick={initiateCloseTicket}> 
+                       {ticket.isOpen ? <LockOpen fill='green'/> :  <Lock/> }
+                     </span>
                 }
                 </div>
             </td>

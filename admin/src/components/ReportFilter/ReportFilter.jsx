@@ -123,7 +123,7 @@ const Filter = ({
                         label: 'currency',
                         items:[
                             {text:'USD', value:'USD'},
-                            {text:'EURO', value:'EUR'}, 
+                            {text:'EURO', value:'EURO'}, 
                             {text:'AED', value:'AED'}, 
                         ]
                     }}

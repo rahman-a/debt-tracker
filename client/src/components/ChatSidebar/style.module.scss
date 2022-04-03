@@ -1,0 +1,338 @@
+@use '../../sass/media' as media;
+@use '../../sass/variables' as var;
+
+@font-face {
+    font-family: 'Segoe Normal';
+    src: url(../../asset/fonts/Segoe-UI.ttf);
+}
+
+@font-face {
+    font-family: 'Segoe Bold';
+    src: url(../../asset/fonts/Segoe-UI-Bold.ttf);
+}
+
+.sidebar {
+    position: relative;
+    width:30%;
+    @include media.mq(md) {
+        width:40%;
+    }
+    @include media.mq(sm) {
+        width:100%;
+    }
+    header {
+        background-color: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:0.3rem;
+
+        img {
+            width:3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            margin:1rem;
+            object-fit: cover;
+        }
+
+        button {
+            all:unset;
+            cursor: pointer;
+            margin:1rem;
+            span {
+                background-color: none;
+                display: grid;
+                display: -ms-grid;
+                place-items: center;
+                width:3.2rem;
+                height: 3.2rem;
+                border-radius: 50%;
+            }
+
+            svg {
+                width:2rem;
+                height: 2rem;
+            }
+
+            &:active span {
+                background-color:#d0d0d0;
+            }
+        }
+    }
+
+    &__search {
+        background-color: #ffffff;
+        padding:0.5rem;
+        border-bottom: 1px solid #ccc;
+        & > div {
+            position: relative;
+        }
+
+        input {
+            all:unset;
+            width:100%;
+            background-color: #f0f2f5;
+            padding:0.5rem 5rem;
+            border-radius: 0.3rem;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            &::placeholder {
+                font-size: 1.3rem;
+            }
+        }
+
+        span {
+            position: absolute;
+            top:50%;
+            left:1.5rem;
+            transform: translateY(-50%);
+
+            svg {
+                width:1.5rem;
+                height:1.5rem;
+            }
+        }
+
+        &_ar {
+            span {
+                left:unset;
+                right:1.5rem;
+            }
+        }
+    }
+
+    &__body {
+        font-family: 'League Spartan', sans-serif;
+        &_overview {
+            width:100%;
+        }
+        &_chat {
+            position: relative;
+            width:100%;
+            display: flex;
+            height: 8rem;
+            padding:2rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            align-items: center;
+            border-bottom:1px solid #dbdbdb;
+            font-family:"League Spartan", sans-serif;
+
+            &:hover {
+                background-color: #f7f7f7;
+            }
+
+            &:active {
+                background-color: #7070701c;
+                box-shadow: unset;
+            }
+
+            figure {
+                position: relative;
+                width:4rem;
+                height: 4rem;
+                margin-right: 1rem;
+                @include media.mq(xl) {
+                    width:3rem;
+                    height: 3rem;
+                }
+
+                span{
+                    position: absolute;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    border-radius: 50%;
+                    background-color: #06a906;
+                }
+            }
+
+            img {
+                width:100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            & > div {
+                @include media.mq(sm) {
+                    width:100%;
+                }
+            }
+
+            h3 {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+
+                span:first-child {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    color:#333;
+                }
+                
+                span:last-child {
+                    font-size: 1.2rem;
+                    color:rgb(87, 87, 87);
+                    font-weight: 500;
+                }
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 1.8;
+                font-weight: 400;
+                font-family: 'Segoe Normal', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            &_delete {
+                display: none;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                right: 0.3rem;
+                top: 0rem;
+                color:rgb(185, 0, 0);
+                background-color: #fff;
+                width: 3rem;
+                height: 3rem;
+                box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 50%);
+                border-radius: 0.3rem;
+                cursor: pointer;
+                z-index:99999;
+            }
+
+            &:hover &_delete {
+                display: flex;
+            }
+            &_unseen {
+                background-color: #0bc40b36 !important;
+                h3 {
+                    span:first-child {
+                        font-weight: 900 !important;
+                    }
+                }
+                p {
+                    font-weight: 900 !important;
+                }
+            }
+            &_ar {
+                figure {
+                    margin-right: unset;
+                    margin-left: 1rem;
+                }
+            }
+            
+        }
+
+    }
+
+    &__room {
+        position: relative;
+        &_overlay {
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.3);
+        }
+        &_members {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            overflow-y: auto;
+        }
+        &_member {
+            background-color: #ededed;
+            padding: 0.3rem;
+            width: fit-content;
+            width: -moz-fit-content;
+            border-radius: 0.5rem;
+            margin: 0.5rem;
+            img {
+                width: 3.5rem;
+                height: 3.5rem;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            span:first-of-type {
+                margin:0 0.5rem;
+            }
+
+            span:last-of-type {
+                margin-right:0.5rem;
+                cursor: pointer;
+            }
+        }
+    }
+
+    &__loading, 
+    &__fallback {
+        min-height: calc(100vh - 30rem);
+        display: flex;
+        align-items: center;
+    }
+
+    &__fallback {
+        flex-direction: column;
+        justify-content: center;
+        span {
+            color:#ddd;
+            margin-bottom: 0.5rem;
+            svg {
+                width:3rem;
+                height: 3rem;
+            }
+        }
+
+        p {
+         font-size: 1.4rem;
+         color:#b8b8b8;
+        }
+    }
+
+    &__delete {
+        text-align: center;
+        h2 {
+            font-weight: 400;
+            color:var.$code-red-color
+        }
+        p {
+            font-weight: 300;
+            padding: 0.5rem 0;
+        }
+    }
+
+    &__overlay {
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.3);
+    }
+
+    &__loading {
+        display: none;
+        width:100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.308);
+        z-index:9999;
+        @include media.mq(sm) {
+            display: block;
+        } 
+    }
+
+    &__off {
+        @include media.mq(sm) {
+           display: none;
+        } 
+    }
+}
+ 

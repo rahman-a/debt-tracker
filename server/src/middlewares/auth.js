@@ -2,7 +2,6 @@ import User from '../models/users.model.js'
 import jwt from 'jsonwebtoken'
 
 export const isAuth = async (req, res, next) => {
-    // req.cookies['token'] || 
     try {
         if(req.cookies['token'] || req.cookies['tkid']) {
             const token = req.cookies['token'] || req.cookies['tkid']
@@ -36,6 +35,8 @@ export const checkRoles = (...requiredRoles) => {
         try {
             const allowedRoles = [...requiredRoles]
             const userRoles = req.user.roles 
+            
+            
 
             const isFound = userRoles.map(role => allowedRoles.includes(role)).find(val => val === true)
             

@@ -15,6 +15,14 @@ import { takeAction } from '../config/takeAction.js'
 import {labels} from '../config/labels.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) 
 
+
+const documentsInArabic = {
+    identity:'بطاقة الهوية',
+    passport:'جواز السفر',
+    residential:'بطاقة الأقامة'
+}
+
+
 // create user document using email and password
 export const register = async (req, res, next) => {
     const {username, emails} = req.body
@@ -73,11 +81,48 @@ export const completeRegistration = async (req, res, next) => {
         await user.save()
         
         const notification = {
-            title:'New Registration',
-            body:`${user.fullNameInEnglish} initiate new registration process with code ${code.toLocaleUpperCase()}`
+            title:{
+                en:'New Registration',
+                ar:'تسجيل جديد'
+            },
+            body:{
+                en:`${user.fullNameInEnglish} initiate new registration process with code #${code.toLocaleUpperCase()}#`,
+                ar:`${user.fullNameInArabic} بدأ عملية تسجيل جديدة بكود رقم #${code.toLocaleUpperCase()}#`
+            }
         }
         
         await sendNotificationToAdminPanel(['manager','hr'], notification)
+        
+        res.send({
+            success:true,
+            code:200,
+            isDone:true
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updatePhoneAndAddress = async (req, res, next) => {
+    const {outsideAddress, outsidePhones} = req.body 
+    const {id} = req.params
+    try {
+        const user = await User.findById(id) 
+        
+        if(!user) {
+            res.status(401)
+            throw new Error(req.t('no_user_found'))
+        }
+        
+        if(outsideAddress) {
+            user.outsideAddress = outsideAddress
+        }
+        
+        if(outsidePhones) {
+            user.outsidePhones = outsidePhones
+        }
+        
+        await user.save()
         
         res.send({
             success:true,
@@ -93,76 +138,125 @@ export const completeRegistration = async (req, res, next) => {
 // [personal image, verification image, identity, passport, residential]
 export const registerDocument = async (req, res, next) => {
     const {id} = req.params 
-    const {snapshot} = req.query
-    const lang = req.headers['accept-language']
     try {
-        let expireAt = null
-        if(snapshot === 'not_taken') {
-            expireAt = JSON.parse(req.body.expireAt);
-        }
+        
+       const expireAt = JSON.parse(req.body.expireAt);
+        
         const user = await User.findById(id) 
-        let docObject;
-        let fileType;
+        
         for(let key in req.files){
-            
-
-            if(user[key] && user[key]?.image) {
-                fs.unlinkSync(
-                    path.join(__dirname, 'server', '../../../uploads', user[key].image)
-                )
-            }
-
-            if(key === 'avatar' || key === 'verificationImage') {
-                
+            if(key === 'avatar' || key === 'verificationImage') {        
                 user[key] = req.files[key][0].filename
             } else {
-                
+        
                 user[key] = {
                     image:req.files[key][0].filename, 
                     expireAt: expireAt[key]
-                }
-
-                let documentState = null
-                
-                if(key === 'identity') {
-                    documentState = user.colorCode.state.filter(
-                        st => st.label['en'] !== labels['idExpired']['en']
-                              && st.label['en'] !== labels['idUpload']['en']
-                    )
-                }else if (key === 'passport') {
-                    documentState = user.colorCode.state.filter(
-                        st => st.label['en'] !== labels['passExpired']['en']
-                              && st.label['en'] !== labels['passUpload']['en']
-                    )
-                }else if (key === 'residential') {
-                    documentState = user.colorCode.state.filter(
-                        st => st.label['en'] !== labels['resiExpired']['en']
-                             && st.label['en'] !== labels['resiUpload']['en']
-                    )
-                }
-
-                user.colorCode.state =  documentState 
-                              
-                
-                fileType = key;
-                docObject = {
-                    image:req.files[key][0].filename, 
-                    expireAt: expireAt[key]
-                }
+                }                              
             }
         } 
         await user.save()
-        
-        await takeAction(user._id, 'green', lang)  
-        
-        if(snapshot === 'not_taken') {
-            await sendConfirmCodeToPhone(user._id) 
-        }
+                
+        await sendConfirmCodeToPhone(user._id) 
 
         res.send({
             success:true,
+            code:200,
+            isDone:true
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateDocuments = async (req, res, next) => {
+    const {id} = req.params 
+    const {type} = req.query
+    try {
+        const expireAt = JSON.parse(req.body.expireAt);
+
+        const documentExpire = new Date(expireAt[type]).getTime()
+        const now = new Date().getTime()
+
+        if(now > documentExpire) {
+            res.status(400)
+            throw new Error('Document already Expired')
+        }
+        
+        const user = await User.findById(id) 
+        
+        if(user[type] && user[type]?.image) {
+            const imagePath = path.join(__dirname, 'server', '../../../uploads', user[type].image)
+            fs.existsSync(imagePath) && fs.unlinkSync(imagePath)
+        }
+
+        user[type] = {
+            image:req.files[type][0].filename, 
+            expireAt: expireAt[type]
+        }
+
+        let documentState = null
+                
+        if(type === 'identity') {
+            documentState = user.colorCode.state.filter(
+                st => st.label['en'] !== labels['idExpired']['en']
+                        && st.label['en'] !== labels['idUpload']['en']
+            )
+        }else if (type === 'passport') {
+            documentState = user.colorCode.state.filter(
+                st => st.label['en'] !== labels['passExpired']['en']
+                        && st.label['en'] !== labels['passUpload']['en']
+            )
+        }else if (type === 'residential') {
+            documentState = user.colorCode.state.filter(
+                st => st.label['en'] !== labels['resiExpired']['en']
+                        && st.label['en'] !== labels['resiUpload']['en']
+            )
+        }
+
+        user.colorCode.state =  documentState 
+        
+        const docObject = {
+            image:req.files[type][0].filename, 
+            expireAt: expireAt[type],
+            isExpired:false
+        }
+        
+        await takeAction(user._id, 'green')  
+        
+        await user.save()
+
+        const documents = {
+            identity:{
+                en:'Identity',
+                ar:'الهوية'
+            },
+            passport:{
+                en:'Passport',
+                ar:'جواز السفر'
+            },
+            residential:{
+                en:'Residential',
+                ar:'الإقامة'
+            }
+        }
+
+        const notification = {
+            title:{
+                en:'Document Update',
+                ar:'تحديث مستندات الإثبات'
+            },
+            body:{
+                en:`Member ${user.fullNameInEnglish} with code #${user.code}# has updated his ${documents[type]['en']} Document at ${new Date().toLocaleDateString()}`,
+                ar:` العضو ${user.fullNameInArabic} بكود #${user.code}# قام بتحديث مستند ${documents[type]['ar']} الخاص به بتاريخ ${new Date().toLocaleDateString()}`
+            }
+        }
+        
+        await sendNotificationToAdminPanel(['manager','hr'], notification)
+        
+        res.send({
+            success:true,
             doc:docObject,
-            type:fileType,
             code:200,
             isDone:true
         })
@@ -311,13 +405,12 @@ export const sendLoginCodeHandler = async (req, res, next) => {
 // SEARCH FOR USERS BY [CODE - PHONE - USERNAME]
 
 export const findUserHandler = async (req, res, next) => {
-    const {code, phone, username} = req.query
-
+    const {code, mobile, username} = req.query
     try {
         let users;
         
-        if(phone) {
-            users = await User.find({"insidePhones.phone": phone})
+        if(mobile) {
+            users = await User.find({"insidePhones.phone": mobile, _id: {$ne: req.user._id}})
             if(users.length === 0) {
                 res.status(404)
                 throw new Error(req.t('no_user_found_search_again'))
@@ -332,7 +425,7 @@ export const findUserHandler = async (req, res, next) => {
                 searchFilter = {username}
             }
             
-            users = await User.find({...searchFilter})
+            users = await User.find({...searchFilter, _id: {$ne: req.user._id}})
             if(users.length === 0) {
                 res.status(404)
                 throw new Error(req.t('no_user_found_search_again'))
@@ -512,6 +605,24 @@ export const updateUserPassword = async (req, res, next) => {
 }
 
 
+export const updateUserPreferredLanguage = async (req, res,next) => {
+    const {lang} = req.query 
+     try {
+         
+         req.user.preferredLanguage = lang 
+         await req.user.save()
+
+         res.send({
+             code:200,
+             success:true,
+             message:req.t('user_language_changed')
+         })
+     } catch (error) {
+         next(error)
+     }
+}
+
+
 ////////////////////////////////////////////////////
 //////////////// Dashboard Routers
 /////////////////////////////////////////////////// 
@@ -606,7 +717,7 @@ export const listAllUsers = async (req, res, next) => {
             }
         }
 
-       const users = await User.find({},{
+       const users = await User.find({...searchFilter},{
           code:1, 
           colorCode:1,
           fullNameInEnglish:1,
@@ -615,7 +726,7 @@ export const listAllUsers = async (req, res, next) => {
           avatar:1,
           isAccountConfirmed:1,
            isProvider:1
-        })
+        }).sort({createdAt:-1})
         
         if(!users.length) {
             res.status(404)
@@ -698,7 +809,7 @@ export const changeUserColorCode = async (req, res, next) => {
             throw new Error(req.t('no_user_found'))
         }
         
-        console.log({code}, {state});
+        
         
         if(code === '#037A12') {
             user.colorCode = {
@@ -720,6 +831,39 @@ export const changeUserColorCode = async (req, res, next) => {
             message:req.t('color_code_change_success')
         })
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const sendContactEmail = async (req, res, next) => {
+    const {name, phone, email, message} = req.body 
+
+    try {
+        if(!name) {
+            res.status(400)
+            throw new Error(req.t('name_is_required'))
+        }
+        if(!phone) {
+            res.status(400)
+            throw new Error(req.t('phone_is_required'))
+        }
+        if(!email) {
+            res.status(400)
+            throw new Error(req.t('email_is_required'))
+        }
+        if(!message) {
+            res.status(400)
+            throw new Error(req.t('message_is_required'))
+        }
+
+        const info = {name, message, phone, email}
+        await sendEmail(info, 'contact', 'ahm.abdrahman@gmail.com')
+        res.send({
+            code:200,
+            success:true,
+            message:req.t('contact_message_sent')
+        })
     } catch (error) {
         next(error)
     }
@@ -782,12 +926,12 @@ async function sendLoginCodeToEmail(id) {
         await user.save()
 
         
-        // const info = {
-        //     code:code,
-        //     name:user.fullNameInEnglish,
-        //     email:user.emails.find(email => email.isPrimary === true).email
-        // }
-        // await sendEmail(info, 'code')
+        const info = {
+            code:code,
+            name:user.fullNameInEnglish,
+            email:user.emails.find(email => email.isPrimary === true).email
+        }
+        await sendEmail(info, 'code')
 
     } catch (error) {
         throw new Error(error)
@@ -817,7 +961,7 @@ async function sendAuthLink (user, req, type) {
         await user.save()
         
         // compose the url
-        const resetUrl = `${req.protocol}://${req.hostname}/#/${type}?TOKEN=${token}`
+        const resetUrl = `${req.protocol}:3000//${req.hostname}/#/${type}?TOKEN=${token}`
         // const resetUrl = `${req.protocol}://localhost:3000/${type}?TOKEN=${token}`
         const info = {
             link:resetUrl,
@@ -931,14 +1075,14 @@ const scanUserDocuments = async () => {
 const documentExpiredHandler  = async (id, document, action) => {
     
     const user = await User.findById(id)
-    
+
     const now = DateTime.now().setZone('Asia/Dubai').ts 
     
     const expiryDateObject = new Date(user[document].expireAt) 
     const expiryDate = DateTime.fromJSDate(expiryDateObject).setZone('Asia/Dubai').ts 
     
     if (now > expiryDate) {
-       await takeAction(user._id, 'yellow', action, 'en')
+        await takeAction(user._id, 'yellow', action)
     } else {
         
         const now = DateTime.now().setZone('Asia/Dubai')
@@ -949,11 +1093,18 @@ const documentExpiredHandler  = async (id, document, action) => {
         const weekDiff = expiryDate.diff(now, ['days','hours'])
         const weekDiffInDays = weekDiff.values.days 
         if(weekDiffInDays < 8 && weekDiffInDays > 6) {
+            documentsInArabic
             const newNotification = {
                 user:user._id, 
-                title:`Your ${capitalize(document)} About to Expire`,
-                body:`We Remind you to upload your new ${document} because you only have less than a week
-                before your ${document} EXPIRE`
+                title: {
+                    en:`Your ${capitalize(document)} About to Expire`,
+                    ar:`صلاحية ${documentsInArabic[document]} على وشك الإنتهاء`
+                },
+                body: {
+                    en:`We Remind you to upload your new ${document} because you only have less than a week
+                    before your ${document} EXPIRE`,
+                    ar:`هذا إشعار تذكير برفع ${documentsInArabic[document]} جديد لأن تاريخ صلاحية المستند القديم على وشك الإنتهاء فى وقت أقل من أسبوع`
+                }
             }
             // sent notification to user
             const notification = new Notification(newNotification)
@@ -968,7 +1119,7 @@ const documentExpiredHandler  = async (id, document, action) => {
             }
 
             // send email to inform the user
-            await sendEmail(info, 'notice')
+            // await sendEmail(info, 'notice')
         }
     }
 }
@@ -977,7 +1128,7 @@ const documentExpiredHandler  = async (id, document, action) => {
 const documentMissingHandler = async (id, document, action) => {
     
     const user = await User.findById(id)
-    
+
     const now = DateTime.now().setZone('Asia/Dubai')
     const registrationDateObject = new Date(user.createdAt) 
     const registrationDate = DateTime.fromJSDate(registrationDateObject).setZone('Asia/Dubai')
@@ -986,7 +1137,7 @@ const documentMissingHandler = async (id, document, action) => {
     const sinceRegistrationInDays = diff.values.days 
     
     if(sinceRegistrationInDays > 29 && sinceRegistrationInDays < 31) {
-        await takeAction(user._id, 'yellow', action, 'en')
+        await takeAction(user._id, 'yellow', action)
     }else if(sinceRegistrationInDays < 30){
         const operationCount = await Operation.count({
             $or:[
@@ -1015,7 +1166,7 @@ const documentMissingHandler = async (id, document, action) => {
                     }
 
                     // send email to inform the user
-                    await sendEmail(info, 'notice')
+                    // await sendEmail(info, 'notice')
                 }
             }else {
                 const info = {
@@ -1027,7 +1178,7 @@ const documentMissingHandler = async (id, document, action) => {
                 }
 
                 // send email to inform the user
-                await sendEmail(info, 'notice')
+                // await sendEmail(info, 'notice')
 
                 user.lastEmailSend = new Date()
                 await user.save()
@@ -1046,6 +1197,6 @@ function expireAt(day) {
     return expiry.setDate(today.getDate() + day)
 }
 
-// cron.schedule('* 18 * * *', scanUserDocuments, {
-//     timezone:'Asia/Dubai'
-// })
+cron.schedule('* 6 * * *', scanUserDocuments, {
+    timezone:'Asia/Dubai'
+})

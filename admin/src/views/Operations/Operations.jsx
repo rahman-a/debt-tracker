@@ -38,7 +38,7 @@ const Operations = () => {
           setSkipValue(skip.skip)
           query = {...filter, ...skip}
         }
-        console.log(query);
+        
         dispatch(actions.operations.listAllOperations(query))
       }
     

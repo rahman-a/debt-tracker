@@ -6,14 +6,16 @@ import {useSelector}  from 'react-redux'
 import {useTranslation} from 'react-i18next'
 import i18next from 'i18next';
 import {Currency} from '../../components'
-import {Copy, Check, Reader} from '../../icons'
+import {Copy, Check, Reader, HandshakeSlash} from '../../icons'
 import Description from './Description';
 import ChangeDue from './ChangeDue';
+import CloseReport from './CloseReport';
 
-const Row = ({record, idx, due, op, closed}) => {
+const Row = ({record, idx, reports, due, op, closed}) => {
     const [isCopied, setIsCopied] = useState(false)
     const [isDescribeOn, setIsDescribeOn] = useState(false)
     const [isDueChange,setIsDueChange] = useState(false)
+    const [isReportClose, setIsReportClose] = useState(false)
     const {user} = useSelector(state => state.login)
     const lang = i18next.language
     const {t} = useTranslation()
@@ -127,6 +129,12 @@ const Row = ({record, idx, due, op, closed}) => {
         id={record._id}
         op={op}
         />
+
+        <CloseReport
+        isReportClose={isReportClose}
+        setIsReportClose={setIsReportClose}
+        report={record._id}
+        />
         
         <tr className={style.row}>
             <td>{idx + 1}</td>
@@ -221,6 +229,16 @@ const Row = ({record, idx, due, op, closed}) => {
             : <Badge bg='dark'>N/A</Badge>} 
             </td>
            } 
+           {
+               reports && 
+               <td> 
+                   <span className={`${style.row__close} 
+                   ${!isCurrentUserCredit() ? style.row__close_disabled :''}`} 
+                   onClick={() => isCurrentUserCredit() && setIsReportClose(true)}> 
+                       <HandshakeSlash/> 
+                    </span> 
+                </td>
+           }
         </tr> 
     </>
     )

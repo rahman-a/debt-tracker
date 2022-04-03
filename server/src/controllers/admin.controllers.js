@@ -8,7 +8,6 @@ import Ticket from '../models/tickets.model.js'
 
 export const login = async (req, res, next) => {
     const {email, password} = req.body 
-    
     try {
         const staff = await User.AuthUser(email, password, res, req.t)
         if(!staff.roles.length){
@@ -81,7 +80,7 @@ export const createProviderAccount = async(req, res, next ) => {
         const isEmailFound = await User.findOne({"emails.email": primaryEmail.email}) 
         if(isEmailFound) {
             res.status(400)
-            throw new Error(req.t('email-already-exist', {email:isEmailFound}))
+            throw new Error(req.t('email-already-exist', {email:primaryEmail.email}))
         }
         
         const primaryPhone = newProvider.insidePhones.find(phone => phone.isPrimary === true)
@@ -117,7 +116,7 @@ export const createProviderAccount = async(req, res, next ) => {
             message:req.t('provider_account_created')
         })
     } catch (error) {
-        console.log(error);
+        
         next(error)
     }
 }
@@ -132,7 +131,7 @@ export const changeUserRole = async (req, res, next) => {
         cs:{en:'Complains Administrator', ar:'أخصائى شكاوى'},
         hr:{en:'Members Administrator', ar:'مختص شئون الإعضاء'}
     }
-    console.log({lang});
+    
     try {
         if(!role) {
             res.status('400')
@@ -143,7 +142,7 @@ export const changeUserRole = async (req, res, next) => {
             res.status(404) 
             throw new Error(req.t('no_user_found'))
         }
-        console.log(roles[role][lang]);
+        
         if(user.roles.includes(role)) {
             res.status(400)
             throw new Error(req.t('member_already_set_as', {role:roles[role][lang]}))
@@ -337,7 +336,7 @@ export const latestTenIssuedTickets = async (req, res, next) => {
 
 // CREATE USER UNIQUE CODE
 const createUserCode = (name, country) => {
-    console.log(name, country);
+    
     const randomNumbers = [0,1,2,3,4,5,6,7,8,9]
     const splittedName = name.split(' ')
     const firstNameLetter = splittedName[0][0]

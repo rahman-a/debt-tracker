@@ -15,7 +15,7 @@ const AudioFile = ({url}) => {
         
         audioFile.addEventListener('timeupdate', e => {
             const progress = (audioFile.currentTime  / audioFile.duration) * 100
-            console.log({duration:audioFile.duration});
+            
             setProgressWidth(progress)
             if(progress >= 99.95) {
                 setIsPlaying(false)

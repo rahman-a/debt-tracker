@@ -42,13 +42,19 @@ const registerDocuments = (id, info, snapshot) => async (dispatch) => {
     }
 }
 
-const updateDocuments = (id, info) => async (dispatch, getState) => {
+const updateDocuments = (id, info, type) => async (dispatch, getState) => {
     dispatch({type:constants.users.DOCUMENT_UPDATE_REQUEST})
     try {
-        const {data} = await api.users.registerDocuments(id, info)
-        let {userProfile:{user}} = getState()
-        user = {...user, [data.type]:data.doc}
-        dispatch({type: constants.users.USER_PROFILE_SUCCESS, payload:user})
+        const {data} = await api.users.updateDocuments(id, info, type)
+        const {user} = getState().userProfile
+        if(user) {
+            const copiedUser = JSON.parse(JSON.stringify(user)) 
+            
+            copiedUser[type] = data.doc
+            
+            dispatch({type: constants.users.USER_PROFILE_SUCCESS, payload:copiedUser})
+        }
+
         dispatch({type: constants.users.DOCUMENT_UPDATE_SUCCESS, payload: data.isDone})
     } catch (error) {
         dispatch({
@@ -228,6 +234,38 @@ const SearchForUsers = (query) => async (dispatch) => {
     }
 }
 
+const updateAddressAndPhone = (id, info) => async (dispatch) => {
+    dispatch({type:constants.users.UPDATE_PHONE_AND_ADDRESS_REQUEST}) 
+    try {
+        const {data} = await api.users.updateAddressAndPhone(id, info)
+        dispatch({
+            type: constants.users.UPDATE_PHONE_AND_ADDRESS_SUCCESS, 
+            payload: data.isDone
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.users.UPDATE_PHONE_AND_ADDRESS_FAIL, 
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
+const sendContactEmail = info => async dispatch => {
+    dispatch({type:constants.users.SEND_CONTACT_REQUEST}) 
+    try {
+        const {data} = await api.users.sendContact(info) 
+        dispatch({
+            type:constants.users.SEND_CONTACT_SUCCESS,
+            payload:data.message
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.users.SEND_CONTACT_FAIL, 
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
 const actions = {
     registerCredential,
     registerInfo,
@@ -244,7 +282,9 @@ const actions = {
     updateDocuments,
     login,
     logout,
-    SearchForUsers
+    SearchForUsers,
+    updateAddressAndPhone,
+    sendContactEmail
 }
 
 export default actions

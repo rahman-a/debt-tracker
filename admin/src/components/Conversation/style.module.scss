@@ -144,6 +144,7 @@
 
     &__emoji {
         position: relative;
+        margin:0 1.2rem;
         &_list {
             list-style: none;
             display: flex;
@@ -164,6 +165,18 @@
                     border-radius: 0.5rem
                 }
             }
+
+            @include media.mq(xl) {
+                bottom:7rem;
+            }
+            @include media.mq(md) {
+                width:44rem;
+                bottom:8rem;
+            }
+            @include media.mq(xs) {
+                width:32rem;
+                bottom:5rem;
+            }
         }
     }
 
@@ -181,6 +194,14 @@
             width:100%;
         }
     }
+
+    &__deleted {
+        font-size: 1.6rem;
+        color: darkred;
+        text-align: center;
+        padding: 1rem;
+    }
+
 
 }
 

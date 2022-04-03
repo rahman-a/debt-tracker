@@ -37,7 +37,7 @@
     "invalid_login":"بيانات الدخول غير صحيحة",
     "phone_not_confirmed":"الهاتف غير مفعل",
     "account_not_approved":"من فضلك انتظر حتى يتم تفعيل حسابك من قبل الإدارة",
-    
+    "user_language_changed":"تم تغيير اللغة بنجاح",
     
     "/2":"///////// CURRENCY ///////////",
     "currency_already_exist":"هذة العملة بالفعل موجودة",
@@ -80,7 +80,9 @@
     "operation_created":"تم إنشاء العملية بنجاح",
     "no_operations_found":"لم يتم العثور على أى عملية",
     "no_operation_found":"لم يتم العثور على العملية المرادة",
-    "operation_set_as":"تم تغيير حالة العملية إلى {{state}}",
+    "operation_active":"العملية الآن نشطة وقيد التنفيذ",
+    "operation_decline":"تم رفض العملية وغلقها الآن",
+    "operation_decision_made":"تم أخد القرار بالفعل فى هذة العملية, لاداعى لإتخاذ قرارات أخرى",
 
     "/6":"///////// REPORTS ///////////",
     "report_already_exist":"التقرير المرتبط بهذة العملية موجود بالفعل",
@@ -97,6 +99,7 @@
     "change_due_date_request_and_wait_approve":"تم جدولة التغيير وفى انتظار موافقة المدين على هذا التغيير",
     "must_be_debt_to_approve_change_date":"يجب ان تكون المدين للموافقة على التغيير",
     "due_date_change_success":"تم تغيير تاريخ الإستحقاق بنجاح",
+    "must_be_credit_to_close_report":"يجب ان تكون دائن لبدء عملية غلق التقرير",
 
     "/7":"///////// CHAT ///////////",
     "room_require_at_least_two":"المجموعة تتطلب على الأقل فردين لإنشائها",
@@ -113,9 +116,15 @@
     "member_not_found_in_room":"العضو ليس موجود بالفعل فى المجموعة",
     "member_removed":"تم إزالة العضو من المجموعة",
     "no_match":"لم يتم العثور على اى نتيجة",
+    "no_active_chat":"لم يتم العثور على محادثات نشطة",
 
     "/8":"///////// GENERAL ///////////",
     "url_not_found":"هذا الرابط {{url}} غير موجود",
     "debt":"مدين",
-    "credit":"دائن"
+    "credit":"دائن",
+    "name_is_required":"من فضلك أدخل الإسم",
+    "phone_is_required":"من فضلك أدخل رقم الهاتف",
+    "email_is_required":"من فضلك أدخل البريد الإلكترونى",
+    "message_is_required":"من فضلك أدخل رسالتك",
+    "contact_message_sent":"تم إرسال رسالتك بنجاح"
 }

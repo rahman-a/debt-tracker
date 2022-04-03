@@ -12,11 +12,10 @@ import {Loader, ChatRoomCreation} from '../../components'
 import DeleteChatRoom from './DeleteChatRoom';
 
 
-const Sidebar = ({socket, isOnline}) => {
+const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
     const [isRoomCreation, setIsRoomCreation] = useState(false)
     const [searchValue, setSearchValue] = useState('')
     const [isSearch, setIsSearch] = useState(false)
-    const [isSearching, setIsSearching] = useState(false)
     const [onlineUsers, setOnlineUsers] = useState([])
     const [peerId, setPeerId] = useState(null)
     const [groupId, setGroupId] = useState('')
@@ -41,16 +40,19 @@ const Sidebar = ({socket, isOnline}) => {
     } = useSelector(state => state.listConversations)
 
     const {loading:chat_loading, conversation:chat} = useSelector(state => state.listMessages)
-    const {success} = useSelector(state => state.markPeerMessagesAsReceived)
+    // const {success} = useSelector(state => state.markPeerMessagesAsReceived)
     
     const lang = i18next.language
     const {t} = useTranslation()
     
     const searchHandler = e => {
         if(e.kayCode === 13 || e.which === 13) {
-            if(searchValue === '') return setIsSearching(false)
-            setIsSearching(true)
+            if(searchValue === '') return 
             
+             //  clear conversations state before search
+            dispatch({type:constants.chat.LIST_CONVERSATION_RESET})
+            dispatch({type:constants.chat.SEARCH_CONVERSATIONS_RESET})
+
             dispatch(actions.chat.searchConversations(searchValue))
             return
         }
@@ -64,15 +66,15 @@ const Sidebar = ({socket, isOnline}) => {
     }
 
     const resetSearchHandler = e => {
-        setIsSearching(false)
         setSearchValue('')
         dispatch(actions.chat.listConversation())
+        dispatch({type:constants.chat.SEARCH_CONVERSATIONS_RESET})
     }
 
     const onBlurInputHandler = e => {
         setTimeout(() => {
             setIsSearch(false)
-    },500)
+        },500)
     }
 
     const conversationsMembers = members => {
@@ -97,6 +99,8 @@ const Sidebar = ({socket, isOnline}) => {
     }
 
     const loadConversationHandler = (id) => {      
+        setUnSeenMessage(null)     
+        
         // if no chat loading at all
         if(!chat) {
             dispatch(actions.chat.listMessages(id))
@@ -113,8 +117,8 @@ const Sidebar = ({socket, isOnline}) => {
         dispatch(actions.chat.markPeerMessagesAsReceived({conversation:id, sender:peerId}))
     }
 
-    const markMyMessageAsRead = _ => {
-        console.log('markMyMessageAsRead:', staff._id);
+    /*const markMyMessageAsRead = _ => {
+        
         const copiedConversation = JSON.parse(JSON.stringify(chat)) 
         copiedConversation.messages.forEach(message => {
             if(message.sender._id === staff._id) {
@@ -126,7 +130,7 @@ const Sidebar = ({socket, isOnline}) => {
             type:constants.chat.LIST_CONVERSATION_MESSAGES_SUCCESS,
             payload:copiedConversation
         })
-    }
+    }*/
 
     const cutLongText = message => {
         if(message.content?.length > 100) {
@@ -151,7 +155,10 @@ const Sidebar = ({socket, isOnline}) => {
     useEffect(() => {
        if(chat) {
         setSelected(chat.metadata.conversation)
-        socket.on('message-has-read', markMyMessageAsRead)
+        if(conversationsSearch?.length) {
+            resetSearchHandler()
+        }
+        // socket.on('message-has-read', markMyMessageAsRead)
        }
         if(listConversation && chat) {
             const conversation = listConversation.find(conversation => conversation._id === id)
@@ -171,11 +178,11 @@ const Sidebar = ({socket, isOnline}) => {
         peerId && markPeerMessageAsRead();
     },[peerId])
 
-    useEffect(() => {
-        if(success) {
-            socket.emit('inform-message-has-read', peerId)
-        }
-    },[success])
+    // useEffect(() => {
+    //     if(success) {
+    //         socket.emit('inform-message-has-read', peerId)
+    //     }
+    // },[success])
 
     useEffect(() => {
         dispatch(actions.chat.listConversation())
@@ -279,11 +286,12 @@ const Sidebar = ({socket, isOnline}) => {
                                 }
                             </div>
                         ) 
-                    : conversations && conversations.length > 0 
+                    :conversations.length > 0 
                     && (
-                        conversations.map((conversation, idx) => (
+                        conversations.map((conversation) => (
                         <div className={`${style.sidebar__body_chat} 
-                        ${lang === 'ar' ? style.sidebar__body_chat_ar :''}`}
+                        ${lang === 'ar' ? style.sidebar__body_chat_ar :''}
+                        ${unSeenMessage === conversation._id ? style.sidebar__body_chat_unseen :''}`}
                         style={{backgroundColor: selected === conversation._id ? '#1a374d1a' :'unset'}}
                         key={conversation._id}
                         onClick={() => navigate(`/chat/${conversation._id}`)}>

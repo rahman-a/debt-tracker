@@ -9,7 +9,7 @@ const notificationsAPI = {
             }
         }
         const queryString = new URLSearchParams(queryObj).toString()
-        console.log(`notifications?${queryString}`);
+        
         return service().get(`notifications?${queryString}`)
     },
     new(data){

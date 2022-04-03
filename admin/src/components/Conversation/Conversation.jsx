@@ -4,7 +4,7 @@ import Scrollbar from 'simplebar-react'
 import {v4} from 'uuid'
 import { useTranslation } from 'react-i18next'
 import {useDispatch, useSelector} from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import ObjectId from 'bson-objectid'
 import {ChatMessage, Loader, ChatRoomUpdate} from '../../components'
 import {Microphone, ArrowLeft,Users} from '../../icons'
@@ -13,9 +13,8 @@ import Upload from './Upload'
 import Emoji from './Emoji'
 import i18next from 'i18next'
 
-const Chat = ({socket}) => {
+const Chat = ({socket, setUnSeenMessage}) => {
   const scrollRef = useRef(null)
-  // const [messages, setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [isEmoji, setIsEmoji] = useState(false)
   const [message, setMessage] = useState('')
@@ -25,12 +24,55 @@ const Chat = ({socket}) => {
   const [isRoomUpdate, setIsRoomUpdate] = useState(false)
   const textAreaRef = useRef(null)
   const navigate = useNavigate()
+  const {id} = useParams()
   const dispatch = useDispatch()
+  const {conversations:chat}  = useSelector(state => state.listConversations)
   const {loading, error, conversation} = useSelector(state => state.listMessages)
   const {staff} = useSelector(state => state.login)
   const lang = i18next.language
   const {t} = useTranslation()
   
+  const checkConversationIsActive = message => {
+    let copiedConversations = chat ? JSON.parse(JSON.stringify(chat)) : []
+    const isFound = copiedConversations.find(conversation => conversation._id === message.conversation) 
+    
+    if(!isFound) {
+        const newlyCreatedConversation = {
+          _id:message.conversation,
+          isRoom:false,
+          lastMessage:message,
+          members:[
+            message.sender,
+            {
+              _id:staff._id,
+              fullNameInEnglish:staff.fullNameInEnglish,
+              fullNameInArabic:staff.fullNameInArabic,
+              avatar:staff.avatar
+            }
+          ],
+          createdAt:message.createdAt
+        }
+        
+        copiedConversations = [newlyCreatedConversation, ...copiedConversations]
+        dispatch({type:constants.chat.LIST_CONVERSATION_SUCCESS, payload:copiedConversations})
+    }
+  }
+
+  const updateLastMessage = message => {
+    const copiedConversations = chat ? JSON.parse(JSON.stringify(chat)) : []
+    copiedConversations.forEach(conversation => {
+        if(conversation._id === message.conversation) {
+            conversation.lastMessage = message
+        }
+    })
+    dispatch({type:constants.chat.LIST_CONVERSATION_SUCCESS, payload:copiedConversations})
+
+    if(id !== message.conversation) {
+      
+      
+      setUnSeenMessage(message.conversation)
+    }
+}
   
   const saveMessageToConversation = message => {
     const copiedConversation = JSON.parse(JSON.stringify(conversation)) 
@@ -49,6 +91,7 @@ const Chat = ({socket}) => {
          _id:staff._id,
         fullNameInEnglish:staff.fullNameInEnglish,
         fullNameInArabic:staff.fullNameInArabic,
+        avatar:staff.avatar
       },
       createdAt:new Date(),
       conversation:conversation.metadata.conversation,
@@ -56,9 +99,6 @@ const Chat = ({socket}) => {
       isNew:true
     }
     saveMessageToConversation(message)
-    // setMessages([...messages, value])
-    // setMessage('')
-    // setIsEmoji(false)
   }
   
   
@@ -148,11 +188,6 @@ const Chat = ({socket}) => {
     })
   },[])
 
-  // useEffect(() => {
-  //   if(conversation) {
-  //     setMessages(conversation.messages)
-  //   }
-  // },[conversation, socket])
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior:'smooth'})
@@ -160,9 +195,17 @@ const Chat = ({socket}) => {
 
 
   useEffect(() => {
-    if(arrivalMessage 
-      && arrivalMessage?.conversation === conversation?.metadata.conversation) {
+    if(arrivalMessage) {
+      updateLastMessage(arrivalMessage)
+      if(arrivalMessage?.conversation === conversation?.metadata.conversation) {
         saveMessageToConversation(arrivalMessage)
+      }else {
+        // sidebar by default contains all active conversation but
+        // when other peer create conversation with user, the conversation doesn't show up
+        // immediately in user sidebar, so we check with every coming message if conversation 
+        // in user sidebar or not and if not create it and push it to user active conversation
+        checkConversationIsActive(arrivalMessage)
+      }
     }
   },[arrivalMessage])
 
@@ -180,7 +223,13 @@ const Chat = ({socket}) => {
         />}
         
         <header>
-            <span onClick={clearChat}> <ArrowLeft/> </span>
+            <span onClick={clearChat}
+            style={{
+              transform:lang === 'ar' ? 'rotate(180deg)' : 'unset',
+              marginLeft:lang === 'ar' ? '1rem' : 'unset'
+            }}> 
+            <ArrowLeft/>
+             </span>
             <figure style={{
               marginRight:lang === 'ar' ? 'unset' : '1rem',
               marginLeft:lang === 'ar' ? '1rem' : 'unset'
@@ -244,7 +293,7 @@ const Chat = ({socket}) => {
             </div>     
         </Scrollbar>
        {
-        (conversation || loading) &&
+        ((conversation && !conversation.metadata.isDeleted) || loading) ?
          <div className={style.chat__input}>
             <Upload isFile={isFile} setIsFile={setIsFile}/>
             <Emoji isEmoji={isEmoji} setIsEmoji={setIsEmoji} addEmojiHandler={addEmojiHandler}/>
@@ -277,6 +326,10 @@ const Chat = ({socket}) => {
             name='attachment' 
             style={{display:'none'}}/>
           </div>
+          :(conversation && conversation.metadata.isDeleted) && 
+          <div className={style.chat__deleted}> 
+              {t('chat_closed')}
+            </div>
        }
     </div>
   )

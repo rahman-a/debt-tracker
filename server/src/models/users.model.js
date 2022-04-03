@@ -113,6 +113,10 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    preferredLanguage: {
+        type:String,
+        default:'en'
+    },
     phoneCode:String,
     emailCode:String,
     authString:String,

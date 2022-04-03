@@ -98,7 +98,7 @@ const Notifications = () => {
                             }
                         </div>
                    
-                  { !loading && !error && <Pagination 
+                  { !loading && !error && count && <Pagination 
                     count={Math.ceil(count/5)}
                     resetPagination={resetPagination}
                     moveToPageHandler={(skip) => paginateHandler(skip)}/>

@@ -41,7 +41,7 @@ router.patch('/:id', isAuth,
             chatRoomImageHandler.single('image'), 
             updateConversation
         )
-router.get('/', isAuth, checkRoles('manager', 'cs', 'hr'), listUserConversation)
+router.get('/', isAuth, listUserConversation)
 
 
 // Message Router

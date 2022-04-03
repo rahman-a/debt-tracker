@@ -52,6 +52,15 @@ const userAPI = {
     search(query) {
         const queryString = new URLSearchParams(query).toString()
         return service().get(`users/search?${queryString}`)
+    },
+    updateAddressAndPhone(id, data) {
+        return service().patch(`users/${id}/update`, data)
+    },
+    updateDocuments(id, data, type) {
+        return service().patch(`users/${id}/documents?type=${type}`, data)
+    },
+    sendContact(data) {
+        return service().post('users/contact', data)
     }
 }
 

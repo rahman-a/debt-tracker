@@ -37,7 +37,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-      output && console.log({output});
+      output && 
     },[output])
 
     return (
