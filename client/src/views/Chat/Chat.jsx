@@ -5,7 +5,7 @@ import style from './Chat.module.scss';
 import {ChatSidebar, Conversation} from '../../components'
 import constants from '../../constants';
 
-const socket = io('http://localhost:5003')
+const socket = io('http://chat.swtle.com')
 
 function Chat() {
   const [unSeenMessage, setUnSeenMessage] = useState(null)
