@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from 'react';
 import {io} from 'socket.io-client'
 import { useSelector, useDispatch } from 'react-redux';
@@ -5,7 +6,7 @@ import style from './Chat.module.scss';
 import {Conversation, ChatSidebar} from '../../components'
 import constants from '../../constants';
 
-const socket = io('http://localhost:5000')
+const socket = io('http://localhost:5003')
 
 function Chat() {
   const [unSeenMessage, setUnSeenMessage] = useState(null)

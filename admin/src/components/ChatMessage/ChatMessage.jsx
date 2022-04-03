@@ -204,7 +204,7 @@ const Message = ({
 
 
     const textMessage = (
-        <p> {message.content} </p>
+        <p> {message?.content} </p>
     )
 
     const errorMessage = (

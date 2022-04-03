@@ -1,3 +1,4 @@
+import React from 'react'
 export const renderStateMessage = (text, className) => {
     const regex = /#\S+#/g
     const splittedText = text.split(' ')

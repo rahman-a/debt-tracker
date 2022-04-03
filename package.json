@@ -9,9 +9,7 @@
     "server": "nodemon index.js",
     "client": "npm start --prefix client",
     "admin": "npm start --prefix admin",
-    "chat": "npm start --prefix chat",
     "admin-dev": "concurrently \"npm run admin\"  \"npm run server\"",
-    "chat-dev": "concurrently \"npm run chat\"  \"npm run server\"",
     "dev": "concurrently \"npm run client\"  \"npm run server\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=FALSE npm install --prefix client && npm run build --prefix client"
   },

@@ -287,8 +287,8 @@ const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
                             {/* group or member image */}
                             <img src={
                                 conversation?.image
-                                ?`/api/files/${conversation.image}`
-                                : `/api/files/${conversationsMembers(conversation.members).image}`
+                                ?`/api/files/${conversation?.image}`
+                                : `/api/files/${conversationsMembers(conversation.members)?.image}`
                             } alt="chat" />
                         </figure>
                         <div className={style.sidebar__body_overview}>
