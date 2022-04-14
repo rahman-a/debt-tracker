@@ -12,6 +12,7 @@ import {Loader, HeaderAlert} from '../../components'
 
 import {useSelector, useDispatch} from 'react-redux'
 import actions from '../../actions'
+import i18next from 'i18next'
 
 
 const Profile = () => {
@@ -19,7 +20,7 @@ const Profile = () => {
 
     const dispatch = useDispatch()
 
-    
+    const lang = i18next.language
 
     useEffect(() => {
         dispatch(actions.users.getUserProfile())
@@ -39,7 +40,9 @@ const Profile = () => {
                             code:user.code,
                             color:user.colorCode,
                             avatar:user.avatar,
-                            fullName:user.fullName,
+                            fullName : lang === 'en' 
+                                       ? user.fullNameInEnglish 
+                                       : user.fullNameInArabic,
                             username:user.username,
                             emails:user.emails
                         }}/>

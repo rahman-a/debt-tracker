@@ -35,6 +35,19 @@ export const createOperation = async (req, res, next) => {
     const lang = req.headers['accept-language']
     
     try {
+        const initiator = await User.findById(req.body.initiator.user)
+        const peer = await User.findById(req.body.peer.user)
+
+        if(initiator.colorCode.code === '#EC4A0D') {
+            res.status(400)
+            throw new Error(req.t('not_allowed_create_operation'))
+        }
+
+        if(peer.colorCode.code === '#EC4A0D') {
+            res.status(400)
+            throw new Error(req.t('not_allowed_create_operation_with_red_member'))
+        }
+        
         let operation = await newOperation.save()
         operation = await Operation.findById(operation._id).populate('currency', 'name')
         .populate({
@@ -90,8 +103,8 @@ export const createOperation = async (req, res, next) => {
             }
         }
 
-        const pushNotification = new Notification(notification)
-        await pushNotification.save()
+        // const pushNotification = new Notification(notification)
+        // await pushNotification.save()
                 
         const adminNotification = {
             title:{
@@ -105,7 +118,7 @@ export const createOperation = async (req, res, next) => {
         }
 
 
-        await sendNotificationToAdminPanel(['manager'], adminNotification)
+        // await sendNotificationToAdminPanel(['manager'], adminNotification)
 
         res.status(201).send({
             success:true,
@@ -132,6 +145,8 @@ export const listAllMemberOperations = async (req, res, next) => {
         skip, 
     } = req.query
     
+    console.log(req.protocol + '://' + req.get('host'))
+
     try {
         if(code) {
             const operation = await Operation.findById(code)
@@ -275,6 +290,7 @@ export const listAllMemberOperations = async (req, res, next) => {
                         {$project:{
                             fullNameInEnglish:1,
                             fullNameInArabic:1,
+                            color:"$colorCode.code",
                             avatar:1
                         }}
                     ],
@@ -293,6 +309,7 @@ export const listAllMemberOperations = async (req, res, next) => {
                         {$project:{
                             fullNameInEnglish:1,
                             fullNameInArabic:1,
+                            color:"$colorCode.code",
                             avatar:1
                         }}
                     ],
@@ -416,11 +433,19 @@ export const updateOperationState = async (req, res, next) => {
         
         await operation.save() 
         
-        const targetedNotification = await Notification.findById(notification)
+        let targetedNotification;
         
-        targetedNotification.isRead = true 
+        if(notification){
+            targetedNotification = await Notification.findById(notification)
+        } else {
+            targetedNotification = await Notification.findOne({operation:operation._id})
+        }
         
-        await targetedNotification.save()
+        if(targetedNotification) {
+            targetedNotification.isRead = true 
+            await targetedNotification.save()
+        }
+        
 
         if(state === 'active') {
             const reportData = {

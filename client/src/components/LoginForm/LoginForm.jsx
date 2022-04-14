@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import style from './style.module.scss'
-import {Modal, Alert, Button, Form} from 'react-bootstrap'
+import {Modal, Alert, Button} from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 import {Loader} from '../../components'
 import {Lock, AtSymbol} from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
-import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
+import {sanitizeInput} from '../../config/sanitize'
 
 const LoginForm = () => {
     const [isForget, setIsForget] = useState(false)
@@ -55,7 +56,7 @@ const LoginForm = () => {
     
     const submitLoginOnKeyHandler = e => {
         if(e.keyCode === 13 || e.which === 13) {
-            const data = {email, password}
+            const data = {email:sanitizeInput(email), password:sanitizeInput(password)}
             dispatch(actions.users.LoginInit(data))
         }
     }

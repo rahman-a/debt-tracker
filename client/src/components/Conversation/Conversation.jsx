@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import ObjectId from 'bson-objectid'
 import {ChatMessage, Loader} from '../../components'
-import {Microphone, ArrowLeft} from '../../icons'
+import {Microphone, ArrowLeft, PaperPlane} from '../../icons'
 import constants from '../../constants'
 import Upload from './Upload'
 import Emoji from './Emoji'
@@ -21,6 +21,7 @@ const Chat = ({socket, setUnSeenMessage}) => {
   const [isFile, setIsFile]  = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [recorder, setRecorder] = useState(null)
+  const [isTyping, setIsTyping] = useState(false)
   const textAreaRef = useRef(null)
   const {id} = useParams()
   const navigate = useNavigate()
@@ -105,6 +106,17 @@ const Chat = ({socket, setUnSeenMessage}) => {
   const addEmojiHandler = emoji => {
     setMessage(prev => prev + emoji)
   }
+  
+  const sendMessage = () => {
+    if(message === '') {
+      composeMessage('error', t('cant-sent-empty-message'))
+      return
+    }
+    
+    composeMessage('text', message)
+
+    setIsTyping(false)
+  }
 
   const sendMessageHandler = e => {
     if((e.keyCode === 13 || e.which === 13) && !e.shiftKey) {
@@ -115,8 +127,10 @@ const Chat = ({socket, setUnSeenMessage}) => {
         composeMessage('error', t('cant-sent-empty-message'))
         return
       }
-      
+
       composeMessage('text', message)
+      
+      setIsTyping(false)
     }
   }
 
@@ -176,6 +190,14 @@ const Chat = ({socket, setUnSeenMessage}) => {
     dispatch({type:constants.chat.LIST_CONVERSATION_MESSAGES_RESET})
     navigate('/chat')
   }
+
+  useEffect(() => {
+    if(message !== '') {
+      setIsTyping(true)
+    }else {
+      setIsTyping(false)
+    }
+  },[message])
 
   useEffect(() => {
     socket.on('getMessage', (message) => {
@@ -288,7 +310,12 @@ const Chat = ({socket, setUnSeenMessage}) => {
             placeholder={t('type-message')}></textarea>
             
             <div className={isRecording ? style.chat__recording : ''}>
-              <span onClick={recordAudio}> <Microphone/> </span>
+              {
+                isTyping 
+                ? <span onClick={sendMessage}> <PaperPlane/> </span>
+                : <span onClick={recordAudio}> <Microphone/> </span>
+              }
+
             </div>
             
             <input 

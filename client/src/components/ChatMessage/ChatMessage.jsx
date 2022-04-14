@@ -27,7 +27,6 @@ const Message = ({
   const dispatch = useDispatch()
   const {t} = useTranslation()
   const lang = i18next.language
-    
   
   const updateLastMessage = message => {
     const copiedConversations = JSON.parse(JSON.stringify(conversations)) 
@@ -134,7 +133,6 @@ const Message = ({
     
   
     const parseContent = _ => {
-    
         if(message.type === 'text' && message.isNew) {
             
            saveMessage(message.type, message.content)
@@ -158,11 +156,8 @@ const Message = ({
         }
 
         if(message.type === 'audio') {
-            
             if(typeof message.content === 'string') {
-                
                 setAudioURL(`/api/files/${message.content}`)
-            
             } else {
                 const audioUrl = URL.createObjectURL(message.content);
                 setAudioURL(audioUrl)
@@ -239,8 +234,8 @@ const Message = ({
     }
 
     useEffect(() => {
+        console.log('not fetch message', message, isFetched);
         if(!isFetched) {
-            
             message.type === 'error' 
             ? setError(message.content) 
             : parseContent()
@@ -255,6 +250,8 @@ const Message = ({
 
     useEffect(() => {
         isFetched = false
+        console.log('not fetch message entry', message, isFetched);
+        return () =>  isFetched = false
     },[])
 
 return (

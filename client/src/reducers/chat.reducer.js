@@ -30,6 +30,35 @@ const createConversation = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const initiateConversation = (state, action) => {
+    const cases = {
+        [constants.chat.INITIATE_CONVERSATION_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.chat.INITIATE_CONVERSATION_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            conversation:action.payload
+        },
+        [constants.chat.INITIATE_CONVERSATION_FAIL]: 
+        {
+            loading:false,
+            error:action.payload
+        },
+        [constants.chat.INITIATE_CONVERSATION_RESET]: 
+        {
+            loading:false,
+            error:action.payload,
+            conversation:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 
 const listConversations = (state, action) => {
     const cases = {
@@ -265,6 +294,35 @@ const membersSearch = (state, action) => {
     return cases[action.type] || {...state}
 }
 
+const support = (state, action) => {
+    const cases = {
+        [constants.chat.CREATE_SUPPORT_GROUP_REQUEST]: 
+        {
+            loading:true,
+            error:null
+        },
+        [constants.chat.CREATE_SUPPORT_GROUP_SUCCESS]: 
+        {
+            loading:false,
+            error:null,
+            conversation:action.payload
+        },
+        [constants.chat.CREATE_SUPPORT_GROUP_FAIL]: 
+        {
+            loading:false,
+            error:action.payload
+        },
+        [constants.chat.CREATE_SUPPORT_GROUP_RESET]: 
+        {
+            loading:false,
+            error:action.payload,
+            conversation:null
+        }
+    }
+
+    return cases[action.type] || {...state}
+}
+
 const reducer = {
     createConversation,
     listConversations,
@@ -274,7 +332,9 @@ const reducer = {
     membersSearch,
     latestMessages,
     markMessageAsReceived,
-    markPeerMessagesAsReceived
+    markPeerMessagesAsReceived,
+    initiateConversation,
+    support
 }
 
 export default reducer

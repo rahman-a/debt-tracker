@@ -83,6 +83,8 @@
     "operation_active":"العملية الآن نشطة وقيد التنفيذ",
     "operation_decline":"تم رفض العملية وغلقها الآن",
     "operation_decision_made":"تم أخد القرار بالفعل فى هذة العملية, لاداعى لإتخاذ قرارات أخرى",
+    "not_allowed_create_operation":"غير مصرح لك بإنشاء عملية جديدة",
+    "not_allowed_create_operation_with_red_member":"غير مصرح لك بإنشاء عملية جديدة مع عميل بكود أحمر",
 
     "/6":"///////// REPORTS ///////////",
     "report_already_exist":"التقرير المرتبط بهذة العملية موجود بالفعل",

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import {Alert} from 'react-bootstrap'
 import flags from 'country-flag-emoji-json'
+import { useTranslation } from 'react-i18next'
 import {Input, Button, DropdownMenu} from '../../components'
 import {Map, Globe} from '../../icons'
-import { useTranslation } from 'react-i18next'
-
+import {sanitizeInput} from '../../config/sanitize'
 
 const Address = ({setStep, setInfo, info}) => {
     const [insideAddress, setInsideAddress] = useState('')
@@ -39,12 +39,12 @@ const Address = ({setStep, setInfo, info}) => {
         }
         
         let data = {
-            insideAddress, 
+            insideAddress:sanitizeInput(insideAddress), 
             country:{name:country.text, abbr:country.abbr, image:country.svg}
         } 
         
         if(outsideAddress) {
-            data = {...data, outsideAddress}
+            data = {...data, outsideAddress:sanitizeInput(outsideAddress)}
         }
 
         

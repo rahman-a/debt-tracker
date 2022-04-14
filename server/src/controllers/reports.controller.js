@@ -1012,6 +1012,6 @@ const scanReportsDueDate = async () => {
 }
 
 
-cron.schedule('* 6 * * *', scanReportsDueDate, {
+cron.schedule('* * 6 * * *', scanReportsDueDate, {
     timezone:'Asia/Dubai'
 })

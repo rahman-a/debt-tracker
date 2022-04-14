@@ -410,7 +410,7 @@ export const findUserHandler = async (req, res, next) => {
         let users;
         
         if(mobile) {
-            users = await User.find({"insidePhones.phone": mobile, _id: {$ne: req.user._id}})
+            users = await User.find({"insidePhones.phone": mobile, _id: {$ne: req.user._id}, isProvider:false})
             if(users.length === 0) {
                 res.status(404)
                 throw new Error(req.t('no_user_found_search_again'))
@@ -425,7 +425,7 @@ export const findUserHandler = async (req, res, next) => {
                 searchFilter = {username}
             }
             
-            users = await User.find({...searchFilter, _id: {$ne: req.user._id}})
+            users = await User.find({...searchFilter, _id: {$ne: req.user._id}, isProvider:false})
             if(users.length === 0) {
                 res.status(404)
                 throw new Error(req.t('no_user_found_search_again'))
@@ -510,13 +510,21 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
             user.isEmailConfirmed = true 
             await user.save()
         }
+        const userData = {
+            _id: user._id,
+            fullNameInEnglish: user.fullNameInEnglish,
+            fullNameInArabic: user.fullNameInArabic,
+            avatar: user.avatar,
+            color: user.colorCode.code,
+            isProvider: user.isProvider
+        }
         const tokenExpiry = rememberDays ? `${rememberDays} days` : '1d'
         const token = user.generateToken(tokenExpiry)
         res.cookie('token', token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * (rememberDays || 1)})
         res.json({
             success:true, 
             code:200,
-            user: user,
+            user:userData,
             expiryAt: expireAt(rememberDays || 1),
         })
     } catch (error) {
@@ -931,7 +939,7 @@ async function sendLoginCodeToEmail(id) {
             name:user.fullNameInEnglish,
             email:user.emails.find(email => email.isPrimary === true).email
         }
-        await sendEmail(info, 'code')
+        // await sendEmail(info, 'code')
 
     } catch (error) {
         throw new Error(error)
@@ -961,8 +969,7 @@ async function sendAuthLink (user, req, type) {
         await user.save()
         
         // compose the url
-        const resetUrl = `${req.protocol}:3000//${req.hostname}/#/${type}?TOKEN=${token}`
-        // const resetUrl = `${req.protocol}://localhost:3000/${type}?TOKEN=${token}`
+        const resetUrl = `${req.protocol}://${req.get('host')}/#/${type}?TOKEN=${token}`
         const info = {
             link:resetUrl,
             name:user.fullNameInEnglish,
@@ -1197,6 +1204,6 @@ function expireAt(day) {
     return expiry.setDate(today.getDate() + day)
 }
 
-cron.schedule('* 6 * * *', scanUserDocuments, {
+cron.schedule('* * 6 * * *', scanUserDocuments, {
     timezone:'Asia/Dubai'
 })

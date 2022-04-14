@@ -3,12 +3,14 @@ import {useSelector, useDispatch} from 'react-redux'
 import {Alert} from 'react-bootstrap'
 import {v4 as uuidv4} from 'uuid'
 import {Link} from 'react-router-dom'
+import validator from 'validator'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 import {Input, SideButton, Button} from '../../components'
 import {EnvelopOpen, Key, Fingerprint} from '../../icons'
 import constants from '../../constants'
 import actions from '../../actions'
-import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
+import {sanitizeInput} from '../../config/sanitize'
 
 const Credential = ({setStep}) => {
     const [moreEmail, setMoreEmail] = useState(1)
@@ -35,11 +37,11 @@ const Credential = ({setStep}) => {
             })
             
             const info = {
-                username,
+                username:sanitizeInput(username),
                 emails:allEmails,
-                password
+                password:sanitizeInput(password)
             }
-            
+    
             setErrors('')
             dispatch(actions.users.registerCredential(info))
         }
@@ -51,10 +53,19 @@ const Credential = ({setStep}) => {
             setErrors(t('provide-unique-username'))
             return false
         }
-        
+
         if(emails.length === 0) {
             setErrors(t('provide-least-one-email'))
             return false
+        }
+
+        if(emails.length > 0) {
+            for(const email of emails) {
+                if(!validator.isEmail(email)) {
+                    setErrors(t('provide-valid-email'))
+                    return false
+                }
+            }
         }
 
         if(!password) {

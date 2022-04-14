@@ -4,6 +4,9 @@ const chatAPI = {
     createConversation(data){
         return service().post('chat/new', data)
     },
+    initiateConversation(id){
+        return service().get(`chat/initiate/${id}`)
+    },
     listConversations() {
         return service().get('chat')
     },
@@ -25,6 +28,9 @@ const chatAPI = {
         ? `chat/messages/${id}`
         : 'chat/messages/bulk?isBulk=true'
         return service().patch(url, data)
+    },
+    createSupportGroup(){
+        return service().post('chat/support-group')
     }
 }
 

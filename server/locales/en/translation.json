@@ -84,6 +84,8 @@
     "operation_active":"Operation is Now Active and Running",
     "operation_decline":"Operation Declined and Closed",
     "operation_decision_made":"Operation Decision already made, no Action Required",
+    "not_allowed_create_operation":"You are not allowed to create operation",
+    "not_allowed_create_operation_with_red_member":"Not allowed to create an operation with red flag member",
 
     "/6":"///////// REPORTS ///////////",
     "report_already_exist":"Report already Exist with this operation",

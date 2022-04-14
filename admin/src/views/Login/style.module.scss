@@ -5,11 +5,13 @@
     position: relative;
     height: 100vh;
     background-color: var.$main-color;
+    display: -ms-grid;
     display: grid;
     place-items: center;
     &__wrapper {
         width:50%;
         min-height: 30vh;
+        display: -ms-grid;
         display: grid;
         place-items: center;
         
@@ -42,5 +44,14 @@
             }
         }
 
+    }
+
+    figure {
+        width:30rem;
+        margin-bottom: 5rem;
+        img {
+            width: 100%;
+            object-fit: cover;
+        }
     }
 }

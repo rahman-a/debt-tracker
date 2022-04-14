@@ -20,7 +20,7 @@ router.post('/new', isAuth, createOperation)
 router.get('/', isAuth, listAllMemberOperations)
 router.get('/all', isAuth, checkRoles('manager'), listAllOperation)
 router.get('/:id', isAuth, getOneOperation)
-router.patch('/:id/:notification', isAuth, updateOperationState)
+router.patch('/:id/:notification?', isAuth, updateOperationState)
 
 
 export default router

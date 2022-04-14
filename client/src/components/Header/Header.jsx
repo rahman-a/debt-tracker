@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { HandDollar, MenuBars, Bell, Envelope } from '../../icons'
+import { MenuBars, Bell, Envelope, Support} from '../../icons'
 import { Loader,SideNavbar, NotificationContainer, PushNotification } from '../../components'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 const Header = () => {
     const [langDropDown, setLangDropDown] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
-    const [navbarColor, setNavbarColor] = useState('rgba(26, 55, 77, 0.7)')
+    const [navbarColor, setNavbarColor] = useState('rgba(26,55,77,0.7)')
     const [showSideMenu, setSideMenu] = useState(false)
     const [toggleNotification, setToggleNotification] = useState(false)
     const [toggleMessages, setToggleMessages] = useState(false)
@@ -23,6 +23,7 @@ const Header = () => {
     const {notifications: pushNotifications} = useSelector(state => state.pushNotifications)
     const {nonRead} = useSelector(state => state.listNotifications)
     const {loading:latest_loading, error:latest_error, count, messages} = useSelector(state => state.latestMessages)
+    const {loading:support_loading, conversation} = useSelector(state => state.support)
     const language = i18next.language
     const {t} = useTranslation()
     const navigate = useNavigate()
@@ -83,6 +84,10 @@ const Header = () => {
         setLangDropDown(prev => !prev)
     }
 
+    const createSupportGroup = _ => {
+        dispatch(actions.chat.createSupportGroup())
+    }
+
     window.addEventListener('click', () => {
         setLangDropDown(false)
         setSideMenu(false)
@@ -110,7 +115,7 @@ const Header = () => {
         !count && dispatch(actions.chat.latestMessages())
 
         page === '/' 
-        ? setNavbarColor('rgba(26, 55, 77, 0.7)')
+        ? setNavbarColor('rgba(26,55,77,0.7)')
         : setNavbarColor('#1A374D')
 
         page === '/login' && setSideMenu(false)
@@ -123,6 +128,11 @@ const Header = () => {
       ? document.body.classList.add('arabic-language')
       : document.body.classList.remove('arabic-language')
     },[language])
+
+    useEffect(() => {
+        conversation && navigate(`/chat/${conversation}`)
+    },[conversation])
+
 
     return (
         <>
@@ -150,7 +160,7 @@ const Header = () => {
                         {/* display the main icon */}
                         <div className={`${style.header__icon} ${language === 'ar' ? style.header__icon_ar : ''}`}>
                             <span onClick={() => navigate('/')}>
-                                <img src="/debt.ico" alt="logo" />
+                                <img src="/images/swtle.png" alt="logo" />
                             </span>
                             
                             {isAuth && 
@@ -173,7 +183,8 @@ const Header = () => {
                         {/* display the actions buttons */}
                         <div className={style.header__actions}>
                             {/* display the main languages */}
-                            <div className={style.header__language}>
+                            <div className={`${style.header__language}
+                            ${!isAuth ? style.header__language_show : ''}`}>
                                 {/* display the other main language */}
                                 <div className={`${style.header__language_flag} 
                                 ${language === 'ar' ? style.header__language_flag_ar :''}`}
@@ -186,12 +197,10 @@ const Header = () => {
                                 {/* the dropdown to select the language */}
                                 <div className={`${style.header__language_menu} 
                                 ${language === 'ar' ? style.header__language_menu_ar : ''}`}
-
                                 style={{display: langDropDown ? 'block' :'none'}}>
                                     {loadingState && <div className={style.header__language_loader}
                                         onClick={(e) => e.stopPropagation()}>
-                                        <Loader center size='4' 
-                                        options={{animation:"border"}}/>
+                                        <Loader center size='4' options={{animation:"border"}}/>
                                     </div>}
                                     <figure onClick={(e) => changeLanguageHandler(e, 'ar')}>
                                         <img src="/images/uae-flag.png" alt="uae flag" />
@@ -265,6 +274,15 @@ const Header = () => {
                     </div>
                 </div>
             </div>
+
+        <div className={style.header__support}
+        style={{display:(page.includes('chat') || !isAuth) ? 'none' : 'block'}}>
+            {
+                support_loading 
+                ? <Loader size="5" options={{animation:'border'}}/>
+                : <span onClick={createSupportGroup}>  <Support/> </span>
+            }
+        </div>
         </>
     )
 }

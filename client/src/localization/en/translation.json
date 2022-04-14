@@ -217,6 +217,8 @@
     "company-name":"Company You Worked for",
     "provide-address-in-uae":"Please Provide Your Address in UAE",
     "provide-country":"Please Choose Your Country",
+    "provide-valid-email":"Please Provide a Valid E-mail",
+    "provide-valid-tel":"Please Provide a Valid Phone Number",
     "address-in-uae":"Address inside UAE",
     "address-out-uae":"Address outside UAE",
     "choose-country":"Choose Your Country",

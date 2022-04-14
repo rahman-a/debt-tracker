@@ -32,6 +32,11 @@ const Phones = ({setStep, info}) => {
                     setErrors(t('provide-phone'))
                     return false
                 }
+
+                if(!(/^\d+$/.test(phone))) {
+                    setErrors(t('provide-valid-tel'))
+                    return false
+                }
             }
         }
 
@@ -42,6 +47,12 @@ const Phones = ({setStep, info}) => {
         let data = {insidePhones:insidePhonesCollection}
         
         if(outsidePhones.length) {
+            for(let phone of outsidePhones) {
+                if(!(/^\d+$/.test(phone))) {
+                    setErrors(t('provide-valid-tel'))
+                    return false
+                }
+            }
             data = {
                 insidePhones:insidePhonesCollection, 
                 outsidePhones

@@ -66,10 +66,26 @@ const createOperation = (info) => async (dispatch) => {
     }
 }
 
-const updateOperationState = (id, notification , state) => async (dispatch) => {
+const updateOperationState = (id, notification , state) => async (dispatch, getState) => {
     dispatch({type: constants.operations.UPDATE_OPERATION_STATE_REQUEST}) 
     try {
         const {data} = await api.operations.updateState(id, notification, state)
+        const {operations, count} = getState().listOperations
+        if(operations) {
+            const copiedOperations = [...operations]
+            const index = copiedOperations.findIndex(operation => operation._id === id)
+            if(index !== -1 && state === 'active') {
+                copiedOperations.splice(index, 1)
+            }
+            if(index !== -1 && state === 'decline') {
+               copiedOperations[index].state = 'decline'
+            }
+            dispatch({
+                type: constants.operations.LIST_OPERATIONS_SUCCESS,
+                operations:copiedOperations,
+                count:state === 'active' ? count - 1 : count
+            })
+        }
         dispatch({
             type: constants.operations.UPDATE_OPERATION_STATE_SUCCESS, 
             payload:data.message

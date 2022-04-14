@@ -44,19 +44,21 @@ const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
     
     const lang = i18next.language
     const {t} = useTranslation()
+
+    const searchingActions = _ => {
+        //  clear conversations state before search
+        dispatch({type:constants.chat.LIST_CONVERSATION_RESET})
+        dispatch({type:constants.chat.SEARCH_CONVERSATIONS_RESET})
+
+        dispatch(actions.chat.searchConversations(searchValue))
+    }
     
     const searchHandler = e => {
         if(e.kayCode === 13 || e.which === 13) {
             if(searchValue === '') return 
-            
-             //  clear conversations state before search
-            dispatch({type:constants.chat.LIST_CONVERSATION_RESET})
-            dispatch({type:constants.chat.SEARCH_CONVERSATIONS_RESET})
-
-            dispatch(actions.chat.searchConversations(searchValue))
+            searchingActions()   
             return
-        }
-        e.stopPropagation()   
+        } 
     }
 
     const dateFormat = {
@@ -194,7 +196,7 @@ const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
     return (
     <div className={`${style.sidebar} ${chat ? style.sidebar__off :''}`}>
         
-       {chat_loading &&  <div className={style.sidebar__loading}>
+       {chat_loading &&  <div className={style.sidebar__overlay}>
             <Loader size='4' center options={{animation:'border'}}/>
         </div> }
         
@@ -210,7 +212,7 @@ const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
         />
         
         <header>
-            <img src="/images/photos/photo-1.jpg" alt="avatar"/>
+            <img src={`/api/files/${staff.avatar}`} alt="avatar"/>
             <button onClick={() => setIsRoomCreation(true)}>
                 <span> <PlusLight/> </span>
             </button>
@@ -241,7 +243,8 @@ const Sidebar = ({socket, unSeenMessage, setUnSeenMessage}) => {
                 
                 {
                     isSearch 
-                    ? <span 
+                    ? <span
+                       onClick={() => searchingActions()}
                         style={{
                             color:'green', 
                             cursor: 'pointer',

@@ -46,7 +46,7 @@ const Profile = () => {
                             code:member.code,
                             color:member.colorCode,
                             avatar:member.avatar,
-                            fullName:member.fullName,
+                            fullName: lang === 'ar' ? member.fullNameInArabic : member.fullNameInEnglish,
                             username:member.username,
                             isProvider:member.isProvider,
                             emails:member.emails

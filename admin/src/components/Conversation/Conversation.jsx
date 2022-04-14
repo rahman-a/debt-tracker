@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import ObjectId from 'bson-objectid'
 import {ChatMessage, Loader, ChatRoomUpdate} from '../../components'
-import {Microphone, ArrowLeft,Users} from '../../icons'
+import {Microphone, ArrowLeft,Users, PaperPlane} from '../../icons'
 import constants from '../../constants'
 import Upload from './Upload'
 import Emoji from './Emoji'
@@ -19,6 +19,7 @@ const Chat = ({socket, setUnSeenMessage}) => {
   const [isEmoji, setIsEmoji] = useState(false)
   const [message, setMessage] = useState('')
   const [isFile, setIsFile]  = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [recorder, setRecorder] = useState(null)
   const [isRoomUpdate, setIsRoomUpdate] = useState(false)
@@ -107,6 +108,17 @@ const Chat = ({socket, setUnSeenMessage}) => {
     setMessage(prev => prev + emoji)
   }
 
+  const sendMessage = () => {
+    if(message === '') {
+      composeMessage('error', t('cant-sent-empty-message'))
+      return
+    }
+    
+    composeMessage('text', message)
+
+    setIsTyping(false)
+  }
+
   const sendMessageHandler = e => {
     if((e.keyCode === 13 || e.which === 13) && !e.shiftKey) {
       
@@ -118,6 +130,8 @@ const Chat = ({socket, setUnSeenMessage}) => {
       }
       
       composeMessage('text', message)
+
+      setIsTyping(false)
     }
   }
 
@@ -188,6 +202,14 @@ const Chat = ({socket, setUnSeenMessage}) => {
     })
   },[])
 
+  useEffect(() => {
+    if(message !== '') {
+      setIsTyping(true)
+    }else {
+      setIsTyping(false)
+    }
+  },[message])
+
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior:'smooth'})
@@ -210,7 +232,6 @@ const Chat = ({socket, setUnSeenMessage}) => {
   },[arrivalMessage])
 
 
-  
   return (
     <div className={`${style.chat} ${conversation ? style.chat__on :''}`}>
         
@@ -307,7 +328,11 @@ const Chat = ({socket, setUnSeenMessage}) => {
             placeholder={t('type-message')}></textarea>
             
             <div className={isRecording ? style.chat__recording : ''}>
-              <span onClick={recordAudio}> <Microphone/> </span>
+              {
+                isTyping 
+                ? <span onClick={sendMessage}> <PaperPlane/> </span>
+                : <span onClick={recordAudio}> <Microphone/> </span>
+              }
             </div>
             
             

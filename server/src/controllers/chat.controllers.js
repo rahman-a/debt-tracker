@@ -32,6 +32,80 @@ export const createConversation = async (req, res, next) => {
 }
 
 
+export const initiateConversation = async (req, res, next) => {
+    const {userId} = req.params 
+    try {
+        const conversation = await Conversation.findOne({members: {$all: [req.user._id, userId]}, isRoom:false})
+        if(conversation){
+            res.send({
+                code:200,
+                success:true,
+                conversation:conversation._id
+            })
+
+            return
+        }
+
+        const newConversation = new Conversation({members:[req.user._id, userId]})
+        const createdConversation = await newConversation.save()
+        res.send({
+            code:200,
+            success:true,
+            conversation:createdConversation._id
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const createSupportGroup = async (req, res, next) => {
+    
+    const lang = req.headers['accept-language']
+    const groupName = lang === 'ar' 
+    ? `مجموعة الدعم مع ${req.user.fullNameInArabic}`
+    : `Support Group with ${req.user.fullNameInEnglish}`
+    try {
+        
+        const isConversationFound = await Conversation.findOne({
+            $or:[
+                {name:`مجموعة الدعم مع ${req.user.fullNameInArabic}`},
+                {name:`Support Group with ${req.user.fullNameInEnglish}`}
+            ],
+            members: {$in: [req.user._id]},
+            isRoom:true
+        })
+        
+        if(isConversationFound){
+            res.send({
+                code:200,
+                success:true,
+                conversation:isConversationFound._id
+            })
+
+            return
+        }
+        const CS = await User.find({roles:{$in:['cs']}})
+        const CSIds = CS.map(user => user._id)
+        const newConversation = new Conversation({
+            name:groupName,
+            image:'support-min.png',
+            members:[...CSIds, req.user._id], 
+            isRoom:true
+        })
+        const createdConversation = await newConversation.save()
+        res.send({
+            code:200,
+            success:true,
+            conversation:createdConversation._id
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 export const createConversationRoom = async (req, res, next) => {
     const {members, name} = req.body 
 

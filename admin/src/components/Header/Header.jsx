@@ -134,7 +134,7 @@ const Header = () => {
                         {/* display the main icon */}
                         <div className={`${style.header__icon} ${language === 'ar' ? style.header__icon_ar : ''}`}>
                             <span onClick={() => navigate('/')}>
-                                <HandDollar/>
+                                <img src="/images/swtle.png" alt="logo" />
                             </span>
                             
                             {isAuth && 

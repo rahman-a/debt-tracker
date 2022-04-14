@@ -21,7 +21,10 @@ const operationAPI = {
         return service().get(`operations/${id}`)
     },
     updateState(id, notification, state){
-        return service().patch(`operations/${id}/${notification}?state=${state}`)
+        const url = notification 
+        ? `operations/${id}/${notification}?state=${state}`
+        : `operations/${id}?state=${state}`
+        return service().patch(url)
     }
 }
 

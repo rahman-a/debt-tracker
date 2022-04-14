@@ -46,6 +46,23 @@ const createConversation = (info) => async (dispatch, getState) => {
     }
 }
 
+const initiateConversation = (id) => async (dispatch) => {
+    dispatch({type:constants.chat.INITIATE_CONVERSATION_REQUEST})
+
+    try {
+        const {data} = await api.chat.initiateConversation(id)
+        dispatch({
+            type:constants.chat.INITIATE_CONVERSATION_SUCCESS,
+            payload:data.conversation
+        })
+    } catch (error) {
+        dispatch({
+            type:constants.chat.INITIATE_CONVERSATION_FAIL,
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
 const listMessages = (id) => async (dispatch, getState) => {
     dispatch({type:constants.chat.LIST_CONVERSATION_MESSAGES_REQUEST})
 
@@ -200,6 +217,29 @@ const membersSearch = search => async dispatch => {
     }
 }
 
+const createSupportGroup = () => async (dispatch) => {
+    dispatch({type:constants.chat.CREATE_SUPPORT_GROUP_REQUEST})
+
+    try {
+        const {data} = await api.chat.createSupportGroup()
+
+        dispatch({
+            type:constants.chat.CREATE_SUPPORT_GROUP_SUCCESS,
+            payload:data.conversation
+        })
+
+        setTimeout(() => {
+            dispatch({type:constants.chat.CREATE_SUPPORT_GROUP_RESET})
+        },250)
+        
+    } catch (error) {
+        dispatch({
+            type:constants.chat.CREATE_SUPPORT_GROUP_FAIL,
+            payload:error.response && error.response.data.message 
+        })
+    }
+}
+
 const reducer = {
     listConversation,
     createConversation,
@@ -209,7 +249,9 @@ const reducer = {
     membersSearch,
     latestMessages,
     markAsReceived,
-    markPeerMessagesAsReceived
+    markPeerMessagesAsReceived,
+    initiateConversation,
+    createSupportGroup
 }
 
 export default reducer

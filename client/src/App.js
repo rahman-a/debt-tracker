@@ -29,7 +29,7 @@ function App() {
   const {isAuth} = useSelector(state => state.login)
 
   return (
-    <div className="App">
+    <div className="App" data-theme="dark">
         <Header />
           <Routes>
             <Route path='/' element={<Home/>}/> 

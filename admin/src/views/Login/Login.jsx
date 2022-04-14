@@ -15,6 +15,7 @@ const Login = () => {
     return (
         <div className={style.login}>
            <div className={style.login__wrapper}>
+                <figure> <img src="/images/swtle.png" alt="logo" /> </figure>
                 { <LoginForm/> }
            </div>
         </div>

@@ -41,7 +41,7 @@ const Input = ({
            {type === 'file' && <p className={style.input__upload_label}>{t(placeholder)}</p>}
            <label htmlFor={id ||name}> {t(label)} </label>
            
-           <input 
+           <input
                 placeholder={t(placeholder)}
                 name={name}
                 type={type}

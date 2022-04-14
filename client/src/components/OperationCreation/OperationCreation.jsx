@@ -49,6 +49,15 @@ const Details = ({peerInfo}) => {
         return []
     }
 
+    const $inputOperationValue = document.getElementById('input-operation-value')
+
+    if($inputOperationValue) {
+        $inputOperationValue.addEventListener('mousewheel', e => {
+            $inputOperationValue.blur()
+        })
+    }
+
+
     // const data = {
     //     initiator:{   
     //         user:user._id,
@@ -83,6 +92,12 @@ const Details = ({peerInfo}) => {
             data.dueDate = dueDate.toISOString()
         }
 
+        if(user.isProvider){
+            data.initiator.type = 'credit'
+            data.peer.type = 'debt'
+            data.currency = currencies.find(currency => currency.abbr === 'AED')._id
+        }
+
         dispatch(actions.operations.createOperation(data))
     }
     
@@ -112,17 +127,24 @@ const Details = ({peerInfo}) => {
            </div>
            <div className={style.details__data}>
                 
-                <p className={style.details__data_label}>{t('peer-type')}</p>
-                <DropdownMenu
-                onSelectHandler={(value) => setPeerType(value)}
-                data={{
-                    label:'peer-select-type',
-                    icon:<Info/>,
-                    items:[
-                        {icon:<HandDollar/>, text:'credit', value:'credit'}, 
-                        {icon:<HandPlus/>, text:'debt', value:'debt'}
-                    ]
-                }}/>
+               {
+                !user.isProvider && 
+                (
+                   <> 
+                   <p className={style.details__data_label}>{t('peer-type')}</p>
+                    <DropdownMenu
+                    onSelectHandler={(value) => setPeerType(value)}
+                    data={{
+                        label:'peer-select-type',
+                        icon:<Info/>,
+                        items:[
+                            {icon:<HandDollar/>, text:'credit', value:'credit'}, 
+                            {icon:<HandPlus/>, text:'debt', value:'debt'}
+                        ]
+                    }}/>
+                    </>
+                )
+               } 
 
                 <Input
                 icon={<FunnelDollar/>}
@@ -131,21 +153,28 @@ const Details = ({peerInfo}) => {
                 label={t('operation-value')}
                 name='value'
                 value={value}
-                onChange={(e) => setValue(e.target.value)}
+                id='input-operation-value'
+                onChange={e => setValue(e.target.value)}
                 className={style.details__data_value}
                 />
+                {
+                    !user.isProvider && 
+                    (
+                        <>
+                        <p className={style.details__data_label}>{t('operation-currency')}</p>
+                        <DropdownMenu
+                        onSelectHandler={(value) => setCurrency(value)}
+                        loading={curr_loading}
+                        error={curr_error}
+                        data={{
+                            label:'operation-currency-select',
+                            icon:<Coins/>,
+                            items:listCurrenciesHandler()
+                        }}/>
+                        </>
+                    )
+                }
                 
-                <p className={style.details__data_label}>{t('operation-currency')}</p>
-                
-                <DropdownMenu
-                onSelectHandler={(value) => setCurrency(value)}
-                loading={curr_loading}
-                error={curr_error}
-                data={{
-                    label:'operation-currency-select',
-                    icon:<Coins/>,
-                    items:listCurrenciesHandler()
-                }}/>
                 
                 <p className={style.details__data_label}>{t('operation-due-date')}</p>
                 <DateInput

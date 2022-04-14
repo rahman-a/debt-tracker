@@ -24,7 +24,7 @@ const Operation = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {loading, error, count, operations} = useSelector(state => state.listOperations)
-
+    const {user} = useSelector(state => state.login)
     const filterOperationHandler = (skip) => {
         let query = {...searchFilter} 
         if(skip) query.skip = skip.skip 
@@ -63,10 +63,13 @@ const Operation = () => {
             <h1>{t('operations-records')}</h1>
             <div className={style.operation__wrapper}>
                 <div className={style.operation__actions}>
-                    <button 
-                    onClick={() => navigate('/operation/new')}>
+                  {
+                      user.color !== '#EC4A0D' &&
+                      <button 
+                        onClick={() => navigate('/operation/new')}>
                         {t('new-operation')}
                     </button>
+                  }  
                     <button className={style.operation__filter}
                     onClick={() => setIsFilter(true)}>
                         <span> <FilterSearch/> </span>

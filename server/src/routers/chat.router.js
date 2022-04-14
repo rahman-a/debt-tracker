@@ -8,13 +8,15 @@ import {
     updateConversation,
     listUserConversation,
     removeConversationRoom,
+    initiateConversation,
+    createSupportGroup,
     // messages
     createMessage,
     listConversationMessages,
     // users
     findConversationsByName,
     markMessageAsReceived,
-    listLatestMessage
+    listLatestMessage,
 } from '../controllers/chat.controllers.js'
 
 import {
@@ -36,13 +38,11 @@ router.post('/room', isAuth,
         createConversationRoom
     )
 router.delete('/:id', isAuth, checkRoles('manager', 'cs', 'hr'), removeConversationRoom)
-router.patch('/:id', isAuth, 
-            checkRoles('manager', 'cs', 'hr'),
-            chatRoomImageHandler.single('image'), 
-            updateConversation
-        )
+router.patch('/:id', isAuth, checkRoles('manager', 'cs', 'hr'), chatRoomImageHandler.single('image'), updateConversation)
 router.get('/', isAuth, listUserConversation)
 
+router.get('/initiate/:userId', isAuth, initiateConversation)
+router.post('/support-group', isAuth, createSupportGroup)
 
 // Message Router
 

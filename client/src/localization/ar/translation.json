@@ -212,6 +212,8 @@
     "condition&terms":"الشروط والأحكام",
     "provide-full-name-english":"أدخل أسمك كاملاً باللغة الإنجلبزية",
     "provide-full-name-arabic":"أدخل أسمك كاملاً باللغة العربية",
+    "provide-valid-email":"البريد الإلكترونى غير صالح",
+    "provide-valid-tel":"رقم الهاتف غير صالح",
     "full-name-in-english":"الأسم كاملاً بالإنجليزى",
     "full-name-in-arabic":"الإسم كاملاً بالعربى",
     "company-name":"إسم الشركة",

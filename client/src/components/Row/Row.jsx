@@ -10,6 +10,8 @@ import {Copy, Check, Reader, HandshakeSlash} from '../../icons'
 import Description from './Description';
 import ChangeDue from './ChangeDue';
 import CloseReport from './CloseReport';
+import Decision from './Decision';
+import Chat from './Chat';
 
 const Row = ({record, idx, reports, due, op, closed}) => {
     const [isCopied, setIsCopied] = useState(false)
@@ -94,13 +96,21 @@ const Row = ({record, idx, reports, due, op, closed}) => {
             )
         } else {
             return (
-                
+               
                 (record.peer?.user?._id || record.operation.peer._id) === user._id
                 ? record.initiator?.user?.fullNameInEnglish || record.operation.initiator.fullNameInEnglish
                 : record.peer?.user?.fullNameInEnglish || record.operation.peer.fullNameInEnglish
             )
         }
         
+    }
+
+    const getPeerId = _ => {
+        const id =  (record.peer?.user?._id || record.operation.peer._id) === user._id
+        ? record.initiator?.user?._id || record.operation.initiator._id
+        : record.peer?.user?._id || record.operation.peer._id
+
+        return id
     }
 
     const getStateColor = state => { 
@@ -150,7 +160,7 @@ const Row = ({record, idx, reports, due, op, closed}) => {
             </td>
             
             {/* Operation Second Peer or Initiator Name */}
-            <td style={{textTransform:'capitalize', position:'relative'}}>
+            <td className={style.row__name}>
                 <span className={style.row__label}
                 style={{
                     backgroundColor: peerType() === 'debt' 
@@ -163,11 +173,20 @@ const Row = ({record, idx, reports, due, op, closed}) => {
                         : t(record.peer?.type) || t(record.operation.peer.type)
                     }
                 </span>
+                <Chat id={getPeerId()}/>
                 { getMemberName() }
             </td>
             
             {/* Operation Second Peer or Initiator Photo */}
-            <td style={{padding:'1rem 0'}}>
+            <td className={style.row__photo} style={{padding:'1rem 0'}}>
+                {
+                    record.state === 'pending' 
+                    && <span style={{
+                        backgroundColor: (record.peer?.user?._id || record.operation.peer._id) === user._id 
+                        ? record.initiator?.user?.color || record.operation.initiator.color
+                        : record.peer?.user?.color || record.operation.peer.color
+                    }}></span> 
+                }
                 <img 
                 src={
                     (record.peer?.user?._id || record.operation.peer._id) === user._id 
@@ -175,7 +194,7 @@ const Row = ({record, idx, reports, due, op, closed}) => {
                     :`/api/files/${record.peer?.user?.avatar || record.operation.peer.avatar}`
                 } 
                 alt="second peer" 
-                className={style.row__photo}/> 
+                /> 
             </td>
             
             {/* Operation Description */}
@@ -207,10 +226,11 @@ const Row = ({record, idx, reports, due, op, closed}) => {
             
             {/* Operation State [pending, approved, declined]*/}
            
-           { op && <td style={{
+           { op && <td className={style.row__state} style={{
                 backgroundColor:getStateColor(record.state),
                 textTransform:'uppercase'
                 }}>
+                {record.state === 'pending' && <Decision id={record._id}/>}
                 {t(record.state)}
             </td> }
             

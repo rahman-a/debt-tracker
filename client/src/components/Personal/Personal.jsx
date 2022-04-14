@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import {Input, Button} from '../../components'
 import {User, Building} from '../../icons'
+import {sanitizeInput} from '../../config/sanitize'
 
 const Personal = ({setStep, setInfo, info}) => {
     const [englishName, setEnglishName] = useState('')
@@ -16,9 +17,9 @@ const Personal = ({setStep, setInfo, info}) => {
 
     const moveNextHandler = _ => {
         const data = {
-            fullNameInEnglish:englishName,
-            fullNameInArabic:arabicName,
-            company
+            fullNameInEnglish:sanitizeInput(englishName),
+            fullNameInArabic:sanitizeInput(arabicName),
+            company:sanitizeInput(company)
         }
 
         if(isFormValid()) {
