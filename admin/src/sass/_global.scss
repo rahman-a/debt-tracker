@@ -1,147 +1,189 @@
 @use '../sass/media.scss' as *;
 @use '../sass/variables.scss' as var;
 
-html  {
-    font-size: 62.5%;
-    scroll-behavior: smooth;
-    @include mq(xl) {
-        font-size: 60%;
-    }
-    @include mq(lg){
-        font-size: 58%;
-    }
-    @include mq(md) {
-        font-size: 56%;
-    }
-    @include mq(sm) {
-        font-size: 54%;
-    }
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+  @include mq(xl) {
+    font-size: 60%;
+  }
+  @include mq(lg) {
+    font-size: 58%;
+  }
+  @include mq(md) {
+    font-size: 56%;
+  }
+  @include mq(sm) {
+    font-size: 54%;
+  }
 }
 
 *,
 *::after,
 *::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important;
 }
 
-.main-header  {
-    text-align: center;
-    font-size: 5rem;
-    padding: 3rem 0;
-    font-weight: 200;
-    @include mq(md) {
-        font-size: 4rem;
-    }
-    @include mq(sm) {
-        font-size: 3rem;
-    }
+.main-header {
+  text-align: center;
+  font-size: 5rem;
+  padding: 3rem 0;
+  font-weight: 200;
+  @include mq(md) {
+    font-size: 4rem;
+  }
+  @include mq(sm) {
+    font-size: 3rem;
+  }
 }
 
 p {
-    margin:0;
+  margin: 0;
 }
 
 body {
-    font-family: var(--main-font);
-    font-size: 1.6rem;
-    line-height: 1.6;
+  font-family: var(--main-font);
+  font-size: 1.6rem;
+  line-height: 1.6;
 }
 
-.arabic-language  {
-    font-family: var(--second-font) !important;
-    direction: rtl !important;
+.arabic-language {
+  font-family: var(--second-font) !important;
+  direction: rtl !important;
 }
 
 .container {
-    max-width:80%;
-    margin:0 auto;
-    @include mq(xl){
-        max-width: 90% !important;
-    }
-    @include mq(md) {
-        max-width: 98% !important;
-        margin:0 !important;
-        height: 100%;
-    }
+  max-width: 80%;
+  margin: 0 auto;
+  @include mq(xl) {
+    max-width: 90% !important;
+  }
+  @include mq(md) {
+    max-width: 98% !important;
+    margin: 0 !important;
+    height: 100%;
+  }
 }
-
-
 
 // customize carousel
 .control-dots {
-    .dot {
-        width: 2rem !important;
-        height: 2rem !important;
-        background-color: var(--light-color) !important;
-        z-index:9999;
-        @include mq(xs){
-            width:1.5rem !important;
-            height: 1.5rem !important;
-            margin:0 5px !important;
-        }
+  .dot {
+    width: 2rem !important;
+    height: 2rem !important;
+    background-color: var(--light-color) !important;
+    z-index: 9999;
+    @include mq(xs) {
+      width: 1.5rem !important;
+      height: 1.5rem !important;
+      margin: 0 5px !important;
     }
-    .selected {
-        background-color: var(--main-color) !important;
-    }
+  }
+  .selected {
+    background-color: var(--main-color) !important;
+  }
 }
 
 //  React Data-Picker
 .react-date-picker {
+  width: 100%;
+  &__wrapper {
+    overflow: hidden;
+    background-color: #fff;
+    border: thin solid #bdd7e5 !important;
+    button {
+      svg {
+        rect {
+          stroke: var.$full-light-color !important;
+        }
+        line {
+          stroke: var.$full-light-color !important;
+        }
+      }
+    }
+  }
+  &__inputGroup {
+    padding: 0.5rem 2rem !important;
     width: 100%;
-    &__wrapper {
-        overflow: hidden;
-        background-color: #fff;
-        border: thin solid #bdd7e5 !important;
-        button {
-            svg {
-                rect {
-                    stroke:var.$full-light-color !important;
-                }
-                line {
-                    stroke:var.$full-light-color !important;
-                }
-            }
-        }
+    &__input {
+      padding: 0 !important;
     }
-    &__inputGroup {
-        padding:.5rem 2rem !important;
-        width:100%;
-        &__input {
-            padding:0 !important;
-        }
-    }
-    
+  }
 }
 
 .public-DraftEditor-content {
-    width:50rem !important;
-    height: 50rem !important;
-    @include mq(sm) {
-        width:45rem !important;
-    }
-    @include mq(xs) {
-        height: 45rem !important;
-        width:40rem !important;
-    }
+  width: 50rem !important;
+  height: 50rem !important;
+  @include mq(sm) {
+    width: 45rem !important;
+  }
+  @include mq(xs) {
+    height: 45rem !important;
+    width: 40rem !important;
+  }
 }
-
 
 .simplebar-content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.sidebar__room_scroll .simplebar-content  {
-    justify-content: flex-start;
+.sidebar__room_scroll .simplebar-content {
+  justify-content: flex-start;
 }
 
+.rdw-editor-toolbar {
+  background-color: #eaeaea !important;
+}
 
-@media (min-width:576px) {
-    .modal-dialog {
-        min-width:65rem;
-    }
+.rdw-editor-main {
+  padding: 1rem;
+}
+.rdw-editor-wrapper {
+  direction: ltr;
+}
+
+.public-DraftEditor-content {
+  width: unset !important;
+  min-height: 25rem !important;
+  height: unset !important;
+}
+
+.row-photo {
+  width: 4.5rem;
+  height: 4.5rem;
+  clip-path: circle();
+  object-fit: cover;
+}
+
+.row-id {
+  position: relative;
+  cursor: pointer;
+  span {
+    display: none !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var.$white-color;
+  }
+  &:hover span {
+    display: -ms-grid !important;
+    display: grid !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    min-width: 65rem;
+  }
 }

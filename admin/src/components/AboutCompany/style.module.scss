@@ -1,0 +1,18 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.about {
+  width: 50%;
+  form {
+    width: 100%;
+    text-align: start;
+  }
+
+  @include media.mq(md) {
+    width: 75%;
+  }
+
+  @include media.mq(sm) {
+    width: 95%;
+  }
+}

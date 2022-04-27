@@ -1,14 +1,15 @@
 import React from 'react'
-import {Carousel, About, Contact} from '../../components'
+import { Carousel, About, Contact, QuickNews } from '../../components'
 
 const Home = () => {
-    return (
-        <>
-          <Carousel/>
-          <About/>
-          <Contact/>
-        </>
-    )
+  return (
+    <>
+      <Carousel />
+      <About />
+      <QuickNews />
+      <Contact />
+    </>
+  )
 }
 
 export default Home

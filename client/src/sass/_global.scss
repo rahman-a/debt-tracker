@@ -1,131 +1,134 @@
 @use '../sass/media.scss' as *;
 @use '../sass/variables.scss' as var;
 
-html  {
-    font-size: 62.5%;
-    scroll-behavior: smooth;
-    @include mq(xl) {
-        font-size: 60%;
-    }
-    @include mq(lg){
-        font-size: 58%;
-    }
-    @include mq(md) {
-        font-size: 56%;
-    }
-    @include mq(sm) {
-        font-size: 54%;
-    }
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+  @include mq(xl) {
+    font-size: 60%;
+  }
+  @include mq(lg) {
+    font-size: 58%;
+  }
+  @include mq(md) {
+    font-size: 56%;
+  }
+  @include mq(sm) {
+    font-size: 54%;
+  }
 }
 
 *,
 *::after,
 *::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important;
 }
 
 p {
-    margin:0;
+  margin: 0;
 }
 
 body {
-    font-family: var(--main-font);
-    font-size: 1.6rem;
-    line-height: 1.6;
+  font-family: var(--main-font);
+  font-size: 1.6rem;
+  line-height: 1.6;
 }
 
-.arabic-language  {
-    font-family: var(--second-font) !important;
-    direction: rtl !important;
+.arabic-language {
+  font-family: var(--second-font) !important;
+  direction: rtl !important;
 }
 
 .container {
-    max-width:80%;
-    margin:0 auto;
-    @include mq(xl){
-        max-width: 90% !important;
-    }
-    @include mq(md) {
-        max-width: 98% !important;
-        margin:0 !important;
-        height: 100%;
-    }
+  max-width: 80%;
+  margin: 0 auto;
+  @include mq(xl) {
+    max-width: 90% !important;
+  }
+  @include mq(md) {
+    max-width: 98% !important;
+    margin: 0 !important;
+    height: 100%;
+  }
 }
 
 // customize carousel
 .control-dots {
-    .dot {
-        width: 2rem !important;
-        height: 2rem !important;
-        background-color: var(--light-color) !important;
-        z-index:9999;
-        @include mq(xs){
-            width:1.5rem !important;
-            height: 1.5rem !important;
-            margin:0 5px !important;
-        }
+  .dot {
+    width: 2rem !important;
+    height: 2rem !important;
+    background-color: var(--light-color) !important;
+    z-index: 9999;
+    @include mq(xs) {
+      width: 1.5rem !important;
+      height: 1.5rem !important;
+      margin: 0 5px !important;
     }
-    .selected {
-        background-color: var(--main-color) !important;
-    }
+  }
+  .selected {
+    background-color: var(--main-color) !important;
+  }
 }
 
 //  React Data-Picker
 .react-date-picker {
+  width: 100%;
+  &__wrapper {
+    border-radius: 2rem;
+    overflow: hidden;
+    background-color: #fff;
+    button {
+      svg {
+        rect {
+          stroke: var.$full-light-color !important;
+        }
+        line {
+          stroke: var.$full-light-color !important;
+        }
+      }
+    }
+  }
+  &__inputGroup {
+    padding: 1.2rem 2rem !important;
     width: 100%;
-    &__wrapper {
-        border-radius: 2rem;
-        overflow: hidden;
-        background-color: #fff;
-        button {
-            svg {
-                rect {
-                    stroke:var.$full-light-color !important;
-                }
-                line {
-                    stroke:var.$full-light-color !important;
-                }
-            }
-        }
+    &__input {
+      padding: 0 !important;
     }
-    &__inputGroup {
-        padding:1.2rem 2rem !important;
-        width:100%;
-        &__input {
-            padding:0 !important;
-        }
-    }
-    
+  }
 }
 
 .public-DraftEditor-content {
-    width:50rem !important;
-    height: 50rem !important;
-    @include mq(sm) {
-        width:45rem !important;
-    }
-    @include mq(xs) {
-        height: 45rem !important;
-        width:40rem !important;
-    }
+  width: 50rem !important;
+  min-height: 25rem !important;
+  height: unset !important;
+  @include mq(sm) {
+    width: 45rem !important;
+  }
+  @include mq(xs) {
+    width: 40rem !important;
+  }
 }
-
 
 .simplebar-content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.sidebar__room_scroll .simplebar-content  {
-    justify-content: flex-start;
+.sidebar__room_scroll .simplebar-content {
+  justify-content: flex-start;
 }
 
-@media (min-width:576px) {
-    .modal-dialog {
-        min-width:65rem;
-    }
+.carousel-control-prev,
+.carousel-control-next {
+  color: #000 !important;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    min-width: 65rem;
+  }
 }

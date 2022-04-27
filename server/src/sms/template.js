@@ -1,8 +1,7 @@
-const template  =  {
-    verification(code){
-        return `${code} is your verification code from debt tracker`
-    }
+const template = {
+  verification(code) {
+    return `${code} is your verification code from SWTLE`
+  },
 }
 
-
-export default template 
+export default template

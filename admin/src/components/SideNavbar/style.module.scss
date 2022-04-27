@@ -2,127 +2,129 @@
 @use '../../sass/media' as media;
 
 .navbar {
-    &__menu {
-        position: fixed;
-        background-color: var.$main-color;
-        color:var.$white-color;
-        height: 100vh;
-        top:5.6rem;
-        left:-18rem;
-        z-index:999;
-        transition: all 0.3s ease-in-out;
-        width:25rem;
-    
-        @include media.mq(md){
-          top:6.6rem;
+  &__menu {
+    position: fixed;
+    background-color: var.$main-color;
+    color: var.$white-color;
+    height: calc(100vh - 5rem);
+    top: 5.6rem;
+    left: -18rem;
+    z-index: 999;
+    transition: all 0.3s ease-in-out;
+    width: 25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    @include media.mq(md) {
+      top: 6.6rem;
+    }
+
+    @include media.mq(xs) {
+      top: 5.6rem;
+    }
+
+    &_list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    &_item {
+      position: relative;
+      & > div {
+        padding: 3.5rem 3.5rem 3rem 1rem;
+        border-bottom: 1px solid var.$full-light-color;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba(var.$full-light-color, 0.2);
         }
 
-        @include media.mq(xs) {
-          top:5.6rem;
+        &:hover span {
+          color: var.$white-color;
         }
-    
-        &_list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
+      }
+      &_logout {
+        svg {
+          transform: rotate(180deg);
         }
-    
-        &_item {
-          position: relative;
-          & > div {
-            padding: 3.5rem 3.5rem 3rem 1rem;
-            border-bottom: 1px solid var.$full-light-color;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            &:hover {
-              background-color: rgba(var.$full-light-color, 0.2);
-            }
-
-            &:hover span {
-              color:var.$white-color;
-            }
-          }
-          &_logout {
-            svg {
-              transform:rotate(180deg)
-            }
-            &_ar {
-              svg {
-                transform: unset;
-              }
-            }
-          }
-    
-          &_loading {
-            position: absolute;
-            top:0;
-            left:0;
-            width:100%;
-            height: 100%;
-            background-color: rgba(0,0,0, 0.4);
-            margin:0 !important;
-          }
-    
-          &_flag {
-            cursor: pointer;
-            img {
-              width:3rem;
-            }
-          }
-    
-          span {
-            font-size: 1.4rem;
-            color:var.$full-light-color;
-          }
-    
+        &_ar {
           svg {
-            width:2.5rem;
-            height: 2.5rem;
-            margin:0 2rem;
-          }
-    
-          &_lang {
-            display: none;
-            @include media.mq(md){
-              display: block;
-            }
-          }
-        }
-
-        &_reports {
-          list-style: none;
-          background-color: lighten(var.$main-color, 5);
-          padding:0;
-          margin:0;
-          height: 0;
-          overflow: hidden;
-          transition: all 0.3s ease-in;
-          &_item {
-            padding:2rem;
-            cursor: pointer;
-            border-bottom:1px dashed rgb(150 150 150 / 30%);
-            box-shadow: 1px 0px 0px 1px rgb(0 0 0 / 30%);
-            &:hover {
-              background-color: rgba(var.$full-light-color, 0.2);
-            }
-            &:hover span {
-              color:var.$white-color;
-            }
+            transform: unset;
           }
         }
       }
 
-      &__logout {
-        &_alert {
-          position: absolute;
-          left: -25rem;
-          top: 5rem;
-          background-color: #fde1e1;
-          color: #ac0000;
-          border-radius: 1rem;
-          padding: 1rem;
-          transition: all 0.3s ease;
+      &_loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        margin: 0 !important;
+      }
+
+      &_flag {
+        cursor: pointer;
+        img {
+          width: 3rem;
         }
       }
+
+      span {
+        font-size: 1.4rem;
+        color: var.$full-light-color;
+      }
+
+      svg {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin: 0 2rem;
+      }
+
+      &_lang {
+        display: none;
+        @include media.mq(md) {
+          display: block;
+        }
+      }
+    }
+
+    &_reports {
+      list-style: none;
+      background-color: lighten(var.$main-color, 5);
+      padding: 0;
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease-in;
+      &_item {
+        padding: 2rem;
+        cursor: pointer;
+        border-bottom: 1px dashed rgb(150 150 150 / 30%);
+        box-shadow: 1px 0px 0px 1px rgb(0 0 0 / 30%);
+        &:hover {
+          background-color: rgba(var.$full-light-color, 0.2);
+        }
+        &:hover span {
+          color: var.$white-color;
+        }
+      }
+    }
+  }
+
+  &__logout {
+    &_alert {
+      position: absolute;
+      left: -25rem;
+      top: 5rem;
+      background-color: #fde1e1;
+      color: #ac0000;
+      border-radius: 1rem;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+  }
 }

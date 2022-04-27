@@ -1,19 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import style from './style.module.scss'
+import { Placeholder } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import i18next from 'i18next'
+import actions from '../../actions'
 
 const About = () => {
-    return (
-        <div className={style.about}>
-            <div className="container">
-                <h1>Lorem ipsum dolor sit amet</h1>
-                <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor 
-                    invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et 
-                    accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.
-                </p>
-            </div>
-        </div>
-    )
+  const { isLoading, aboutUs } = useSelector((state) => state.getAboutUs)
+  const dispatch = useDispatch()
+  const lang = i18next.language
+
+  useEffect(() => {
+    !aboutUs && dispatch(actions.content.getAboutUs())
+  }, [])
+  return (
+    <div className={style.about}>
+      <div className='container'>
+        {isLoading ? (
+          <>
+            <Placeholder xs={6} />
+            <Placeholder className='w-75' />{' '}
+            <Placeholder style={{ width: '25%' }} />
+          </>
+        ) : (
+          aboutUs && (
+            <>
+              <h1>{aboutUs?.header[lang]}</h1>
+              <p> {aboutUs?.body[lang]} </p>
+            </>
+          )
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default About

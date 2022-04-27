@@ -21,6 +21,8 @@
         letter-spacing: 1px;
         &:last-of-type {
             margin-bottom: 2rem;
+            width: max-content;
+            margin-left: -5rem;
         }
     }
 
@@ -60,10 +62,22 @@
                     }
                 }
             }
+
+            &_ar {
+                font-size: 0.9rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         }
 
         button {
             all:unset;
+            width: 10rem;
+            height: 5.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: 900;
             text-transform: uppercase;
             padding:2.5rem;

@@ -55,10 +55,14 @@ const LoginCode = ({userId, setIsLoginCode}) => {
         <div className={style.loginCode}>
            { loading 
            ? <Loader 
-                size='20' 
+                size='10' 
                 center 
                 options={{animation:'border'}} 
-                text={t('sending-login-code')}/>
+                text={t('sending-login-code')}
+                textStyle={{
+                    marginLeft:lang === 'ar' ? '0' : '-5rem',
+                    marginRight:lang === 'ar' ? '-5rem' : '0',
+                }}/>
            : error 
            ? <Alert 
                 variant='danger' 
@@ -78,11 +82,11 @@ const LoginCode = ({userId, setIsLoginCode}) => {
            } 
 
             <p>{t('code-sent')}</p>
-            <p>{t('type-code')}</p>
+            <p style={{marginLeft:'unset', width:'auto'}}>{t('type-code')}</p>
             <div className={`${style.loginCode__group} 
             ${lang === 'ar' ? style.loginCode__group_ar : ''}`}>
                 <div className={style.loginCode__group_input}>
-                    <span>
+                    <span className={lang === 'ar' ? style.loginCode__group_input_ar : '' }>
                        {t('login-code')}
                     </span>
                     <input 

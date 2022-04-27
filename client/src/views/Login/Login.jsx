@@ -22,6 +22,7 @@ const Login = () => {
                {t('back-home')}
             </button>
            <div className={style.login__wrapper}>
+           <figure> <img src="/images/swtle.png" alt="logo" /> </figure>
                 {
                 userId 
                 ? <LoginCode userId={userId}/>

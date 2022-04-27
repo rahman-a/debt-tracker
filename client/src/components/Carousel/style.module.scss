@@ -2,57 +2,79 @@
 @use '../../sass/media' as media;
 
 .carousel {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  position: relative;
+  // margin-bottom: 1.6rem;
+  direction: ltr;
+  @include media.mq(sm) {
+    height: 100%;
+  }
+  &__slide {
+    img {
+      height: 100vh;
+      object-fit: cover;
+      @include media.mq(sm) {
+        height: 25rem;
+      }
+    }
+  }
+  &__desc {
     position: absolute;
-    top:0;
-    height: 100vh;
-    position: relative;
-    margin-bottom: 1.6rem;
-    direction: ltr;
-    @include media.mq(sm){
-        height: 100%;
+    top: 50%;
+    margin-left: 5rem;
+    width: 50%;
+    color: var.$white-color;
+    text-align: left;
+    padding: 5rem;
+    background-color: rgba(var.$main-color, 65%);
+    border-radius: 2rem;
+
+    @include media.mq(md) {
+      width: 65%;
     }
-    &__slide {
-        img {
-            height: 100vh;
-            object-fit: cover;
-            @include media.mq(sm){
-                height: 100%;
-            }
-        }
+
+    @include media.mq(sm) {
+      top: 20%;
+      width: 90%;
+      margin-left: 1rem;
+      padding: 2rem;
     }
-    &__desc {
-        position: absolute;
-        top: 50%;
-        margin-left: 5rem;
-        width: 50%;
-        color: var.$white-color;
-        text-align: left;
-        padding: 5rem;
-        background-color: rgba(var.$main-color, 65%);
-        border-radius: 2rem;
-        
-        @include media.mq(md){
-            width: 65%;
-        }
-        
-        @include media.mq(sm) {
-            top:50%;
-            width:90%;
-            margin-left: 1rem;
-            padding:2rem;
-        }
-        h2 {
-            margin-bottom: 1rem;
-            font-weight: 500;
-            font-size: 3rem;
-            @include media.mq(sm) {
-                font-size:2rem
-            }
-        }
-        p{
-            @include media.mq(sm) {
-                font-size: 1.4rem;
-            }
-        }
+    h2 {
+      margin-bottom: 1rem;
+      font-weight: 500;
+      font-size: 3rem;
+      @include media.mq(sm) {
+        font-size: 2rem;
+      }
     }
+    p {
+      display: flex;
+      align-items: end;
+      @include media.mq(sm) {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  &__more {
+    font-family: monospace;
+    cursor: pointer;
+    background-color: #042637;
+    border-radius: 1rem;
+    padding: 0rem 0.5rem;
+    border-bottom: 1px transparent;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    &:hover {
+      background-color: #042637;
+      color: var.$white-color;
+      border-bottom: 1px solid var.$white-color;
+      transform: scale(1.1);
+    }
+    &:active {
+      transform: scale(0.9);
+    }
+  }
 }

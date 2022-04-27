@@ -1,7 +1,7 @@
 import React from 'react'
 import {Spinner} from 'react-bootstrap'
 
-const Loader = ({size, text, center, custom, options}) => {
+const Loader = ({size, text, center, custom, options, textStyle}) => {
     const getStyle = _ => {
         let centerStyle = {}
         if(center) {
@@ -32,7 +32,7 @@ const Loader = ({size, text, center, custom, options}) => {
                width:'100%', 
                height:'100%'
             }}/>
-           {text ? <p>{text}</p> : ''}
+           {text ? <p style={textStyle}>{text}</p> : ''}
         </div>
     )
 }
