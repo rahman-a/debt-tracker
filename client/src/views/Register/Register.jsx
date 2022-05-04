@@ -17,7 +17,7 @@ import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 const Register = () => {
-  const [step, setStep] = useState(5)
+  const [step, setStep] = useState(1)
   const [info, setInfo] = useState({})
   const navigate = useNavigate()
   const lang = i18next.language
