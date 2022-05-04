@@ -54,7 +54,7 @@ const Article = () => {
     return () => {
       dispatch({ type: constants.article.CREATE_ARTICLE_RESET })
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div className={style.article}>
@@ -72,6 +72,7 @@ const Article = () => {
         type='success'
         isOn={message ? true : false}
         text={message}
+        reset={() => dispatch({ type: constants.article.CREATE_ARTICLE_RESET })}
       />
 
       <div className='container'>

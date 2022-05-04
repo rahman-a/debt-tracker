@@ -25,6 +25,8 @@ import {
   TermsAndConditions,
 } from './views'
 
+import Test from './views/test'
+
 function App() {
   const { isAuth } = useSelector((state) => state.login)
 
@@ -34,7 +36,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
+        <Route
+          path='/login'
+          element={!isAuth ? <Login /> : <Navigate to='/' />}
+        />
         <Route path='/operation'>
           <Route
             index
@@ -84,6 +89,7 @@ function App() {
             element={isAuth ? <Chat /> : <Navigate to='/login' />}
           />
         </Route>
+        <Route path='/test' element={<Test />} />
         <Route path='/articles/:id' element={<Article />} />
         <Route path='/activate' element={<EmailActivation />} />
         <Route path='/reset' element={<ResetPassword />} />

@@ -48,16 +48,15 @@
 
   &__description {
     color: var.$white-color;
-    margin-right: 15rem;
+    margin: 0 15rem 0 2rem;
     flex-basis: 55%;
     @include media.mq(md) {
       margin-right: 5rem;
     }
 
     @include media.mq(sm) {
-      margin-right: unset;
       text-align: center;
-      margin-bottom: 2rem;
+      margin: 2rem;
     }
     &_ar {
       margin-right: unset;

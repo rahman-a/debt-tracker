@@ -60,7 +60,6 @@ app.use(
     origin: ['http://localhost:3000', 'http://localhost:3001'],
   })
 )
-app.use(helmet())
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(i18nextMiddleware.handle(i18next))

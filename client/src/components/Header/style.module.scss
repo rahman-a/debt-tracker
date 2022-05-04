@@ -176,6 +176,9 @@
       @include media.mq(sm) {
         font-size: 1.4rem;
       }
+      @include media.mq(xxs) {
+        font-size: 1.2rem;
+      }
     }
     a:last-child {
       background-color: var.$full-light-color;
@@ -188,14 +191,17 @@
       }
       @include media.mq(sm) {
         font-size: 1.4rem;
-        padding: 0.3rem 2rem;
+        padding: 0.3rem 1rem;
+      }
+      @include media.mq(xxs) {
+        font-size: 1.2rem;
       }
     }
 
     &_ar {
       a:first-child {
         margin-right: unset;
-        margin-left: 2rem;
+        margin-left: 1.5rem;
       }
     }
   }

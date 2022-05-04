@@ -2,21 +2,21 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert } from 'react-bootstrap'
 import { v4 as uuidv4 } from 'uuid'
-import { Input, SideButton, Button } from '../../components'
+import { Input, SideButton, Button, FormStepsChanger } from '../../components'
 import { Phone } from '../../icons'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
 
-const Phones = ({ setStep, info }) => {
-  const [moreInsidePhone, setMoreInsidePhone] = useState(1)
-  const [moreOutsidePhone, setMoreOutsidePhone] = useState(1)
-  const [insidePhones, setInsidePhones] = useState([])
-  const [outsidePhones, setOutsidePhones] = useState([])
-  const [insideFocus, setInsideFocus] = useState(false)
-  const [outsideFocus, setOutsideFocus] = useState(false)
+const Phones = ({ step, setStep, info, setInfo }) => {
+  const [insidePhones, setInsidePhones] = useState([
+    { _id: uuidv4(), value: '', isPrimary: true },
+  ])
+  const [outsidePhones, setOutsidePhones] = useState([
+    { _id: uuidv4(), value: '' },
+  ])
   const [errors, setErrors] = useState('')
-  const { loading, error, isDone } = useSelector((state) => state.registerInfo)
-  const { userId } = useSelector((state) => state.registerCredential)
+  const [phones, setPhones] = useState(null)
+  const { loading, error, success } = useSelector((state) => state.checkInfo)
   const dispatch = useDispatch()
   const insideRef = useRef()
   const outsideRef = useRef()
@@ -28,100 +28,115 @@ const Phones = ({ setStep, info }) => {
       return false
     } else {
       for (let phone of insidePhones) {
-        if (phone === '' || phone === ' ') {
+        if (phone.value === '' || phone.value === ' ') {
           setErrors(t('provide-phone'))
           return false
         }
 
-        if (!/^\d+$/.test(phone)) {
+        if (!/^\d+$/.test(phone.value)) {
           setErrors(t('provide-valid-tel'))
           return false
         }
 
-        if (phone.replace(/\D/g, '').startsWith('971')) {
+        if (phone.value.replace(/\D/g, '').startsWith('971')) {
           setErrors(t('remove-dialing-code'))
           return false
         }
       }
     }
 
-    const insidePhonesCollection = insidePhones.map((phone, idx) => {
-      return { isPrimary: idx === 0, phone }
+    const insidePhonesCollection = insidePhones.map((phone) => {
+      return { isPrimary: phone.isPrimary, phone: phone.value }
     })
 
     let data = { insidePhones: insidePhonesCollection }
 
-    if (outsidePhones.length) {
-      for (let phone of outsidePhones) {
-        if (!/^\d+$/.test(phone)) {
+    for (const phone of outsidePhones) {
+      if (phone.value !== '' && phone.value !== ' ') {
+        if (!/^\d+$/.test(phone.value)) {
           setErrors(t('provide-valid-tel'))
           return false
         }
-      }
-      data = {
-        insidePhones: insidePhonesCollection,
-        outsidePhones,
+        data['outsidePhones'] = outsidePhones.map((phone) => phone.value)
       }
     }
 
-    const infoData = { ...data, ...info }
-    dispatch(actions.users.registerInfo(userId, infoData))
+    setPhones(data)
+    dispatch(actions.users.checkInfo({ phones: insidePhonesCollection }))
   }
 
-  const setInsidePhoneHandler = (e, idx) => {
-    const phones = [...insidePhones]
-    phones[idx] = e.target.value
+  const setInsidePhoneHandler = (e, id) => {
+    const phones = insidePhones.map((phone) => {
+      if (phone._id === id) {
+        phone.value = e.target.value
+      }
+      return phone
+    })
     setInsidePhones(phones)
-    setInsideFocus(true)
   }
 
-  const setOutsidePhonesHandler = (e, idx) => {
-    const phones = [...outsidePhones]
-    phones[idx] = e.target.value
+  const setOutsidePhonesHandler = (e, id) => {
+    const phones = outsidePhones.map((phone) => {
+      if (phone._id === id) {
+        phone.value = e.target.value
+      }
+      return phone
+    })
     setOutsidePhones(phones)
-    setOutsideFocus(true)
   }
 
   const addMorePhoneHandler = (where) => {
     if (where === 'inside') {
-      setMoreInsidePhone((prev) => prev + 1)
+      setInsidePhones([
+        ...insidePhones,
+        { _id: uuidv4(), value: '', isPrimary: false },
+      ])
     } else {
-      setMoreOutsidePhone((prev) => prev + 1)
+      setOutsidePhones([...outsidePhones, { _id: uuidv4(), value: '' }])
     }
   }
 
-  const removeMorePhoneHandler = (where, idx) => {
+  const removeMorePhoneHandler = (where, id) => {
     if (where === 'inside') {
-      const phones = [...insidePhones]
-      phones.splice(idx, 1)
+      const phones = insidePhones.filter((phone) => phone._id !== id)
       setInsidePhones(phones)
-      setMoreInsidePhone((prev) => prev - 1)
     } else {
-      const phones = [...outsidePhones]
-      phones.splice(idx, 1)
+      const phones = outsidePhones.filter((phone) => phone._id !== id)
       setOutsidePhones(phones)
-      setMoreOutsidePhone((prev) => prev - 1)
     }
   }
-
-  useEffect(() => {
-    outsideRef.current.focus()
-    outsideFocus && setOutsideFocus(false)
-  }, [outsideFocus])
-
-  useEffect(() => {
-    insideRef.current.focus()
-    insideFocus && setInsideFocus(false)
-  }, [insideFocus])
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [errors])
 
   useEffect(() => {
-    setErrors(error)
-    isDone && setStep(5)
-  }, [error, isDone])
+    error && setErrors(error)
+    if (success) {
+      setInfo({ ...info, ...phones })
+      setStep(5)
+    }
+  }, [error, success])
+
+  useEffect(() => {
+    if (info.insidePhones?.length) {
+      setInsidePhones(
+        info.insidePhones.map((phone) => ({
+          _id: uuidv4(),
+          value: phone.phone,
+          isPrimary: phone.isPrimary,
+        }))
+      )
+    }
+    if (info.outsidePhones?.length) {
+      setOutsidePhones(
+        info.outsidePhones.map((phone) => ({
+          _id: uuidv4(),
+          value: phone,
+        }))
+      )
+    }
+  }, [info])
 
   return (
     <>
@@ -135,10 +150,10 @@ const Phones = ({ setStep, info }) => {
         {t('enter-phone-without-emirates-code')}{' '}
       </span>
       {/* INPUTS TO ENTER PHONES NUMBERS INSIDE UAE*/}
-      {[...Array(moreInsidePhone)].map((_, idx) => {
+      {insidePhones.map((phone, idx) => {
         return (
           <div
-            key={uuidv4()}
+            key={phone._id}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -148,25 +163,24 @@ const Phones = ({ setStep, info }) => {
               name='insidePhone'
               placeholder='phone-in-uae'
               label='phone-in-uae'
-              type='text'
+              type='number'
               icon={<Phone />}
-              value={insidePhones[idx] ? insidePhones[idx] : ''}
-              onChange={(e) => setInsidePhoneHandler(e, idx)}
+              value={phone.value}
+              onChange={(e) => setInsidePhoneHandler(e, phone._id)}
               inputRef={insideRef}
-              disabled={moreInsidePhone > idx + 1}
               custom={{ marginBottom: '3rem' }}
             />
-            {moreInsidePhone === idx + 1 && (
+            {insidePhones.length === idx + 1 && (
               <SideButton
                 text={t('another-phone')}
                 handler={() => addMorePhoneHandler('inside')}
               />
             )}
-            {moreInsidePhone === idx + 1 && moreInsidePhone > 1 && (
+            {insidePhones.length === idx + 1 && insidePhones.length > 1 && (
               <SideButton
                 minus
                 text={t('remove-phone')}
-                handler={() => removeMorePhoneHandler('inside', idx)}
+                handler={() => removeMorePhoneHandler('inside', phone._id)}
               />
             )}
           </div>
@@ -174,10 +188,10 @@ const Phones = ({ setStep, info }) => {
       })}
 
       {/* INPUTS TO ENTER PHONES NUMBERS OUTSIDE UAE*/}
-      {[...Array(moreOutsidePhone)].map((_, idx) => {
+      {outsidePhones.map((phone, idx) => {
         return (
           <div
-            key={uuidv4()}
+            key={phone._id}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -187,25 +201,24 @@ const Phones = ({ setStep, info }) => {
               name='outsidePhone'
               placeholder='phone-out-uae'
               label='phone-out-uae'
-              type='text'
+              type='number'
               icon={<Phone />}
-              value={outsidePhones[idx] ? outsidePhones[idx] : ''}
-              onChange={(e) => setOutsidePhonesHandler(e, idx)}
+              value={phone.value}
+              onChange={(e) => setOutsidePhonesHandler(e, phone._id)}
               inputRef={outsideRef}
-              disabled={moreOutsidePhone > idx + 1}
               custom={{ marginBottom: '3rem' }}
             />
-            {moreOutsidePhone === idx + 1 && (
+            {outsidePhones.length === idx + 1 && (
               <SideButton
                 text={t('another-phone')}
                 handler={() => addMorePhoneHandler('outside')}
               />
             )}
-            {moreOutsidePhone === idx + 1 && moreOutsidePhone > 1 && (
+            {outsidePhones.length === idx + 1 && outsidePhones.length > 1 && (
               <SideButton
                 minus
                 text={t('remove-phone')}
-                handler={() => removeMorePhoneHandler('outside', idx)}
+                handler={() => removeMorePhoneHandler('outside', phone._id)}
               />
             )}
           </div>
@@ -216,6 +229,11 @@ const Phones = ({ setStep, info }) => {
         value={t('next')}
         handler={moveNextHandler}
         loading={loading && loading}
+      />
+      <FormStepsChanger
+        step={step}
+        setStep={setStep}
+        moveForwardHandler={moveNextHandler}
       />
     </>
   )

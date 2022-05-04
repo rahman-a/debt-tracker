@@ -17,18 +17,23 @@ import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 const Register = () => {
-  const [step, setStep] = useState(4)
+  const [step, setStep] = useState(5)
   const [info, setInfo] = useState({})
   const navigate = useNavigate()
   const lang = i18next.language
   const { t } = useTranslation()
+
   const Component = {
-    1: <Credential setStep={setStep} />,
-    2: <Personal setStep={setStep} setInfo={setInfo} info={info} />,
-    3: <Address setStep={setStep} setInfo={setInfo} info={info} />,
-    4: <Phones setStep={setStep} info={info} />,
-    5: <Documents setStep={setStep} />,
-    6: <Snapshot setStep={setStep} />,
+    1: (
+      <Credential step={step} setStep={setStep} setInfo={setInfo} info={info} />
+    ),
+    2: <Personal step={step} setStep={setStep} setInfo={setInfo} info={info} />,
+    3: <Address step={step} setStep={setStep} setInfo={setInfo} info={info} />,
+    4: <Phones step={step} setStep={setStep} setInfo={setInfo} info={info} />,
+    5: (
+      <Documents step={step} setStep={setStep} setInfo={setInfo} info={info} />
+    ),
+    6: <Snapshot step={step} setStep={setStep} setInfo={setInfo} info={info} />,
     7: <Done setStep={setStep} />,
   }
 

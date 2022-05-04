@@ -34,6 +34,9 @@
     left: 20%;
     right: unset;
   }
+  @include media.mq(xxs) {
+    left: 10%;
+  }
   a {
     margin-bottom: 1.5rem;
     text-decoration: none;

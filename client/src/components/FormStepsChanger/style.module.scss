@@ -1,0 +1,26 @@
+@use '../../sass/media' as media;
+
+.move {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 5rem;
+  button {
+    all: unset;
+    color: #1a374d;
+    background-color: #fff;
+    padding: 0 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    &:disabled {
+      background-color: #d1d1d1 !important;
+      color: #797a7b !important;
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+    }
+  }
+
+  @include media.mq(xs) {
+    transform: translateY(2rem);
+  }
+}

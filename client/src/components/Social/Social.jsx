@@ -32,7 +32,7 @@ const Social = () => {
     <div className={`${style.social} ${lang === 'ar' ? style.social_ar : ' '}`}>
       {socials?.length > 0 &&
         socials.map((item) => (
-          <a href={item.link} target='_blank' rel='noreferrer'>
+          <a key={item._id} href={item.link} target='_blank' rel='noreferrer'>
             {socialIcon[item.name]}
           </a>
         ))}

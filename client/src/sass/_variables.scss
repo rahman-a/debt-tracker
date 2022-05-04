@@ -2,46 +2,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400&display=swap');
 
-
 :root {
-    
-    // fonts
-    --main-font:'Roboto', sans-serif;
-    --second-font:'Cairo', sans-serif;
-    --third-font:'Montserrat', sans-serif;
-    
-    // colors
-    --main-color:#1A374D;
-    --second-color:#406882;
-    --light-color:#6998AB;
-    --full-light-color:#B1D0E0;
-    --state-red-color:#FCD4DB;
-    --state-green-color:#C7FFCE;
-    --state-yellow-color:#FBFCD4;
-    --code-red-color:#EC4A0D;
-    --code-yellow-color:#C7E81D;
-    --code-green-color:#037A12; 
-    --white-color:#fff;
+  // fonts
+  --main-font: 'Roboto', sans-serif;
+  --second-font: 'Cairo', sans-serif;
+  --third-font: 'Montserrat', sans-serif;
+
+  // colors
+  --main-color: #1a374d;
+  --second-color: #406882;
+  --light-color: #6998ab;
+  --full-light-color: #b1d0e0;
+  --state-red-color: #fcd4db;
+  --state-green-color: #c7ffce;
+  --state-yellow-color: #fbfcd4;
+  --code-red-color: #ec4a0d;
+  --code-yellow-color: #fffb00;
+  --code-green-color: #037a12;
+  --white-color: #fff;
 }
 
+// fonts
+$main-font: 'Roboto', sans-serif;
+$second-font: 'Cairo', sans-serif;
+$third-font: 'Montserrat', sans-serif;
 
-
- // fonts
- $main-font:'Roboto', sans-serif;
- $second-font:'Cairo', sans-serif;
- $third-font:'Montserrat', sans-serif;
-
- // colors
- $main-color:#1A374D;
- $second-color:#406882;
- $light-color:#6998AB;
- $full-light-color:#B1D0E0;
- $state-red-color:#FCD4DB;
- $state-green-color:#C7FFCE;
- $state-yellow-color:#FBFCD4;
- $code-red-color:#EC4A0D;
- $code-yellow-color:#C7E81D;
- $code-green-color:#037A12;
- $white-color:#fff;
- 
-
+// colors
+$main-color: #1a374d;
+$second-color: #406882;
+$light-color: #6998ab;
+$full-light-color: #b1d0e0;
+$state-red-color: #fcd4db;
+$state-green-color: #c7ffce;
+$state-yellow-color: #fbfcd4;
+$code-red-color: #ec4a0d;
+$code-yellow-color: #fffb00;
+$code-green-color: #037a12;
+$white-color: #fff;

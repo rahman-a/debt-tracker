@@ -15,7 +15,7 @@ const OTPCode = () => {
   const { loading, error, message } = useSelector(
     (state) => state.VerifyPhoneCode
   )
-  const { userId } = useSelector((state) => state.registerCredential)
+  const { userId } = useSelector((state) => state.registerUser)
   const {
     loading: phone_loading,
     error: phone_error,

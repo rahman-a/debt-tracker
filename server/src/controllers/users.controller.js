@@ -13,6 +13,7 @@ import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
 import { labels } from '../config/labels.js'
+import { v4 as uuidv4 } from 'uuid'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const documentsInArabic = {
@@ -21,71 +22,77 @@ const documentsInArabic = {
   residential: 'بطاقة الأقامة',
 }
 
-// create user document using email and password
-export const register = async (req, res, next) => {
-  const { username, emails } = req.body
-  const newUser = new User(req.body)
+// check if username, email, phone exist
+export const checkIfExist = async (req, res, next) => {
+  const { username, emails, phones } = req.body
 
   try {
-    const isUsernameFound = await User.findOne({ username })
-    if (isUsernameFound) {
-      res.status(400)
-      throw new Error(req.t('username_already_found'))
-    }
-    for (const email of emails) {
-      const isFound = await User.findOne({ 'emails.email': email.email })
-      if (isFound) {
+    if (username) {
+      const isUsernameFound = await User.findOne({ username })
+      if (isUsernameFound) {
         res.status(400)
-        throw new Error(req.t('email-already-exist', { email: email.email }))
+        throw new Error(req.t('username_already_found'))
       }
     }
-    const user = await newUser.save()
+    if (emails && emails.length) {
+      for (const email of emails) {
+        const isFound = await User.findOne({ 'emails.email': email.email })
+        if (isFound) {
+          res.status(400)
+          throw new Error(req.t('email-already-exist', { email: email.email }))
+        }
+      }
+    }
+    if (phones && phones.length) {
+      for (const phone of phones) {
+        const isPhoneFound = await User.findOne({
+          'insidePhones.phone': phone.phone,
+        })
+        if (isPhoneFound) {
+          res.status(400)
+          throw new Error(req.t('phone_already_exist', { phone: phone.phone }))
+        }
+      }
+    }
     res.send({
+      code: 200,
       success: true,
-      code: 201,
-      user: user._id,
     })
   } catch (error) {
     next(error)
   }
 }
 
-// complete the user information ['fullNameInEnglish', 'fullNameInArabic', 'company',
-// 'insideAddress','outsideAddress', 'insidePhones','outsidePhones']
-export const completeRegistration = async (req, res, next) => {
-  const { id } = req.params
-  const userData = req.body
+export const registerNewUser = async (req, res, next) => {
+  const { country, emails, insidePhones, outsidePhones } = req.body
+  const user = req.body
   try {
-    const allowedKeys = [
-      'fullNameInEnglish',
-      'fullNameInArabic',
-      'company',
-      'insideAddress',
-      'outsideAddress',
-      'insidePhones',
-      'outsidePhones',
-      'country',
-    ]
+    user.country = JSON.parse(country)
+    user.emails = JSON.parse(emails)
+    user.insidePhones = JSON.parse(insidePhones)
+    outsidePhones && (user.outsidePhones = JSON.parse(outsidePhones))
 
-    if (Object.keys(userData).length === 0) {
-      res.status(400)
-      throw new Error(req.t('provide_required_data'))
+    const code = createUserCode(
+      user.fullNameInEnglish,
+      user.country.name
+    ).toLocaleUpperCase()
+    user.code = code
+
+    const expireAt = user.expireAt ? JSON.parse(user.expireAt) : null
+    user['avatar'] = req.files['avatar'][0].filename
+    user['verificationImage'] = req.files['verificationImage'][0].filename
+    user['passport'] = {
+      image: req.files['passport'][0].filename,
+      expireAt: expireAt['passport'],
     }
-
-    const user = await User.findById(id)
-
-    for (let key in userData) {
-      if (!allowedKeys.includes(key)) {
-        res.status(400)
-        throw new Error(req.t('value_not_recognized', { value: key }))
-      }
-      user[key] = userData[key]
+    user['identity'] = {
+      image: req.files['identity-front'][0].filename,
+      back: req.files['identity-back'][0].filename,
+      expireAt: expireAt['identity'],
     }
-
-    const code = createUserCode(user.fullNameInEnglish, user.country.name)
-    user.code = code.toLocaleUpperCase()
-    await user.save()
-
+    console.log({ user })
+    const newUser = new User(user)
+    const savedUser = await newUser.save()
     const notification = {
       title: {
         en: 'New Registration',
@@ -102,75 +109,13 @@ export const completeRegistration = async (req, res, next) => {
     }
 
     await sendNotificationToAdminPanel(['manager', 'hr'], notification)
+    await sendConfirmCodeToPhone(savedUser._id)
 
-    res.send({
+    res.status(201).send({
+      code: 201,
       success: true,
-      code: 200,
-      isDone: true,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const updatePhoneAndAddress = async (req, res, next) => {
-  const { outsideAddress, outsidePhones } = req.body
-  const { id } = req.params
-  try {
-    const user = await User.findById(id)
-
-    if (!user) {
-      res.status(401)
-      throw new Error(req.t('no_user_found'))
-    }
-
-    if (outsideAddress) {
-      user.outsideAddress = outsideAddress
-    }
-
-    if (outsidePhones) {
-      user.outsidePhones = outsidePhones
-    }
-
-    await user.save()
-
-    res.send({
-      success: true,
-      code: 200,
-      isDone: true,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-// upload the required documents to verify the user
-// [personal image, verification image, identity, passport, residential]
-export const registerDocument = async (req, res, next) => {
-  const { id } = req.params
-  try {
-    const expireAt = JSON.parse(req.body.expireAt)
-
-    const user = await User.findById(id)
-
-    for (let key in req.files) {
-      if (key === 'avatar' || key === 'verificationImage') {
-        user[key] = req.files[key][0].filename
-      } else {
-        user[key] = {
-          image: req.files[key][0].filename,
-          expireAt: expireAt[key],
-        }
-      }
-    }
-    await user.save()
-
-    await sendConfirmCodeToPhone(user._id)
-
-    res.send({
-      success: true,
-      code: 200,
-      isDone: true,
+      id: savedUser._id,
+      message: req.t('user_created_successfully'),
     })
   } catch (error) {
     next(error)
@@ -180,8 +125,10 @@ export const registerDocument = async (req, res, next) => {
 export const updateDocuments = async (req, res, next) => {
   const { id } = req.params
   const { type } = req.query
+
   try {
     const expireAt = JSON.parse(req.body.expireAt)
+    console.log('expireAt: ', expireAt)
 
     const documentExpire = new Date(expireAt[type]).getTime()
     const now = new Date().getTime()
@@ -201,11 +148,27 @@ export const updateDocuments = async (req, res, next) => {
         user[type].image
       )
       fs.existsSync(imagePath) && fs.unlinkSync(imagePath)
+      if (user[type]?.back) {
+        const imagePath = path.join(
+          __dirname,
+          'server',
+          '../../../uploads',
+          user[type].back
+        )
+        fs.existsSync(imagePath) && fs.unlinkSync(imagePath)
+      }
     }
-
-    user[type] = {
-      image: req.files[type][0].filename,
-      expireAt: expireAt[type],
+    if (type === 'passport') {
+      user['passport'] = {
+        image: req.files['passport'][0].filename,
+        expireAt: expireAt['passport'],
+      }
+    } else {
+      user['identity'] = {
+        image: req.files['identity-front'][0].filename,
+        back: req.files['identity-back'][0].filename,
+        expireAt: expireAt['identity'],
+      }
     }
 
     let documentState = null
@@ -216,26 +179,37 @@ export const updateDocuments = async (req, res, next) => {
           st.label['en'] !== labels['idExpired']['en'] &&
           st.label['en'] !== labels['idUpload']['en']
       )
-    } else if (type === 'passport') {
+    } else {
       documentState = user.colorCode.state.filter(
         (st) =>
           st.label['en'] !== labels['passExpired']['en'] &&
           st.label['en'] !== labels['passUpload']['en']
       )
-    } else if (type === 'residential') {
-      documentState = user.colorCode.state.filter(
-        (st) =>
-          st.label['en'] !== labels['resiExpired']['en'] &&
-          st.label['en'] !== labels['resiUpload']['en']
-      )
     }
 
     user.colorCode.state = documentState
 
-    const docObject = {
-      image: req.files[type][0].filename,
-      expireAt: expireAt[type],
-      isExpired: false,
+    let docObject = {}
+
+    if (type === 'passport') {
+      docObject = {
+        image: req.files['passport'][0].filename,
+        expireAt: expireAt['passport'],
+        isExpired: false,
+      }
+    } else {
+      docObject = {
+        identityFront: {
+          image: req.files['identity-front'][0].filename,
+          expireAt: expireAt['identity'],
+          isExpired: false,
+        },
+        identityBack: {
+          image: req.files['identity-back'][0].filename,
+          expireAt: expireAt['identity'],
+          isExpired: false,
+        },
+      }
     }
 
     await takeAction(user._id, 'green')
@@ -463,6 +437,7 @@ export const findUserHandler = async (req, res, next) => {
       name: user.fullNameInEnglish,
       arabicName: user.fullNameInArabic,
       image: user.avatar,
+      color: user.colorCode.code,
     }))
     res.send({
       success: true,
@@ -587,11 +562,19 @@ export const sendUserData = async (req, res, next) => {
       const date = new Date(user.identity.expireAt)
       const expiry = DateTime.fromJSDate(date).ts
 
-      const identity = {
+      user['identity-front'] = {
+        _id: uuidv4(),
         image: user.identity.image,
         isExpired: now > expiry,
       }
-      user.identity = identity
+
+      user['identity-back'] = {
+        _id: uuidv4(),
+        image: user.identity.back,
+        isExpired: now > expiry,
+      }
+
+      delete user.identity
     }
 
     if (user.passport) {
@@ -599,22 +582,20 @@ export const sendUserData = async (req, res, next) => {
       const date = new Date(user.passport.expireAt)
       const expiry = DateTime.fromJSDate(date).ts
       const passport = {
+        _id: uuidv4(),
         image: user.passport.image,
         isExpired: now > expiry,
       }
       user.passport = passport
     }
 
-    if (user.residential) {
-      const now = DateTime.now().ts
-      const date = new Date(user.residential.expireAt)
-      const expiry = DateTime.fromJSDate(date).ts
-
-      const residential = {
-        image: user.residential.image,
-        isExpired: now > expiry,
+    if (user.verificationImage) {
+      user.snapshot = {
+        _id: uuidv4(),
+        image: user.verificationImage,
       }
-      user.residential = residential
+
+      delete user.verificationImage
     }
 
     res.send({
@@ -959,7 +940,7 @@ async function sendLoginCodeToEmail(id) {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
     }
-    await sendEmail(info, 'code')
+    // await sendEmail(info, 'code')
   } catch (error) {
     throw new Error(error)
   }
@@ -1077,6 +1058,7 @@ const createUserCode = (name, country) => {
   const splittedName = name.split(' ')
   const firstNameLetter = splittedName[0][0]
   const lastNameLetter = splittedName[splittedName.length - 1][0]
+  console.log({ country })
   const countryFirstLetter = country[0]
   let codeNumber = ''
   for (let i = 0; i < 6; i++) {
