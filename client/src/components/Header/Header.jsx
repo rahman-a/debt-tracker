@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, Envelope, Support } from '../../icons'
+import { MenuBars, Bell, Envelope, Support, ChatSupport } from '../../icons'
 import {
   Loader,
   SideNavbar,
@@ -74,7 +74,6 @@ const Header = () => {
       i18next.changeLanguage(lang)
       setLangDropDown((prev) => !prev)
       setLoadingState(false)
-      // window.location.reload()
     }, 500)
   }
 
@@ -123,7 +122,6 @@ const Header = () => {
       setTimeout(() => {
         dispatch(actions.notifications.pushNotification())
       }, 5000)
-
     !nonRead && dispatch(actions.notifications.listNotification())
     !count && dispatch(actions.chat.latestMessages())
 
@@ -151,7 +149,11 @@ const Header = () => {
       {pushNotifications &&
         pushNotifications.length > 0 &&
         pushNotifications.map((notification, idx) => (
-          <PushNotification key={idx} idx={idx} data={notification} />
+          <PushNotification
+            key={notification._id}
+            idx={idx}
+            data={notification}
+          />
         ))}
 
       <div
@@ -338,8 +340,7 @@ const Header = () => {
           <Loader size='5' options={{ animation: 'border' }} />
         ) : (
           <span onClick={createSupportGroup}>
-            {' '}
-            <Support />{' '}
+            <ChatSupport />
           </span>
         )}
       </div>

@@ -32,7 +32,6 @@ const About = () => {
         ) : (
           aboutUs && (
             <>
-              <p>{lang === 'ar' ? 'Arabic' : 'English'}</p>
               <h1>{aboutUs.header[lang]}</h1>
               <p>{aboutUs.body[lang]}</p>
             </>

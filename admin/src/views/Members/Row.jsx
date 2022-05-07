@@ -21,7 +21,7 @@ const Row = ({ user, idx }) => {
   const variant = {
     '#037A12': { color: 'success', text: lang === 'ar' ? 'مؤهل' : 'OK' },
     ' #fffb00': { color: 'warning', text: lang === 'ar' ? 'تحذير' : 'WARNING' },
-    '#EC4A0D': { color: 'danger', text: lang === 'ar' ? 'خطر' : 'DANGER' },
+    '#ec4a0d': { color: 'danger', text: lang === 'ar' ? 'خطر' : 'DANGER' },
   }
 
   const dateFormat = {
@@ -124,8 +124,8 @@ const Row = ({ user, idx }) => {
 
         <td style={{ padding: '0' }}>
           <div className={style.members__code}>
-            <Badge bg={variant[user.colorCode.code].color}>
-              {variant[user.colorCode.code].text}
+            <Badge bg={variant[user.colorCode.code]?.color}>
+              {variant[user.colorCode.code]?.text}
             </Badge>
           </div>
         </td>

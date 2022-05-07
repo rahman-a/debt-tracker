@@ -25,14 +25,14 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
 
   const stateName = {
     '#037A12': lang === 'ar' ? 'مؤهل' : 'Accredited',
-    ' #fffb00': lang === 'ar' ? 'تحذير' : 'Warning',
-    '#EC4A0D': lang === 'ar' ? 'خطر' : 'Danger',
+    '#fffb00': lang === 'ar' ? 'تحذير' : 'Warning',
+    '#ec4a0d': lang === 'ar' ? 'خطر' : 'Danger',
   }
 
   const textColor = {
     '#037A12': '#fff',
-    ' #fffb00': '#000',
-    '#EC4A0D': '#fff',
+    '#fffb00': '#000',
+    '#ec4a0d': '#fff',
   }
 
   const declineOperationHandler = (_) => {

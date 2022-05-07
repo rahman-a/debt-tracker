@@ -54,7 +54,12 @@ function App() {
           <Route
             path='active'
             element={isAuth ? <ActiveReports /> : <Navigate to='/login' />}
-          />
+          >
+            <Route
+              path=':id'
+              element={isAuth ? <ActiveReports /> : <Navigate to='/login' />}
+            />
+          </Route>
           <Route
             path='closed'
             element={isAuth ? <ClosedReports /> : <Navigate to='/login' />}

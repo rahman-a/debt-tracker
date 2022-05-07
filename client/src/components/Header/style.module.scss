@@ -325,7 +325,6 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    background-color: var.$white-color;
     border-radius: 50%;
     cursor: pointer;
     z-index: 9;
@@ -337,8 +336,8 @@
     }
 
     svg {
-      width: 5rem;
-      height: 5rem;
+      width: 6rem;
+      height: 6rem;
     }
   }
 }

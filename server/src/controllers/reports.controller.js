@@ -1,11 +1,12 @@
+import { DateTime } from 'luxon'
+import cron from 'node-cron'
+import mongoose from 'mongoose'
 import Report from '../models/reports.model.js'
 import Operation from '../models/operations.model.js'
 import User from '../models/users.model.js'
 import Notification from '../models/notifications.model.js'
 import { takeAction } from '../config/takeAction.js'
 import { code } from '../config/code.js'
-import { DateTime } from 'luxon'
-import cron from 'node-cron'
 
 export const createReport = async (req, res, next) => {
   const { operation } = req.body
@@ -68,39 +69,6 @@ export const listAllMemberReports = async (req, res, next) => {
   } = req.query
 
   try {
-    if (code) {
-      const report = await Report.findById(code)
-        .populate({
-          path: 'operation',
-          populate: {
-            path: 'initiator',
-            populate: {
-              path: 'user',
-              select: 'fullNameInEnglish fullNameInArabic avatar',
-            },
-          },
-        })
-        .populate({
-          path: 'operation',
-          populate: {
-            path: 'peer',
-            populate: {
-              path: 'user',
-              select: 'fullNameInEnglish fullNameInArabic avatar',
-            },
-          },
-        })
-        .populate('currency', 'name abbr image')
-      res.send({
-        success: true,
-        code: 200,
-        count: 1,
-        reports: [report],
-      })
-
-      return
-    }
-
     let searchFilter = {
       $or: [
         { 'operation.initiator._id': req.user._id },
@@ -112,6 +80,13 @@ export const listAllMemberReports = async (req, res, next) => {
     }
 
     let dueDateFilter = { createdAt: -1 }
+
+    if (code) {
+      searchFilter = {
+        ...searchFilter,
+        _id: mongoose.Types.ObjectId(code),
+      }
+    }
 
     if (type) {
       searchFilter = {
@@ -248,6 +223,7 @@ export const listAllMemberReports = async (req, res, next) => {
                     $project: {
                       fullNameInEnglish: 1,
                       fullNameInArabic: 1,
+                      color: '$colorCode.code',
                       avatar: 1,
                       type: '$$type',
                     },
@@ -266,6 +242,7 @@ export const listAllMemberReports = async (req, res, next) => {
                     $project: {
                       fullNameInEnglish: 1,
                       fullNameInArabic: 1,
+                      color: '$colorCode.code',
                       avatar: 1,
                       type: '$$type',
                     },
@@ -285,11 +262,13 @@ export const listAllMemberReports = async (req, res, next) => {
                 'initiator._id': 1,
                 'initiator.fullNameInEnglish': 1,
                 'initiator.fullNameInArabic': 1,
+                'initiator.color': 1,
                 'initiator.avatar': 1,
                 'initiator.type': 1,
                 'peer._id': 1,
                 'peer.fullNameInEnglish': 1,
                 'peer.fullNameInArabic': 1,
+                'peer.color': 1,
                 'peer.avatar': 1,
                 'peer.type': 1,
                 note: 1,
@@ -433,7 +412,7 @@ export const closeReportHandler = async (req, res, next) => {
       throw new Error(req.t('must_be_credit_to_close_report'))
     }
 
-    const color = debtor.colorCode.code
+    const color = debtor.colorCode.code.trim().toLocaleLowerCase()
 
     if (color === code['green']) {
       report.isActive = false
@@ -449,6 +428,7 @@ export const closeReportHandler = async (req, res, next) => {
     }
 
     if (color === code['yellow']) {
+      console.log('color is yellow...')
       debtor.colorCode.state = debtor.colorCode.state.filter(
         (st) => st.report?.toString() !== report._id.toString()
       )
@@ -1085,6 +1065,6 @@ const scanReportsDueDate = async () => {
   }
 }
 
-cron.schedule('* 6 * * *', scanReportsDueDate, {
+cron.schedule('10 6 * * *', scanReportsDueDate, {
   timezone: 'Asia/Dubai',
 })

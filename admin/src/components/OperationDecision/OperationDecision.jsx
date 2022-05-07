@@ -21,7 +21,7 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
   const stateName = {
     '#037A12': 'Accredited',
     '#fffb00': 'Warning',
-    '#EC4A0D': 'Danger',
+    '#ec4a0d': 'Danger',
   }
 
   const declineOperationHandler = (_) => {

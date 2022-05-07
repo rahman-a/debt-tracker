@@ -14,7 +14,7 @@ const Filter = ({
   const colorCode = {
     green: '#037A12',
     yellow: '#fffb00',
-    red: '#EC4A0D',
+    red: '#ec4a0d',
   }
   const searchFilterHandler = (e) => {
     let value = {}

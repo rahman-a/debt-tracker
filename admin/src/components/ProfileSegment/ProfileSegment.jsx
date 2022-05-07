@@ -103,7 +103,7 @@ const MemberColorCode = ({ color, memberId }) => {
   const lang = i18next.language
 
   const colorCodes = {
-    red: '#EC4A0D',
+    red: '#ec4a0d',
     yellow: ' #fffb00',
     green: '#037A12',
   }

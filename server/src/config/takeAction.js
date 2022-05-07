@@ -104,8 +104,8 @@ export const takeAction = async (id, state, messageState, report) => {
         (st) => st.label['en'] === label['en']
       )
       if (!isLabelFound) {
-        // change color code and push the message to state
-        if (user.colorCode.code !== '#EC4A0D') {
+        // change color code and push the message to state #ec4a0d
+        if (user.colorCode.code !== '#ec4a0d') {
           user.colorCode.code = color
         }
         user.colorCode.state = user.colorCode.state.concat({ label, message })

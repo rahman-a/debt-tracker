@@ -189,18 +189,16 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
 
         {/* Operation Second Peer or Initiator Photo */}
         <td className={style.row__photo} style={{ padding: '1rem 0' }}>
-          {record.state === 'pending' && (
-            <span
-              style={{
-                backgroundColor:
-                  (record.peer?.user?._id || record.operation.peer._id) ===
-                  user._id
-                    ? record.initiator?.user?.color ||
-                      record.operation.initiator.color
-                    : record.peer?.user?.color || record.operation.peer.color,
-              }}
-            ></span>
-          )}
+          <span
+            style={{
+              backgroundColor:
+                (record.peer?.user?._id || record.operation.peer._id) ===
+                user._id
+                  ? record.initiator?.user?.color ||
+                    record.operation.initiator.color
+                  : record.peer?.user?.color || record.operation.peer.color,
+            }}
+          ></span>
           <img
             src={
               (record.peer?.user?._id || record.operation.peer._id) === user._id

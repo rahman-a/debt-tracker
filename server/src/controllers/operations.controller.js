@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import Operation from '../models/operations.model.js'
 import Report from '../models/reports.model.js'
 import Notification from '../models/notifications.model.js'
@@ -35,12 +36,12 @@ export const createOperation = async (req, res, next) => {
     const initiator = await User.findById(req.body.initiator.user)
     const peer = await User.findById(req.body.peer.user)
 
-    if (initiator.colorCode.code === '#EC4A0D') {
+    if (initiator.colorCode.code === '#ec4a0d') {
       res.status(400)
       throw new Error(req.t('not_allowed_create_operation'))
     }
 
-    if (peer.colorCode.code === '#EC4A0D') {
+    if (peer.colorCode.code === '#ec4a0d') {
       res.status(400)
       throw new Error(req.t('not_allowed_create_operation_with_red_member'))
     }
@@ -144,42 +145,7 @@ export const listAllMemberOperations = async (req, res, next) => {
   const { code, name, type, value, currency, state, dueDate, page, skip } =
     req.query
 
-  console.log(req.protocol + '://' + req.get('host'))
-
   try {
-    if (code) {
-      const operation = await Operation.findById(code)
-        .populate({
-          path: 'initiator',
-          populate: {
-            path: 'user',
-            select: 'fullNameInEnglish fullNameInArabic avatar',
-          },
-        })
-        .populate({
-          path: 'peer',
-          populate: {
-            path: 'user',
-            select: 'fullNameInEnglish fullNameInArabic avatar',
-          },
-        })
-        .populate('currency', 'name abbr image')
-
-      if (!operation) {
-        res.status(404)
-        throw new Error(req.t('no_operation_found'))
-      }
-
-      res.send({
-        success: true,
-        code: 200,
-        count: 1,
-        operations: [operation],
-      })
-
-      return
-    }
-
     let searchFilter = {
       $or: [
         { 'initiator.user._id': req.user._id },
@@ -189,6 +155,13 @@ export const listAllMemberOperations = async (req, res, next) => {
     }
 
     let dueDateFilter = { createdAt: -1 }
+
+    if (code) {
+      searchFilter = {
+        ...searchFilter,
+        _id: mongoose.Types.ObjectId(code),
+      }
+    }
 
     if (type) {
       searchFilter = {
