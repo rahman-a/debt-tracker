@@ -1,8 +1,12 @@
+// remove captilize and sendEmail
+// remove sendEmail
+
 import mongoose from 'mongoose'
 import Operation from '../models/operations.model.js'
 import Report from '../models/reports.model.js'
 import Notification from '../models/notifications.model.js'
 import User from '../models/users.model.js'
+import sendEmail from '../emails/email.js'
 
 const peerTypeInArabic = {
   debt: 'مدين',
@@ -146,6 +150,28 @@ export const listAllMemberOperations = async (req, res, next) => {
     req.query
 
   try {
+    const user = req.user
+    const document = 'identity'
+    const infoEmail = {
+      name: user.fullNameInEnglish,
+      email: user.emails.find((email) => email.isPrimary === true).email,
+      type: capitalize(document),
+      data: new Date(user[document].expireAt).toLocaleString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+      image:
+        'https://upload.wikimedia.org/wikipedia/commons/e/ef/Dowod-osobisty-wzorzec-868x489.png',
+    }
+
+    console.log({
+      info: infoEmail,
+    })
+
+    // send email to inform the user
+    await sendEmail(infoEmail, 'reminder')
+
     let searchFilter = {
       $or: [
         { 'initiator.user._id': req.user._id },
@@ -770,4 +796,8 @@ const sendNotificationToAdminPanel = async (roles, data) => {
   } catch (error) {
     throw new Error(error)
   }
+}
+
+function capitalize(string) {
+  return string.charAt(0).toLocaleUpperCase() + string.slice(1)
 }

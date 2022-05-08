@@ -871,7 +871,7 @@ export const sendContactEmail = async (req, res, next) => {
     }
 
     const info = { name, message, phone, email }
-    await sendEmail(info, 'contact', 'ahm.abdrahman@gmail.com')
+    await sendEmail(info, 'contact', 'swtle.op@gmail.com')
     res.send({
       code: 200,
       success: true,
@@ -1084,14 +1084,6 @@ const scanUserDocuments = async () => {
 
         if (user.passport && user.passport.expireAt) {
           await documentExpiredHandler(user._id, 'passport', 'passExpired')
-        } else {
-          await documentMissingHandler(user._id, 'passport', 'passUpload')
-        }
-
-        if (user.residential && user.residential.expireAt) {
-          await documentExpiredHandler(user._id, 'residential', 'resiExpired')
-        } else {
-          await documentMissingHandler(user._id, 'residential', 'resiUpload')
         }
       }
     }
@@ -1152,75 +1144,17 @@ const documentExpiredHandler = async (id, document, action) => {
 
       const info = {
         name: user.fullNameInEnglish,
-        email: user.emails.find((email) => email.isPrimary === true).email,
-        message: `We Remind you to upload your new ${document} because you only have less than a week
-                before your ${document} EXPIRE`,
-        label: `Your ${capitalize(document)} About to Expire`,
+        type: capitalize(document),
+        data: new Date(user[document].expireAt).toLocaleString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        }),
+        image: `https://www.swtle.com/api/files/${user[document].image}`,
       }
 
       // send email to inform the user
-      await sendEmail(info, 'notice')
-    }
-  }
-}
-
-const documentMissingHandler = async (id, document, action) => {
-  const user = await User.findById(id)
-
-  const now = DateTime.now().setZone('Asia/Dubai')
-  const registrationDateObject = new Date(user.createdAt)
-  const registrationDate = DateTime.fromJSDate(registrationDateObject).setZone(
-    'Asia/Dubai'
-  )
-
-  const diff = now.diff(registrationDate, ['days', 'hours'])
-  const sinceRegistrationInDays = diff.values.days
-
-  if (sinceRegistrationInDays > 29 && sinceRegistrationInDays < 31) {
-    await takeAction(user._id, 'yellow', action)
-  } else if (sinceRegistrationInDays < 30) {
-    const operationCount = await Operation.count({
-      $or: [{ 'initiator.user': user._id }, { 'peer.user': user._id }],
-    })
-    if (operationCount >= 5) {
-      if (user.lastEmailSend) {
-        const now = DateTime.now().setZone('Asia/Dubai')
-
-        const lastEmailSendDateObject = new Date(user.lastEmailSend)
-        const lastEmailSendDate = DateTime.fromJSDate(
-          lastEmailSendDateObject
-        ).setZone('Asia/Dubai')
-
-        const diff = now.diff(lastEmailSendDate, ['days', 'hours'])
-        const lastEmailSendInDays = diff.values.days
-
-        if (lastEmailSendInDays > 2 && lastEmailSendInDays < 4) {
-          const info = {
-            name: user.fullNameInEnglish,
-            email: user.emails.find((email) => email.isPrimary === true).email,
-            message: `This is a reminder E-mail to upload your ${document} because we notice you start create
-                        operations and engage with other clients`,
-            label: `Reminder to upload Your ${capitalize(document)}`,
-          }
-
-          // send email to inform the user
-          await sendEmail(info, 'notice')
-        }
-      } else {
-        const info = {
-          name: user.fullNameInEnglish,
-          email: user.emails.find((email) => email.isPrimary === true).email,
-          message: `This is a reminder E-mail to upload your ${document} because we notice you start create
-                    operations and engage with other clients`,
-          label: `Reminder to upload Your ${capitalize(document)}`,
-        }
-
-        // send email to inform the user
-        await sendEmail(info, 'notice')
-
-        user.lastEmailSend = new Date()
-        await user.save()
-      }
+      await sendEmail(info, 'reminder')
     }
   }
 }

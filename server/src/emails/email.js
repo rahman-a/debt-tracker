@@ -1,5 +1,13 @@
 import mailgun from 'mailgun-js'
-import template from './template.js'
+import {
+  welcome,
+  reset,
+  code,
+  document,
+  debt,
+  reminder,
+  contact,
+} from './template.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -8,32 +16,50 @@ const mg = mailgun({
   domain: process.env.MG_DOMAIN,
 })
 
+const emailData = {
+  activate: {
+    subject: 'Welcome to SWTLE Portal',
+    sender: '<support@swtle.com>',
+    template: welcome,
+  },
+  reset: {
+    subject: 'Reset Your Password',
+    sender: '<noreplay@swtle.com>',
+    template: reset,
+  },
+  code: {
+    subject: 'One-time Login Passcode',
+    sender: '<noreplay@swtle.com>',
+    template: code,
+  },
+  debt: {
+    subject: 'Due Date is Approaching',
+    sender: '<support@swtle.com>',
+    template: debt,
+  },
+  document: {
+    subject: 'Upload a new Document',
+    sender: '<support@swtle.com>',
+    template: document,
+  },
+  reminder: {
+    subject: 'Your document about to expire',
+    sender: '<support@swtle.com>',
+    template: reminder,
+  },
+  contact: {
+    subject: 'A message from SWTLE Portal',
+    sender: '<contact@swtle.com>',
+    template: contact,
+  },
+}
+
 const sendEmail = async (info, type, email) => {
   const data = {
-    from: 'SWTLE <noreplay@swtle.com>',
+    from: `SWTLE ${emailData[type].sender}`,
     to: email ? email : info.email,
-
-    subject:
-      type === 'activate'
-        ? 'Email Verification'
-        : type === 'reset'
-        ? 'Reset Account Password'
-        : type === 'code'
-        ? 'Login Code'
-        : type === 'notice'
-        ? 'Important Message from SWTLE Panel'
-        : type === 'contact' && 'New Contact Message',
-
-    html:
-      type === 'activate'
-        ? template.activate(info)
-        : type === 'reset'
-        ? template.reset(info)
-        : type === 'code'
-        ? template.code(info)
-        : type === 'notice'
-        ? template.notice(info)
-        : type === 'contact' && template.receiveContact(info),
+    subject: emailData[type].subject,
+    html: emailData[type].template(info),
   }
 
   mg.messages().send(data, function (error, body) {

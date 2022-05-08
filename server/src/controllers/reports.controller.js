@@ -966,14 +966,10 @@ const scanReportsDueDate = async () => {
             name: debtor.fullNameInEnglish,
             email: debtor.emails.find((email) => email.isPrimary === true)
               .email,
-            message: `This is a reminder E-mail to remind you that your debt of operation ${
-              report._id
-            } with amount of ${
-              operation.peer.value
-            } is due on ${dueDateObject.toLocaleString()}`,
-            label: `Reminder to pay debt of operation ${report._id}`,
+            date: dueDateObject.toLocaleString(),
+            report: report._id,
           }
-          await sendEmail(info, 'notice')
+          await sendEmail(info, 'debt')
         }
 
         if (now > dueDate && report.isActive) {
