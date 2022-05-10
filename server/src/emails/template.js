@@ -727,6 +727,140 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
 </html>
 `
 
+// name, label, message
+export const notice = (info) => `
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+
+<head style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+    <meta name="viewport" content="width=device-width, initial-scale=1"
+        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+    <link rel="preconnect" href="https://fonts.googleapis.com"
+        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin
+        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+    <title style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">Login Code</title>
+</head>
+
+<body bgcolor="#f7f7f7"
+    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;-webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;height: 100%;color: #676767;width: 100% !important;margin: 0 !important;">
+    <table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%"
+        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;min-width: 600px;border-collapse: collapse !important;">
+        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+            <td align="left" valign="top" width="100%"
+                style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
+                <center style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                    <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff"
+                        style="background-color: transparent;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
+                        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                            <td width="100%" height="80" valign="top"
+                                style="text-align: center;vertical-align: middle;background-color: #1a374d;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;line-height: 21px;border-collapse: collapse;">
+                                <center
+                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                                    <table cellpadding="0" cellspacing="0" width="600" class="w320"
+                                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
+                                        <tr
+                                            style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                                            <td class="pull-left mobile-header-padding-left"
+                                                style="vertical-align: middle;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: left;line-height: 21px;border-collapse: collapse;width: 290px;padding-left: 10px;">
+                                                <a href="https://www.swtle.com"
+                                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img
+                                                        width="137" height="47" src="https://i.ibb.co/WzfZRNC/swtle.png"
+                                                        alt="logo"
+                                                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+            <td align="center" valign="top" width="100%"
+                style="background-color: #f7f7f7;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 20px 0 30px;"
+                class="content-padding">
+                <center style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                    <table cellspacing="0" cellpadding="0" width="600" class="w320"
+                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
+                        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                            <td class="header-lg"
+                                style="color: #1a374d;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 25px;text-align: left;line-height: normal;border-collapse: collapse;font-weight: 700;padding: 35px 0 0 15px;">
+                                ${info.label}
+                            </td>
+                        </tr>
+                        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                            <td class="free-text"
+                                style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 15px;color: #777777;text-align: left;line-height: 2;border-collapse: collapse;padding: 15px 0 0 15px;width: 100% !important;">
+                                Hi, ${info.name}
+                            </td>
+                        </tr>
+                        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                            <td class="free-text"
+                                style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 15px;color: #777777;text-align: left;line-height: 2.2;border-collapse: collapse;padding: 15px;width: 100% !important;">
+                                ${info.message}
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+            <td align="center" valign="top" width="100%"
+                style="background-color: #ffffff;border-top: 1px solid #e5e5e5;border-bottom: 1px solid #e5e5e5;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
+            </td>
+        </tr>
+        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+            <td align="center" valign="top" width="100%"
+                style="background-color: #f7f7f7;height: 100px;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
+                <center style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                    <table cellspacing="0" cellpadding="0" width="600" class="w320"
+                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;border-collapse: collapse !important;">
+                        <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
+                            <td class="pull-center mobile-header-padding-center"
+                                style="color: #1a374d;font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;text-align: center;line-height: 21px;border-collapse: collapse;">
+                                <a href=""
+                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img
+                                        width="44" height="47"
+                                        src="http://s3.amazonaws.com/swu-filepicker/k8D8A7SLRuetZspHxsJk_social_08.gif"
+                                        alt="twitter"
+                                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
+                                <a href=""
+                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img
+                                        width="38" height="47"
+                                        src="http://s3.amazonaws.com/swu-filepicker/LMPMj7JSRoCWypAvzaN3_social_09.gif"
+                                        alt="facebook"
+                                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
+                                <a href=""
+                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;"><img
+                                        width="40" height="47"
+                                        src="http://s3.amazonaws.com/swu-filepicker/hR33ye5FQXuDDarXCGIW_social_10.gif"
+                                        alt="rss"
+                                        style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
+                            </td>
+                            <td
+                                style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;">
+                                <a href="https://www.swtle.com"
+                                    style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;color: #676767;text-decoration: none !important;">Swtle
+                                    Portal</a>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
+`
+
 // name, date, report
 export const debt = (info) => `
 <!DOCTYPE html
@@ -801,10 +935,9 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
                             style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 15px;color: #777777;text-align: left;line-height: 3;border-collapse: collapse;padding: 15px;width: 100% !important;">
                             Hi, ${info.name} <br
                                 style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                            This a friendly E-mail to remind you that your due date <span
+                            This a friendly E-mail to remind you that your due date &nbsp; <span
                                 style="color:#1a374d; font-weight: 500; font-family: monospace;font-size: 15px; border:1px solid; padding: 0 2px;">${info.date}</span>
-                            of
-                            report
+                            &nbsp; of report
                             <a href="https://swtle.com/#/reports/active/${info.report}">${info.report}</a> is approaching.
                         </td>
                     </tr>
@@ -941,7 +1074,7 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
         </td>
     </tr>
     <tr>
-        <td>
+        <td style="background-color:#f7f7f7">
             <center>
                 <table cellspacing="0" cellpadding="0" width="400" style="margin:-15px 0 25px -200px;">
                     <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">

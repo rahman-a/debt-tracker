@@ -1,3 +1,4 @@
+import ObjectID from 'bson-objectid'
 import User from '../models/users.model.js'
 import sendEmail from '../emails/email.js'
 import Notification from '../models/notifications.model.js'
@@ -7,6 +8,29 @@ import { messages } from './messages.js'
 import { Database } from '../../database.connection.js'
 
 Database()
+
+const renderStateMessage = (text) => {
+  const regex = /#\S+#/g
+  const splittedText = text.split(' ')
+  const fullText = []
+  splittedText.forEach((tx) => {
+    const match = tx.match(regex)
+    if (match) {
+      const matchText = match[0].split('') /// [#, p, t,t,e,r,n,#]
+      const value = matchText.splice(1, matchText.length - 2).join('')
+      console.log('is Object Id:', ObjectID.isValid(value))
+      if (ObjectID.isValid(value)) {
+        fullText.push(
+          `<a-href=https://swtle.com/#/reports/active/${value}>${value}</a>`
+        )
+      } else
+        fullText.push(
+          `<span-style="border:1px-solid; padding:0-2px; margin:0-2px">${value}</span>`
+        )
+    } else fullText.push(` ${tx} `)
+  })
+  return fullText.join('-').replace(/\s/g, '').replace(/-/g, ' ')
+}
 
 export const takeAction = async (id, state, messageState, report) => {
   const color = code[state]
@@ -22,14 +46,14 @@ export const takeAction = async (id, state, messageState, report) => {
   }
 
   if (messageState) {
-    label = labels[messageState]
-    message = report ? messages[messageState](report) : messages[messageState]()
-
     const userInfo = {
       englishName: user.fullNameInEnglish,
       arabicName: user.fullNameInArabic,
       code: user.code,
     }
+
+    label = labels[messageState]
+    message = report ? messages[messageState](report) : messages[messageState]()
 
     const adminMessage = report
       ? messages[messageState](report, 'admin', userInfo)
@@ -49,7 +73,7 @@ export const takeAction = async (id, state, messageState, report) => {
     info = {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
-      message: message['en'],
+      message: renderStateMessage(message['en']),
       label: label['en'],
     }
   }

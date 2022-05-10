@@ -1145,7 +1145,7 @@ const documentExpiredHandler = async (id, document, action) => {
       const info = {
         name: user.fullNameInEnglish,
         type: capitalize(document),
-        data: new Date(user[document].expireAt).toLocaleString('en-US', {
+        date: new Date(user[document].expireAt).toLocaleString('en-US', {
           month: 'long',
           day: 'numeric',
           year: 'numeric',

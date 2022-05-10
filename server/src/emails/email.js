@@ -6,6 +6,7 @@ import {
   document,
   debt,
   reminder,
+  notice,
   contact,
 } from './template.js'
 import dotenv from 'dotenv'
@@ -46,6 +47,11 @@ const emailData = {
     subject: 'Your document about to expire',
     sender: '<support@swtle.com>',
     template: reminder,
+  },
+  notice: {
+    subject: 'Important Notice from SWTLE',
+    sender: '<support@swtle.com>',
+    template: notice,
   },
   contact: {
     subject: 'A message from SWTLE Portal',

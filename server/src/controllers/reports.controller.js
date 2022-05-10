@@ -966,7 +966,11 @@ const scanReportsDueDate = async () => {
             name: debtor.fullNameInEnglish,
             email: debtor.emails.find((email) => email.isPrimary === true)
               .email,
-            date: dueDateObject.toLocaleString(),
+            date: dueDateObject.toLocaleString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            }),
             report: report._id,
           }
           await sendEmail(info, 'debt')
