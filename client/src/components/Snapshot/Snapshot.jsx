@@ -80,9 +80,9 @@ const VerificationSnapshot = ({ step, setStep, info }) => {
                 <p>Click to open the camera</p>
             </button> */}
       <div className={style.snapshot__photo}>
-        <span className={style.snapshot__skip} onClick={() => setStep(7)}>
+        {/* <span className={style.snapshot__skip} onClick={() => setStep(7)}>
           skip this step
-        </span>
+        </span> */}
         <Webcam
           key={uuidv4()}
           audio={false}
