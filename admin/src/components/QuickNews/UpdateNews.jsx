@@ -23,6 +23,7 @@ const UpdateNews = ({ isUpdateNews, setIsUpdateNews, news }) => {
       return
     }
     setData({ ...data, [name]: value })
+    console.log({ data })
   }
 
   const handleSubmit = (e) => {
@@ -35,8 +36,8 @@ const UpdateNews = ({ isUpdateNews, setIsUpdateNews, news }) => {
       en: news.name?.en,
       ar: news.name?.ar,
     }
-    data.englishBody && (body.en = data.englishText)
-    data.arabicBody && (body.ar = data.arabicText)
+    data.englishBody && (body.en = data.englishBody)
+    data.arabicBody && (body.ar = data.arabicBody)
     data.englishName && (name.en = data.englishName)
     data.arabicName && (name.ar = data.arabicName)
 

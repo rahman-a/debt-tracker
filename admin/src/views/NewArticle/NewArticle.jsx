@@ -9,8 +9,14 @@ import { useTranslation } from 'react-i18next'
 
 const Article = () => {
   const [info, setInfo] = useState({
-    title: '',
-    body: '',
+    title: {
+      en: '',
+      ar: '',
+    },
+    body: {
+      ar: '',
+      en: '',
+    },
     image: '',
   })
   const imageRef = useRef()
@@ -32,7 +38,9 @@ const Article = () => {
 
     for (let key in article) {
       if (article[key]) {
-        data.append(key, article[key])
+        key === 'image'
+          ? data.append(key, article[key])
+          : data.append(key, JSON.stringify(article[key]))
       }
     }
     dispatch(actions.article.createArticle(data))
@@ -41,8 +49,8 @@ const Article = () => {
   useEffect(() => {
     if (message) {
       setInfo({
-        title: '',
-        body: '',
+        title: { ar: '', en: '' },
+        body: { ar: '', en: '' },
         image: '',
       })
 
@@ -54,7 +62,7 @@ const Article = () => {
     return () => {
       dispatch({ type: constants.article.CREATE_ARTICLE_RESET })
     }
-  }, [dispatch])
+  }, [])
 
   return (
     <div className={style.article}>

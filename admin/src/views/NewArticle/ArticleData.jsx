@@ -1,40 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import style from './style.module.scss'
 import { Form, Button, Alert } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import { Editor } from 'react-draft-wysiwyg'
-import { EditorState, convertToRaw } from 'draft-js'
-import draftToHTML from 'draftjs-to-html'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { Loader } from '../../components'
 import { useTranslation } from 'react-i18next'
+import ArticleForm from './Form'
 
 const ArticleData = ({ saveArticleInfo, loading, info, setInfo, imageRef }) => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  )
+  const [locale, setLocale] = useState('en')
 
   const [errors, setErrors] = useState(null)
 
-  const { message } = useSelector((state) => state.createArticle)
-
   const { t } = useTranslation()
-
-  const editorToolbarOptions = [
-    'inline',
-    'blockType',
-    'fontSize',
-    'fontFamily',
-    'textAlign',
-    'colorPicker',
-    'link',
-    'emoji',
-  ]
-
-  const getArticleInfo = (e) => {
-    const value = { [e.target.name]: e.target.value }
-    setInfo({ ...info, ...value })
-  }
 
   const isFormValid = (_) => {
     const values = []
@@ -47,11 +24,11 @@ const ArticleData = ({ saveArticleInfo, loading, info, setInfo, imageRef }) => {
       setErrors(t('provide-required-data'))
       return false
     }
-    if (!info.title) {
+    if (!info.title['en'] || !info.title['ar']) {
       setErrors(t('article-title-required'))
       return false
     }
-    if (info.body.length < 200) {
+    if (info.body['ar'].length < 200 || info.body['en'].length < 200) {
       setErrors(t('minimum-content-length'))
       return false
     }
@@ -78,21 +55,6 @@ const ArticleData = ({ saveArticleInfo, loading, info, setInfo, imageRef }) => {
     }
   }
 
-  useEffect(() => {
-    if (message) {
-      setEditorState(() => EditorState.createEmpty())
-    }
-  }, [message])
-
-  useEffect(() => {
-    if (editorState) {
-      setInfo({
-        ...info,
-        body: draftToHTML(convertToRaw(editorState.getCurrentContent())),
-      })
-    }
-  }, [editorState])
-
   return (
     <>
       <div className={style.article__form}>
@@ -105,47 +67,26 @@ const ArticleData = ({ saveArticleInfo, loading, info, setInfo, imageRef }) => {
           </Alert>
         )}
 
-        <Form>
-          <div
-            style={{
-              border: '1px solid black',
-              padding: '1rem',
-              minHeight: '400px',
-              margin: '1rem 0',
-            }}
+        <div className={style.article__language}>
+          <Button
+            variant={locale === 'ar' ? 'light' : 'dark'}
+            onClick={() => setLocale('en')}
           >
-            <Form.Group className='mb-3' controlId='formBasicName'>
-              <Form.Label>
-                {t('article-title')}
-                <sup style={{ color: 'red' }} title='required'>
-                  *
-                </sup>
-              </Form.Label>
-              <Form.Control
-                type='text'
-                placeholder={t('add-article-title')}
-                name='title'
-                size='lg'
-                value={info.title}
-                onChange={(e) => getArticleInfo(e)}
-              />
-            </Form.Group>
-
-            <p style={{ marginBottom: '1rem' }}>
-              {' '}
-              {t('article-body')}
-              <sup style={{ color: 'red' }} title='required'>
-                *
-              </sup>
-            </p>
-            <Editor
-              editorState={editorState}
-              onEditorStateChange={setEditorState}
-              toolbar={{
-                options: editorToolbarOptions,
-              }}
-            />
-          </div>
+            English
+          </Button>
+          <Button
+            variant={locale === 'ar' ? 'dark' : 'light'}
+            onClick={() => setLocale('ar')}
+          >
+            Arabic
+          </Button>
+        </div>
+        <Form>
+          {locale === 'ar' ? (
+            <ArticleForm info={info} setInfo={setInfo} locale='ar' />
+          ) : (
+            <ArticleForm info={info} setInfo={setInfo} locale='en' />
+          )}
           <Form.Group controlId='formFile' className='mb-3'>
             <Form.Label>
               {t('upload-new-image')}
@@ -160,7 +101,6 @@ const ArticleData = ({ saveArticleInfo, loading, info, setInfo, imageRef }) => {
               onChange={(e) => setInfo({ ...info, image: e.target.files[0] })}
             />
           </Form.Group>
-
           <div className={style.article__submit}>
             <Button
               variant='primary'

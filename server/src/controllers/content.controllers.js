@@ -152,6 +152,8 @@ export const updateContent = async (req, res, next) => {
   const { id } = req.params
   const { type } = req.body
   const updateData = req.body
+  console.log('updateData: ', updateData.body.en)
+  console.log('updateDataAr: ', updateData.body.ar)
 
   try {
     const content = await Content.findById(id)

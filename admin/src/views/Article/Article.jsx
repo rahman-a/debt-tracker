@@ -13,6 +13,7 @@ import ArticleData from './ArticleData'
 
 const Article = () => {
   const [isCopied, setIsCopied] = useState(false)
+  const [locale, setLocale] = useState('en')
   const dispatch = useDispatch()
   const { isLoading, error, article } = useSelector((state) => state.getArticle)
   const { isLoading: img_loading } = useSelector((state) => state.updateArticle)
@@ -66,7 +67,7 @@ const Article = () => {
             article && (
               <>
                 <div className={style.article__header}>
-                  <h1 className='main-header'> {article.title} </h1>
+                  <h1 className='main-header'> {article.title[locale]} </h1>
                   <p>
                     {' '}
                     <strong> {t('article-id')} </strong>
@@ -88,7 +89,11 @@ const Article = () => {
 
                 <div className={style.article__body}>
                   <div className={style.article__content}>
-                    <ArticleData data={article} />
+                    <ArticleData
+                      data={article}
+                      locale={locale}
+                      setLocale={setLocale}
+                    />
                   </div>
                   <figure className={style.article__image}>
                     {img_loading && (

@@ -13,8 +13,8 @@ import { Loader, SideAlert } from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
 
-const ArticleData = ({ data }) => {
-  const blocksFromHtml = htmlToDraft(data.body)
+const ArticleData = ({ data, locale, setLocale }) => {
+  const blocksFromHtml = htmlToDraft(data.body[locale])
   const { contentBlocks, entityMap } = blocksFromHtml
   const contentState = ContentState.createFromBlockArray(
     contentBlocks,
@@ -26,8 +26,8 @@ const ArticleData = ({ data }) => {
   )
 
   const [info, setInfo] = useState({
-    title: '',
-    body: '',
+    title: { ar: '', en: '' },
+    body: { ar: '', en: '' },
   })
 
   const { isLoading, error, message } = useSelector(
@@ -37,8 +37,6 @@ const ArticleData = ({ data }) => {
   const dispatch = useDispatch()
 
   const { t } = useTranslation()
-
-  const lang = i18next.language
 
   const editorToolbarOptions = [
     'inline',
@@ -52,21 +50,30 @@ const ArticleData = ({ data }) => {
   ]
 
   const getArticleInfo = (e) => {
-    const value = { [e.target.name]: e.target.value }
-    setInfo({ ...info, ...value })
+    const updatedInfo = { ...info }
+    updatedInfo.title[locale] = e.target.value
+    setInfo(updatedInfo)
   }
 
   const updateTheArticleInfo = (e) => {
     e.preventDefault()
 
-    let articleData = {}
+    let articleData = { body: data.body, title: data.title }
 
     for (let key in info) {
-      if (info[key]) {
-        articleData[key] = info[key]
+      if (info[key]['en']) {
+        articleData[key]['en'] = info[key]['en']
+      }
+      if (info[key]['ar']) {
+        articleData[key]['ar'] = info[key]['ar']
       }
     }
-    dispatch(actions.article.updateArticle(data._id, articleData))
+    dispatch(
+      actions.article.updateArticle(data._id, {
+        body: JSON.stringify(articleData.body),
+        title: JSON.stringify(articleData.title),
+      })
+    )
   }
 
   const clearAlert = () => {
@@ -76,19 +83,24 @@ const ArticleData = ({ data }) => {
   useEffect(() => {
     message &&
       setInfo({
-        title: '',
-        body: '',
+        title: { ar: '', en: '' },
+        body: { ar: '', en: '' },
       })
   }, [message])
 
   useEffect(() => {
     if (editorState) {
-      setInfo({
-        ...info,
-        body: draftToHTML(convertToRaw(editorState.getCurrentContent())),
-      })
+      const updatedInfo = { ...info }
+      updatedInfo.body[locale] = draftToHTML(
+        convertToRaw(editorState.getCurrentContent())
+      )
+      setInfo(updatedInfo)
     }
   }, [editorState])
+
+  useEffect(() => {
+    setEditorState(EditorState.createWithContent(contentState))
+  }, [locale])
 
   return (
     <>
@@ -108,6 +120,21 @@ const ArticleData = ({ data }) => {
         reset={() => clearAlert()}
       />
 
+      <div className={style.article__language}>
+        <Button
+          variant={locale === 'ar' ? 'light' : 'dark'}
+          onClick={() => setLocale('en')}
+        >
+          English
+        </Button>
+        <Button
+          variant={locale === 'ar' ? 'dark' : 'light'}
+          onClick={() => setLocale('ar')}
+        >
+          Arabic
+        </Button>
+      </div>
+
       <Form>
         <div
           style={{
@@ -126,10 +153,11 @@ const ArticleData = ({ data }) => {
             </Form.Label>
             <Form.Control
               type='text'
-              placeholder={data.title}
+              placeholder={data.title[locale]}
               name='title'
               size='lg'
-              value={info.title}
+              value={info.title[locale]}
+              style={{ direction: locale === 'ar' ? 'rtl' : 'ltr' }}
               onChange={(e) => getArticleInfo(e)}
             />
           </Form.Group>

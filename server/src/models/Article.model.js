@@ -7,11 +7,12 @@ const ArticleSchema = new mongoose.Schema(
       required: true,
     },
     title: {
-      type: String,
-      required: true,
+      en: String,
+      ar: String,
     },
     body: {
-      type: String,
+      en: String,
+      ar: String,
     },
     views: {
       type: Number,

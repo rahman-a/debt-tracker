@@ -6,17 +6,30 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Create a new article
 export const createArticle = async (req, res, next) => {
-  const { title } = req.body
-
   try {
-    const isExist = await Article.findOne({ title })
-    if (isExist) {
+    const parsedTitle = JSON.parse(req.body['title'])
+    const parsedBody = JSON.parse(req.body['body'])
+    const data = { title: parsedTitle, body: parsedBody }
+
+    const isTitleEnglishExist = await Article.findOne({
+      'title.en': parsedTitle['en'],
+    })
+
+    if (isTitleEnglishExist) {
       return res.status(400).json({
         message: req.t('article_exist'),
       })
     }
 
-    const data = req.body
+    const isTitleArabicExist = await Article.findOne({
+      'title.ar': parsedTitle['ar'],
+    })
+
+    if (isTitleArabicExist) {
+      return res.status(400).json({
+        message: req.t('article_exist'),
+      })
+    }
 
     if (req.fileName) {
       data.image = req.fileName
@@ -38,15 +51,23 @@ export const createArticle = async (req, res, next) => {
 // Get all articles
 export const getArticles = async (req, res, next) => {
   const { title } = req.query
-
   try {
     let searchFilter = {}
 
     if (title) {
       searchFilter = {
-        title: {
-          $regex: new RegExp(title, 'i'),
-        },
+        $or: [
+          {
+            'title.en': {
+              $regex: new RegExp(title, 'i'),
+            },
+          },
+          {
+            'title.ar': {
+              $regex: new RegExp(title, 'i'),
+            },
+          },
+        ],
       }
     }
 
@@ -82,7 +103,7 @@ export const updateArticle = async (req, res, next) => {
 
     if (Object.keys(req.body).length > 0) {
       for (let key in req.body) {
-        article[key] = req.body[key]
+        article[key] = JSON.parse(req.body[key])
       }
     }
 

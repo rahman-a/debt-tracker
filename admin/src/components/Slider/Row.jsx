@@ -151,12 +151,12 @@ const Row = ({ slide, idx }) => {
           </td>
 
           <td>
-            {slide.article?.title ? (
+            {slide.article?.title[lang] ? (
               <span
                 className={style.slider__item}
                 onClick={() => navigate(`/articles/${slide.article._id}`)}
               >
-                {slide.article.title.substring(0, 35) + '...'}
+                {slide.article.title[lang].substring(0, 35) + '...'}
               </span>
             ) : (
               <Badge variant='secondary'>N/A</Badge>

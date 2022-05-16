@@ -50,6 +50,7 @@ const createArticle = (state = {}, action) => {
       ...state,
       isLoading: false,
       error: null,
+      message: null,
     },
   }
   return cases[action.type] || state
@@ -105,6 +106,7 @@ const getArticle = (state = {}, action) => {
       ...state,
       isLoading: false,
       error: null,
+      article: null,
     },
   }
   return cases[action.type] || state
@@ -132,6 +134,7 @@ const deleteArticle = (state = {}, action) => {
       ...state,
       isLoading: false,
       error: null,
+      message: null,
     },
   }
   return cases[action.type] || state

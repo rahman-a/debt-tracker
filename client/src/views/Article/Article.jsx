@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -6,8 +6,10 @@ import parser from 'html-react-parser'
 import { Loader, HeaderAlert } from '../../components'
 import actions from '../../actions'
 import { increaseViews } from '../../actions/content.actions'
+import i18next from 'i18next'
 
 const Article = () => {
+  const [lang, setLang] = useState(i18next.language)
   const { id } = useParams()
   const dispatch = useDispatch()
   const { isLoading, error, article } = useSelector(
@@ -18,6 +20,12 @@ const Article = () => {
     const text = parser(content)
     return text
   }
+
+  useEffect(() => {
+    i18next.on('languageChanged', (lng) => {
+      setLang(lng)
+    })
+  }, [lang])
 
   useEffect(() => {
     dispatch(actions.content.getArticleData(id))
@@ -41,12 +49,12 @@ const Article = () => {
         ) : (
           article && (
             <div className={style.article__wrapper}>
-              <h1>{article.title}</h1>
+              <h1>{article.title[lang]}</h1>
               <figure>
                 <img src={`/api/files/${article.image}`} alt={article.title} />
               </figure>
               <p className={style.article__content}>
-                {renderContent(article.body)}
+                {renderContent(article.body[lang])}
               </p>
             </div>
           )

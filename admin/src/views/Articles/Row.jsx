@@ -92,14 +92,14 @@ const Row = ({ article, idx }) => {
             </CopyToClipboard>
             {article._id.substring(0, 12) + '...'}
           </td>
-          <td style={{ padding: '1.6rem' }} title={article.title}>
-            {article.title.substring(0, 50)}
+          <td style={{ padding: '1.6rem' }} title={article.title[lang]}>
+            {article.title[lang].substring(0, 50)}
           </td>
           <td>
             <img
               className='row-photo'
               src={`/api/files/${article.image}`}
-              alt={article.title}
+              alt={article.title[lang]}
             />
           </td>
           <td>
