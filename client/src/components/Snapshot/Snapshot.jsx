@@ -48,7 +48,6 @@ const VerificationSnapshot = ({ step, setStep, info }) => {
       } else data.append(key, info[key])
     }
     data.append('verificationImage', snapshot)
-    console.log({ info })
     dispatch(actions.users.registerUser(data))
   }
 
@@ -109,7 +108,6 @@ const VerificationSnapshot = ({ step, setStep, info }) => {
           onClick={uploadDocumentsHandler}
           style={{
             position: 'relative',
-            padding: loading ? '1.2rem 2rem' : '0.1rem 2rem',
             color: '#1A374D',
           }}
         >

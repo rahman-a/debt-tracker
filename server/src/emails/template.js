@@ -82,7 +82,7 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
                             style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 21px;border-collapse: collapse;padding: 30px 0;">
                             <div
                                 style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
-                                <a class="button-mobile" target="_blank" href=${info.link}"
+                                <a class="button-mobile" target="_blank" href=${info.link}
                                     style="background-color:#1a374d;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">
                                     confirm account</a></div>
                         </td>

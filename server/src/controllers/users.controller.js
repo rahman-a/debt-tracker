@@ -451,11 +451,11 @@ export const findUserHandler = async (req, res, next) => {
 
 export const verifyAuthLink = async (req, res, next) => {
   const { token, type, password } = req.body
-
   try {
     // decode the token to extract user id
     const decode = jwt.verify(token, process.env.RESET_TOKEN, (err, decode) => {
       if (err) {
+        console.log('err: ', err)
         throw new Error(req.t('link_invalid'))
       }
       return decode

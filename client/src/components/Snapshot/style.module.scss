@@ -15,6 +15,8 @@
     padding: 1rem 3rem;
     margin-top: 2.5rem;
     border-radius: 1.6rem;
+    width: 12rem;
+    height: 3rem;
     cursor: pointer;
     overflow: hidden;
     p {
@@ -65,9 +67,11 @@
       cursor: pointer;
       font-size: 1.4rem;
       font-weight: 400;
+      width: 15rem;
+      height: 3rem;
       &:disabled {
-        background-color: #ececec;
-        color: #c0c1c2;
+        background-color: #d8d8d8;
+        color: #9c9c9c !important;
         cursor: not-allowed;
       }
     }
