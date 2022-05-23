@@ -7,7 +7,7 @@ import { ChatSidebar, Conversation, BackButton } from '../../components'
 import constants from '../../constants'
 import { useTranslation } from 'react-i18next'
 
-const socket = io('http://localhost:5000')
+const socket = io('https://chat.swtle.com')
 
 function Chat() {
   const [unSeenMessage, setUnSeenMessage] = useState(null)
