@@ -1,36 +1,36 @@
 @use '../../sass/variables' as var;
 
 .ribbon {
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  &__stripe {
+    width: 3.5rem;
+    height: 8rem;
+    clip-path: polygon(100% 0%, 100% 100%, 45% 69%, 45% 69%, 0 100%, 0 0);
+  }
+
+  span {
     position: absolute;
-    top:0;
-    right:2rem;
-    &__stripe {
-        width:3.5rem;
-        height:8rem;
-        clip-path: polygon(100% 0%, 100% 100%, 45% 69%, 45% 69%, 0 100%, 0 0);
-    }
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    z-index: 999;
+    color: #acabab;
+  }
 
-    span {
-        position: absolute;
-        bottom: -1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        cursor: pointer;
-        z-index:9999;
-        color: #acabab;
+  &__states {
+    padding: 3rem;
+    li {
+      color: var.$code-red-color;
+      margin: 0.5rem;
     }
+  }
 
-    &__states {
-        padding: 3rem;
-        li {
-            color:var.$code-red-color;
-            margin:0.5rem;
-        }
-    }
-
-    &__report {
-        background-color: #1f1e1e;
-        padding:0.3rem;
-        border-radius: 0.5rem;
-    }
+  &__report {
+    background-color: #1f1e1e;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+  }
 }

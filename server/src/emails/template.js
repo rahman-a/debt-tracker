@@ -69,7 +69,7 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
                     <tr style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                         <td class="free-text"
                             style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size: 14px;color: #777777;text-align: center;line-height: 2;border-collapse: collapse;padding: 10px 15px 0px;width: 100% !important;">
-                            Thank you ${info.name} for signing up with swtle portal <br
+                            Thank you for signing up with swtle portal <br
                                 style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !important;">
                             We hope you enjoy your time with
                             us.<br

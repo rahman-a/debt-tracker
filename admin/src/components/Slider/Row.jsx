@@ -122,8 +122,7 @@ const Row = ({ slide, idx }) => {
           <td>{idx + 1}</td>
 
           <td style={{ padding: '1rem 0' }} title={slide.title[lang]}>
-            {' '}
-            {slide.title[lang].substring(0, 75)}{' '}
+            {slide.title[lang].substring(0, 75)}
           </td>
 
           <td style={{ padding: slide.text ? '0' : '2.5rem 0' }}>
@@ -164,11 +163,7 @@ const Row = ({ slide, idx }) => {
           </td>
 
           <td>
-            {' '}
-            {new Date(slide.createdAt).toLocaleDateString(
-              'en-US',
-              dateOptions
-            )}{' '}
+            {new Date(slide.createdAt).toLocaleDateString('en-US', dateOptions)}
           </td>
           <td className={style.slider__action}>
             <span

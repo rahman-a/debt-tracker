@@ -51,11 +51,13 @@
       font-size: 1.3rem;
       color: var.$white-color;
       position: absolute;
-      left: -1rem;
-      margin-top: 0.5rem;
+      left: -1.4rem;
+      margin-top: 1.2rem;
       line-height: 1.6rem;
       @include media.mq(sm) {
         font-size: 1.1rem;
+        left: -0.9rem;
+        margin-top: 1rem;
       }
       @include media.mq(xxs) {
         font-size: 1rem;

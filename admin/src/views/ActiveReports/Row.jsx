@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import style from './style.module.scss'
-import { Badge, Button, Modal, Alert } from 'react-bootstrap'
+import { Badge } from 'react-bootstrap'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import { useSelector, useDispatch } from 'react-redux'
-import { Currency, Note, DateInput, Loader } from '../../components'
-import { Check, Copy, Reader, Calendar } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+import { Currency, Note } from '../../components'
+import { Check, Copy, Reader } from '../../icons'
+import ChangeDueDate from './ChangeDueDate'
 
 const Row = ({ report, idx, due }) => {
   const [isDueChange, setIsDueChange] = useState(false)
-  const [dueDateChange, setDueDateChange] = useState(null)
   const [isCopied, setIsCopied] = useState(false)
   const [isNoteOn, setIsNoteOn] = useState(false)
   const [copyCode, setCopyCode] = useState(null)
-  const dispatch = useDispatch()
-  const { loading, error, message } = useSelector((state) => state.updateReport)
   const { t } = useTranslation()
   const lang = i18next.language
 
@@ -40,20 +35,18 @@ const Row = ({ report, idx, due }) => {
     }, 500)
   }
 
-  const changeDueDateHandler = (_) => {
-    dispatch(
-      actions.reports.updateReport(report._id, { dueDate: dueDateChange })
-    )
-  }
-
-  useEffect(() => {
-    if (message) {
-      setTimeout(() => {
-        setIsDueChange(false)
-        dispatch({ type: constants.reports.UPDATE_REPORT_RESET })
-      }, 3000)
-    }
-  }, [message])
+  const initiatorName =
+    lang === 'ar'
+      ? report.operation.initiator.fullNameInArabic ||
+        report.operation.initiator.user?.fullNameInArabic
+      : report.operation.initiator.fullNameInEnglish ||
+        report.operation.initiator.user?.fullNameInEnglish
+  const peerName =
+    lang === 'ar'
+      ? report.operation.peer.fullNameInArabic ||
+        report.operation.peer.user?.fullNameInArabic
+      : report.operation.peer.fullNameInEnglish ||
+        report.operation.peer.user?.fullNameInEnglish
 
   return (
     <>
@@ -63,53 +56,11 @@ const Row = ({ report, idx, due }) => {
         note={report.operation.note}
       />
 
-      <Modal show={isDueChange} onHide={() => setIsDueChange(false)}>
-        <Modal.Header>
-          <p>
-            <span>
-              {' '}
-              <Calendar />{' '}
-            </span>
-            <span> {t('change-due-date')} </span>
-          </p>
-        </Modal.Header>
-        <Modal.Body>
-          <div className={style.reports__dueChange}>
-            {message && <Alert variant='success'> {message} </Alert>}
-            {error && <Alert variant='danger'>{error}</Alert>}
-            {loading && (
-              <Loader size='8' center options={{ animation: 'border' }} />
-            )}
-
-            <h2>{t('choose-new-due-date')}</h2>
-            <DateInput
-              name='dueDate'
-              getExpiryDate={(date) => setDueDateChange(date)}
-              custom={{ marginLeft: '0', transform: 'unset' }}
-              disabled={loading ? true : false}
-            />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            size='lg'
-            variant='success'
-            onClick={changeDueDateHandler}
-            disabled={loading ? true : false}
-          >
-            {t('confirm-change')}
-          </Button>
-
-          <Button
-            size='lg'
-            variant='danger'
-            onClick={() => setIsDueChange(false)}
-            disabled={loading ? true : false}
-          >
-            {t('cancel-change')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ChangeDueDate
+        isDueChange={isDueChange}
+        setIsDueChange={setIsDueChange}
+        id={report._id}
+      />
 
       <tr>
         <td> {idx + 1} </td>
@@ -134,12 +85,8 @@ const Row = ({ report, idx, due }) => {
             >
               {t(report.operation.initiator.type)}
             </span>
-            <span>
-              {lang === 'ar'
-                ? report.operation.initiator.fullNameInArabic ||
-                  report.operation.initiator.user?.fullNameInArabic
-                : report.operation.initiator.fullNameInEnglish ||
-                  report.operation.initiator.user?.fullNameInEnglish}
+            <span title={initiatorName}>
+              {initiatorName.substring(0, 13) + '...'}
             </span>
             <span>
               <Badge bg='dark'>
@@ -187,13 +134,7 @@ const Row = ({ report, idx, due }) => {
             >
               {t(report.operation.peer.type)}
             </span>
-            <span>
-              {lang === 'ar'
-                ? report.operation.peer.fullNameInArabic ||
-                  report.operation.peer.user?.fullNameInArabic
-                : report.operation.peer.fullNameInEnglish ||
-                  report.operation.peer.user?.fullNameInEnglish}
-            </span>
+            <span title={peerName}>{peerName.substring(0, 13) + '...'}</span>
             <span>
               <Badge bg='dark'>
                 {report.operation.peer.code || report.operation.peer.user?.code}
@@ -268,11 +209,7 @@ const Row = ({ report, idx, due }) => {
         )}
 
         <td>
-          {' '}
-          {new Date(report.createdAt).toLocaleDateString(
-            'en-US',
-            dateFormat
-          )}{' '}
+          {new Date(report.createdAt).toLocaleDateString('en-US', dateFormat)}
         </td>
 
         {/* <td style={{padding:0}}>

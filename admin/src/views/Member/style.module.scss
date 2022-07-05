@@ -2,118 +2,137 @@
 @use '../../sass/media' as media;
 
 .profile {
-    background-color: #F5F5F5;
-    min-height: 100vh;
-    position: relative;
-    &__wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 8rem 5rem;
-        @include media.mq(xxl){
-            padding:8rem 1rem;
-        }
-        @include media.mq(lg){
-            justify-content: center;
-        }
-        @include media.mq(sm){
-            padding:8rem 0;
-        }
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  position: relative;
+  &__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8rem 5rem;
+    @include media.mq(xxl) {
+      padding: 8rem 1rem;
     }
-    &__personal {
-        &_info {
-            position: relative;
-            display: grid;
-            display: -ms-grid;
-            place-items: center;
-            padding:2rem 6rem;
-            margin-top:2.5rem;
-            @include media.mq(sm){
-                padding:0;
-            }
-            h2 {
-                margin:1rem 0;
-                @include media.mq(sm){
-                    font-size: 1.4rem;
-                }
-            }
-            p {
-                span:first-child {
-                    color:var.$second-color;
-                }
-                span:nth-child(2){
-                    color:var.$full-light-color;
-                }
-                span:nth-child(3) {
-                    cursor: pointer;
-                    color:var.$second-color;
-                }
-            }
-        }
-        &_provider {
-            position: absolute;
-            top: 0;
-            left: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #dc3545;
-            p {
-                font-size: 1.4rem;
-            }
-            svg {
-                width:2rem;
-                height: 2rem;
-            }
-        }
-        img {
-            width:15rem;
-            border-radius: 50%;
-        }
+    @include media.mq(lg) {
+      justify-content: center;
     }
-
-    &__personal,
-    &__address,
-    &__phones,
-    &__documents,
-    &__company,
-    &__social {
-        width:50rem;
-        margin:0 3rem 4rem 0;
-        &_ar {
-            margin:0 0 4rem 3rem;
+    @include media.mq(sm) {
+      padding: 8rem 0;
+    }
+  }
+  &__personal {
+    &_info {
+      position: relative;
+      display: grid;
+      display: -ms-grid;
+      place-items: center;
+      padding: 2rem 6rem;
+      margin-top: 2.5rem;
+      @include media.mq(sm) {
+        padding: 0;
+      }
+      h2 {
+        margin: 1rem 0;
+        @include media.mq(sm) {
+          font-size: 1.4rem;
         }
-        @include media.mq(xxl) {
-            width: 50rem !important;
+      }
+      p {
+        span:first-child {
+          color: var.$second-color;
         }
-        
-        @include media.mq(xl){
-            width:60rem;
+        span:nth-child(2) {
+          color: var.$full-light-color;
         }
-        @include media.mq(sm){
-            margin:4rem 0;
-            width:100%
+        span:nth-child(3) {
+          cursor: pointer;
+          color: var.$second-color;
         }
+      }
+    }
+    &_provider {
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #dc3545;
+      p {
+        font-size: 1.4rem;
+      }
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+    img {
+      width: 15rem;
+      border-radius: 50%;
     }
 
-    &__documents {
-        &_wrapper {
-            display: flex;
-            align-items: center;
-            justify-content:space-around;
-        }
+    &_edit {
+      color: var.$full-light-color !important;
+      text-transform: capitalize;
+      font-size: 1.6rem;
+      border-bottom: 1px dashed;
+      cursor: pointer;
     }
+  }
+
+  &__personal,
+  &__address,
+  &__phones,
+  &__documents,
+  &__company,
+  &__social {
+    width: 50rem;
+    margin: 0 3rem 4rem 0;
+    &_ar {
+      margin: 0 0 4rem 3rem;
+    }
+    @include media.mq(xxl) {
+      width: 50rem !important;
+    }
+
+    @include media.mq(xl) {
+      width: 60rem;
+    }
+    @include media.mq(sm) {
+      margin: 4rem 0;
+      width: 100%;
+    }
+  }
+
+  &__documents {
+    &_wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
 
   &__company {
-      &_name {
-          clip-path: polygon(100% 0, 100% 50%, 100% 99%, 0% 100%, 12% 48%, 0 0);
-          box-shadow: inset 0px 1px 6px 3px rgb(0 0 0 / 30%);
-          background-color: #fffdfd;
-          width: 25rem;
-          padding: 0 4rem;
-          margin-bottom: 1rem;
-          p {
-              color:var.$main-color;
-          }
+    &_name {
+      clip-path: polygon(100% 0, 100% 50%, 100% 99%, 0% 100%, 12% 48%, 0 0);
+      box-shadow: inset 0px 1px 6px 3px rgb(0 0 0 / 30%);
+      background-color: #fffdfd;
+      width: 25rem;
+      padding: 0 4rem;
+      margin-bottom: 1rem;
+      p {
+        color: var.$main-color;
       }
+    }
+
+    &_edit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      span:last-child {
+        font-size: 2rem;
+        color: var.$full-light-color;
+        cursor: pointer;
+      }
+    }
   }
 }

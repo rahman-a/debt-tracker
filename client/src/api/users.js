@@ -50,8 +50,8 @@ const userAPI = {
     const queryString = new URLSearchParams(query).toString()
     return service().get(`users/search?${queryString}`)
   },
-  updateAddressAndPhone(id, data) {
-    return service().patch(`users/${id}/update`, data)
+  updateAddressAndPhone(data) {
+    return service().patch(`users/info/update`, data)
   },
   updateDocuments(id, data, type) {
     return service().patch(`users/${id}/documents?type=${type}`, data)

@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import { Badge } from 'react-bootstrap'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { Required } from '../../components'
 
 const Input = ({
   icon,
@@ -21,6 +22,7 @@ const Input = ({
   custom,
   subLabel,
   disabled,
+  required,
 }) => {
   const lang = i18next.language
   const { t } = useTranslation()
@@ -57,9 +59,13 @@ const Input = ({
           <Badge style={{ margin: marginValue[lang] }} bg='success'>
             {t(subLabel)}
           </Badge>
+          <Required styles={{ marginLeft: '1rem' }} />
         </p>
       )}
-      <label htmlFor={id || name}>{t(label)}</label>
+      <div style={{ display: type !== 'file' && 'flex' }}>
+        <label htmlFor={id || name}>{t(label)}</label>
+        {required && <Required />}
+      </div>
 
       <input
         placeholder={t(placeholder)}
@@ -82,7 +88,6 @@ const Input = ({
           color: '#1A374D',
         }}
       />
-
       {error && (
         <>
           <strong>ERROR</strong>

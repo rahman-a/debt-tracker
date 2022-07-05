@@ -67,20 +67,16 @@ export const registerNewUser = async (req, res, next) => {
   const { country, emails, insidePhones, outsidePhones } = req.body
   const user = req.body
   try {
-    user.country = JSON.parse(country)
+    user.country && (user.country = JSON.parse(country))
     user.emails = JSON.parse(emails)
     user.insidePhones = JSON.parse(insidePhones)
     outsidePhones && (user.outsidePhones = JSON.parse(outsidePhones))
 
-    const code = createUserCode(
-      user.fullNameInEnglish,
-      user.country.name
-    ).toLocaleUpperCase()
+    const code = createUserCode()
     user.code = code
 
     const expireAt = user.expireAt ? JSON.parse(user.expireAt) : null
     user['avatar'] = req.files['avatar'][0].filename
-    user['verificationImage'] = req.files['verificationImage'][0].filename
     user['passport'] = {
       image: req.files['passport'][0].filename,
       expireAt: expireAt['passport'],
@@ -90,7 +86,7 @@ export const registerNewUser = async (req, res, next) => {
       back: req.files['identity-back'][0].filename,
       expireAt: expireAt['identity'],
     }
-    console.log({ user })
+
     const newUser = new User(user)
     const savedUser = await newUser.save()
     const notification = {
@@ -589,19 +585,34 @@ export const sendUserData = async (req, res, next) => {
       user.passport = passport
     }
 
-    if (user.verificationImage) {
-      user.snapshot = {
-        _id: uuidv4(),
-        image: user.verificationImage,
-      }
-
-      delete user.verificationImage
-    }
-
     res.send({
       success: true,
       code: 200,
       user,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const updatePhoneAndAddress = async (req, res, next) => {
+  const { outsidePhones, outsideAddress } = req.body
+
+  try {
+    let updateData = {}
+    if (outsideAddress) {
+      req.user.outsideAddress = outsideAddress
+      updateData = { outsideAddress }
+    }
+    if (outsidePhones) {
+      req.user.outsidePhones = outsidePhones
+      updateData = { outsidePhones }
+    }
+    await req.user.save()
+    res.send({
+      success: true,
+      code: 200,
+      user: updateData,
     })
   } catch (error) {
     next(error)
@@ -1052,20 +1063,21 @@ const generateRandomCode = (count, type) => {
 }
 
 // CREATE USER UNIQUE CODE
-const createUserCode = (name, country) => {
-  console.log({ country })
+const createUserCode = () => {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+  const randomCharacters = () =>
+    alphabet[Math.floor(Math.random() * alphabet.length)].toLocaleUpperCase()
+  let randomString = ''
+  for (let i = 0; i < 3; i++) {
+    randomString += randomCharacters()
+  }
   const randomNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  const splittedName = name.split(' ')
-  const firstNameLetter = splittedName[0][0]
-  const lastNameLetter = splittedName[splittedName.length - 1][0]
-  console.log({ country })
-  const countryFirstLetter = country[0]
   let codeNumber = ''
   for (let i = 0; i < 6; i++) {
     const num = randomNumbers[Math.floor(Math.random() * randomNumbers.length)]
     codeNumber += num
   }
-  return firstNameLetter + lastNameLetter + countryFirstLetter + codeNumber
+  return randomString + codeNumber
 }
 
 const scanUserDocuments = async () => {

@@ -23,9 +23,9 @@ import {
   Chat,
   Article,
   TermsAndConditions,
+  Test,
+  Swiper,
 } from './views'
-
-import Test from './views/test'
 
 function App() {
   const { isAuth } = useSelector((state) => state.login)
@@ -94,13 +94,14 @@ function App() {
             element={isAuth ? <Chat /> : <Navigate to='/login' />}
           />
         </Route>
-        <Route path='/test' element={<Test />} />
         <Route path='/articles/:id' element={<Article />} />
         <Route path='/activate' element={<EmailActivation />} />
         <Route path='/reset' element={<ResetPassword />} />
         <Route path='/terms-conditions' element={<TermsAndConditions />} />
+        <Route path='/test' element={<Test />} />
+        <Route path='/swiper' element={<Swiper />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

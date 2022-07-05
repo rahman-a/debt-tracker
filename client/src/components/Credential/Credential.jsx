@@ -6,7 +6,13 @@ import { Link } from 'react-router-dom'
 import validator from 'validator'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Input, SideButton, Button, FormStepsChanger } from '../../components'
+import {
+  Input,
+  SideButton,
+  Button,
+  FormStepsChanger,
+  Required,
+} from '../../components'
 import { EnvelopOpen, Key, Fingerprint } from '../../icons'
 import constants from '../../constants'
 import actions from '../../actions'
@@ -175,6 +181,7 @@ const Credential = ({ step, setStep, info, setInfo }) => {
         icon={<Fingerprint />}
         custom={{ marginBottom: '3rem' }}
         value={username}
+        required
         inputRef={userRef}
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -199,6 +206,7 @@ const Credential = ({ step, setStep, info, setInfo }) => {
               custom={{ marginBottom: '3rem' }}
               value={email.value}
               inputRef={inputRef}
+              required={idx === 0}
               onChange={(e) => setEmailsHandler(e, email._id)}
             />
             {emails.length === idx + 1 && (
@@ -225,6 +233,7 @@ const Credential = ({ step, setStep, info, setInfo }) => {
         type='password'
         icon={<Key />}
         value={password}
+        required
         custom={{ marginBottom: '3rem' }}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -236,6 +245,7 @@ const Credential = ({ step, setStep, info, setInfo }) => {
         type='password'
         icon={<Key />}
         value={confirmPassword}
+        required
         custom={{ marginBottom: '3rem' }}
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
@@ -262,6 +272,8 @@ const Credential = ({ step, setStep, info, setInfo }) => {
         <label
           style={{
             fontSize: '1.4rem',
+            display: 'flex',
+            alignItems: 'center',
           }}
           htmlFor='terms'
         >
@@ -276,6 +288,9 @@ const Credential = ({ step, setStep, info, setInfo }) => {
           >
             {t('condition&terms')}
           </Link>
+          <Required
+            styles={{ marginLeft: '1rem', transform: 'translate(0)' }}
+          />
         </label>
       </div>
       <Button

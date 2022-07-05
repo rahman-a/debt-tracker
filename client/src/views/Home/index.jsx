@@ -1,15 +1,26 @@
-import React from 'react'
-import { Carousel, About, Contact, QuickNews } from '../../components'
+import React, { useRef } from 'react'
+import style from './style.module.scss'
+import {
+  Carousel,
+  About,
+  Video,
+  QuickNews,
+  Contact,
+  PageFooter,
+} from '../../components'
 
-const Home = () => {
+const Index = () => {
+  const aboutRef = useRef(null)
   return (
-    <>
-      <Carousel />
-      <About />
+    <div className={style.container}>
+      <Carousel aboutRef={aboutRef} />
+      <About aboutRef={aboutRef} />
+      <Video />
       <QuickNews />
       <Contact />
-    </>
+      <PageFooter />
+    </div>
   )
 }
 
-export default Home
+export default Index

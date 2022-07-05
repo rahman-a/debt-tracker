@@ -85,78 +85,34 @@ const Contact = () => {
         reset={() => clearAlert()}
       />
       <div className={style.contact}>
-        <Social />
-        <div className={style.contact__bg}></div>
-        <div className='container'>
-          <div className={style.contact__wrapper}>
-            <div
-              className={`${style.contact__description} ${
-                lang === 'ar' ? style.contact__description_ar : ''
-              }`}
-            >
-              <div className={style.contact__text}>
-                {isLoading ? (
-                  <>
-                    <Placeholder xs={6} />
-                    <Placeholder style={{ width: '50rem' }} />{' '}
-                    <Placeholder style={{ width: '50rem' }} />
-                  </>
-                ) : (
-                  contactUs && (
-                    <>
-                      <h2>{contactUs?.header[lang]}</h2>
-                      <p> {contactUs?.body[lang]} </p>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
-            <div className={style.contact__form}>
-              <h3>{t('contact-us')}</h3>
-              <form onSubmit={submitFormHandler}>
-                <input
-                  type='text'
-                  name='name'
-                  value={contact['name']}
-                  placeholder={t('enter-name')}
-                  onChange={(e) => getContactInformation(e)}
-                />
+        <div className={style.contact__container}>
+          <div className={style.contact__form}>
+            <form>
+              <input type='text' name='name' placeholder={t('enter-name')} />
 
-                <input
-                  type='email'
-                  name='email'
-                  value={contact['email']}
-                  placeholder={t('enter-email')}
-                  onChange={(e) => getContactInformation(e)}
-                />
+              <input type='email' name='email' placeholder={t('enter-email')} />
 
-                <input
-                  type='text'
-                  name='phone'
-                  value={contact['phone']}
-                  placeholder={t('enter-phone')}
-                  onChange={(e) => getContactInformation(e)}
-                />
+              <input type='text' name='phone' placeholder={t('enter-phone')} />
 
-                <textarea
-                  name='message'
-                  id='message'
-                  cols='30'
-                  rows='10'
-                  value={contact['message']}
-                  placeholder={t('enter-message')}
-                  onChange={(e) => getContactInformation(e)}
-                ></textarea>
+              <textarea
+                name='message'
+                id='message'
+                cols='30'
+                rows='10'
+                placeholder={t('enter-message')}
+              ></textarea>
 
-                <button style={{ padding: loading ? '0' : '1rem 0.5rem' }}>
-                  {loading ? (
-                    <Loader size='4' options={{ animation: 'border' }} />
-                  ) : (
-                    t('contact-send')
-                  )}
-                </button>
-              </form>
-            </div>
+              <button>{t('contact-send')}</button>
+            </form>
+          </div>
+          <div className={style.contact__content}>
+            <h3 className={style.contact__title}>
+              <span>Get in touch with us</span>
+            </h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Reprehenderit dolor corrupti tempore.
+            </p>
           </div>
         </div>
       </div>

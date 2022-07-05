@@ -2,226 +2,244 @@
 @use '../../sass/media' as media;
 
 .segment {
-    margin-top:3rem;
-    &_ar {
-        p {
-            span {
-                &::after {
-                    left:'unset';
-                    right:-11px
-                }
-                &::before {
-                    left:'unset';
-                    right:-12px
-                }
-            }
-        }
-    }
-    h3 {
-        color:var.$main-color;
-        font-weight: 400;
-        text-transform: capitalize;
-        span {
-            margin-left:0.5rem;
-            cursor: pointer;
-        }
-    }
+  margin-top: 3rem;
+  &_ar {
     p {
-        display: flex;
-        flex-direction: column;
-        margin-left: 3rem;
-        color:var.$full-light-color;
-        text-transform: capitalize;
-        span {
-            position: relative;
-            &::before {
-                content: "";
-                position: absolute;
-                left: -12px;
-                width: 1px;
-                height: 100%;
-                background-color: var.$main-color;
-            }
-
-            &::after {
-                content: "";
-                position: absolute;
-                left: -11px;
-                top: 12px;
-                width: 5px;
-                height: 2px;
-                background-color: var.$main-color;
-            }
+      span {
+        &::after {
+          left: 'unset';
+          right: -11px;
         }
+        &::before {
+          left: 'unset';
+          right: -12px;
+        }
+      }
+    }
+  }
+  h3 {
+    color: var.$main-color;
+    font-weight: 400;
+    text-transform: capitalize;
+    span {
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+  }
+  p {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3rem;
+    color: var.$full-light-color;
+    text-transform: capitalize;
+    span {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        left: -12px;
+        width: 1px;
+        height: 100%;
+        background-color: var.$main-color;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: -11px;
+        top: 12px;
+        width: 5px;
+        height: 2px;
+        background-color: var.$main-color;
+      }
+    }
+  }
+
+  &__edit {
+    margin-left: 2rem;
+    display: flex;
+    align-items: center;
+    input {
+      border: 0;
+      outline: none;
+      box-shadow: 1px 2px 2px 1px rgb(0 0 0 / 30%);
+      border-radius: 3rem;
+      padding: 0.3rem 1rem;
+      margin-right: 1rem;
+      &::placeholder {
+        font-size: 1.2rem;
+        color: var.$full-light-color;
+      }
     }
 
-    &__edit {
-        margin-left:2rem;
-        display: flex;
-        align-items: center;
-        input {
-            border: 0;
-            outline: none;
-            box-shadow: 1px 2px 2px 1px rgb(0 0 0 / 30%);
-            border-radius: 3rem;
-            padding: 0.3rem 1rem;
-            margin-right: 1rem;
-            &::placeholder {
-                font-size: 1.2rem;
-                color:var.$full-light-color;
-            }
-        }
-
-        button {
-            all:unset;
-            color:var.$main-color;
-            cursor: pointer;
-        }
-
-        span {
-            font-size: 1.3rem;
-            width: 15rem;
-            margin-left: 1rem;
-            width:fit-content;
-            width:-moz-fit-content;
-        }
+    button {
+      all: unset;
+      color: var.$main-color;
+      cursor: pointer;
     }
 
-    &__toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    span {
+      font-size: 1.3rem;
+      width: 15rem;
+      margin-left: 1rem;
+      width: fit-content;
+      width: -moz-fit-content;
+    }
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    &_state {
+      position: relative;
+      display: flex;
+      label {
+        margin: 0 1rem;
         position: relative;
-        &_state {
-            position: relative;
-            display: flex;
-            label {
-                margin: 0 1rem;
-                position: relative;
-                background-color:rgb(226, 226, 226);
-                padding: 1.1rem;
-                border-radius: 2rem;
-                width: 6rem;
-                cursor: pointer;
-                span:after,
-                span:before{
-                    display: none;
-                }
-                span:last-child {
-                    position: absolute !important;
-                    width: 1.9rem;
-                    height: 1.9rem;
-                    clip-path: circle();
-                    background-color:var.$code-red-color;
-                    transition: all 0.3s ease;
-                    top: 2px;
-                    left: 2px;
-                }
-            }
-            input {
-                display: none;
-            }
-
-            &_ar {
-                span:last-child {
-                    right: 2px;
-                    left:unset;
-                }
-            }
-
+        background-color: rgb(226, 226, 226);
+        padding: 1.1rem;
+        border-radius: 2rem;
+        width: 6rem;
+        cursor: pointer;
+        span:after,
+        span:before {
+          display: none;
         }
-
-        &_active {
-            background-color:var.$code-green-color !important;
-            left:3.8rem !important;
-            &_ar {
-                left:unset;
-                right:3.8rem;
-            }
+        span:last-child {
+          position: absolute !important;
+          width: 1.9rem;
+          height: 1.9rem;
+          clip-path: circle();
+          background-color: var.$code-red-color;
+          transition: all 0.3s ease;
+          top: 2px;
+          left: 2px;
         }
+      }
+      input {
+        display: none;
+      }
 
-        &_backdrop {
-            position: absolute !important;
-            top: 0;
-            left: 0;
-            background-color: rgb(0 0 0 / 50%);
-            width: 100%;
-            height: 100%;
-            z-index: 999;
-            border-radius: 1rem;
+      &_ar {
+        span:last-child {
+          right: 2px;
+          left: unset;
         }
+      }
     }
 
-    &__color {
-        display: flex;
-        align-items: center;
-        &_block {
-            width: 3rem;
-            height: 3rem;
-            margin-right: 2rem;
-            border-radius: 50%;
-        }
-
-        &_change {
-            text-align: center;
-            h3 {
-                font-size: 1.4rem;
-                font-weight: 400;
-                margin:1.5rem 0;
-            }
-        }
-        &_types {
-            span {
-                color: #fff;
-                padding: 0.5rem 1rem;
-                border-radius: 1rem;
-                margin-right: 1rem;
-                cursor: pointer;
-                border:0px solid transparent;
-                transition: all 0.3s ease;
-                font-size: 1.4rem;
-                font-weight: 300;
-                &:first-of-type {
-                    background-color: var.$code-green-color;
-                }
-                &:nth-of-type(2) {
-                    background-color: var.$code-yellow-color;
-                }
-                &:last-of-type {
-                    background-color: var.$code-red-color;
-                }
-            }
-
-            &_select {
-                border:5px solid #dedede !important;
-                transform: scale(1.05);
-            }
-        }
-
-        &_state {
-            margin-top: 1.6rem;
-        }
-
-        &_report {
-            all: unset;
-            border: 1px solid #636363;
-            padding: 0.2rem 1rem;
-            border-radius: 1rem;
-            width: 25rem;
-            text-align: start;
-            font-size: 1.4rem;
-            font-weight: 400;
-            &::placeholder {
-                font-size: 1.4rem;
-                font-weight: 400;
-            }
-        }
-
-        &_ar {
-            & > div {
-                margin-left: 2rem;
-                margin-right:unset;
-            }
-        }
+    &_active {
+      background-color: var.$code-green-color !important;
+      left: 3.8rem !important;
+      &_ar {
+        left: unset;
+        right: 3.8rem;
+      }
     }
+
+    &_backdrop {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      background-color: rgb(0 0 0 / 50%);
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+      border-radius: 1rem;
+    }
+  }
+
+  &__color {
+    display: flex;
+    align-items: center;
+    &_block {
+      width: 3rem;
+      height: 3rem;
+      margin-right: 2rem;
+      border-radius: 50%;
+    }
+
+    &_change {
+      text-align: center;
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 400;
+        margin: 1.5rem 0;
+      }
+    }
+    &_types {
+      span {
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+        margin-right: 1rem;
+        cursor: pointer;
+        border: 0px solid transparent;
+        transition: all 0.3s ease;
+        font-size: 1.4rem;
+        font-weight: 300;
+        &:first-of-type {
+          background-color: var.$code-green-color;
+        }
+        &:nth-of-type(2) {
+          background-color: var.$code-yellow-color;
+        }
+        &:last-of-type {
+          background-color: var.$code-red-color;
+        }
+      }
+
+      &_select {
+        border: 5px solid #dedede !important;
+        transform: scale(1.05);
+      }
+    }
+
+    &_state {
+      margin-top: 1.6rem;
+    }
+
+    &_report {
+      all: unset;
+      border: 1px solid #636363;
+      padding: 0.2rem 1rem;
+      border-radius: 1rem;
+      width: 25rem;
+      text-align: start;
+      font-size: 1.4rem;
+      font-weight: 400;
+      &::placeholder {
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+    }
+
+    &_ar {
+      & > div {
+        margin-left: 2rem;
+        margin-right: unset;
+      }
+    }
+  }
+
+  &__member {
+    &_edit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      span:last-child {
+        font-size: 2rem;
+        margin-left: 1rem;
+        cursor: pointer;
+      }
+      span:before {
+        display: none;
+      }
+      span:after {
+        display: none;
+      }
+    }
+  }
 }

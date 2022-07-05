@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Alert } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Input, Button, Countries, FormStepsChanger } from '../../components'
 import { Map } from '../../icons'
@@ -9,25 +8,19 @@ const Address = ({ step, setStep, setInfo, info }) => {
   const [insideAddress, setInsideAddress] = useState('')
   const [outsideAddress, setOutsideAddress] = useState('')
   const [country, setCountry] = useState(null)
-  const [error, setError] = useState('')
-  const [toggleAlert, setToggleAlert] = useState(true)
   const { t } = useTranslation()
 
   const moveNextHandler = (_) => {
-    setToggleAlert(true)
-
-    if (!insideAddress) {
-      setError(t('provide-address-in-uae'))
-      return false
-    }
-    if (!country || !country.text) {
-      setError(t('provide-country'))
-      return false
+    let data = {}
+    if (insideAddress) {
+      data = { insideAddress: sanitizeInput(insideAddress) }
     }
 
-    let data = {
-      insideAddress: sanitizeInput(insideAddress),
-      country: { name: country.text, abbr: country.abbr, image: country.svg },
+    if (country) {
+      data = {
+        ...data,
+        country: { name: country.text, abbr: country.abbr, image: country.svg },
+      }
     }
 
     if (outsideAddress) {
@@ -37,10 +30,6 @@ const Address = ({ step, setStep, setInfo, info }) => {
     setInfo({ ...info, ...data })
     setStep(4)
   }
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [error])
 
   useEffect(() => {
     info.insideAddress && setInsideAddress(info.insideAddress)
@@ -55,15 +44,6 @@ const Address = ({ step, setStep, setInfo, info }) => {
 
   return (
     <>
-      {toggleAlert && error && (
-        <Alert
-          variant='danger'
-          onClose={() => setToggleAlert(false)}
-          dismissible
-        >
-          {error}
-        </Alert>
-      )}
       <Input
         name='address'
         placeholder='address-in-uae'

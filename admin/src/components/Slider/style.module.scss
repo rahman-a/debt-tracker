@@ -8,6 +8,15 @@
   align-items: center;
   text-align: -webkit-center;
 
+  &__content {
+    display: none;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    @include media.mq(sm) {
+      display: block;
+    }
+  }
+
   &__action {
     display: flex !important;
     align-items: center;
@@ -33,6 +42,7 @@
     border: 1px solid var.$main-color;
     color: var.$main-color;
   }
+
   &__confirmDelete {
     text-align: center;
     padding: 0.2rem;

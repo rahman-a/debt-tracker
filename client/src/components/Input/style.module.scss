@@ -18,7 +18,7 @@
   }
   &__icon {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 2rem;
     color: var.$full-light-color;
     @include media.mq(sm) {
@@ -111,10 +111,16 @@
     }
 
     &_label {
+      display: flex;
+      align-items: center;
       color: #fff;
       font-style: italic;
       margin-bottom: 1rem;
       transform: translateX(10px);
+
+      @include media.mq(sm) {
+        font-size: 1.3rem;
+      }
     }
   }
 
@@ -141,6 +147,8 @@
   }
   // eslint-disable-next-line
   input[type='number'] {
+    -webkit-appearance: textfield;
     -moz-appearance: textfield;
+    appearance: textfield;
   }
 }

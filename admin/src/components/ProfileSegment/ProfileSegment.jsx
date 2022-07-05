@@ -3,31 +3,41 @@ import style from './style.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import { Badge, Button, Modal, Alert } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { Loader } from '../../components'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+import { Loader, EditMember } from '../../components'
 import labels from '../../config/label'
 import messages from '../../config/messages'
 import actions from '../../actions'
-import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
+import { Plus } from '../../icons'
 
 const Country = ({ country }) => {
+  const [isEdit, setIsEdit] = useState(false)
   const { t } = useTranslation()
   return (
-    <span style={{ flexDirection: 'row' }}>
-      {country.name ? (
-        <>
-          <img
-            src={country.image}
-            alt={country.name}
-            width='25'
-            style={{ marginRight: '1rem' }}
-          />
-          {`${country.abbr} ${country.name}`}
-        </>
-      ) : (
-        <Badge bg='danger'>{t('not-provided')}</Badge>
-      )}
-    </span>
+    <>
+      <EditMember isEdit={isEdit} setIsEdit={setIsEdit} type='country' />
+      <span style={{ flexDirection: 'row' }}>
+        {country?.name ? (
+          <>
+            <img
+              src={country.image}
+              alt={country.name}
+              width='25'
+              style={{ marginRight: '1rem' }}
+            />
+            {`${country.abbr} ${country.name}`}
+          </>
+        ) : (
+          <div className={style.segment__member_edit}>
+            <Badge bg='danger'>{t('not-provided')}</Badge>
+            <span onClick={() => setIsEdit(true)}>
+              <Plus />
+            </span>
+          </div>
+        )}
+      </span>
+    </>
   )
 }
 
@@ -50,8 +60,7 @@ const ToggleAccount = ({ isActive, setIsActive, memberId }) => {
     <div className={style.segment__toggle}>
       {loading && <Loader size='5' center options={{ animation: 'border' }} />}
       <strong style={{ color: 'red' }}>
-        {' '}
-        <i> {t('account-not-active')} </i>{' '}
+        <i> {t('account-not-active')} </i>
       </strong>
 
       <div
@@ -82,8 +91,7 @@ const ToggleAccount = ({ isActive, setIsActive, memberId }) => {
       </div>
 
       <strong style={{ color: 'green' }}>
-        {' '}
-        <i> {t('account-active')} </i>{' '}
+        <i> {t('account-active')} </i>
       </strong>
     </div>
   )
@@ -272,6 +280,7 @@ const ProfileSegment = ({
   color,
 }) => {
   const [isActive, setIsActive] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
 
   const { t } = useTranslation()
   const lang = i18next.language
@@ -281,32 +290,40 @@ const ProfileSegment = ({
   }, [isConfirmed])
 
   return (
-    <div
-      className={`${style.segment} ${lang === 'ar' ? style.segment_ar : ''}`}
-    >
-      <h3> {t(title)} </h3>
-      <p style={{ display: placeholder ? 'block' : 'flex' }}>
-        {placeholder ? (
-          <Badge bg='danger'>{t('not-provided')}</Badge>
-        ) : type === 'email' || type === 'phones' ? (
-          text.map((t) => <span key={t._id}>{t.email || t.phone}</span>)
-        ) : type === 'outPhones' && text ? (
-          text.map((t) => <span key={uuidv4()}>{t}</span>)
-        ) : type === 'country' ? (
-          <Country country={text} />
-        ) : type === 'toggle' ? (
-          <ToggleAccount
-            isActive={isActive}
-            setIsActive={setIsActive}
-            memberId={memberId}
-          />
-        ) : type === 'color' ? (
-          <MemberColorCode color={color} memberId={memberId} />
-        ) : (
-          text
-        )}
-      </p>
-    </div>
+    <>
+      <EditMember isEdit={isEdit} setIsEdit={setIsEdit} type={type} />
+      <div
+        className={`${style.segment} ${lang === 'ar' ? style.segment_ar : ''}`}
+      >
+        <h3> {t(title)} </h3>
+        <p style={{ display: placeholder ? 'block' : 'flex' }}>
+          {placeholder ? (
+            <div className={style.segment__member_edit}>
+              <Badge bg='danger'>{t('not-provided')}</Badge>
+              <span onClick={() => setIsEdit(true)}>
+                <Plus />
+              </span>
+            </div>
+          ) : type === 'email' || type === 'phones' ? (
+            text.map((t) => <span key={t._id}>{t.email || t.phone}</span>)
+          ) : type === 'outPhones' && text ? (
+            text.map((t) => <span key={uuidv4()}>{t}</span>)
+          ) : type === 'country' ? (
+            <Country country={text} />
+          ) : type === 'toggle' ? (
+            <ToggleAccount
+              isActive={isActive}
+              setIsActive={setIsActive}
+              memberId={memberId}
+            />
+          ) : type === 'color' ? (
+            <MemberColorCode color={color} memberId={memberId} />
+          ) : (
+            text
+          )}
+        </p>
+      </div>
+    </>
   )
 }
 

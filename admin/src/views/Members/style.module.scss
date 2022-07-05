@@ -1,72 +1,79 @@
 @use '../../sass/variables' as var;
 @use '../../sass/media' as media;
 
+.members {
+  min-height: calc(100vh - 10rem);
+  text-align: -webkit-center;
+  margin-bottom: 5rem;
+  &__content {
+    display: none;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    @include media.mq(sm) {
+      display: block;
+    }
+  }
+  &__photo {
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+    img {
+      width: 6.5rem;
+      clip-path: circle();
+    }
+  }
+  &__code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
 
-.members  {
-    min-height: calc(100vh - 10rem);
-    text-align: -webkit-center;
-    margin-bottom: 5rem;
-    &__photo {
-        display: -ms-grid;
-        display: grid;
-        place-items: center;
-        img {
-            width: 6.5rem;
-            clip-path: circle();
-        }
+  &__actions {
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    span {
+      cursor: pointer;
     }
-    &__code {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+    span:first-child {
+      color: var.$main-color;
     }
+    span:nth-child(2) {
+      color: var.$code-yellow-color;
+    }
+    span:last-child {
+      color: var.$code-red-color;
+    }
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
 
-    &__actions {
-        height: 100%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        span {
-            cursor: pointer;
-        }
-        span:first-child {
-            color:var.$main-color
-        }
-        span:nth-child(2) {
-            color:var.$code-yellow-color 
-        }
-        span:last-child {
-            color:var.$code-red-color
-        }
-        svg {
-            width: 2rem;
-            height: 2rem;
-        }
+  &__delete {
+    text-align: center;
+    h2 {
+      font-weight: 400;
+      color: var.$code-red-color;
     }
+    p {
+      font-weight: 300;
+      padding: 0.5rem 0;
+    }
+  }
 
-    &__delete {
-        text-align: center;
-        h2 {
-            font-weight: 400;
-            color:var.$code-red-color
-        }
-        p {
-            font-weight: 300;
-            padding: 0.5rem 0;
-        }
+  &__provider {
+    span {
+      color: #dc3545;
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      svg {
+        width: 1.4rem;
+        height: 1.4rem;
+      }
     }
-
-    &__provider {
-        span {
-            color:#dc3545;
-            position: absolute;
-            top: 0.5rem;
-            right: 1rem;
-            svg {
-                width:1.4rem;
-                height: 1.4rem;
-            }
-        }
-    }
+  }
 }

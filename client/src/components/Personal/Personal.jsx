@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Alert } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Input, Button, FormStepsChanger } from '../../components'
@@ -11,27 +10,27 @@ const Personal = ({ step, setStep, setInfo, info }) => {
   const [englishName, setEnglishName] = useState('')
   const [arabicName, setArabicName] = useState('')
   const [company, setCompany] = useState('')
-  const [errors, setErrors] = useState(null)
-  const [toggleAlert, setToggleAlert] = useState(true)
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const moveNextHandler = (_) => {
-    const data = {
-      fullNameInEnglish: sanitizeInput(englishName),
-      fullNameInArabic: sanitizeInput(arabicName),
-      company: sanitizeInput(company),
+    let data = {}
+
+    if (englishName) {
+      data = { fullNameInEnglish: sanitizeInput(englishName) }
     }
 
-    if (isFormValid()) {
-      setInfo({ ...info, ...data })
-      setStep(3)
+    if (arabicName) {
+      data = { ...data, fullNameInArabic: sanitizeInput(arabicName) }
     }
+
+    if (company) {
+      data = { ...data, company: sanitizeInput(company) }
+    }
+
+    setInfo({ ...info, ...data })
+    setStep(3)
   }
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [errors])
 
   useEffect(() => {
     info.fullNameInArabic && setArabicName(info.fullNameInArabic)
@@ -43,32 +42,8 @@ const Personal = ({ step, setStep, setInfo, info }) => {
     dispatch({ type: constants.users.CHECK_INFO_RESET })
   }, [])
 
-  const isFormValid = (_) => {
-    setToggleAlert(true)
-    if (!englishName) {
-      setErrors(t('provide-full-name-english'))
-      return false
-    }
-
-    if (!arabicName) {
-      setErrors(t('provide-full-name-arabic'))
-      return false
-    }
-
-    return true
-  }
-
   return (
     <>
-      {toggleAlert && errors && (
-        <Alert
-          variant='danger'
-          onClose={() => setToggleAlert(false)}
-          dismissible
-        >
-          {errors}
-        </Alert>
-      )}
       <Input
         type='text'
         placeholder='full-name-in-english'

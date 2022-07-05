@@ -1,0 +1,213 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.slider {
+  width: 100%;
+  min-height: calc(100vh - 10rem);
+  padding: 5rem 10rem;
+  position: relative;
+  overflow: hidden;
+
+  @include media.mq(sm) {
+    padding: 2rem;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 10rem;
+    @include media.mq(md) {
+      flex-direction: column-reverse;
+      margin-top: 5rem;
+    }
+    @include media.mq(sm) {
+      margin-top: 10rem;
+    }
+  }
+
+  &__text {
+    width: 150rem;
+    margin-right: 8rem;
+    @include media.mq(md) {
+      width: auto;
+      margin-right: 0;
+      margin-top: 10rem;
+    }
+    @include media.mq(sm) {
+      width: 100%;
+      margin-top: 5rem;
+    }
+    h1 {
+      font-size: 6rem;
+      font-weight: 600;
+      color: hsl(206deg 50% 20% / 90%);
+      background: -webkit-linear-gradient(#355268, #1a6299);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      @include media.mq(md) {
+        font-size: 5rem;
+      }
+      @include media.mq(sm) {
+        font-size: 4rem;
+      }
+    }
+
+    p {
+      font-size: 1.8rem;
+      color: #1a374dd9;
+      line-height: 1.7;
+      margin: 2rem 0;
+    }
+
+    button {
+      all: unset;
+      width: 20rem;
+      height: 4.5rem;
+      text-align: center;
+      border-radius: 2rem;
+      background-image: linear-gradient(to right, #6e9fd0, #356c96);
+      color: #fff;
+      box-shadow: 1px 3px 4px 0px rgb(83 123 139 / 50%);
+      cursor: pointer;
+      transition: all 0.5s;
+      &:active {
+        transform: scale(0.8);
+        box-shadow: unset !important;
+      }
+      &:hover {
+        background-image: linear-gradient(to left, #6e9fd0, #356c96);
+        box-shadow: 1px 6px 7px 2px rgb(83 123 139 / 50%);
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__illustration {
+    width: 130rem;
+    height: 35rem;
+    animation: bounce 3.5s infinite;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @include media.mq(lg) {
+      height: 25rem;
+    }
+    @include media.mq(md) {
+      width: 35rem;
+      height: 25rem;
+    }
+
+    @include media.mq(sm) {
+      width: 40rem;
+      height: auto;
+    }
+  }
+
+  &__outline {
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    box-shadow: 1px 5px 14px 1px rgb(0 0 0 / 20%);
+    z-index: 999;
+    @include media.mq(md) {
+      width: 100%;
+      bottom: 5rem;
+    }
+    @include media.mq(sm) {
+      top: 0.5rem;
+      bottom: unset;
+    }
+    &_segment {
+      position: relative;
+      width: 25rem;
+      text-align: center;
+      padding: 0.5rem 0;
+      color: #979797;
+      text-transform: capitalize;
+      background-color: var.$white-color;
+      cursor: pointer;
+      @include media.mq(md) {
+        padding: 0.5rem;
+        font-size: 1.4rem;
+      }
+      &::after {
+        content: '';
+        width: 0%;
+        height: 0.2rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: linear-gradient(to left, #6e9fd0, #356c96);
+        transition: all 0.3s;
+      }
+
+      &:not(:first-child) {
+        border-left: 1px dashed;
+      }
+
+      &:hover {
+        background-color: var.$white-color;
+        color: #355268;
+      }
+      &:hover::after {
+        width: 100%;
+      }
+    }
+
+    &_active {
+      background-color: var.$white-color;
+      color: #355268;
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &_progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 0.2rem;
+      background-image: linear-gradient(to left, #198754, #212529);
+    }
+  }
+
+  &__tap {
+    display: none;
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    // transform: translateX(-50%);
+    border: 1px solid;
+    border-color: linear-gradient(to left, #6e9fd0, #356c96);
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounce 3.5s infinite;
+    @include media.mq(sm) {
+      display: flex;
+    }
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

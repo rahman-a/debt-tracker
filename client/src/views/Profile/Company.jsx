@@ -1,16 +1,26 @@
 import React from 'react'
 import style from './style.module.scss'
-import {ProfileContainer} from '../../components'
-const Company = ({company}) => {
-    return (
-        <div className={style.profile__company}>
-            <ProfileContainer title='company-works-with'>
-                    <div className={style.profile__company_name}>
-                        <p>{company}</p>
-                    </div>
-            </ProfileContainer>
+import { Badge } from 'react-bootstrap'
+import { ProfileContainer } from '../../components'
+import { useTranslation } from 'react-i18next'
+
+const Company = ({ company }) => {
+  const { t } = useTranslation()
+  return (
+    <div className={style.profile__company}>
+      <ProfileContainer title='company-works-with'>
+        <div className={company ? style.profile__company_name : ''}>
+          {company ? (
+            <p>{company}</p>
+          ) : (
+            <Badge bg='danger' className='w-25'>
+              {t('not-provided')}
+            </Badge>
+          )}
         </div>
-    )
+      </ProfileContainer>
+    </div>
+  )
 }
 
 export default Company

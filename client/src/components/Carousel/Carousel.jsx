@@ -1,71 +1,102 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { Placeholder } from 'react-bootstrap'
-import { Carousel as Slider } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { useNavigate } from 'react-router-dom'
 import i18next from 'i18next'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
+import { sliders as slidersData, titles } from './data'
+import { ArrowDown } from '../../icons'
+import Particles from './Particles'
 
-const Carousel = () => {
+const Carousel = ({ aboutRef }) => {
   const navigate = useNavigate()
   const { isLoading, sliders } = useSelector((state) => state.listSliders)
   const dispatch = useDispatch()
+  const [currentSlider, setCurrentSlider] = useState(1)
+  const [progress, setProgress] = useState(0)
+  const progressTracker = useRef(null)
+  const [slider, setSlider] = useState(null)
   const lang = i18next.language
   const { t } = useTranslation()
+
+  const changeSlider = (value) => {
+    setCurrentSlider(value)
+    setSlider(slidersData[value - 1])
+    setProgress(0)
+  }
+
+  useEffect(() => {
+    if (slidersData) {
+      setSlider(slidersData[0])
+    }
+  }, [slidersData])
+
+  useEffect(() => {
+    progressTracker.current = setInterval(() => {
+      setProgress((prev) => prev + 0.4)
+    }, 40)
+  }, [])
+
+  useEffect(() => {
+    if (progress >= 100) {
+      setProgress(0)
+      if (currentSlider === slidersData.length) {
+        setCurrentSlider(1)
+        setSlider(slidersData[0])
+      } else {
+        setCurrentSlider((prev) => prev + 1)
+        setSlider(slidersData[currentSlider])
+      }
+    }
+  }, [progress])
+
   useEffect(() => {
     !sliders?.length && dispatch(actions.content.listSliders())
   }, [])
 
   return (
-    <Slider
-      autoPlay
-      infiniteLoop={true}
-      swipeable={true}
-      showStatus={false}
-      showThumbs={false}
-      className={style.carousel}
-    >
-      {isLoading ? (
-        <div
-          className={style.carousel__slide}
-          style={{ height: 'calc(100vh - 10rem)' }}
-        >
-          <Placeholder as='p' bg='light' animation='wave' className='h-100'>
-            <Placeholder xs={12} className='h-100' />
-          </Placeholder>
+    <>
+      <div
+        className={`${style.slider} ${lang === 'ar' ? style.slider_ar : ''}`}
+      >
+        <Particles />
+        <div key={slider?._id} className={style.slider__content}>
+          <div className={style.slider__text} ref={aboutRef}>
+            <h1>{slider?.title}</h1>
+            <p>{slider?.description}</p>
+            <button>Know more...</button>
+          </div>
+          <div className={style.slider__illustration}>
+            <img src={`/api/files/${slider?.image}`} alt='slider' />
+          </div>
         </div>
-      ) : (
-        sliders &&
-        sliders.map((slide) => {
-          return (
-            <div className={style.carousel__slide} key={slide._id}>
-              <img src={`/api/files/${slide.image}`} alt={slide.title} />
-              <div
-                className={style.carousel__desc}
-                style={{ textAlign: lang === 'ar' ? 'right' : 'left' }}
-              >
-                <h2>{slide.title[lang]}</h2>
-                <p style={{ flexDirection: lang === 'ar' && 'row-reverse' }}>
-                  {slide.text[lang]}
-                  {slide.article && (
-                    <span
-                      className={style.carousel__more}
-                      onClick={() => navigate(`/articles/${slide.article._id}`)}
-                    >
-                      {' '}
-                      {t('more')}{' '}
-                    </span>
-                  )}
-                </p>
-              </div>
+        <div className={style.slider__outline}>
+          {titles.map((title, idx) => (
+            <div
+              key={title}
+              onClick={() => changeSlider(idx + 1)}
+              className={`${style.slider__outline_segment} ${
+                currentSlider === idx + 1 ? style.slider__outline_active : ''
+              }`}
+            >
+              {title}
             </div>
-          )
-        })
-      )}
-    </Slider>
+          ))}
+          <div
+            className={style.slider__outline_progress}
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <div
+          className={style.slider__tap}
+          onClick={() => aboutRef.current.scrollIntoView()}
+        >
+          <ArrowDown />
+        </div>
+      </div>
+    </>
   )
 }
 

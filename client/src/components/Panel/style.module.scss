@@ -1,0 +1,226 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.panel {
+  display: none;
+  flex-grow: 1;
+  border-radius: 0.5rem;
+  padding: 1rem 0.5rem;
+  box-shadow: 0px 1px 4px -1px rgb(0 0 0 / 50%);
+  background-color: var.$white-color;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  @include media.mq(md) {
+    display: block;
+  }
+  @include media.mq(sm) {
+    width: 100%;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0.5rem;
+    direction: ltr;
+    &_id {
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      span:first-child {
+        cursor: pointer;
+      }
+      span:last-child {
+        margin-right: 0.5rem;
+        color: var.$main-color;
+      }
+    }
+
+    &_state {
+      span:first-child {
+        cursor: pointer;
+        color: #198754;
+        margin-right: 1rem;
+        svg {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+      span:last-child {
+        width: fit-content;
+        width: -moz-fit-content;
+        padding: 0.2rem 1rem;
+        background-color: #fdffbf;
+        color: #333;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+    }
+  }
+  &__body {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    &_photo {
+      width: 8rem;
+      height: 8rem;
+      overflow: hidden;
+      border-radius: 50%;
+      margin-right: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 85%;
+        height: 85%;
+        border-radius: 50%;
+      }
+      &_ar {
+        margin-right: unset;
+        margin-left: 1.5rem;
+      }
+    }
+    &_value {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0;
+      span {
+        margin-right: 0.5rem;
+      }
+      h3 {
+        font-weight: 600;
+        transform: translateY(2px);
+        margin-right: 1rem;
+      }
+
+      &_ar {
+        h3 {
+          margin-right: unset;
+        }
+        & > div {
+          direction: ltr;
+        }
+        img {
+          margin-left: unset !important;
+          margin-right: 0.5rem !important;
+        }
+      }
+    }
+    &_name {
+      display: flex;
+      align-items: center;
+      p {
+        margin-right: 0.5rem;
+      }
+      &_ar {
+        p {
+          margin-right: unset;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+
+    &_date {
+      display: flex;
+      align-items: center;
+      p {
+        margin-left: 0.5rem !important;
+      }
+
+      &_ar {
+        p {
+          margin-right: 0.5rem !important;
+          margin-left: unset !important;
+        }
+      }
+    }
+  }
+
+  &__note {
+    span {
+      display: inline-block;
+      color: #6c757d;
+      position: relative;
+      cursor: pointer;
+      line-height: 1.8;
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -1.2rem;
+        width: 100%;
+        height: 2rem;
+        background-color: #fff;
+        opacity: 0.9;
+        box-shadow: -1px -14px 20px 5px #f9fafb;
+      }
+    }
+    &_show {
+      span:after {
+        display: none;
+      }
+    }
+  }
+
+  &__label {
+    font-size: 1.4rem;
+    color: var.$white-color;
+    border-radius: 0.5rem;
+    padding: 0 2px;
+  }
+
+  &__decision {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 2rem 0;
+    button {
+      width: 12rem;
+    }
+  }
+
+  &__due {
+    border-bottom: 1px dashed #fd7e14;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 1px solid #fd7e14;
+    }
+  }
+  &__close {
+    color: darkred;
+    cursor: pointer;
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+    &_confirm {
+      text-align: center;
+      h2 {
+        font-weight: 400;
+        color: var.$code-red-color;
+      }
+      p {
+        font-weight: 300;
+        padding: 0.5rem 0;
+      }
+    }
+  }
+
+  &__disabled {
+    background-color: #f9fafb !important;
+    color: #ccc !important;
+    cursor: not-allowed !important;
+  }
+
+  &__overflow {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

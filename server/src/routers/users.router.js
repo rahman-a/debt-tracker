@@ -23,6 +23,7 @@ import {
   updateUserPreferredLanguage,
   updateDocuments,
   sendContactEmail,
+  updatePhoneAndAddress,
 } from '../controllers/users.controller.js'
 
 import {
@@ -35,11 +36,15 @@ import {
   latestTenIssuedTickets,
   pendingOperationsAtLastWeek,
   activeReportsAtLastWeek,
+  updateMemberData,
 } from '../controllers/admin.controllers.js'
 
 import { isAuth, checkRoles } from '../middlewares/auth.js'
 
-import { uploadHandler } from '../middlewares/uploads.js'
+import {
+  uploadDocumentsHandler,
+  uploadHandler,
+} from '../middlewares/uploads.js'
 
 const imagesFields = [
   { name: 'avatar', maxCount: 1 },
@@ -50,7 +55,11 @@ const imagesFields = [
 ]
 
 router.post('/check-if-exist', checkIfExist)
-router.post('/register', uploadHandler.fields(imagesFields), registerNewUser)
+router.post(
+  '/register',
+  uploadDocumentsHandler.fields(imagesFields),
+  registerNewUser
+)
 router.get('/phone/:id?', sendConfirmCodeToPhoneHandler)
 router.get('/email/:id', sendEmailVerificationLink)
 router.patch('/phone/verify/:id?', verifyConfirmPhoneCodeHandler)
@@ -71,6 +80,7 @@ router.patch(
   updateDocuments
 )
 router.post('/contact', sendContactEmail)
+router.patch('/info/update', isAuth, updatePhoneAndAddress)
 
 // DASHBOARD ROUTERS
 router.post('/staff/login', staffLogin)
@@ -126,6 +136,13 @@ router.get(
   isAuth,
   checkRoles('manager', 'hr', 'cs'),
   activeReportsAtLastWeek
+)
+
+router.patch(
+  '/:id/update',
+  isAuth,
+  checkRoles('manager', 'hr'),
+  updateMemberData
 )
 
 export default router

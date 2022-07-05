@@ -9,6 +9,14 @@
   align-items: center;
   text-align: -webkit-center;
   margin-bottom: 5rem;
+  &__content {
+    display: none;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    @include media.mq(sm) {
+      display: block;
+    }
+  }
   h1 {
     padding: 5rem 0;
   }
@@ -54,6 +62,12 @@
     text-align: left !important;
     margin: 0 1rem 1rem 0;
     width: 40rem;
+    @include media.mq(sm) {
+      width: 32rem;
+      input {
+        padding: 0.5rem !important;
+      }
+    }
   }
 
   &__name {
@@ -132,5 +146,9 @@
     position: absolute;
     top: 5rem;
     right: 15rem;
+    @include media.mq(sm) {
+      top: 2rem;
+      right: 2rem;
+    }
   }
 }

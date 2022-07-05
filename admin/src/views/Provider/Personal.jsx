@@ -62,8 +62,7 @@ const Personal = ({ getInfoValues, setCountry }) => {
         >
           {countries().map((country) => (
             <option key={country.abbr} value={country.abbr}>
-              {' '}
-              {country.name}{' '}
+              {country.name}
             </option>
           ))}
         </Form.Select>

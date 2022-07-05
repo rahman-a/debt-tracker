@@ -265,13 +265,24 @@ const SearchForUsers = (query) => async (dispatch) => {
   }
 }
 
-const updateAddressAndPhone = (id, info) => async (dispatch) => {
+const updateAddressAndPhone = (info) => async (dispatch, getState) => {
   dispatch({ type: constants.users.UPDATE_PHONE_AND_ADDRESS_REQUEST })
   try {
-    const { data } = await api.users.updateAddressAndPhone(id, info)
+    const { data } = await api.users.updateAddressAndPhone(info)
+    const { user } = getState().userProfile
+    if (user) {
+      const updatedUser = { ...user }
+      for (let key in data.user) {
+        updatedUser[key] = data.user[key]
+      }
+      dispatch({
+        type: constants.users.USER_PROFILE_SUCCESS,
+        payload: updatedUser,
+      })
+    }
     dispatch({
       type: constants.users.UPDATE_PHONE_AND_ADDRESS_SUCCESS,
-      payload: data.isDone,
+      payload: true,
     })
   } catch (error) {
     dispatch({

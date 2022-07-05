@@ -414,7 +414,7 @@ export const closeReportHandler = async (req, res, next) => {
 
     const color = debtor.colorCode.code.trim().toLocaleLowerCase()
 
-    if (color === code['green']) {
+    if (color === code['green'].toLocaleLowerCase()) {
       report.isActive = false
       report.paymentDate = new Date()
       await report.save()
@@ -427,7 +427,7 @@ export const closeReportHandler = async (req, res, next) => {
       return
     }
 
-    if (color === code['yellow']) {
+    if (color === code['yellow'].toLocaleLowerCase()) {
       console.log('color is yellow...')
       debtor.colorCode.state = debtor.colorCode.state.filter(
         (st) => st.report?.toString() !== report._id.toString()
@@ -446,7 +446,7 @@ export const closeReportHandler = async (req, res, next) => {
       return
     }
 
-    if (color === code['red']) {
+    if (color === code['red'].toLocaleLowerCase()) {
       debtor.colorCode.state = debtor.colorCode.state.filter(
         (st) => st.report?.toString() !== report._id.toString()
       )

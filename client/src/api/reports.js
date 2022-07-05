@@ -35,7 +35,7 @@ const reportsAPI = {
     return service().patch(`reports/${id}/due/approve`, date)
   },
   close(id) {
-    console.log('close id:', id)
+    console.log('id: ', id)
     return service().patch(`reports/close/${id}`)
   },
 }

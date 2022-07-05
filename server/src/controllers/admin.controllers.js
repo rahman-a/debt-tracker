@@ -175,6 +175,68 @@ export const changeUserRole = async (req, res, next) => {
   }
 }
 
+export const updateMemberData = async (req, res, next) => {
+  const { id } = req.params
+  console.log('id: ', id)
+  const {
+    englishName,
+    arabicName,
+    country,
+    company,
+    outsideAddress,
+    insideAddress,
+    phones,
+  } = req.body
+  try {
+    console.log({ body: req.body })
+    let updatedData = {}
+    const user = await User.findById(id)
+    if (!user) {
+      res.status(404)
+      throw new Error(req.t('no_user_found'))
+    }
+    if (englishName) {
+      user.fullNameInEnglish = englishName
+      updatedData = { fullNameInEnglish: englishName }
+    }
+    if (arabicName) {
+      user.fullNameInArabic = arabicName
+      updatedData = { ...updatedData, fullNameInArabic: arabicName }
+    }
+    if (country) {
+      user.country = JSON.parse(country)
+      updatedData = { country: user.country }
+    }
+
+    if (phones) {
+      user.outsidePhones = phones
+      updatedData = { outsidePhones: phones }
+    }
+    if (insideAddress) {
+      user.insideAddress = insideAddress
+      updatedData = { insideAddress }
+    }
+    if (outsideAddress) {
+      user.outsideAddress = outsideAddress
+      updatedData = { outsideAddress }
+    }
+    if (company) {
+      user.company = company
+      updatedData = { company }
+    }
+    console.log({ updatedData })
+    await user.save()
+    res.send({
+      success: true,
+      code: 200,
+      user: updatedData,
+      message: req.t('member_data_updated'),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const mainDashboardInfo = async (req, res, next) => {
   try {
     const pendingOperationCount = await Operation.count({ state: 'pending' })

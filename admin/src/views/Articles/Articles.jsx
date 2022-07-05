@@ -5,7 +5,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import actions from '../../actions'
 import constants from '../../constants'
-import { Input, Table, Loader, HeaderAlert, SideAlert } from '../../components'
+import {
+  Input,
+  Table,
+  Loader,
+  HeaderAlert,
+  SideAlert,
+  ArticleCard,
+} from '../../components'
 import Row from './Row'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
@@ -106,6 +113,14 @@ const Articles = () => {
                 ))}
             </tbody>
           </Table>
+          <div className={style.articles__content}>
+            {articles &&
+              articles.map((article, idx) => (
+                <tr key={article._id}>
+                  <ArticleCard article={article} />
+                </tr>
+              ))}
+          </div>
         </>
       )}
     </div>

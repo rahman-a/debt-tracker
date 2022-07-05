@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import style from './style.module.scss'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Loader, HeaderAlert, BackButton } from '../../components'
 import actions from '../../actions'
 import Personal from './Personal'
@@ -10,8 +12,6 @@ import Phone from './Phone'
 import Documents from './Documents'
 import Company from './Company'
 import Actions from './Actions'
-import i18next from 'i18next'
-import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
   const { loading, error, member } = useSelector((state) => state.member)
@@ -74,7 +74,6 @@ const Profile = () => {
                   passport: member.passport,
                   'identity-front': member['identity-front'],
                   'identity-back': member['identity-back'],
-                  snapshot: member.snapshot,
                 }}
               />
               <Company company={member.company} />

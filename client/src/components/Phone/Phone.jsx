@@ -168,6 +168,7 @@ const Phones = ({ step, setStep, info, setInfo }) => {
               value={phone.value}
               onChange={(e) => setInsidePhoneHandler(e, phone._id)}
               inputRef={insideRef}
+              required={idx === 0}
               custom={{ marginBottom: '3rem' }}
             />
             {insidePhones.length === idx + 1 && (

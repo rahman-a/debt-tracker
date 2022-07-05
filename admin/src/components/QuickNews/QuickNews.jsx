@@ -42,7 +42,7 @@ const QuickNews = () => {
           />
         ) : (
           news && (
-            <Table>
+            <Table show>
               <thead>
                 <th>#</th>
                 <th>{t('news-body')}</th>

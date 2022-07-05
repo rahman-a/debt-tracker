@@ -2,108 +2,62 @@
 @use '../../sass/media' as media;
 
 .contact {
-  position: relative;
-  background-image: url('../../../public/images/contact-bg.jpg');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  overflow: hidden;
+  padding: 10rem;
+  z-index: 9;
 
-  @include media.mq(sm) {
-    height: 102rem;
-  }
-  &__bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgba(var.$main-color, 80%);
-    @include media.mq(sm) {
-      height: 100%;
-    }
+  @include media.mq(md) {
+    padding: 1rem 2rem;
   }
 
-  &__wrapper {
+  @include media.mq(xs) {
+    padding: 2rem 1rem;
+  }
+
+  &__container {
     position: relative;
+    width: 90%;
+    margin: auto;
+    background-image: url('../../../public/images/contact.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0px 1px 10px 5px rgb(0 0 0 / 30%);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 7rem 10rem;
-    z-index: 99;
-
-    @include media.mq(lg) {
-      padding: 5rem 0;
-    }
-
+    z-index: 1;
     @include media.mq(md) {
-      padding: 5rem 1.6rem;
+      width: 70%;
+      flex-direction: column-reverse;
     }
-
     @include media.mq(sm) {
-      flex-direction: column;
-      padding: 2rem;
-    }
-  }
-
-  &__description {
-    color: var.$white-color;
-    margin: 0 15rem 0 2rem;
-    flex-basis: 55%;
-    @include media.mq(md) {
-      margin-right: 5rem;
-    }
-
-    @include media.mq(sm) {
-      text-align: center;
-      margin: 2rem;
-    }
-    &_ar {
-      margin-right: unset;
-      margin-left: 15rem;
-      @include media.mq(md) {
-        margin-left: 5rem;
-      }
-
-      @include media.mq(sm) {
-        margin-left: unset;
-      }
-    }
-  }
-
-  &__text {
-    margin-top: 10rem;
-    @include media.mq(sm) {
-      margin-top: 0;
-    }
-    h2 {
-      font-weight: 700;
-      font-size: 3.5rem;
-      margin-bottom: 1.6rem;
-      @include media.mq(md) {
-        font-size: 2.5rem;
-      }
-    }
-
-    p {
-      @include media.mq(md) {
-        font-size: 1.5rem;
-      }
+      width: 100%;
+      padding: 2rem 0;
     }
   }
 
   &__form {
-    flex-basis: 35%;
-    h3 {
-      font-size: 5rem;
-      font-weight: 400;
-      color: var.$white-color;
-      text-align: center;
-      margin-bottom: 1rem;
-      letter-spacing: 1px;
-      @include media.mq(md) {
-        font-size: 4rem;
-      }
+    width: 75%;
+    background-color: rgba(255, 255, 255, 0.806);
+    clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%);
+    padding: 1rem;
+
+    @include media.mq(xl) {
+      width: 100%;
+    }
+    @include media.mq(md) {
+      clip-path: none;
+      background-color: transparent;
+    }
+  }
+
+  form {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+
+    @include media.mq(md) {
+      width: 100%;
     }
     input,
     textarea {
@@ -114,9 +68,10 @@
       border-radius: 2rem;
       margin-bottom: 1rem;
       background-color: var.$white-color;
-      color: var.$main-color;
+      color: #333;
+      box-shadow: 0px -1px 8px -3px rgb(0 0 0 / 20%);
       &::placeholder {
-        color: var.$full-light-color;
+        color: var.$main-color;
         font-size: 1.4rem;
         font-weight: 300;
         font-style: italic;
@@ -135,6 +90,7 @@
       width: 15rem;
       height: 3.8rem;
       cursor: pointer;
+      box-shadow: 0px -1px 8px -3px rgb(0 0 0 / 20%);
       transition: all 0.3s ease;
       &:hover {
         transform: scale(1.05);
@@ -143,6 +99,61 @@
       &:active {
         transform: scale(0.95);
         box-shadow: unset;
+      }
+    }
+  }
+
+  &__content {
+    padding-right: 10rem;
+    @include media.mq(md) {
+      padding-right: unset;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    h3,
+    p {
+      text-align: center;
+      @include media.mq(md) {
+        text-align: unset;
+      }
+    }
+    h3 {
+      font-size: 5rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+      background-color: rgb(255 255 255 / 50%);
+      border-radius: 0.5rem;
+      padding: 0 0.5rem;
+
+      @include media.mq(lg) {
+        font-size: 4rem;
+      }
+
+      @include media.mq(md) {
+        font-weight: 300;
+      }
+
+      @include media.mq(xs) {
+        font-size: 3rem;
+      }
+
+      span {
+        background: -webkit-linear-gradient(#adb5bd, #1a374d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    p {
+      width: 100%;
+      color: var.$main-color;
+      font-weight: 300;
+      background-color: rgba(255, 255, 255, 0.5);
+      padding: 0 0.5rem;
+      border-radius: 0.5rem;
+      letter-spacing: 1px;
+      line-height: 1.8;
+      @include media.mq(md) {
+        font-weight: 400;
       }
     }
   }

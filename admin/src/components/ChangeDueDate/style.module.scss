@@ -1,0 +1,9 @@
+@use '../../sass/variables' as var;
+
+.dueChange {
+  border-bottom: 1px dashed var.$main-color;
+  cursor: pointer;
+  &:hover {
+    border-bottom: 1px solid var.$main-color;
+  }
+}

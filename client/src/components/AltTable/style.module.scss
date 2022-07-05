@@ -2,47 +2,49 @@
 @use '../../sass/media' as media;
 
 .records {
-    width:100%;
-    @include media.mq(xxl) {
-        overflow: auto;
-    }
-    table {
+  width: 100%;
+  @include media.mq(xxl) {
+    overflow: auto;
+  }
+  @include media.mq(sm) {
+    display: none;
+  }
+  table {
+    text-align: center;
+    tr {
+      display: inline-flex !important;
+      margin-top: 0.3rem;
+      td {
+        width: 15rem;
+        height: 8rem;
+        font-size: 1.3rem;
         text-align: center;
-        tr {
-            display: inline-flex !important;
-            margin-top:0.3rem;
-            td {
-                width: 15rem;
-                height: 8rem;
-                font-size: 1.3rem;
-                text-align: center;
-                background-color: var.$white-color;
-                color:var.$main-color;
-                border-right: 1px solid var.$full-light-color;
-                border-left: 1px solid var.$full-light-color;
-                padding: 2.5rem 0;
-                display: inline-block;
-                font-weight: 400;
-                line-break: anywhere;
-            }
-            td {
-                border-bottom: 2px solid var.$second-color;  
-            }
-        }
-        th {
-            width: 15rem;
-            height: 8rem;
-            font-size: 1.3rem;
-            text-align: center;
-            background-color: var.$white-color;
-            color:var.$main-color;
-            border-right: 1px solid var.$full-light-color;
-            border-left: 1px solid var.$full-light-color;
-            border-bottom: 2px solid var.$full-light-color; 
-            padding: 2.5rem 0;
-            display: inline-block;
-            font-weight: 500;
-        }
+        background-color: var.$white-color;
+        color: var.$main-color;
+        border-right: 1px solid var.$full-light-color;
+        border-left: 1px solid var.$full-light-color;
+        padding: 2.5rem 0;
+        display: inline-block;
+        font-weight: 400;
+        line-break: anywhere;
+      }
+      td {
+        border-bottom: 2px solid var.$second-color;
+      }
     }
+    th {
+      width: 15rem;
+      height: 8rem;
+      font-size: 1.3rem;
+      text-align: center;
+      background-color: var.$white-color;
+      color: var.$main-color;
+      border-right: 1px solid var.$full-light-color;
+      border-left: 1px solid var.$full-light-color;
+      border-bottom: 2px solid var.$full-light-color;
+      padding: 2.5rem 0;
+      display: inline-block;
+      font-weight: 500;
+    }
+  }
 }
-

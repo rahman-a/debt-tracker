@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import ObjectId from 'bson-objectid'
-import { ChatMessage, Loader } from '../../components'
+import { ChatMessage, Loader, CropModal } from '../../components'
 import { Microphone, ArrowLeft, PaperPlane } from '../../icons'
 import constants from '../../constants'
 import Upload from './Upload'
@@ -22,6 +22,9 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   const [isRecording, setIsRecording] = useState(false)
   const [recorder, setRecorder] = useState(null)
   const [isTyping, setIsTyping] = useState(false)
+  const [isImageCrop, setIsImageCrop] = useState(false)
+  const [imageCropData, setImageCropData] = useState(null)
+  const [trackRunningAudio, setTrackRunningAudio] = useState('')
   const textAreaRef = useRef(null)
   const scrollElementRef = useRef(null)
   const { id } = useParams()
@@ -146,8 +149,18 @@ const Chat = ({ socket, setUnSeenMessage }) => {
 
   const uploadImageHandler = (e) => {
     const file = e.target.files[0]
-    composeMessage('image', file)
+    const url = URL.createObjectURL(file)
+    setImageCropData({ url, file })
+    setIsImageCrop(true)
     setIsFile(false)
+  }
+
+  const sendImageAfterCropHandler = (file) => {
+    file.name = imageCropData.file.name
+    composeMessage('image', file)
+    setTimeout(() => {
+      setImageCropData(null)
+    }, 500)
   }
 
   const uploadDocumentHandler = (e) => {
@@ -251,132 +264,145 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   }, [arrivalMessage])
 
   return (
-    <div className={`${style.chat} ${conversation ? style.chat__on : ''}`}>
-      <header>
-        <span
-          onClick={clearChat}
+    <>
+      <CropModal
+        isCropPhoto={isImageCrop}
+        defaultSrc={imageCropData?.url}
+        file={imageCropData?.file}
+        closePanel={() => setIsImageCrop(false)}
+        output={(file) => sendImageAfterCropHandler(file)}
+        title='edit-image'
+      />
+      <div className={`${style.chat} ${conversation ? style.chat__on : ''}`}>
+        <header>
+          <span
+            onClick={clearChat}
+            style={{
+              transform: lang === 'ar' ? 'rotate(180deg)' : 'unset',
+              marginLeft: lang === 'ar' ? '1rem' : 'unset',
+            }}
+          >
+            {' '}
+            <ArrowLeft />{' '}
+          </span>
+          <figure
+            style={{
+              marginRight: lang === 'ar' ? 'unset' : '1rem',
+              marginLeft: lang === 'ar' ? '1rem' : 'unset',
+            }}
+          >
+            {conversation && (
+              <img
+                src={`/api/files/${conversation.metadata.image}`}
+                alt='chat'
+              />
+            )}
+          </figure>
+          <div
+            style={{
+              marginRight: lang === 'ar' ? 'unset' : 'auto',
+              marginLeft: lang === 'en' ? 'unset' : 'auto',
+            }}
+          >
+            {conversation && <h3> {conversation.metadata.name} </h3>}
+            {/* <p>{t('last-seen', {date:'Fri 4 Sep 2022'})}</p> */}
+          </div>
+        </header>
+        <Scrollbar
           style={{
-            transform: lang === 'ar' ? 'rotate(180deg)' : 'unset',
-            marginLeft: lang === 'ar' ? '1rem' : 'unset',
+            height: conversation || loading ? '75%' : '90%',
+            backgroundColor: '#efeae2',
           }}
+          scrollableNodeProps={{ ref: scrollElementRef }}
         >
-          {' '}
-          <ArrowLeft />{' '}
-        </span>
-        <figure
-          style={{
-            marginRight: lang === 'ar' ? 'unset' : '1rem',
-            marginLeft: lang === 'ar' ? '1rem' : 'unset',
-          }}
-        >
-          {conversation && (
-            <img src={`/api/files/${conversation.metadata.image}`} alt='chat' />
-          )}
-        </figure>
-        <div
-          style={{
-            marginRight: lang === 'ar' ? 'unset' : 'auto',
-            marginLeft: lang === 'en' ? 'unset' : 'auto',
-          }}
-        >
-          {conversation && <h3> {conversation.metadata.name} </h3>}
-          {/* <p>{t('last-seen', {date:'Fri 4 Sep 2022'})}</p> */}
-        </div>
-      </header>
-      <Scrollbar
-        style={{
-          height: conversation || loading ? '75%' : '90%',
-          backgroundColor: '#efeae2',
-        }}
-        scrollableNodeProps={{ ref: scrollElementRef }}
-      >
-        <div className={style.chat__messages}>
-          {loading ? (
-            <div className={style.chat__loading}>
-              <Loader size='4' options={{ animation: 'border' }} />
-            </div>
-          ) : error ? (
-            <ChatMessage key={v4()} content={error} type='error' />
-          ) : (
-            conversation &&
-            conversation.messages.map((message, idx) => (
-              <div
-                key={message._id}
-                ref={
-                  idx === conversation.messages.length - 1 ? scrollRef : null
-                }
-                style={{ alignSelf: messagePosition(message.sender._id) }}
-              >
-                <ChatMessage
-                  message={message}
-                  socket={socket}
-                  receiver={conversation?.metadata._id}
-                  customStyle={{
-                    backgroundColor:
-                      message.sender._id === user._id ? '#bff4bf' : '#fff',
-                  }}
-                />
+          <div className={style.chat__messages}>
+            {loading ? (
+              <div className={style.chat__loading}>
+                <Loader size='4' options={{ animation: 'border' }} />
               </div>
-            ))
-          )}
-        </div>
-      </Scrollbar>
-      {(conversation && !conversation.metadata.isDeleted) || loading ? (
-        <div className={style.chat__input}>
-          <Upload isFile={isFile} setIsFile={setIsFile} />
-          <Emoji
-            isEmoji={isEmoji}
-            setIsEmoji={setIsEmoji}
-            addEmojiHandler={addEmojiHandler}
-          />
-
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={sendMessageHandler}
-            ref={textAreaRef}
-            type='text'
-            placeholder={t('type-message')}
-          ></textarea>
-
-          <div className={isRecording ? style.chat__recording : ''}>
-            {isTyping ? (
-              <span onClick={sendMessage}>
-                {' '}
-                <PaperPlane />{' '}
-              </span>
+            ) : error ? (
+              <ChatMessage key={v4()} content={error} type='error' />
             ) : (
-              <span onClick={recordAudio}>
-                {' '}
-                <Microphone />{' '}
-              </span>
+              conversation &&
+              conversation.messages.map((message, idx) => (
+                <div
+                  key={message._id}
+                  ref={
+                    idx === conversation.messages.length - 1 ? scrollRef : null
+                  }
+                  style={{ alignSelf: messagePosition(message.sender._id) }}
+                >
+                  <ChatMessage
+                    message={message}
+                    socket={socket}
+                    receiver={conversation?.metadata._id}
+                    trackRunningAudio={trackRunningAudio}
+                    setTrackRunningAudio={setTrackRunningAudio}
+                    customStyle={{
+                      backgroundColor:
+                        message.sender._id === user._id ? '#bff4bf' : '#fff',
+                    }}
+                  />
+                </div>
+              ))
             )}
           </div>
+        </Scrollbar>
+        {(conversation && !conversation.metadata.isDeleted) || loading ? (
+          <div className={style.chat__input}>
+            <Upload isFile={isFile} setIsFile={setIsFile} />
+            <Emoji
+              isEmoji={isEmoji}
+              setIsEmoji={setIsEmoji}
+              addEmojiHandler={addEmojiHandler}
+            />
 
-          <input
-            onChange={uploadImageHandler}
-            accept='.png,.PNG,.jpg,.jpeg,.JPG'
-            id='image-upload'
-            type='file'
-            name='attachment'
-            style={{ display: 'none' }}
-          />
-          <input
-            onChange={uploadDocumentHandler}
-            accept='.pdf,.doc,.docx,.pptx,.xlsx,.txt'
-            id='document-upload'
-            type='file'
-            name='attachment'
-            style={{ display: 'none' }}
-          />
-        </div>
-      ) : (
-        conversation &&
-        conversation.metadata.isDeleted && (
-          <div className={style.chat__deleted}>{t('chat_closed')}</div>
-        )
-      )}
-    </div>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={sendMessageHandler}
+              ref={textAreaRef}
+              type='text'
+              placeholder={t('type-message')}
+            ></textarea>
+
+            <div className={isRecording ? style.chat__recording : ''}>
+              {isTyping ? (
+                <span onClick={sendMessage}>
+                  <PaperPlane />
+                </span>
+              ) : (
+                <span onClick={recordAudio}>
+                  <Microphone />
+                </span>
+              )}
+            </div>
+
+            <input
+              onChange={uploadImageHandler}
+              accept='.png,.PNG,.jpg,.jpeg,.JPG'
+              id='image-upload'
+              type='file'
+              name='attachment'
+              style={{ display: 'none' }}
+            />
+            <input
+              onChange={uploadDocumentHandler}
+              accept='.pdf,.doc,.docx,.pptx,.xlsx,.txt'
+              id='document-upload'
+              type='file'
+              name='attachment'
+              style={{ display: 'none' }}
+            />
+          </div>
+        ) : (
+          conversation &&
+          conversation.metadata.isDeleted && (
+            <div className={style.chat__deleted}>{t('chat_closed')}</div>
+          )
+        )}
+      </div>
+    </>
   )
 }
 

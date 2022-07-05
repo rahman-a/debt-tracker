@@ -12,7 +12,6 @@ import i18next from 'i18next'
 const Row = ({ user, idx }) => {
   const [toggleDelete, setToggleDelete] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [userId, setUserId] = useState(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { message, error } = useSelector((state) => state.deleteUser)
@@ -34,12 +33,11 @@ const Row = ({ user, idx }) => {
     setToggleDelete(false)
     setIsDeleting(true)
     setTimeout(() => {
-      dispatch(actions.admin.deleteUser(userId))
+      dispatch(actions.admin.deleteUser(user._id))
     }, 500)
   }
 
-  const initiateUserDelete = (id) => {
-    setUserId(id)
+  const initiateUserDelete = () => {
     setToggleDelete(true)
   }
 
@@ -74,7 +72,6 @@ const Row = ({ user, idx }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       <tr>
         <td> {idx + 1} </td>
 
@@ -84,23 +81,18 @@ const Row = ({ user, idx }) => {
             color: user.isAccountConfirmed ? '#1A374D' : '#fff',
           }}
         >
-          {' '}
-          {user.code}{' '}
+          {user.code}
         </td>
 
         <td style={{ position: 'relative' }}>
           <div className={style.members__provider}>
             {user.isProvider && (
               <span>
-                {' '}
-                <Wrench />{' '}
+                <Wrench />
               </span>
             )}
             <p>
-              {' '}
-              {lang === 'ar'
-                ? user.fullNameInArabic
-                : user.fullNameInEnglish}{' '}
+              {lang === 'ar' ? user.fullNameInArabic : user.fullNameInEnglish}
             </p>
           </div>
         </td>
@@ -115,11 +107,7 @@ const Row = ({ user, idx }) => {
         </td>
 
         <td>
-          {' '}
-          {new Date(user.createdAt).toLocaleDateString(
-            'en-US',
-            dateFormat
-          )}{' '}
+          {new Date(user.createdAt).toLocaleDateString('en-US', dateFormat)}
         </td>
 
         <td style={{ padding: '0' }}>
@@ -133,15 +121,13 @@ const Row = ({ user, idx }) => {
         <td style={{ padding: 0 }}>
           <div className={style.members__actions}>
             <span onClick={() => navigate(`/member/${user._id}`)}>
-              {' '}
-              <Edit />{' '}
+              <Edit />
             </span>
             {isDeleting ? (
               <Loader size='4' options={{ animation: 'border' }} />
             ) : (
               <span onClick={() => initiateUserDelete(user._id)}>
-                {' '}
-                <Trash />{' '}
+                <Trash />
               </span>
             )}
           </div>

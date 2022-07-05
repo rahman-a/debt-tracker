@@ -9,8 +9,8 @@ import {
   Phones,
   Credential,
   Progress,
-  Snapshot,
   Done,
+  Required,
 } from '../../components'
 import { ArrowRight } from '../../icons'
 import i18next from 'i18next'
@@ -33,8 +33,7 @@ const Register = () => {
     5: (
       <Documents step={step} setStep={setStep} setInfo={setInfo} info={info} />
     ),
-    6: <Snapshot step={step} setStep={setStep} setInfo={setInfo} info={info} />,
-    7: <Done setStep={setStep} />,
+    6: <Done setStep={setStep} />,
   }
 
   return (
@@ -49,17 +48,21 @@ const Register = () => {
         </span>
         {t('back-home')}
       </button>
-      <div className='container' style={{ paddingTop: '5rem' }}>
+      <div
+        className='container'
+        style={{ paddingTop: '5rem', position: 'relative' }}
+      >
         <div
           className={`${style.register__wrapper} ${
             lang === 'ar' ? style.register__wrapper_ar : ''
           }`}
         >
-          {step === 7 ? (
+          {step === 6 ? (
             <Done />
           ) : (
             <>
               <Progress step={step} />
+              <Required text={t('required-field')} />
               <div className={style.register__data}>{Component[step]}</div>
             </>
           )}

@@ -22,6 +22,7 @@ import {
   Article,
   NewArticle,
   Chat,
+  Test,
 } from './views'
 
 function App() {
@@ -100,7 +101,10 @@ function App() {
             element={isAuth ? <Article /> : <Navigate to='/login' />}
           />
         </Route>
-
+        <Route
+          path='/test'
+          element={isAuth ? <Test /> : <Navigate to='/login' />}
+        />
         <Route path='/reset' element={<ResetPassword />} />
       </Routes>
       <Footer />

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
 
 import actions from '../../actions'
-import { Table, Loader, HeaderAlert } from '../../components'
+import { Table, Loader, HeaderAlert, SliderCard } from '../../components'
 import Row from './Row'
 import AddNewSlider from './AddNewSlider'
 import { useTranslation } from 'react-i18next'
@@ -32,8 +32,7 @@ const Slider = () => {
           className='mb-3'
           onClick={() => setIsCreateSlide(true)}
         >
-          {' '}
-          {t('add-new-slider')}{' '}
+          {t('add-new-slider')}
         </Button>
         {loading ? (
           <Loader size='5' options={{ animation: 'border' }} />
@@ -67,6 +66,14 @@ const Slider = () => {
             </Table>
           )
         )}
+        <div className={style.slider__content}>
+          {sliders &&
+            sliders.map((slide) => (
+              <tr key={slide._id}>
+                <SliderCard slide={slide} />
+              </tr>
+            ))}
+        </div>
       </div>
     </>
   )

@@ -49,8 +49,7 @@ const Content = () => {
                 marginLeft: lang === 'ar' ? '1rem' : 'unset',
               }}
             >
-              {' '}
-              <Slider />{' '}
+              <Slider />
             </span>
             {t('slider')}
           </button>
@@ -65,8 +64,7 @@ const Content = () => {
                 marginLeft: lang === 'ar' ? '1rem' : 'unset',
               }}
             >
-              {' '}
-              <AboutCompany />{' '}
+              <AboutCompany />
             </span>
             {t('about-company')}
           </button>
@@ -80,8 +78,7 @@ const Content = () => {
                 marginLeft: lang === 'ar' ? '1rem' : 'unset',
               }}
             >
-              {' '}
-              <News />{' '}
+              <News />
             </span>
             {t('quick-news')}
           </button>
@@ -95,8 +92,7 @@ const Content = () => {
                 marginLeft: lang === 'ar' ? '1rem' : 'unset',
               }}
             >
-              {' '}
-              <ContactText />{' '}
+              <ContactText />
             </span>
             {t('form-text')}
           </button>
@@ -110,8 +106,7 @@ const Content = () => {
                 marginLeft: lang === 'ar' ? '1rem' : 'unset',
               }}
             >
-              {' '}
-              <SocialNetWork />{' '}
+              <SocialNetWork />
             </span>
             {t('social-platForm')}
           </button>

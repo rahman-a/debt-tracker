@@ -25,6 +25,7 @@ const Documents = ({ data }) => {
   }
 
   useEffect(() => {
+    console.log({ data })
     createDocuments()
   }, [data])
 

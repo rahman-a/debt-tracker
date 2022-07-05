@@ -5,7 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Currency } from '../../components'
+import { Currency, ChangeDue, Description, CloseReport } from '../../components'
 import {
   Copy,
   Check,
@@ -14,9 +14,6 @@ import {
   Times,
   Chat as ChatIcon,
 } from '../../icons'
-import Description from './Description'
-import ChangeDue from './ChangeDue'
-import CloseReport from './CloseReport'
 import Decision from './Decision'
 import Chat from './Chat'
 
@@ -238,8 +235,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
 
         {/* Creditor amount value*/}
         <td style={{ textTransform: 'capitalize' }}>
-          {' '}
-          {defineValue(peerType(), 'credit')}{' '}
+          {defineValue(peerType(), 'credit')}
         </td>
 
         {/* Debtor amount value*/}

@@ -15,16 +15,16 @@
     position: relative;
     box-shadow: 1px 0px 3px 2px rgb(0 0 0 / 30%);
     border: 1px solid rgba(var.$full-light-color, 30%);
-    width: 43vw;
+    width: 45vw;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 1.6rem;
     padding: 4rem;
-    @include media.mq(lg) {
-      width: 55vw;
+    @include media.mq(xl) {
+      width: 56vw;
     }
     @include media.mq(md) {
-      width: 70vw;
+      width: 75vw;
     }
 
     @include media.mq(sm) {
@@ -51,7 +51,6 @@
 
     @include media.mq(xs) {
       padding: 0;
-      margin-top: 3rem;
     }
   }
 
