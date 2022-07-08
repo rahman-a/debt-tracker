@@ -1,13 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Modal, Button } from 'react-bootstrap'
 import { Play } from '../../icons'
+import data from './data'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const Video = () => {
   const [show, setShow] = useState(false)
+  const [lang, setLang] = useState(i18next.language)
+
   const watchVideoHandler = () => {
-    setShow(true)
+    // setShow(true)
   }
+
+  const { t } = useTranslation()
+
+  useEffect(() => {
+    i18next.on('languageChanged', (lng) => {
+      setLang(lng)
+    })
+  }, [lang])
+
   return (
     <>
       <Modal show={show} onHide={() => setShow(false)} centered>
@@ -16,7 +30,7 @@ const Video = () => {
             <iframe
               width='100%'
               height='315'
-              src='https://www.youtube.com/embed/5hhwr2QU4Ck'
+              src={`https://www.youtube.com/embed/${data.video}`}
               title='YouTube video player'
               frameBorder='0'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -26,7 +40,7 @@ const Video = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button size='lg' variant='secondary' onClick={() => setShow(false)}>
-            Close
+            {t('close')}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -38,15 +52,13 @@ const Video = () => {
         </button>
         <div className={style.video__container}>
           {/* <img src='/images/swtle-bg.png' alt='bg' /> */}
-          <div className={style.video__content}>
-            <h3>Lorem ipsum dolor sit amet consectetur</h3>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Excepturi provident quae, voluptatum quaerat earum suscipit
-              numquam. Voluptatum harum, in sit ducimus atque dolore distinctio
-              laborum corrupti dicta natus eius saepe nulla molestias
-              consectetur nisi et.
-            </p>
+          <div
+            className={`${style.video__content} ${
+              lang === 'ar' ? style.video__content_ar : ''
+            }`}
+          >
+            <h3>{data.header[lang]}</h3>
+            <p>{data.body[lang]}</p>
           </div>
         </div>
         <figure>

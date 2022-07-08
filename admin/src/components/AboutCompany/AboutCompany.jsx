@@ -1,176 +1,155 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Card } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import actions from '../../actions'
 import constants from '../../constants'
 import { Loader, SideAlert } from '../../components'
-import { useTranslation } from 'react-i18next'
+import AboutItem from './AboutItem'
+import UpdateItem from './UpdateItem'
+import i18next from 'i18next'
 
 const AboutCompany = () => {
-  const [data, setData] = useState({})
+  const [headline, setHeadline] = useState({})
+  const [isShow, setIsShow] = useState(false)
   const [isError, setIsError] = useState(null)
+  const [itemId, setItemId] = useState(null)
+  const [isItemUpdate, setIsItemUpdate] = useState(false)
   const [successMessage, setSuccessMessage] = useState(null)
-  const { loading, error, content } = useSelector((state) => state.getContent)
-
-  const {
-    loading: createLoading,
-    error: createError,
-    message,
-  } = useSelector((state) => state.createContent)
-
-  const {
-    loading: updateLoading,
-    error: updateError,
-    message: updateMessage,
-  } = useSelector((state) => state.updateContent)
-
-  const location = useLocation()
-  const type = new URLSearchParams(location.search).get('type')
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const lang = i18next.language
 
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    console.log({ [name]: value })
-    setData({ ...data, [name]: value })
+  const { loading, error, message } = useSelector(
+    (state) => state.createHeadline
+  )
+
+  const { content, loading: get_loading } = useSelector(
+    (state) => state.getAboutContent
+  )
+
+  const {
+    message: updateMessage,
+    loading: updateLoading,
+    error: updateError,
+  } = useSelector((state) => state.updateHeadline)
+
+  const { loading: deleteLoading, error: deleteError } = useSelector(
+    (state) => state.deleteAboutItem
+  )
+
+  const clearContent = () => {
+    dispatch({ type: constants.content.CREATE_ABOUT_RESET })
+    dispatch({ type: constants.content.UPDATE_ABOUT_HEADLINE_RESET })
+    setIsError(null)
+    setSuccessMessage(null)
   }
 
-  const isFormValid = () => {
-    const { englishHeader, arabicHeader, englishBody, arabicBody } = data
-    if (!englishHeader || !arabicHeader || !englishBody || !arabicBody) {
-      setIsError(t('fill-all-fields'))
-      return false
-    }
-
-    return true
-  }
-
-  const createContentHandler = (e) => {
+  const createHeadlineHandler = (e) => {
     e.preventDefault()
+    dispatch(
+      actions.about.createContent({ headline: JSON.stringify(headline) })
+    )
+  }
 
-    if (isFormValid()) {
-      const header = {
-        en: data.englishHeader,
-        ar: data.arabicHeader,
-      }
-
-      const body = {
-        en: data.englishBody,
-        ar: data.arabicBody,
-      }
-      dispatch(actions.content.createContent({ header, body, type }))
-    }
+  const deleteAboutItem = (id) => {
+    dispatch(actions.about.deleteAboutItem(id))
   }
 
   const updateContentHandler = (e) => {
     e.preventDefault()
+
     const header = {
-      en: data.englishHeader ? data.englishHeader : content.header.en,
-      ar: data.arabicHeader ? data.arabicHeader : content.header.ar,
+      en: headline['en'] ? headline['en'] : content.header.en,
+      ar: headline['ar'] ? headline['ar'] : content.header.ar,
     }
 
-    const body = {
-      en: data.englishBody ? data.englishBody : content.body.en,
-      ar: data.arabicBody ? data.arabicBody : content.body.ar,
-    }
     dispatch(
-      actions.content.updateContent(type, content._id, { header, body, type })
+      actions.about.updateHeadline(content._id, {
+        headline: JSON.stringify(header),
+      })
     )
   }
 
-  const clearContent = () => {
-    dispatch({ type: constants.content.CREATE_CONTENT_RESET })
-    dispatch({ type: constants.content.UPDATE_CONTENT_RESET })
+  const initiateItemUpdate = (id) => {
+    setItemId(id)
+    setIsItemUpdate(true)
   }
 
   useEffect(() => {
-    dispatch(actions.content.getContent(type))
-    return () => {
-      clearContent()
-    }
-  }, [])
-
-  useEffect(() => {
     error && setIsError(error)
-    createError && setIsError(createError)
     updateError && setIsError(updateError)
-  }, [error, createError, updateError])
+  }, [error, updateError])
 
   useEffect(() => {
     message && setSuccessMessage(message)
     updateMessage && setSuccessMessage(updateMessage)
   }, [message, updateMessage])
 
-  if (loading) {
-    return <Loader size='5' center options={{ animation: 'border' }} />
-  }
-
+  useEffect(() => {
+    dispatch(actions.about.getAboutContent())
+  }, [])
   return (
     <>
-      <SideAlert
-        isOn={isError ? true : false}
-        text={isError}
-        type='danger'
-        reset={() => clearContent()}
-      />
-
+      <AboutItem show={isShow} setIsShow={setIsShow} />
+      {itemId && (
+        <UpdateItem
+          id={itemId}
+          setIsShow={setIsItemUpdate}
+          show={isItemUpdate}
+        />
+      )}
       <SideAlert
         isOn={successMessage ? true : false}
         text={successMessage}
         type='success'
         reset={() => clearContent()}
       />
-
+      <SideAlert
+        isOn={isError ? true : false}
+        text={isError}
+        type='danger'
+        reset={() => clearContent()}
+      />
       <div className={style.about}>
+        <Button
+          className='mb-3'
+          size='lg'
+          variant='dark'
+          disabled={content ? false : true}
+          onClick={() => setIsShow(true)}
+        >
+          New Item
+        </Button>
         <Form>
-          <Form.Group controlId='formBasicHeader' className='mb-3'>
-            <Form.Label>{t('english-header')}</Form.Label>
+          <Form.Group className='mb-3' controlId='exampleForm.ControlTextarea1'>
+            <Form.Label>English Headline</Form.Label>
             <Form.Control
-              size='lg'
-              placeholder={
-                content ? content.header['en'] : 'Enter header in English'
-              }
-              name='englishHeader'
-              onChange={(e) => handleInput(e)}
-            />
-          </Form.Group>
-          <Form.Group controlId='formBasicHeader' className='mb-3'>
-            <Form.Label>{t('arabic-header')}</Form.Label>
-            <Form.Control
-              size='lg'
-              name='arabicHeader'
-              placeholder={
-                content ? content.header['ar'] : 'Enter header in Arabic'
-              }
-              onChange={(e) => handleInput(e)}
-            />
-          </Form.Group>
-          <Form.Group controlId='formBasicHeader' className='mb-3'>
-            <Form.Label>{t('english-body')}</Form.Label>
-            <Form.Control
-              size='lg'
+              name='en'
               as='textarea'
-              row={5}
-              name='englishBody'
               placeholder={
-                content ? content.body['en'] : 'Enter body in English'
+                content ? content.header['en'] : 'Enter headline in English'
               }
-              onChange={(e) => handleInput(e)}
+              rows={3}
+              onChange={(e) =>
+                setHeadline({ ...headline, [e.target.name]: e.target.value })
+              }
             />
           </Form.Group>
-          <Form.Group controlId='formBasicHeader' className='mb-3'>
-            <Form.Label>{t('arabic-body')}</Form.Label>
+          <Form.Group className='mb-3' controlId='exampleForm.ControlTextarea2'>
+            <Form.Label>Arabic Headline</Form.Label>
             <Form.Control
-              size='lg'
+              name='ar'
               as='textarea'
-              row={5}
-              name='arabicBody'
               placeholder={
-                content ? content.body['ar'] : 'Enter body in Arabic'
+                content ? content.header['ar'] : 'Enter headline in Arabic'
               }
-              onChange={(e) => handleInput(e)}
+              rows={3}
+              onChange={(e) =>
+                setHeadline({ ...headline, [e.target.name]: e.target.value })
+              }
             />
           </Form.Group>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -190,16 +169,57 @@ const AboutCompany = () => {
                 size='lg'
                 variant='success'
                 type='submit'
-                onClick={createContentHandler}
+                onClick={createHeadlineHandler}
               >
                 {t('save')}
               </Button>
             )}
-            {(createLoading || updateLoading) && (
+            {(loading || updateLoading) && (
               <Loader size='4' options={{ animation: 'border' }} />
             )}
           </div>
         </Form>
+        <div className={style.about__items}>
+          {content &&
+            content.items.map((item, index) => (
+              <Card
+                style={{ width: '25rem', cursor: 'pointer' }}
+                key={item._id}
+              >
+                <Card.Body>
+                  <Card.Title>{item.title[lang]}</Card.Title>
+                  <Card.Text style={{ fontSize: '1.4rem' }}>
+                    {item.body[lang]}
+                  </Card.Text>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Button
+                      variant='primary'
+                      style={{ margin: '1rem' }}
+                      onClick={() => initiateItemUpdate(item._id)}
+                    >
+                      Edit
+                    </Button>
+                    {deleteLoading ? (
+                      <Loader size='4' options={{ animation: 'border' }} />
+                    ) : (
+                      <Button
+                        variant='danger'
+                        onClick={() => deleteAboutItem(item._id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </div>
+                </Card.Body>
+              </Card>
+            ))}
+        </div>
       </div>
     </>
   )

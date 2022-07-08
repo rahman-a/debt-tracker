@@ -3,6 +3,25 @@
 
 .about {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__items {
+    position: relative;
+    left: 5%;
+    width: 100%;
+    margin-top: 5rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    @include media.mq(md) {
+      justify-content: center;
+      left: 0;
+    }
+  }
   form {
     width: 100%;
     text-align: start;

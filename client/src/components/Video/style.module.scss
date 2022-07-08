@@ -5,7 +5,7 @@
   width: 99vw;
   height: 100vh;
   position: relative;
-
+  direction: ltr;
   @include media.mq(md) {
     height: 45vh;
   }
@@ -166,6 +166,13 @@
         font-size: 1.1rem;
         overflow-y: auto;
         z-index: 99;
+      }
+    }
+
+    &_ar {
+      direction: rtl;
+      @include media.mq(sm) {
+        padding: 3rem 2rem;
       }
     }
   }

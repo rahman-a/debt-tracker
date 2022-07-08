@@ -6,6 +6,7 @@ import ticketsReducer from './ticket.reducer'
 import chatReducer from './chat.reducer'
 import contentReducer from './content.reducer'
 import articleReducer from './article.reducer'
+import aboutReducer from './about.reducer'
 
 export const globalReducer = {
   ...adminReducer,
@@ -16,4 +17,5 @@ export const globalReducer = {
   ...chatReducer,
   ...contentReducer,
   ...articleReducer,
+  ...aboutReducer,
 }

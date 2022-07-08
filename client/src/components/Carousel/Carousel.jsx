@@ -29,14 +29,15 @@ const Carousel = ({ aboutRef }) => {
 
   useEffect(() => {
     if (slidersData) {
+      console.log('slidersData: ', slidersData[0])
       setSlider(slidersData[0])
     }
   }, [slidersData])
 
   useEffect(() => {
     progressTracker.current = setInterval(() => {
-      setProgress((prev) => prev + 0.4)
-    }, 40)
+      setProgress((prev) => prev + 0.5)
+    }, 50)
   }, [])
 
   useEffect(() => {
@@ -62,11 +63,11 @@ const Carousel = ({ aboutRef }) => {
         className={`${style.slider} ${lang === 'ar' ? style.slider_ar : ''}`}
       >
         <Particles />
-        <div key={slider?._id} className={style.slider__content}>
+        <div className={style.slider__content}>
           <div className={style.slider__text} ref={aboutRef}>
-            <h1>{slider?.title}</h1>
-            <p>{slider?.description}</p>
-            <button>Know more...</button>
+            <h1>{slider?.title[lang]}</h1>
+            <p>{slider?.description[lang]}</p>
+            <button>{t('learn-more')}</button>
           </div>
           <div className={style.slider__illustration}>
             <img src={`/api/files/${slider?.image}`} alt='slider' />
@@ -75,13 +76,13 @@ const Carousel = ({ aboutRef }) => {
         <div className={style.slider__outline}>
           {titles.map((title, idx) => (
             <div
-              key={title}
+              key={title['en']}
               onClick={() => changeSlider(idx + 1)}
               className={`${style.slider__outline_segment} ${
                 currentSlider === idx + 1 ? style.slider__outline_active : ''
               }`}
             >
-              {title}
+              {title[lang]}
             </div>
           ))}
           <div

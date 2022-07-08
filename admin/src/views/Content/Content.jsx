@@ -10,6 +10,7 @@ import {
   AboutCompany,
   ContactText,
   SocialNetWork,
+  Video as VideoIcon,
 } from '../../icons'
 import {
   Slider as SliderComponent,
@@ -17,6 +18,7 @@ import {
   FormText,
   AboutCompany as AboutComponent,
   SocialMedia,
+  Video,
 } from '../../components'
 
 const Content = () => {
@@ -32,6 +34,7 @@ const Content = () => {
     about: <AboutComponent />,
     contact: <FormText />,
     social: <SocialMedia />,
+    video: <Video />,
   }
 
   return (
@@ -97,6 +100,20 @@ const Content = () => {
             {t('form-text')}
           </button>
           <button
+            className={type === 'video' ? style.content__select_active : ''}
+            onClick={() => navigate('/content?type=video')}
+          >
+            <span
+              style={{
+                marginRight: lang === 'en' ? '1rem' : 'unset',
+                marginLeft: lang === 'ar' ? '1rem' : 'unset',
+              }}
+            >
+              <VideoIcon />
+            </span>
+            {t('video-section')}
+          </button>
+          <button
             className={type === 'social' ? style.content__select_active : ''}
             onClick={() => navigate('/content?type=social')}
           >
@@ -108,7 +125,7 @@ const Content = () => {
             >
               <SocialNetWork />
             </span>
-            {t('social-platForm')}
+            {t('social-media')}
           </button>
         </div>
         <div className={style.content_body}>{SelectedComponent[type]}</div>

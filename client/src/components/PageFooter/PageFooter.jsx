@@ -45,10 +45,10 @@ const Footer = () => {
       </div>
       <ul className={style.footer__laws}>
         <li>
-          <a href='https://www.goog.com'>Privacy Policy</a>
+          <a href='#'>Privacy Policy</a>
         </li>
         <li>
-          <a href='https://www.goog.com'>Terms & Conditions</a>
+          <a href='#'>Terms & Conditions</a>
         </li>
       </ul>
       <span>Copyright &copy; reserved 2022</span>

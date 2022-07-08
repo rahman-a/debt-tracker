@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import i18next from 'i18next'
+import i18next, { t } from 'i18next'
 import actions from '../../actions'
 import Card from './NewsCard'
 import { ArrowLeft, ArrowRight } from '../../icons'
+import data from './data'
 
 const QuickNews = () => {
   const [lang, setLang] = useState(i18next.language)
@@ -31,7 +32,7 @@ const QuickNews = () => {
 
   return (
     <div className={style.news}>
-      <h2>Quick News</h2>
+      <h2>{t('quick-news')}</h2>
       <button
         onClick={() => sliderMoveHandler('next')}
         className={`${style.news__btn} ${style.news__nxtBtn}`}
@@ -48,10 +49,9 @@ const QuickNews = () => {
         <div
           className={`${style.news__cards} ${true && style.news__cards_center}`}
         >
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {data.map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
         </div>
       </div>
     </div>

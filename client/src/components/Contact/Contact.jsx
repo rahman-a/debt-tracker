@@ -7,6 +7,7 @@ import { Placeholder } from 'react-bootstrap'
 import { Social, SideAlert, Loader } from '../../components'
 import constants from '../../constants'
 import actions from '../../actions'
+import data from './data'
 
 const Contact = () => {
   const [contact, setContact] = useState({
@@ -16,13 +17,13 @@ const Contact = () => {
     message: '',
   })
   const [errors, setErrors] = useState(null)
+  const [lang, setLang] = useState(i18next.language)
   const dispatch = useDispatch()
   const { loading, error, message } = useSelector(
     (state) => state.sendContactEmail
   )
   const { isLoading, contactUs } = useSelector((state) => state.getContactUs)
   const { t } = useTranslation()
-  const lang = i18next.language
 
   const getContactInformation = (e) => {
     const value = { [e.target.name]: e.target.value }
@@ -70,6 +71,12 @@ const Contact = () => {
     !contactUs && dispatch(actions.content.getContactUs())
   }, [])
 
+  useEffect(() => {
+    i18next.on('languageChanged', (lng) => {
+      setLang(lng)
+    })
+  }, [lang])
+
   return (
     <>
       <SideAlert
@@ -86,7 +93,11 @@ const Contact = () => {
       />
       <div className={style.contact}>
         <div className={style.contact__container}>
-          <div className={style.contact__form}>
+          <div
+            className={`${style.contact__form} ${
+              lang === 'ar' ? style.contact__form_ar : ''
+            }`}
+          >
             <form>
               <input type='text' name='name' placeholder={t('enter-name')} />
 
@@ -105,14 +116,15 @@ const Contact = () => {
               <button>{t('contact-send')}</button>
             </form>
           </div>
-          <div className={style.contact__content}>
+          <div
+            className={`${style.contact__content} ${
+              lang === 'ar' ? style.contact__content_ar : ''
+            }`}
+          >
             <h3 className={style.contact__title}>
-              <span>Get in touch with us</span>
+              <span>{data.header[lang]}</span>
             </h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reprehenderit dolor corrupti tempore.
-            </p>
+            <p>{data.body[lang]}</p>
           </div>
         </div>
       </div>

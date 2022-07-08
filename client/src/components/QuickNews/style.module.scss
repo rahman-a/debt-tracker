@@ -142,7 +142,7 @@
     }
     img {
       width: 100%;
-      height: 89%;
+      height: 85%;
       object-fit: cover;
       @include media.mq(md) {
         height: 10rem;
@@ -153,9 +153,10 @@
 
     h3 {
       font-size: 1.4rem;
-      padding: 1.1rem;
+      padding: 1rem;
       background-color: #406882;
       color: #fff;
+      height: 6rem;
       @include media.mq(md) {
         display: none;
       }
@@ -210,6 +211,12 @@
         margin: 2rem 0;
       }
     }
+
+    &_ar {
+      p {
+        overflow: hidden;
+      }
+    }
   }
 
   &__content {
@@ -219,6 +226,13 @@
       height: 10rem;
       margin-top: 8rem;
       z-index: 99;
+    }
+  }
+
+  &_ar {
+    &:not(:last-child) {
+      margin-left: 2rem;
+      margin-right: unset;
     }
   }
 }

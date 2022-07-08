@@ -23,9 +23,10 @@ const contentSchema = new mongoose.Schema(
       en: String,
       ar: String,
     },
+    video: String,
     type: {
       type: String,
-      enum: ['about', 'contact', 'news'],
+      enum: ['video', 'contact', 'news'],
       required: true,
     },
   },

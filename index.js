@@ -25,6 +25,7 @@ import notificationsRouter from './server/src/routers/notifications.router.js'
 import ticketsRouter from './server/src/routers/tickets.router.js'
 import chatRouter from './server/src/routers/chat.router.js'
 import contentRouter from './server/src/routers/content.router.js'
+import AboutRouter from './server/src/routers/about.router.js'
 import articleRouter from './server/src/routers/article.router.js'
 import socialRouter from './server/src/routers/social.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -95,6 +96,7 @@ app.use('/api/notifications', notificationsRouter)
 app.use('/api/tickets', ticketsRouter)
 app.use('/api/chat', chatRouter)
 app.use('/api/content', contentRouter)
+app.use('/api/about', AboutRouter)
 app.use('/api/article', articleRouter)
 app.use('/api/social', socialRouter)
 

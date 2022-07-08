@@ -6,6 +6,7 @@ import ticketAPI from './tickets.api'
 import chatAPI from './chat.api'
 import contentAPI from './content.api'
 import articleAPI from './article.api'
+import aboutAPI from './about.api'
 
 const api = {
   admin: adminAPI,
@@ -16,6 +17,7 @@ const api = {
   chat: chatAPI,
   content: contentAPI,
   article: articleAPI,
+  about: aboutAPI,
 }
 
 export default api
