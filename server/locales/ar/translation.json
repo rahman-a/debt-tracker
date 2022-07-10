@@ -142,5 +142,8 @@
   "social_platform_exist": "إسم المنصة موجودة بالفعل",
   "social_platform_created": "تم إضافة المنصة بنجاح",
   "no_social_platforms_found": "لم يتم العثور على اى منصات",
-  "social_platform_deleted": "تم حذف المنصة بنجاح"
+  "social_platform_deleted": "تم حذف المنصة بنجاح",
+  "item_updated": "تم تحديث الفقرة بنجاح",
+  "item_created": "تم إنشاء الفقرة بنجاح",
+  "item_deleted": "تم حذف الفقرة بنجاح"
 }

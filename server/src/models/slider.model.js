@@ -30,6 +30,16 @@ const sliderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Article',
     },
+    keyword: {
+      en: {
+        type: String,
+        required: true,
+      },
+      ar: {
+        type: String,
+        required: true,
+      },
+    },
   },
   { timestamps: true }
 )

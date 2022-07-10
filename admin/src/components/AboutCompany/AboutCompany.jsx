@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
-import { Form, Button, Card } from 'react-bootstrap'
+import { Form, Button, Card, InputGroup, FormControl } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ import i18next from 'i18next'
 
 const AboutCompany = () => {
   const [headline, setHeadline] = useState({})
+  const [link, setLink] = useState('')
   const [isShow, setIsShow] = useState(false)
   const [isError, setIsError] = useState(null)
   const [itemId, setItemId] = useState(null)
@@ -50,7 +51,7 @@ const AboutCompany = () => {
   const createHeadlineHandler = (e) => {
     e.preventDefault()
     dispatch(
-      actions.about.createContent({ headline: JSON.stringify(headline) })
+      actions.about.createContent({ headline: JSON.stringify(headline), link })
     )
   }
 
@@ -66,9 +67,12 @@ const AboutCompany = () => {
       ar: headline['ar'] ? headline['ar'] : content.header.ar,
     }
 
+    const targetLink = link ? link : content.link
+
     dispatch(
       actions.about.updateHeadline(content._id, {
         headline: JSON.stringify(header),
+        link: targetLink,
       })
     )
   }
@@ -93,7 +97,7 @@ const AboutCompany = () => {
   }, [])
   return (
     <>
-      <AboutItem show={isShow} setIsShow={setIsShow} />
+      <AboutItem show={isShow} setIsShow={setIsShow} id={content?._id} />
       {itemId && (
         <UpdateItem
           id={itemId}
@@ -152,6 +156,17 @@ const AboutCompany = () => {
               }
             />
           </Form.Group>
+          <InputGroup className='mb-3'>
+            <InputGroup.Text id='basic-addon1'>Link to </InputGroup.Text>
+            <FormControl
+              size='lg'
+              placeholder={content ? content.link : 'Enter article link'}
+              aria-label='learn more'
+              name='link'
+              aria-describedby='basic-addon1'
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </InputGroup>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {content ? (
               <Button

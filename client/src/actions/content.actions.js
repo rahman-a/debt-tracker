@@ -73,6 +73,24 @@ const listNews = () => async (dispatch) => {
   }
 }
 
+const listVideo = () => async (dispatch) => {
+  dispatch({
+    type: constants.content.LIST_VIDEO_REQUEST,
+  })
+  try {
+    const { data } = await api.content.getVideo()
+    dispatch({
+      type: constants.content.LIST_VIDEO_SUCCESS,
+      payload: data.content,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.content.LIST_VIDEO_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
 const getArticleData = (id) => async (dispatch) => {
   dispatch({
     type: constants.content.GET_ARTICLE_REQUEST,
@@ -122,6 +140,7 @@ const actions = {
   getAboutUs,
   getContactUs,
   listNews,
+  listVideo,
   getArticleData,
   listSocial,
 }

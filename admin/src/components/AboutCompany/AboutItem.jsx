@@ -6,7 +6,7 @@ import actions from '../../actions'
 import { Loader, SideAlert } from '../../components'
 import constants from '../../constants'
 
-const AboutItem = ({ show, setIsShow }) => {
+const AboutItem = ({ show, setIsShow, id }) => {
   const [isError, setIsError] = useState(null)
   const [data, setData] = useState({})
   const [image, setImage] = useState('')
@@ -54,9 +54,7 @@ const AboutItem = ({ show, setIsShow }) => {
       itemData.append('title', JSON.stringify(title))
       itemData.append('body', JSON.stringify(body))
       itemData.append('image', image)
-      dispatch(
-        actions.about.createAboutItem('62c71c65cd65d5b593072db0', itemData)
-      )
+      dispatch(actions.about.createAboutItem(id, itemData))
     }
   }
 

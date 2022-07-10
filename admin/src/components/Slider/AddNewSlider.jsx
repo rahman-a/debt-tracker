@@ -24,7 +24,15 @@ const CreateSlider = ({ isCreateSlide, setIsCreateSlide }) => {
   }
 
   const isFormValid = () => {
-    const { englishTitle, arabicTitle, englishText, arabicText, slider } = data
+    const {
+      englishTitle,
+      arabicTitle,
+      englishText,
+      arabicText,
+      slider,
+      arabicKeyword,
+      englishKeyword,
+    } = data
     if (!englishTitle) {
       setIsError(t('english-title-required'))
       return false
@@ -45,6 +53,15 @@ const CreateSlider = ({ isCreateSlide, setIsCreateSlide }) => {
       setIsError(t('image-required'))
       return false
     }
+    if (!arabicKeyword) {
+      setIsError(t('arabic-keyword-required'))
+      return false
+    }
+
+    if (!englishKeyword) {
+      setIsError(t('english-keyword-required'))
+      return false
+    }
 
     return true
   }
@@ -58,6 +75,8 @@ const CreateSlider = ({ isCreateSlide, setIsCreateSlide }) => {
       formData.append('englishText', data.englishText)
       formData.append('arabicText', data.arabicText)
       formData.append('slider', data.slider)
+      formData.append('arabicKeyword', data.arabicKeyword)
+      formData.append('englishKeyword', data.englishKeyword)
       data.article && formData.append('article', data.article)
       dispatch(actions.content.addSlider(formData))
     }
@@ -143,7 +162,22 @@ const CreateSlider = ({ isCreateSlide, setIsCreateSlide }) => {
               <Form.Text className='d-block text-muted fs-5 mb-3'>
                 {t('max-size-1000')}
               </Form.Text>
-
+              {/* /////////////// */}
+              <InputGroup className='mb-3'>
+                <InputGroup.Text> {t('arabic-keyword')} </InputGroup.Text>
+                <Form.Control
+                  name='arabicKeyword'
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </InputGroup>
+              {/* /////////////// */}
+              <InputGroup className='mb-3'>
+                <InputGroup.Text> {t('english-keyword')} </InputGroup.Text>
+                <Form.Control
+                  name='englishKeyword'
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </InputGroup>
               {/* Link to article */}
               <InputGroup>
                 <InputGroup.Text> {t('link-to')} </InputGroup.Text>

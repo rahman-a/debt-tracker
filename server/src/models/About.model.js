@@ -12,6 +12,7 @@ const AboutSchema = new mongoose.Schema(
         required: true,
       },
     },
+    link: String,
     items: [
       {
         title: {

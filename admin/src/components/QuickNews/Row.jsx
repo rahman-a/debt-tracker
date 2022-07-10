@@ -131,7 +131,13 @@ const Row = ({ news, idx }) => {
             )}
           </td>
 
-          <td style={{ padding: 0 }}>
+          <td
+            style={{
+              padding: '0 0.5rem',
+              lineBreak: 'auto',
+              fontSize: '1.2rem',
+            }}
+          >
             {news.name ? (
               news.name[lang]
             ) : (

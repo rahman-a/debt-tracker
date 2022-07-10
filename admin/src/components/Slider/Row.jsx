@@ -150,6 +150,14 @@ const Row = ({ slide, idx }) => {
           </td>
 
           <td>
+            {slide.keyword ? (
+              slide.keyword[lang]
+            ) : (
+              <Badge variant='secondary'>N/A</Badge>
+            )}
+          </td>
+
+          <td>
             {slide.article?.title[lang] ? (
               <span
                 className={style.slider__item}

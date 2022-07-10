@@ -5,13 +5,13 @@ import i18next, { t } from 'i18next'
 import actions from '../../actions'
 import Card from './NewsCard'
 import { ArrowLeft, ArrowRight } from '../../icons'
-import data from './data'
 
 const QuickNews = () => {
   const [lang, setLang] = useState(i18next.language)
   const { news } = useSelector((state) => state.listNews)
   const dispatch = useDispatch()
   const containerRef = useRef(null)
+
   const sliderMoveHandler = (type) => {
     const container = containerRef.current
     const containerDimension = container.getBoundingClientRect()
@@ -20,6 +20,7 @@ const QuickNews = () => {
       ? (container.scrollLeft += width)
       : (container.scrollLeft -= width)
   }
+
   useEffect(() => {
     i18next.on('languageChanged', (lng) => {
       setLang(lng)
@@ -49,9 +50,8 @@ const QuickNews = () => {
         <div
           className={`${style.news__cards} ${true && style.news__cards_center}`}
         >
-          {data.map((card) => (
-            <Card key={card.id} card={card} />
-          ))}
+          {news?.length &&
+            news.map((card) => <Card key={card.id} card={card} />)}
         </div>
       </div>
     </div>

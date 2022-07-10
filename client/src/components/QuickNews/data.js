@@ -7,7 +7,11 @@ const data = [
     },
     body: {
       en: `the new amendments are in line with the initiatives and strategic plans of Dubai. Such plans aim to achieve justice in accurate and fast way, provide judicial services to all, and keep peace, independence, transparency, and teamwork which represent the vision of Dubai Courts of becoming distinct courts globally. The Chief Judge of Enforcement Court also indicated that the new amendments have decriminalized bounced back cheques and limited criminalization to cases of fraud in issuing the cheque or in cases where there were sufficient funds but were withdrawn by the issuer. In this way we achieve the objectives of decriminalization and replace it with faster and easier procedures that give the beneficiary his right and protect him. Additionally, with the usage of modern technology encouraging the public that cheque value can collect faster instead of old-fashioned cheques`,
-      ar: `التعديلات الجديدة تمت من خلالها تضييق إطار تجريم الشيك المرتجع دون رصيد واقتصاره فقط على حالات حددها المشرع حصرًا في قانون العقوبات ومنها، جريمة التحايل في إصدار الشيك، أو وجود رصيد في حساب الساحب عند إصداره الشيك وقيامه بسحب الرصيد، وذلك لضمان تحقيق الأهداف المنشودة من رفع التجريم والاستعاضة عنه بإجراءات أسرع واسهل لحصول المستفيد من الشيك على حقه، كما تضمن حقوق المستفيدين من الشيكات وحامليها، علاوة على استحصال قيمة الشيك بشكل أسرع، وفي نفس الوقت تشجع الجمهور على استخدام الوسائل التكنولوجية والرقمية الحديثة بدلًا من الشيكات الورقية التقليدية. المصدر الموقع الإلكتروني لمحاكم دبي`,
+      ar: `التعديلات الجديدة تمت من خلالها تضييق إطار تجريم الشيك المرتجع دون رصيد واقتصاره فقط على حالات حددها المشرع حصرًا 
+      في قانون العقوبات ومنها، جريمة التحايل في إصدار الشيك، أو وجود رصيد في حساب الساحب عند إصداره الشيك وقيامه بسحب الرصيد،
+       وذلك لضمان تحقيق الأهداف المنشودة من رفع التجريم والاستعاضة عنه بإجراءات أسرع واسهل لحصول المستفيد من الشيك على حقه،
+       كما تضمن حقوق المستفيدين من الشيكات وحامليها، علاوة على استحصال قيمة الشيك بشكل أسرع، وفي نفس الوقت تشجع الجمهور
+       على استخدام الوسائل التكنولوجية والرقمية الحديثة بدلًا من الشيكات الورقية التقليدية. المصدر الموقع الإلكتروني لمحاكم دبي`,
     },
     image: 'https://swtle.com/api/files/image-1651068281812-.jpg',
   },

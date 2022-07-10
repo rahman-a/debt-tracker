@@ -6,8 +6,15 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const createSlider = async (req, res, next) => {
-  const { englishTitle, arabicTitle, englishText, arabicText, article } =
-    req.body
+  const {
+    englishTitle,
+    arabicTitle,
+    englishText,
+    arabicText,
+    article,
+    arabicKeyword,
+    englishKeyword,
+  } = req.body
 
   const newSlider = new Slider({
     title: {
@@ -17,6 +24,10 @@ export const createSlider = async (req, res, next) => {
     text: {
       en: englishText,
       ar: arabicText,
+    },
+    keyword: {
+      en: englishKeyword,
+      ar: arabicKeyword,
     },
   })
 
@@ -74,6 +85,12 @@ export const updateSlider = async (req, res, next) => {
 
   if (req.body.article) {
     updateData.article = req.body.article
+  }
+
+  console.log('keyword: ', req.body.keyword)
+
+  if (req.body.keyword) {
+    updateData.keyword = JSON.parse(req.body.keyword)
   }
 
   try {

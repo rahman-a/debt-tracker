@@ -14,7 +14,7 @@ import {
 
 router.post('/', isAuth, checkRoles('manager', 'hr', 'cs'), createContent)
 
-router.get('/', isAuth, checkRoles('manager', 'hr', 'cs'), getContent)
+router.get('/', getContent)
 
 router.put('/:id', isAuth, checkRoles('manager', 'hr', 'cs'), updateHeadline)
 

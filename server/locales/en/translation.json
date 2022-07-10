@@ -142,5 +142,8 @@
     "social_platform_exist": "Social Platform already exist",
     "social_platform_created": "Social Platform has been created",
     "no_social_platforms_found": "No Social Platforms Found",
-    "social_platform_deleted": "Social Platform has been deleted"
+    "social_platform_deleted": "Social Platform has been deleted",
+    "item_updated": "Item has been updated",
+    "item_created": "Item has been created",
+    "item_deleted": "Item has been deleted"
 }

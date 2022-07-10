@@ -5,10 +5,13 @@ const contentAPI = {
     return service().get('/content/slider')
   },
   getAboutUs: () => {
-    return service().get('/content?type=about')
+    return service().get('/about')
   },
   getContactUs: () => {
     return service().get('/content?type=contact')
+  },
+  getVideo: () => {
+    return service().get('/content?type=video')
   },
   listNews: () => {
     return service().get('/content/news')

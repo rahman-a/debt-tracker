@@ -63,11 +63,14 @@
       margin: 2rem 0;
     }
 
-    button {
+    a {
       all: unset;
+      display: inline-block;
       width: 20rem;
       height: 4.5rem;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 2rem;
       background-image: linear-gradient(to right, #6e9fd0, #356c96);
       color: #fff;

@@ -8,7 +8,12 @@ import constants from '../../constants'
 
 const AboutItem = ({ show, setIsShow, id }) => {
   const [isError, setIsError] = useState(null)
-  const [data, setData] = useState({})
+  const [data, setData] = useState({
+    englishHeader: '',
+    arabicHeader: '',
+    englishBody: '',
+    arabicBody: '',
+  })
   const [image, setImage] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
   const dispatch = useDispatch()
@@ -41,9 +46,11 @@ const AboutItem = ({ show, setIsShow, id }) => {
 
     const itemData = new FormData()
     itemData.append('title', JSON.stringify(title))
+
     itemData.append('body', JSON.stringify(body))
     image && itemData.append('image', image)
-    dispatch(actions.about.updateAboutItem(id, { title, body }))
+    console.log('id: ', id)
+    dispatch(actions.about.updateAboutItem(id, itemData))
   }
 
   const clearContent = () => {
@@ -55,6 +62,7 @@ const AboutItem = ({ show, setIsShow, id }) => {
   const getItem = () => {
     if (content) {
       const item = content.items.find((item) => item._id.toString() === id)
+      console.log('item: ', item)
       if (item) {
         setData({
           englishHeader: item.title.en,
@@ -75,8 +83,8 @@ const AboutItem = ({ show, setIsShow, id }) => {
   }, [updateMessage])
 
   useEffect(() => {
-    content && getItem()
-  }, [content])
+    content && show && getItem()
+  }, [content, show])
 
   return (
     <>

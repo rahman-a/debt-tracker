@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
-import { Placeholder } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import i18next, { t } from 'i18next'
 import actions from '../../actions'
-import data from './data'
 
 const About = ({ aboutRef }) => {
   const [images, setImages] = useState([])
   const [lang, setLang] = useState(i18next.language)
-  const { isLoading, aboutUs } = useSelector((state) => state.getAboutUs)
+  const { isLoading, aboutUs: content } = useSelector(
+    (state) => state.getAboutUs
+  )
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -19,8 +20,15 @@ const About = ({ aboutRef }) => {
   }, [lang])
 
   useEffect(() => {
-    !aboutUs && dispatch(actions.content.getAboutUs())
+    !content && dispatch(actions.content.getAboutUs())
   }, [])
+
+  useEffect(() => {
+    if (content) {
+      const images = content.items.map((item) => item.image)
+      setImages(images)
+    }
+  }, [content])
 
   return (
     <div className={style.about} ref={aboutRef}>
@@ -31,15 +39,20 @@ const About = ({ aboutRef }) => {
       >
         <div className={style.about__header_text}>
           <h2>{t('about-us')}</h2>
-          <button className={style.about__header_learn}>
-            {t('learn-more')}
-          </button>
+          {content?.link && (
+            <Link
+              to={`/articles/${content.link}`}
+              className={style.about__header_learn}
+            >
+              {t('learn-more')}
+            </Link>
+          )}
         </div>
-        <p>{data.header[lang]}</p>
+        <p>{content?.header[lang]}</p>
       </div>
       <div className={style.about__content}>
         <ul className={style.about__list}>
-          {data.items.map((item, idx) => (
+          {content?.items.map((item, idx) => (
             <li className={style.about__item} key={item.key}>
               <h2>{idx + 1}</h2>
               <h3>{item.title[lang]}</h3>
@@ -52,34 +65,17 @@ const About = ({ aboutRef }) => {
             lang === 'ar' ? style.about__images_ar : ''
           }`}
         >
-          <div
-            className={`${style.about__images_item} ${
-              lang === 'ar' ? style.about__images_item_ar : ''
-            }`}
-          >
-            <img src='/images/carousel/slide-1.jpg' alt='security' />
-          </div>
-          <div
-            className={`${style.about__images_item} ${
-              lang === 'ar' ? style.about__images_item_ar : ''
-            }`}
-          >
-            <img src='/images/carousel/slide-2.png' alt='security' />
-          </div>
-          <div
-            className={`${style.about__images_item} ${
-              lang === 'ar' ? style.about__images_item_ar : ''
-            }`}
-          >
-            <img src='/images/carousel/slide-3.jpg' alt='security' />
-          </div>
-          <div
-            className={`${style.about__images_item} ${
-              lang === 'ar' ? style.about__images_item_ar : ''
-            }`}
-          >
-            <img src='/images/carousel/slide-4.jpeg' alt='security' />
-          </div>
+          {images.length &&
+            images.map((image, idx) => (
+              <div
+                key={image}
+                className={`${style.about__images_item} ${
+                  lang === 'ar' ? style.about__images_item_ar : ''
+                }`}
+              >
+                <img src={`api/files/${image}`} alt='security' />
+              </div>
+            ))}
         </div>
       </div>
     </div>

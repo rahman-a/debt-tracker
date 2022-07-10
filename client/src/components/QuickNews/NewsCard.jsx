@@ -9,7 +9,7 @@ const NewsCard = ({ card }) => {
     <div className={`${style.card} ${lang === 'ar' ? style.card_ar : ''}`}>
       <div className={style.card__container}>
         <div className={style.card__front}>
-          <img src={card.image} alt='support' />
+          <img src={`/api/files/${card.image}`} alt='support' />
           <h3>{card.name[lang]}</h3>
         </div>
         <div

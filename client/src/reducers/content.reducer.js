@@ -112,6 +112,34 @@ const listNews = (state = {}, action) => {
   return cases[action.type] || state
 }
 
+const listVideos = (state = {}, action) => {
+  const cases = {
+    [constants.content.LIST_VIDEO_REQUEST]: {
+      ...state,
+      isLoading: true,
+      error: null,
+    },
+    [constants.content.LIST_VIDEO_SUCCESS]: {
+      ...state,
+      isLoading: false,
+      error: null,
+      video: action.payload,
+    },
+    [constants.content.LIST_VIDEO_FAIL]: {
+      ...state,
+      isLoading: false,
+      error: action.payload,
+    },
+    [constants.content.LIST_VIDEO_RESET]: {
+      ...state,
+      isLoading: false,
+      error: null,
+      video: null,
+    },
+  }
+  return cases[action.type] || state
+}
+
 const listSocial = (state = {}, action) => {
   const cases = {
     [constants.content.LIST_SOCIAL_REQUEST]: {
@@ -173,6 +201,7 @@ const reducers = {
   getAboutUs,
   getContactUs,
   listNews,
+  listVideos,
   getArticleData,
   listSocial,
 }

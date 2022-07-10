@@ -423,5 +423,11 @@
     "english-name": "English Name",
     "arabic-name": "Arabic Name",
     "english-body-required": "English News Body is Required",
-    "arabic-body-required": "Arabic News Body is Required"
+    "arabic-body-required": "Arabic News Body is Required",
+    "keyword-required": "Keyword is Required",
+    "arabic-keyword-required": "Arabic Keyword is Required",
+    "english-keyword-required": "English Keyword is Required",
+    "keyword": "Keyword",
+    "arabic-keyword": "Arabic Keyword",
+    "english-keyword": "English Keyword"
 }

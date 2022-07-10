@@ -422,5 +422,11 @@
     "english-name": "الإسم بالإنجليزي",
     "arabic-name": "الإسم بالعربي",
     "english-body-required": "من فضلك أدخل نص الخبر بالإنجليزي",
-    "arabic-body-required": "من فضلك أدخل نص الخبر بالعربي"
+    "arabic-body-required": "من فضلك أدخل نص الخبر بالعربي",
+    "keyword-required": "من فضلك أدخل الكلمة المفتاحية",
+    "arabic-keyword-required": "من فضلك أدخل الكلمة المفتاحية بالعربي",
+    "english-keyword-required": "من فضلك أدخل الكلمة المفتاحية بالإنجليزي",
+    "keyword": "الكلمة المفتاحية",
+    "arabic-keyword": "الكلمة المفتاحية بالعربى",
+    "english-keyword": "الكلمة المفتاحية بالإنجليزى"
 }

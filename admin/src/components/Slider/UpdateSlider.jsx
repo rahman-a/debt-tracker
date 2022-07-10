@@ -36,14 +36,23 @@ const UpdateSlider = ({ isUpdateSlide, setIsUpdateSlide, slide }) => {
       en: slide.text.en,
       ar: slide.text.ar,
     }
+    const keyword = {
+      en: slide.keyword.en,
+      ar: slide.keyword.ar,
+    }
     data.englishTitle && (title.en = data.englishTitle)
     data.arabicTitle && (title.ar = data.arabicTitle)
     data.englishText && (text.en = data.englishText)
     data.arabicText && (text.ar = data.arabicText)
+    data.englishKeyword && (keyword.en = data.englishKeyword)
+    data.arabicKeyword && (keyword.ar = data.arabicKeyword)
+
+    console.log({ keyword })
 
     const formData = new FormData()
     formData.append('title', JSON.stringify(title))
     formData.append('text', JSON.stringify(text))
+    formData.append('keyword', JSON.stringify(keyword))
     data.slider && formData.append('slider', data.slider)
     data.article && formData.append('article', data.article)
     if (Object.values(data).length > 0) {
@@ -57,6 +66,8 @@ const UpdateSlider = ({ isUpdateSlide, setIsUpdateSlide, slide }) => {
     dispatch({ type: constants.content.EDIT_SLIDER_RESET })
     setIsError(null)
   }
+
+  console.log({ slide })
 
   useEffect(() => {
     if (message) {
@@ -143,6 +154,28 @@ const UpdateSlider = ({ isUpdateSlide, setIsUpdateSlide, slide }) => {
               <Form.Text className='d-block text-muted fs-5 mb-3'>
                 {t('max-size-1000')}
               </Form.Text>
+
+              {/* /////////// */}
+              <InputGroup className='mb-3'>
+                <InputGroup.Text>{t('arabic-keyword')} </InputGroup.Text>
+                <Form.Control
+                  name='arabicKeyword'
+                  placeholder={slide.keyword['ar']}
+                  value={data.arabicKeyword}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </InputGroup>
+
+              {/* /////////// */}
+              <InputGroup className='mb-3'>
+                <InputGroup.Text>{t('english-keyword')} </InputGroup.Text>
+                <Form.Control
+                  name='englishKeyword'
+                  placeholder={slide.keyword['en']}
+                  value={data.englishKeyword}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </InputGroup>
 
               {/* Link to article */}
               <InputGroup>

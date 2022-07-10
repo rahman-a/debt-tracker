@@ -5,14 +5,14 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const createContent = async (req, res, next) => {
-  const { headline } = req.body
+  const { headline, link } = req.body
   try {
     const about = await Content.find({})
     if (about.length) {
       return res.sendStatus(204)
     }
     const newContent = new Content({ header: JSON.parse(headline) })
-
+    link && (newContent.link = link)
     await newContent.save()
 
     res.status(201).json({
@@ -44,10 +44,11 @@ export const getContent = async (req, res, next) => {
 
 export const updateHeadline = async (req, res, next) => {
   const { id } = req.params
-  const { headline } = req.body
+  const { headline, link } = req.body
   try {
     const newContent = await Content.findById(id)
     newContent.header = JSON.parse(headline)
+    link && (newContent.link = link)
     const updatedContent = await newContent.save()
     res.status(200).json({
       code: 200,
@@ -62,6 +63,7 @@ export const updateHeadline = async (req, res, next) => {
 
 export const createAboutItem = async (req, res, next) => {
   const { id } = req.params
+
   try {
     const content = await Content.findById(id)
 
@@ -95,25 +97,21 @@ export const createAboutItem = async (req, res, next) => {
 export const updateAboutItem = async (req, res, next) => {
   const { id } = req.params
   const { title, body } = req.body
-  console.log('body: ', body)
-  console.log('title: ', title)
   try {
     const contents = await Content.find({})
     const content = contents[0]
-    const item = content.items.find(
-      (item) => item._id.toString() === id.toString()
-    )
-    const newItem = { title, body }
-
-    if (req.fileName) {
-      item.image &&
-        fs.unlinkSync(path.resolve(__dirname, `../../uploads/${item.image}`))
-      newItem.image = req.fileName
-    }
 
     content.items = content.items.map((item) => {
-      if (item._id.toString() === id.toString()) {
-        return newItem
+      if (item._id.toString() === id) {
+        item.title = JSON.parse(title)
+        item.body = JSON.parse(body)
+        if (req.fileName) {
+          item.image &&
+            fs.unlinkSync(
+              path.resolve(__dirname, `../../uploads/${item.image}`)
+            )
+          item['image'] = req.fileName
+        }
       }
       return item
     })

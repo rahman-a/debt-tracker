@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { Placeholder } from 'react-bootstrap'
-import { Social, SideAlert, Loader } from '../../components'
+import { SideAlert, Loader } from '../../components'
 import constants from '../../constants'
 import actions from '../../actions'
-import data from './data'
 
 const Contact = () => {
   const [contact, setContact] = useState({
@@ -99,21 +98,42 @@ const Contact = () => {
             }`}
           >
             <form>
-              <input type='text' name='name' placeholder={t('enter-name')} />
+              <input
+                type='text'
+                name='name'
+                placeholder={t('enter-name')}
+                onChange={(e) => getContactInformation(e)}
+              />
 
-              <input type='email' name='email' placeholder={t('enter-email')} />
+              <input
+                type='email'
+                name='email'
+                placeholder={t('enter-email')}
+                onChange={(e) => getContactInformation(e)}
+              />
 
-              <input type='text' name='phone' placeholder={t('enter-phone')} />
+              <input
+                type='text'
+                name='phone'
+                placeholder={t('enter-phone')}
+                onChange={(e) => getContactInformation(e)}
+              />
 
               <textarea
                 name='message'
                 id='message'
                 cols='30'
                 rows='10'
+                onChange={(e) => getContactInformation(e)}
                 placeholder={t('enter-message')}
               ></textarea>
-
-              <button>{t('contact-send')}</button>
+              <button onClick={submitFormHandler} disabled={loading}>
+                {loading ? (
+                  <Loader size='4' options={{ animation: 'border' }} />
+                ) : (
+                  t('contact-send')
+                )}
+              </button>
             </form>
           </div>
           <div
@@ -122,9 +142,9 @@ const Contact = () => {
             }`}
           >
             <h3 className={style.contact__title}>
-              <span>{data.header[lang]}</span>
+              <span>{contactUs?.header[lang]}</span>
             </h3>
-            <p>{data.body[lang]}</p>
+            <p>{contactUs?.body[lang]}</p>
           </div>
         </div>
       </div>

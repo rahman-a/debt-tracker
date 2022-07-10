@@ -11,7 +11,7 @@ const Video = (props) => {
       width='1em'
       height='1em'
       viewBox='0 0 37 32'
-      enable-background='new 0 0 37 32'
+      enableBackground='new 0 0 37 32'
     >
       <g>
         <path

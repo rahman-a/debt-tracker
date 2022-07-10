@@ -2,11 +2,10 @@ import React, { useEffect, useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import i18next from 'i18next'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
-import { sliders as slidersData, titles } from './data'
 import { ArrowDown } from '../../icons'
 import Particles from './Particles'
 
@@ -15,6 +14,7 @@ const Carousel = ({ aboutRef }) => {
   const { isLoading, sliders } = useSelector((state) => state.listSliders)
   const dispatch = useDispatch()
   const [currentSlider, setCurrentSlider] = useState(1)
+  const [keywords, setKeywords] = useState([])
   const [progress, setProgress] = useState(0)
   const progressTracker = useRef(null)
   const [slider, setSlider] = useState(null)
@@ -23,16 +23,9 @@ const Carousel = ({ aboutRef }) => {
 
   const changeSlider = (value) => {
     setCurrentSlider(value)
-    setSlider(slidersData[value - 1])
+    setSlider(sliders[value - 1])
     setProgress(0)
   }
-
-  useEffect(() => {
-    if (slidersData) {
-      console.log('slidersData: ', slidersData[0])
-      setSlider(slidersData[0])
-    }
-  }, [slidersData])
 
   useEffect(() => {
     progressTracker.current = setInterval(() => {
@@ -43,12 +36,12 @@ const Carousel = ({ aboutRef }) => {
   useEffect(() => {
     if (progress >= 100) {
       setProgress(0)
-      if (currentSlider === slidersData.length) {
+      if (currentSlider === sliders.length) {
         setCurrentSlider(1)
-        setSlider(slidersData[0])
+        setSlider(sliders[0])
       } else {
         setCurrentSlider((prev) => prev + 1)
-        setSlider(slidersData[currentSlider])
+        setSlider(sliders[currentSlider])
       }
     }
   }, [progress])
@@ -56,6 +49,13 @@ const Carousel = ({ aboutRef }) => {
   useEffect(() => {
     !sliders?.length && dispatch(actions.content.listSliders())
   }, [])
+
+  useEffect(() => {
+    if (sliders) {
+      setKeywords(sliders.map((slider) => slider.keyword))
+      setSlider(sliders[0])
+    }
+  }, [sliders])
 
   return (
     <>
@@ -66,25 +66,30 @@ const Carousel = ({ aboutRef }) => {
         <div className={style.slider__content}>
           <div className={style.slider__text} ref={aboutRef}>
             <h1>{slider?.title[lang]}</h1>
-            <p>{slider?.description[lang]}</p>
-            <button>{t('learn-more')}</button>
+            <p>{slider?.text[lang]}</p>
+            {slider?.article && (
+              <Link to={`/articles/${slider.article._id}`}>
+                {t('learn-more')}
+              </Link>
+            )}
           </div>
           <div className={style.slider__illustration}>
             <img src={`/api/files/${slider?.image}`} alt='slider' />
           </div>
         </div>
         <div className={style.slider__outline}>
-          {titles.map((title, idx) => (
-            <div
-              key={title['en']}
-              onClick={() => changeSlider(idx + 1)}
-              className={`${style.slider__outline_segment} ${
-                currentSlider === idx + 1 ? style.slider__outline_active : ''
-              }`}
-            >
-              {title[lang]}
-            </div>
-          ))}
+          {keywords.length &&
+            keywords.map((keyword, idx) => (
+              <div
+                key={keyword['en']}
+                onClick={() => changeSlider(idx + 1)}
+                className={`${style.slider__outline_segment} ${
+                  currentSlider === idx + 1 ? style.slider__outline_active : ''
+                }`}
+              >
+                {keyword[lang]}
+              </div>
+            ))}
           <div
             className={style.slider__outline_progress}
             style={{ width: `${progress}%` }}

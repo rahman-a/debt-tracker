@@ -51,6 +51,7 @@ const Slider = () => {
                 <th>{t('title')}</th>
                 <th>{t('text')}</th>
                 <th>{t('image')}</th>
+                <th>{t('keyword')}</th>
                 <th>{t('link-to')}</th>
                 <th>{t('createdAt')}</th>
                 <th></th>

@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Modal, Button } from 'react-bootstrap'
-import { Play } from '../../icons'
-import data from './data'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import actions from '../../actions'
+import { Play } from '../../icons'
+import data from './data'
 
 const Video = () => {
   const [show, setShow] = useState(false)
   const [lang, setLang] = useState(i18next.language)
+  const {
+    isLoading,
+    error,
+    video: content,
+  } = useSelector((state) => state.listVideos)
+  const dispatch = useDispatch()
 
   const watchVideoHandler = () => {
-    // setShow(true)
+    if (content.video) {
+      setShow(true)
+    }
   }
 
   const { t } = useTranslation()
@@ -22,6 +32,10 @@ const Video = () => {
     })
   }, [lang])
 
+  useEffect(() => {
+    !content && dispatch(actions.content.listVideo())
+  }, [])
+
   return (
     <>
       <Modal show={show} onHide={() => setShow(false)} centered>
@@ -30,7 +44,7 @@ const Video = () => {
             <iframe
               width='100%'
               height='315'
-              src={`https://www.youtube.com/embed/${data.video}`}
+              src={`https://www.youtube.com/embed/${content?.video}`}
               title='YouTube video player'
               frameBorder='0'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -57,8 +71,8 @@ const Video = () => {
               lang === 'ar' ? style.video__content_ar : ''
             }`}
           >
-            <h3>{data.header[lang]}</h3>
-            <p>{data.body[lang]}</p>
+            <h3>{content?.header[lang]}</h3>
+            <p>{content?.body[lang]}</p>
           </div>
         </div>
         <figure>
