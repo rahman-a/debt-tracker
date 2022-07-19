@@ -156,7 +156,7 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   }
 
   const sendImageAfterCropHandler = (file) => {
-    file.name = imageCropData.file.name
+    !file.name && (file.name = imageCropData.file.name)
     composeMessage('image', file)
     setTimeout(() => {
       setImageCropData(null)

@@ -37,6 +37,11 @@
     align-items: center;
     padding: 3rem;
     direction: ltr;
+    @include media.mq(xs) {
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 3rem 0;
+    }
     button:disabled {
       opacity: 0.5;
       color: #b5b5b5;
@@ -71,6 +76,9 @@
     @include media.mq(sm) {
       width: 15rem;
     }
+    @include media.mq(xs) {
+      top: 3rem;
+    }
   }
 
   &__zoom {
@@ -87,7 +95,8 @@
     }
   }
 
-  &__action {
+  &__action,
+  &__select {
     button {
       all: unset;
       cursor: pointer;
@@ -111,6 +120,24 @@
       span {
         margin-right: unset;
         margin-left: 0.5rem;
+      }
+    }
+  }
+
+  &__select {
+    button {
+      background-color: #029b15;
+      color: #fff;
+      width: fit-content;
+      padding: 0 0.5rem;
+      margin-right: 1rem;
+    }
+
+    &_ar {
+      direction: rtl;
+      button {
+        margin-right: unset;
+        margin-left: 1rem;
       }
     }
   }
