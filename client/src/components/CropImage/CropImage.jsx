@@ -40,6 +40,11 @@ const CropImage = ({
     }
   }
 
+  const selectPhotoWithoutCropHandler = () => {
+    outputFile(file)
+    closePanel()
+  }
+
   useEffect(() => {
     setIsLoading(true)
     const reader = new FileReader()
@@ -126,6 +131,21 @@ const CropImage = ({
       </div>
       <div className={style.crop__actions}>
         <div className={style.crop__adjustment}>
+          <div
+            className={`${style.crop__select} ${
+              lang === 'ar' ? style.crop__select_ar : ''
+            }`}
+          >
+            <button
+              disabled={Boolean(cropData)}
+              onClick={selectPhotoWithoutCropHandler}
+            >
+              <span>
+                <Crop />
+              </span>
+              {t('select-photo')}
+            </button>
+          </div>
           <div
             className={`${style.crop__action} ${
               lang === 'ar' ? style.crop__action_ar : ''

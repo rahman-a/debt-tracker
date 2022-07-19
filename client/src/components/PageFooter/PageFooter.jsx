@@ -55,7 +55,7 @@ const Footer = () => {
         </li>
       </ul>
       <div className={style.footer__social}>
-        {socials.length &&
+        {socials?.length &&
           socials.map((social) => (
             <a href={social.link} key={social._id}>
               {socialsList[social.name]}

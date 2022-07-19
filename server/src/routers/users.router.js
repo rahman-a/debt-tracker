@@ -24,6 +24,7 @@ import {
   updateDocuments,
   sendContactEmail,
   updatePhoneAndAddress,
+  updatePhoneNumber,
 } from '../controllers/users.controller.js'
 
 import {
@@ -63,6 +64,7 @@ router.post(
 router.get('/phone/:id?', sendConfirmCodeToPhoneHandler)
 router.get('/email/:id', sendEmailVerificationLink)
 router.patch('/phone/verify/:id?', verifyConfirmPhoneCodeHandler)
+router.patch('/:id/phone/update/', updatePhoneNumber)
 router.patch('/verify', verifyAuthLink)
 router.post('/login', login)
 router.get('/login/code/new/:id', sendLoginCodeHandler)

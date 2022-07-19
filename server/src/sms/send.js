@@ -12,7 +12,7 @@ const sendSMS = (phone, code) => {
   client.messages
     .create({
       body: template.verification(code),
-      from: '+19035013810',
+      from: '+19402863101',
       to: `+2${phone}`,
     })
     .then((message) =>

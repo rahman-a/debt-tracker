@@ -3,6 +3,7 @@
     "username_already_found": "username already found, please choose another username",
     "email-already-exist": "{{email}} already exist please choose another email",
     "phone_already_exist": "phone {{phone}} already found, please choose another one",
+    "phone_updated_successfully": "phone updated successfully",
     "provide_required_data": "Please Provide the Required Data",
     "value_not_recognized": "{{value}} is not recognized",
     "phone_code_sent": "Code has been sent to your phone",

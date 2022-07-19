@@ -59,6 +59,9 @@ const userAPI = {
   sendContact(data) {
     return service().post('users/contact', data)
   },
+  updatePhoneNumber(id, phone) {
+    return service().patch(`users/${id}/phone/update?phone=${phone}`)
+  },
 }
 
 export default userAPI

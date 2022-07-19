@@ -1,53 +1,61 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import { Alert } from 'react-bootstrap'
 import { CircleCheck } from '../../icons'
-import { Input, SideButton, Loader } from '../../components'
-import actions from '../../actions'
 import constants from '../../constants'
+import SendCode from './SendCode'
+import CodeSent from './CodeSent'
 import { useTranslation } from 'react-i18next'
 
 const OTPCode = () => {
   const [completeCreation, setCompleteCreation] = useState(false)
-  const [phoneCode, setPhoneCode] = useState(null)
+  const [isCodeSent, setIsCodeSent] = useState(false)
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const { error, message } = useSelector((state) => state.VerifyPhoneCode)
 
-  const { loading, error, message } = useSelector(
-    (state) => state.VerifyPhoneCode
-  )
-  const { userId } = useSelector((state) => state.registerUser)
   const {
-    loading: phone_loading,
-    error: phone_error,
-    message: phone_message,
-  } = useSelector((state) => state.sendPhoneCode)
+    error: updateError,
+    message: updateMessage,
+    loading: updateLoading,
+  } = useSelector((state) => state.updatePhoneNumber)
 
   const dispatch = useDispatch()
 
   const { t } = useTranslation()
 
-  const clearAlert = (_) => {
-    dispatch({ type: constants.users.SEND_PHONE_CODE_RESET })
-  }
-
-  const verifyPhoneCodeHandler = (_) => {
-    dispatch(actions.users.verifyPhoneCode(userId, phoneCode))
-  }
-
-  const sendPhoneCodeHandler = (_) => {
-    dispatch(actions.users.sendCodeToPhone(userId))
-  }
+  const clearAlert = useCallback(() => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
+    dispatch({ type: constants.users.VERIFY_PHONE_CODE_RESET })
+    dispatch({ type: constants.users.UPDATE_PHONE_RESET })
+  }, [dispatch])
 
   useEffect(() => {
     if (message) {
       dispatch({ type: constants.users.VERIFY_PHONE_CODE_RESET })
       setCompleteCreation(true)
     }
-    error && window.scrollTo(0, 0)
-  }, [message, error])
+    error && setErrorMessage(error)
+  }, [message, error, dispatch])
+
+  useEffect(() => {
+    updateMessage && setSuccessMessage(updateMessage)
+    updateError && setErrorMessage(updateError)
+  }, [updateError, updateMessage])
+
+  useEffect(() => {
+    ;(errorMessage || successMessage) && window.scrollTo(0, 0)
+  }, [errorMessage, successMessage])
+
+  useEffect(() => {
+    if (completeCreation || updateLoading || isCodeSent) {
+      clearAlert()
+    }
+  }, [completeCreation, updateLoading, isCodeSent, clearAlert])
+
   return (
     <div className={style.done}>
-      {error && <Alert variant='danger'>{error}</Alert>}
       <span>
         <CircleCheck width='10rem' height='10rem' fill='#7dff6e' />
       </span>
@@ -57,83 +65,42 @@ const OTPCode = () => {
       <p style={{ marginBottom: '5rem', letterSpacing: '2px' }}>
         {t('account-created')}
       </p>
-
-      {!completeCreation ? (
-        <>
-          {' '}
-          {/* Sent Code To Verify Phone Number */}
-          <p>{t('code-sent-phone')}</p>
-          <p>{t('type-code-activate')}</p>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '1.5rem',
-            }}
-          >
-            <Input
-              type='number'
-              name='otp'
-              placeholder='type-code-sent-phone'
-              onChange={(e) => setPhoneCode(e.target.value)}
-              value={phoneCode}
-              icon={<strong className={style.done__icon}>OTP</strong>}
-            />
-            <SideButton
-              noIcon
-              text={!loading && <CircleCheck />}
-              loading={loading}
-              custom={{ transform: 'translateY(3px)', height: '5.5rem' }}
-              handler={verifyPhoneCodeHandler}
-            />
-          </div>
-          <button
-            className={style.done__sentAgain}
-            onClick={sendPhoneCodeHandler}
-          >
-            {phone_loading ? (
-              <Loader size='5' options={{ animation: 'border' }} />
-            ) : (
-              t('send-code-again')
-            )}
-          </button>
-          {phone_error && (
-            <Alert variant='danger' dismissible onClose={clearAlert}>
-              {phone_error}
-            </Alert>
-          )}
-          {phone_message && (
-            <Alert variant='success' dismissible onClose={clearAlert}>
-              {phone_message}
-            </Alert>
-          )}
-        </>
+      {errorMessage && <p className={style.done__error}>{errorMessage}</p>}
+      {successMessage && (
+        <p className={style.done__success}>{successMessage}</p>
+      )}
+      {!isCodeSent && (
+        <SendCode setIsCodeSent={setIsCodeSent} setErrors={setErrorMessage} />
+      )}
+      {!completeCreation && isCodeSent ? (
+        <CodeSent />
       ) : (
-        <>
-          {' '}
-          {/* Phone has been verified and Sent Link to E-mail */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <CircleCheck width='2.5rem' height='2.5rem' fill='#7dff6e' />
-            <p
+        isCodeSent && (
+          <>
+            {/* Phone has been verified and Sent Link to E-mail */}
+            <div
               style={{
-                marginLeft: '1rem',
-                fontWeight: '400',
-                fontSize: '2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              {t('phone-verified')}
-            </p>
-          </div>
-          <div className={style.done__emailSent}>
-            {t('send-activation-link')}
-          </div>
-        </>
+              <CircleCheck width='2.5rem' height='2.5rem' fill='#7dff6e' />
+              <p
+                style={{
+                  marginLeft: '1rem',
+                  fontWeight: '400',
+                  fontSize: '2rem',
+                }}
+              >
+                {t('phone-verified')}
+              </p>
+            </div>
+            <div className={style.done__emailSent}>
+              {t('send-activation-link')}
+            </div>
+          </>
+        )
       )}
     </div>
   )

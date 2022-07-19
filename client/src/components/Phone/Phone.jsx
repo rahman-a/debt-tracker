@@ -7,6 +7,8 @@ import { Phone } from '../../icons'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
 
+//  /^(50|52|54|55|56|58)\d{7}$/
+
 const Phones = ({ step, setStep, info, setInfo }) => {
   const [insidePhones, setInsidePhones] = useState([
     { _id: uuidv4(), value: '', isPrimary: true },
@@ -40,6 +42,10 @@ const Phones = ({ step, setStep, info, setInfo }) => {
 
         if (phone.value.replace(/\D/g, '').startsWith('971')) {
           setErrors(t('remove-dialing-code'))
+          return false
+        }
+        if (!/^(50|52|54|55|56|58)\d{7}$/.test(Number(phone.value))) {
+          setErrors(t('provide-valid-uae-tel'))
           return false
         }
       }
@@ -146,8 +152,7 @@ const Phones = ({ step, setStep, info, setInfo }) => {
         </Alert>
       )}
       <span style={{ color: '#fff', fontSize: '1.4rem', marginBottom: '2rem' }}>
-        {' '}
-        {t('enter-phone-without-emirates-code')}{' '}
+        {t('enter-phone-without-emirates-code')}
       </span>
       {/* INPUTS TO ENTER PHONES NUMBERS INSIDE UAE*/}
       {insidePhones.map((phone, idx) => {
@@ -166,6 +171,7 @@ const Phones = ({ step, setStep, info, setInfo }) => {
               type='number'
               icon={<Phone />}
               value={phone.value}
+              text='+971'
               onChange={(e) => setInsidePhoneHandler(e, phone._id)}
               inputRef={insideRef}
               required={idx === 0}

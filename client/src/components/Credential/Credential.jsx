@@ -88,8 +88,6 @@ const Credential = ({ step, setStep, info, setInfo }) => {
     }
 
     if (password !== confirmPassword) {
-      console.log({ password })
-      console.log({ confirmPassword })
       setErrors(t('pass-not-match'))
       return false
     }

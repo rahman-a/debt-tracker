@@ -14,6 +14,7 @@ import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
 import { labels } from '../config/labels.js'
 import { v4 as uuidv4 } from 'uuid'
+import { setTimeout } from 'timers/promises'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const documentsInArabic = {
@@ -105,12 +106,12 @@ export const registerNewUser = async (req, res, next) => {
     }
 
     await sendNotificationToAdminPanel(['manager', 'hr'], notification)
-    await sendConfirmCodeToPhone(savedUser._id)
 
     res.status(201).send({
       code: 201,
       success: true,
       id: savedUser._id,
+      phone: user.insidePhones.find((phone) => phone.isPrimary === true).phone,
       message: req.t('user_created_successfully'),
     })
   } catch (error) {
@@ -253,6 +254,35 @@ export const updateDocuments = async (req, res, next) => {
       doc: docObject,
       code: 200,
       isDone: true,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const updatePhoneNumber = async (req, res, next) => {
+  const { id } = req.params
+  const { phone } = req.query
+
+  try {
+    const user = await User.findById(id)
+    user.insidePhones.map((ph) => {
+      if (ph.isPrimary === true) {
+        if (ph.phone === phone) {
+          res.status(400)
+          throw new Error(req.t('phone_already_exist', { phone }))
+        }
+
+        ph.phone = phone
+      }
+      return ph
+    })
+    await user.save()
+
+    res.send({
+      success: true,
+      code: 200,
+      message: req.t('phone_updated_successfully'),
     })
   } catch (error) {
     next(error)

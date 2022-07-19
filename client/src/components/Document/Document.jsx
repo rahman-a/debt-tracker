@@ -65,6 +65,13 @@ const Documents = ({ step, setStep, setInfo, info }) => {
   }
 
   const initiateEditImage = (e) => {
+    const fileSize = e.target.files[0].size
+    if (fileSize > 2000000) {
+      setErrors(
+        t('allowed-file-size', { size: lang === 'en' ? '2MB' : '2 ميجابايت' })
+      )
+      return
+    }
     const url = URL.createObjectURL(e.target.files[0])
     setImgData({ url, file: e.target.files[0], name: e.target.name })
   }

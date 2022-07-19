@@ -5,6 +5,19 @@
   align-items: center;
   margin-left: 1.8rem;
   transform: translateY(-5px);
+
+  &__data {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
   p {
     margin-left: 0.5rem;
     color: #fff;

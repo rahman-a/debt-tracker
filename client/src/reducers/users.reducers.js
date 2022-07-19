@@ -9,6 +9,7 @@ const registerUser = (state, action) => {
       error: null,
       success: action.payload?.success,
       userId: action.payload?.id,
+      phone: action.payload?.phone,
     },
 
     [constants.users.REGISTER_USER_FAIL]: {
@@ -21,6 +22,7 @@ const registerUser = (state, action) => {
       error: null,
       success: false,
       userId: null,
+      phone: null,
     },
   }
 
@@ -168,6 +170,31 @@ const VerifyPhoneCode = (state, action) => {
     },
 
     [constants.users.VERIFY_PHONE_CODE_RESET]: {
+      loading: false,
+      error: null,
+      message: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const updatePhoneNumber = (state, action) => {
+  const cases = {
+    [constants.users.UPDATE_PHONE_REQUEST]: { loading: true, error: null },
+
+    [constants.users.UPDATE_PHONE_SUCCESS]: {
+      loading: false,
+      error: null,
+      message: action.payload,
+    },
+
+    [constants.users.UPDATE_PHONE_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+
+    [constants.users.UPDATE_PHONE_RESET]: {
       loading: false,
       error: null,
       message: null,
@@ -459,6 +486,7 @@ const reducers = {
   searchUsers,
   updateAddressAndPhone,
   sendContactEmail,
+  updatePhoneNumber,
 }
 
 export default reducers

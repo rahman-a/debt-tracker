@@ -99,12 +99,12 @@ const Header = () => {
     dispatch(actions.chat.createSupportGroup())
   }
 
-  window.addEventListener('click', () => {
-    setLangDropDown(false)
-    setSideMenu(false)
-    document.body.style.height = 'unset'
-    document.body.style.overflow = 'unset'
-  })
+  // window.addEventListener('click', () => {
+  //   setLangDropDown(false)
+  //   setSideMenu(false)
+  //   document.body.style.height = 'unset'
+  //   document.body.style.overflow = 'unset'
+  // })
 
   useEffect(() => {
     let intervalNotificationsRequest

@@ -25,13 +25,16 @@ const storage = multer.diskStorage({
 
 export const uploadDocumentsHandler = multer({
   limits: {
-    fileSize: 5000000,
+    fileSize: 25000000,
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match('blob')) {
-      cb(new Error(req.t('upload_image_extension')))
-    }
-    cb(undefined, true)
+    console.log('file original name: ', file.originalname)
+    if (
+      file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|svg|SVG)$/) ||
+      file.originalname === 'blob'
+    ) {
+      cb(undefined, true)
+    } else cb(new Error(req.t('upload_image_extension')))
   },
   storage,
 })

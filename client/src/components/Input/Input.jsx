@@ -23,6 +23,7 @@ const Input = ({
   subLabel,
   disabled,
   required,
+  text,
 }) => {
   const lang = i18next.language
   const { t } = useTranslation()
@@ -39,6 +40,8 @@ const Input = ({
         ${lang === 'ar' ? style.input_ar : ''} 
         ${direction === 'right' ? style.input__right : ''}
         ${type === 'file' ? style.input__upload : ''}
+        ${text ? style.input__text : ''}
+        ${text && lang === 'ar' ? style.input__text_ar : ''}
         ${className}
         `}
       style={{ ...custom }}
@@ -66,7 +69,15 @@ const Input = ({
         <label htmlFor={id || name}>{t(label)}</label>
         {required && <Required />}
       </div>
-
+      {text && (
+        <span
+          className={`${style.input__text_data} ${
+            lang === 'ar' ? style.input__text_ar_data : ''
+          }`}
+        >
+          {text}
+        </span>
+      )}
       <input
         placeholder={t(placeholder)}
         name={name}
@@ -84,7 +95,7 @@ const Input = ({
           padding:
             type === 'date'
               ? '1rem'
-              : direction !== 'right' && '1.5rem 1.5rem 1.5rem 5.5rem',
+              : direction !== 'right' && !text && '1.5rem 1.5rem 1.5rem 5.5rem',
           color: '#1A374D',
         }}
       />

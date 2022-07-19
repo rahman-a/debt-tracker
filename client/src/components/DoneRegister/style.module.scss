@@ -2,35 +2,189 @@
 @use '../../sass/media' as media;
 
 .done {
-    padding:6rem;
-    margin-top:2rem;
-    color:var.$white-color;
-    text-align: center;
-    @include media.mq(sm){
-        padding:0;
+  padding: 6rem;
+  margin-top: 2rem;
+  color: var.$white-color;
+  text-align: center;
+  @include media.mq(sm) {
+    padding: 0;
+  }
+  &__icon {
+    font-weight: 600;
+    font-size: 1.4rem !important;
+    color: var.$full-light-color !important;
+    right: -2rem !important;
+    transform: translateY(-20%) !important;
+  }
+  &__emailSent {
+    background-color: rgba(var.$full-light-color, 0.1);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  &__sentAgain {
+    all: unset;
+    margin-top: 2rem;
+    color: var.$full-light-color;
+    border-bottom: 1px solid transparent;
+    font-weight: 300;
+    &:hover {
+      border-bottom: 1px solid var.$white-color;
     }
-    &__icon {
-        font-weight: 600;
-        font-size: 1.4rem !important;
-        color: var.$full-light-color !important;
-        right: -2rem !important;
-        transform: translateY(-20%) !important;
-    }
-    &__emailSent {
-        background-color: rgba(var.$full-light-color, 0.1);
-        padding: 2rem;
-        border-radius: 1.5rem;
-        margin-top: 2rem;
+  }
+
+  &__error,
+  &__success {
+    padding: 0 0.5rem;
+    border-radius: 0.3rem;
+  }
+
+  &__success {
+    color: #005600;
+    background-color: #d9ffd9;
+  }
+
+  &__error {
+    color: #930202;
+    background-color: #ffd9d9;
+  }
+
+  &__code {
+    margin-top: 1.5rem;
+    &_info {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      @include media.mq(sm) {
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      span {
+        color: #adb5bd;
+        direction: initial;
+      }
     }
 
-    &__sentAgain {
-        all:unset;
-        margin-top:2rem;
-        color:var.$full-light-color;
-        border-bottom: 1px solid transparent;
-        font-weight: 300;
-        &:hover {
-            border-bottom: 1px solid var.$white-color;
+    &_edit {
+      position: relative;
+      @include media.mq(sm) {
+        margin-bottom: 1.5rem;
+      }
+      span {
+        position: absolute;
+        left: 0.5rem;
+        top: 2px;
+        border-right: 1px solid;
+        padding: 0 0.5rem;
+      }
+      input {
+        padding: 0.3rem 0 0.3rem 5.5rem;
+        border-radius: 0.5rem;
+        outline: none;
+        border: 0;
+
+        &::placeholder {
+          font-size: 1.2rem;
         }
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &[type='number'] {
+          -webkit-appearance: textfield;
+          -moz-appearance: textfield;
+          appearance: textfield;
+        }
+      }
+      &_ar {
+        span {
+          left: unset;
+          right: 0.5rem;
+          border-right: unset;
+          border-left: 1px solid;
+        }
+        input {
+          padding: 0.3rem 5.5rem 0.3rem 0;
+        }
+      }
     }
+    &_verify {
+      button {
+        all: unset;
+        position: relative;
+        width: 15rem;
+        height: 3rem;
+        background-color: #fff;
+        color: #1a374d;
+        border-radius: 0.5rem;
+        margin-top: 1.6rem;
+        cursor: pointer;
+        &:disabled {
+          opacity: 0.5;
+          background-color: #ddd;
+          color: #adb5bd;
+          cursor: not-allowed;
+        }
+      }
+    }
+    &_change {
+      all: unset;
+      margin-left: 1rem;
+      border-bottom: 1px dashed;
+      font-size: 1.4rem;
+      color: #adb5bd;
+      cursor: pointer;
+    }
+
+    &_update {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-left: 2rem;
+      @include media.mq(sm) {
+        margin-left: 0;
+      }
+      button {
+        all: unset;
+        position: relative;
+        background-color: #fff;
+        color: var.$main-color;
+        padding: 0 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 1.6rem;
+        width: 12rem;
+        height: 3rem;
+        cursor: pointer;
+        &:disabled {
+          opacity: 0.5;
+          background-color: #ddd;
+          color: #adb5bd;
+          cursor: not-allowed;
+        }
+        &:first-child {
+          margin-right: 1rem;
+        }
+      }
+
+      &_ar {
+        margin-left: unset;
+        margin-right: 2rem;
+        button:first-child {
+          margin-right: unset;
+          margin-left: 1rem;
+        }
+      }
+    }
+
+    &_notice {
+      color: #adb5bd;
+      margin-top: 2rem;
+      font-weight: 300;
+    }
+  }
 }

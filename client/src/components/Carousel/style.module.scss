@@ -16,7 +16,6 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    margin-top: 10rem;
     @include media.mq(md) {
       flex-direction: column-reverse;
       margin-top: 5rem;
@@ -142,6 +141,14 @@
       @include media.mq(md) {
         padding: 0.5rem;
         font-size: 1.4rem;
+      }
+      @include media.mq(md) {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+      }
+      @include media.mq(xs) {
+        padding: 0.5rem;
+        font-size: 1.1rem;
       }
       &::after {
         content: '';

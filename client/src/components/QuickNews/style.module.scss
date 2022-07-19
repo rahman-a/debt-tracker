@@ -193,12 +193,10 @@
       color: #fff;
       min-height: 100%;
       overflow: auto;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       line-height: 1.5;
       font-weight: 500;
-      @include media.mq(md) {
-        font-size: 1.6rem;
-      }
+      text-transform: capitalize;
     }
 
     h3 {

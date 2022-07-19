@@ -62,7 +62,7 @@ const Register = () => {
           ) : (
             <>
               <Progress step={step} />
-              <Required text={t('required-field')} />
+              <Required text={t('required-field')} step={step} />
               <div className={style.register__data}>{Component[step]}</div>
             </>
           )}

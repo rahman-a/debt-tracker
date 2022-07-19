@@ -8,6 +8,9 @@
   flex-direction: column;
   background-color: #79a2b91e;
   padding: 10rem;
+  @include media.mq(md) {
+    padding: 10rem 6rem;
+  }
   @include media.mq(sm) {
     padding: 5rem 2rem 20rem 1rem;
   }
@@ -95,6 +98,11 @@
 
     @include media.mq(lg) {
       flex-direction: column;
+      gap: 15rem;
+    }
+
+    @include media.mq(md) {
+      gap: 5rem;
     }
   }
 
@@ -113,6 +121,9 @@
       width: 100%;
       margin-bottom: 20rem;
       gap: 2rem;
+    }
+    @include media.mq(md) {
+      gap: 5rem;
     }
     @include media.mq(sm) {
       margin-bottom: 8rem;
@@ -160,8 +171,11 @@
       margin-bottom: 1rem;
     }
     p {
-      max-width: 35rem;
+      max-width: 30rem;
       color: #adb5bd;
+      @include media.mq(md) {
+        max-width: 35rem;
+      }
       @include media.mq(sm) {
         max-width: 100%;
       }

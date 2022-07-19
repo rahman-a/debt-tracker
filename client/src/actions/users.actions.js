@@ -7,7 +7,7 @@ const registerUser = (info) => async (dispatch) => {
     const { data } = await api.users.registerUser(info)
     dispatch({
       type: constants.users.REGISTER_USER_SUCCESS,
-      payload: { success: data.success, id: data.id },
+      payload: { success: data.success, id: data.id, phone: data.phone },
     })
   } catch (error) {
     dispatch({
@@ -81,6 +81,22 @@ const sendCodeToPhone = (id, email) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: constants.users.SEND_PHONE_CODE_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const updatePhoneNumber = (id, phone) => async (dispatch) => {
+  dispatch({ type: constants.users.UPDATE_PHONE_REQUEST })
+  try {
+    const { data } = await api.users.updatePhoneNumber(id, phone)
+    dispatch({
+      type: constants.users.UPDATE_PHONE_SUCCESS,
+      payload: data.message,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.users.UPDATE_PHONE_FAIL,
       payload: error.response && error.response.data.message,
     })
   }
@@ -326,6 +342,7 @@ const actions = {
   SearchForUsers,
   updateAddressAndPhone,
   sendContactEmail,
+  updatePhoneNumber,
 }
 
 export default actions

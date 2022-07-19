@@ -18,7 +18,7 @@
   }
   &__icon {
     position: absolute;
-    top: 55%;
+    top: 50%;
     left: 2rem;
     color: var.$full-light-color;
     @include media.mq(sm) {
@@ -142,6 +142,37 @@
     }
   }
 
+  &__text {
+    input {
+      padding: 1.5rem 1.5rem 1.5rem 9rem !important;
+      @include media.mq(sm) {
+        padding: 1rem 1rem 1rem 9rem !important;
+      }
+    }
+    &_data {
+      position: absolute;
+      top: 53%;
+      left: 5rem;
+      color: var.$full-light-color;
+      @include media.mq(sm) {
+        top: 51%;
+      }
+    }
+    &_ar {
+      input {
+        padding: 1.5rem 5.5rem 1.5rem 9rem !important;
+        @include media.mq(sm) {
+          padding: 1rem 6rem 1rem 9rem !important;
+        }
+      }
+
+      &_data {
+        left: unset;
+        right: 1.5rem;
+      }
+    }
+  }
+
   &_ar {
     text-align: right;
   }
@@ -150,5 +181,10 @@
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
+  }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

@@ -3,6 +3,7 @@
   "username_already_found": "إسم المستخدم بالفعل موجود, من فضلك أختر اسم مستخدم آخر",
   "email-already-exist": "هذا البريد {{email}} بالفعل موجود من فضلك إختر بريداَ آخر",
   "phone_already_exist": "رقم الهاتف {{phone}} موجود بالفعل, من فضلك أختر رقماً آخر",
+  "phone_updated_successfully": "تم تحديث رقم الهاتف بنجاح",
   "provide_required_data": "من فضلك أدخل البيانات اللازمة",
   "value_not_recognized": "هذة القيمة {{value}} غير معروفة",
   "phone_code_sent": "تم إرسال كود التفعيل الى هاتفك",
