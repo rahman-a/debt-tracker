@@ -158,19 +158,19 @@
         top: 51%;
       }
     }
-    &_ar {
-      input {
-        padding: 1.5rem 5.5rem 1.5rem 9rem !important;
-        @include media.mq(sm) {
-          padding: 1rem 6rem 1rem 9rem !important;
-        }
-      }
+    // &_ar {
+    //   input {
+    //     padding: 1.5rem 5.5rem 1.5rem 9rem !important;
+    //     @include media.mq(sm) {
+    //       padding: 1rem 6rem 1rem 9rem !important;
+    //     }
+    //   }
 
-      &_data {
-        left: unset;
-        right: 1.5rem;
-      }
-    }
+    //   &_data {
+    //     left: unset;
+    //     right: 1.5rem;
+    //   }
+    // }
   }
 
   &_ar {

@@ -981,7 +981,7 @@ async function sendLoginCodeToEmail(id) {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
     }
-    await sendEmail(info, 'code')
+    // await sendEmail(info, 'code')
   } catch (error) {
     throw new Error(error)
   }
