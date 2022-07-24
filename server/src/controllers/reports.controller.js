@@ -428,7 +428,6 @@ export const closeReportHandler = async (req, res, next) => {
     }
 
     if (color === code['yellow'].toLocaleLowerCase()) {
-      console.log('color is yellow...')
       debtor.colorCode.state = debtor.colorCode.state.filter(
         (st) => st.report?.toString() !== report._id.toString()
       )

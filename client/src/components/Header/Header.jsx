@@ -84,8 +84,8 @@ const Header = () => {
       document.body.style.overflow = 'hidden'
       setSideMenu(true)
     } else {
-      document.body.style.height = 'unset'
-      document.body.style.overflow = 'unset'
+      document.body.style.height = null
+      document.body.style.overflow = null
       setSideMenu(false)
     }
   }
@@ -99,12 +99,14 @@ const Header = () => {
     dispatch(actions.chat.createSupportGroup())
   }
 
-  // window.addEventListener('click', () => {
-  //   setLangDropDown(false)
-  //   setSideMenu(false)
-  //   document.body.style.height = 'unset'
-  //   document.body.style.overflow = 'unset'
-  // })
+  window.addEventListener('click', () => {
+    if (isAuth) {
+      setLangDropDown(false)
+      setSideMenu(false)
+      document.body.style.height = null
+      document.body.style.overflow = null
+    }
+  })
 
   useEffect(() => {
     let intervalNotificationsRequest

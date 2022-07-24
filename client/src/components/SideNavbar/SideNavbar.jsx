@@ -51,6 +51,8 @@ const SideNavbar = ({
 
   useEffect(() => {
     if (isLogout) {
+      document.body.style.height = null
+      document.body.style.overflow = null
       setSideMenu(false)
       navigate('/')
       dispatch({ type: 'RESET_STORE' })

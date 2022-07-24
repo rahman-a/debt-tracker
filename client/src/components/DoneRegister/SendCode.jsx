@@ -96,7 +96,7 @@ const SendCode = ({ setIsCodeSent, setErrors }) => {
             />
           </div>
         ) : (
-          <span>+971 {formattedPhone()}</span>
+          <span>+971 85 245 2631</span>
         )}
         {isPhoneEdit ? (
           <div

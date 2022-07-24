@@ -962,6 +962,7 @@ async function sendConfirmLinkToEmail(id, req) {
     const user = await User.findById(id)
     await sendAuthLink(user, req, 'activate')
   } catch (error) {
+    console.log('error: ', error)
     throw new Error(error)
   }
 }
@@ -991,6 +992,7 @@ async function sendAuthLink(user, req, type) {
   try {
     // create randomstring
     const resetCode = randomstring.generate()
+
     // create token
     const token = jwt.sign(
       {
