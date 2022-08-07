@@ -1,17 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.5506d490.css",
-    "main.js": "/static/js/main.cab1678f.js",
+    "main.css": "/static/css/main.015c2223.css",
+    "main.js": "/static/js/main.9835dfb7.js",
     "static/media/contact.jpg": "/static/media/contact.f100e5ec11b4eb6bf10d.jpg",
     "static/media/Segoe-UI-Bold.ttf": "/static/media/Segoe-UI-Bold.b00928e669b804136004.ttf",
     "static/media/notification.mp3": "/static/media/notification.3bf633c48a5768f62cdc.mp3",
     "static/media/Segoe-UI.ttf": "/static/media/Segoe-UI.45472284dc36b2486ce2.ttf",
+    "static/media/chat.mp3": "/static/media/chat.1aea1803ea480944b186.mp3",
     "index.html": "/index.html",
-    "main.5506d490.css.map": "/static/css/main.5506d490.css.map",
-    "main.cab1678f.js.map": "/static/js/main.cab1678f.js.map"
+    "main.015c2223.css.map": "/static/css/main.015c2223.css.map",
+    "main.9835dfb7.js.map": "/static/js/main.9835dfb7.js.map"
   },
   "entrypoints": [
-    "static/css/main.5506d490.css",
-    "static/js/main.cab1678f.js"
+    "static/css/main.015c2223.css",
+    "static/js/main.9835dfb7.js"
   ]
 }

@@ -18,6 +18,8 @@ const Header = () => {
   const [showSideMenu, setSideMenu] = useState(false)
   const [toggleNotification, setToggleNotification] = useState(false)
   const [toggleMessages, setToggleMessages] = useState(false)
+  const [notificationsCount, setNotificationsCount] = useState(0)
+  const [messagesCount, setMessagesCount] = useState(0)
   const headerBgRef = useRef(null)
   const sideMenuRef = useRef(null)
   const dispatch = useDispatch()
@@ -120,6 +122,16 @@ const Header = () => {
 
     return () => clearTimeout(initNotifications)
   }, [page, isAuth])
+
+  useEffect(() => {
+    ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
+    console.log('nonRead: ', nonRead)
+  }, [nonRead])
+
+  useEffect(() => {
+    ;(count || count === 0) && setMessagesCount(count)
+    console.log('count: ', count)
+  }, [count])
 
   return (
     <>
@@ -234,17 +246,19 @@ const Header = () => {
                 <div className={style.header__notify}>
                   <div className={style.header__notify_list}></div>
                   <span onClick={() => toggleNotifyData('notification')}>
-                    {nonRead > 0 && (
+                    {notificationsCount > 0 && (
                       <span className={style.header__notify_num}>
-                        {nonRead < 100 ? nonRead : `99+`}
+                        {notificationsCount < 100 ? notificationsCount : `99+`}
                       </span>
                     )}
                     <Bell />
                   </span>
 
                   <span onClick={() => toggleNotifyData('messages')}>
-                    {count > 0 && (
-                      <span className={style.header__notify_num}>{count}</span>
+                    {messagesCount > 0 && (
+                      <span className={style.header__notify_num}>
+                        {messagesCount}
+                      </span>
                     )}
                     <Envelope />
                   </span>

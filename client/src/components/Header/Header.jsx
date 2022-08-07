@@ -19,6 +19,8 @@ const Header = () => {
   const [navbarColor, setNavbarColor] = useState('rgba(26,55,77,0.7)')
   const [showSideMenu, setSideMenu] = useState(false)
   const [toggleNotification, setToggleNotification] = useState(false)
+  const [notificationsCount, setNotificationsCount] = useState(0)
+  const [messagesCount, setMessagesCount] = useState(0)
   const [toggleMessages, setToggleMessages] = useState(false)
   const headerBgRef = useRef(null)
   const sideMenuRef = useRef(null)
@@ -146,6 +148,16 @@ const Header = () => {
     conversation && navigate(`/chat/${conversation}`)
   }, [conversation])
 
+  useEffect(() => {
+    ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
+    console.log('nonRead: ', nonRead)
+  }, [nonRead])
+
+  useEffect(() => {
+    ;(count || count === 0) && setMessagesCount(count)
+    console.log('count: ', count)
+  }, [count])
+
   return (
     <>
       {pushNotifications &&
@@ -268,18 +280,19 @@ const Header = () => {
                 <div className={style.header__notify}>
                   <div className={style.header__notify_list}></div>
                   <span onClick={() => toggleNotifyData('notification')}>
-                    {nonRead > 0 && (
+                    {notificationsCount > 0 && (
                       <span className={style.header__notify_num}>
-                        {nonRead}
-                        {/* {nonRead > 100 ? '99+' : nonRead} */}
+                        {notificationsCount < 100 ? notificationsCount : `99+`}
                       </span>
                     )}
                     <Bell />
                   </span>
 
                   <span onClick={() => toggleNotifyData('messages')}>
-                    {count > 0 && (
-                      <span className={style.header__notify_num}>{count}</span>
+                    {messagesCount > 0 && (
+                      <span className={style.header__notify_num}>
+                        {messagesCount}
+                      </span>
                     )}
                     <Envelope />
                   </span>
