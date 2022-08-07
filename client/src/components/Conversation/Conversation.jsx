@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import ObjectId from 'bson-objectid'
+import { useReactMediaRecorder } from 'react-media-recorder'
 import { ChatMessage, Loader, CropModal } from '../../components'
 import { Microphone, ArrowLeft, PaperPlane } from '../../icons'
 import constants from '../../constants'
@@ -19,14 +20,18 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   const [isEmoji, setIsEmoji] = useState(false)
   const [message, setMessage] = useState('')
   const [isFile, setIsFile] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
-  const [recorder, setRecorder] = useState(null)
   const [isTyping, setIsTyping] = useState(false)
   const [isImageCrop, setIsImageCrop] = useState(false)
   const [imageCropData, setImageCropData] = useState(null)
   const [trackRunningAudio, setTrackRunningAudio] = useState('')
+  const [audioBlob, setAudioBlob] = useState(null)
+  const { status, startRecording, stopRecording } = useReactMediaRecorder({
+    audio: true,
+    onStop: (url, blob) => setAudioBlob(blob),
+  })
   const textAreaRef = useRef(null)
   const scrollElementRef = useRef(null)
+  const trackRecording = useRef(null)
   const { id } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -149,6 +154,13 @@ const Chat = ({ socket, setUnSeenMessage }) => {
 
   const uploadImageHandler = (e) => {
     const file = e.target.files[0]
+    if (file.size > 2000000) {
+      composeMessage(
+        'error',
+        t('allowed-file-size', { size: lang === 'en' ? '2MB' : '2 ميجابايت' })
+      )
+      return
+    }
     const url = URL.createObjectURL(file)
     setImageCropData({ url, file })
     setIsImageCrop(true)
@@ -165,6 +177,13 @@ const Chat = ({ socket, setUnSeenMessage }) => {
 
   const uploadDocumentHandler = (e) => {
     const file = e.target.files[0]
+    if (file.size > 2000000) {
+      composeMessage(
+        'error',
+        t('allowed-file-size', { size: lang === 'en' ? '2MB' : '2 ميجابايت' })
+      )
+      return
+    }
     composeMessage('file', file)
     setIsFile(false)
   }
@@ -180,32 +199,12 @@ const Chat = ({ socket, setUnSeenMessage }) => {
     return position
   }
 
-  const recordAudio = (_) => {
-    if (isRecording) {
-      setIsRecording(false)
-      recorder.stop()
+  const recordAudio = async (_) => {
+    if (status === 'recording') {
+      stopRecording()
       return
     }
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      setIsRecording(true)
-      const mediaRecorder = new MediaRecorder(stream)
-      setRecorder(mediaRecorder)
-      mediaRecorder.start()
-      const audioChunks = []
-      mediaRecorder.addEventListener('dataavailable', (event) => {
-        audioChunks.push(event.data)
-      })
-
-      mediaRecorder.addEventListener('stop', () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' })
-        composeMessage('audio', audioBlob)
-        setIsRecording(false)
-      })
-
-      setTimeout(() => {
-        mediaRecorder.stop()
-      }, 30000)
-    })
+    startRecording()
   }
 
   const loadMessageOnScrollHandler = (e) => {
@@ -225,15 +224,11 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   }
 
   useEffect(() => {
-    if (message !== '') {
-      setIsTyping(true)
-    } else {
-      setIsTyping(false)
+    if (!socket.connected) {
+      navigate('/')
     }
-  }, [message])
-
-  useEffect(() => {
     socket.on('getMessage', (message) => {
+      console.log('getMessage....')
       setArrivalMessage({
         _id: ObjectId().toHexString(),
         isReceived: true,
@@ -243,8 +238,31 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   }, [])
 
   useEffect(() => {
+    if (message !== '') {
+      setIsTyping(true)
+    } else {
+      setIsTyping(false)
+    }
+  }, [message])
+
+  useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [conversation])
+
+  useEffect(() => {
+    if (status === 'recording') {
+      trackRecording.current = setTimeout(() => {
+        stopRecording()
+      }, 30000)
+    }
+    if (status === 'stopped') {
+      clearTimeout(trackRecording.current)
+    }
+  }, [status, stopRecording])
+
+  useEffect(() => {
+    audioBlob && composeMessage('audio', audioBlob)
+  }, [audioBlob])
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -282,8 +300,7 @@ const Chat = ({ socket, setUnSeenMessage }) => {
               marginLeft: lang === 'ar' ? '1rem' : 'unset',
             }}
           >
-            {' '}
-            <ArrowLeft />{' '}
+            <ArrowLeft />
           </span>
           <figure
             style={{
@@ -366,7 +383,10 @@ const Chat = ({ socket, setUnSeenMessage }) => {
               placeholder={t('type-message')}
             ></textarea>
 
-            <div className={isRecording ? style.chat__recording : ''}>
+            <div
+              className={status === 'recording' ? style.chat__recording : ''}
+              style={{ position: 'relative', zIndex: '999' }}
+            >
               {isTyping ? (
                 <span onClick={sendMessage}>
                   <PaperPlane />

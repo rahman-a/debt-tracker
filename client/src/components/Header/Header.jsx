@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, Envelope, Support, ChatSupport } from '../../icons'
+import { MenuBars, Bell, Envelope, ChatSupport } from '../../icons'
 import {
   Loader,
   SideNavbar,

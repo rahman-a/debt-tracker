@@ -53,7 +53,7 @@ const About = ({ aboutRef }) => {
       <div className={style.about__content}>
         <ul className={style.about__list}>
           {content?.items.map((item, idx) => (
-            <li className={style.about__item} key={item.key}>
+            <li className={style.about__item} key={item._id}>
               <h2>{idx + 1}</h2>
               <h3>{item.title[lang]}</h3>
               <p>{item.body[lang]}</p>

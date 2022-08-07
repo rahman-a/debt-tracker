@@ -124,6 +124,7 @@
   "email_is_required": "من فضلك أدخل البريد الإلكترونى",
   "message_is_required": "من فضلك أدخل رسالتك",
   "contact_message_sent": "تم إرسال رسالتك بنجاح",
+  "cannot_change_role_of_manager": "لا يمكن تغيير صلاحية المدير",
   "/9": "///////// ARTICLE ///////////",
   "article_exist": "المقال موجود بالفعل",
   "article_created": "تم إنشاء المقال بنجاح",

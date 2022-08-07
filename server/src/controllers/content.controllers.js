@@ -122,7 +122,6 @@ export const updateSlider = async (req, res, next) => {
 export const listSliders = async (req, res, next) => {
   try {
     const sliders = await Slider.find({}).populate('article', 'title')
-
     res.status(200).json({
       code: 200,
       success: true,

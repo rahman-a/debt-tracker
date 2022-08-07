@@ -91,13 +91,6 @@ const pushNotification = () => async (dispatch, getState) => {
         count,
         nonRead: nonRead + data.notifications.length,
       })
-    } else {
-      dispatch({
-        type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
-        notifications: data.notifications,
-        count: data.notifications.length,
-        nonRead: data.notifications.length,
-      })
     }
 
     dispatch({

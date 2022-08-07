@@ -47,8 +47,6 @@ const UpdateSlider = ({ isUpdateSlide, setIsUpdateSlide, slide }) => {
     data.englishKeyword && (keyword.en = data.englishKeyword)
     data.arabicKeyword && (keyword.ar = data.arabicKeyword)
 
-    console.log({ keyword })
-
     const formData = new FormData()
     formData.append('title', JSON.stringify(title))
     formData.append('text', JSON.stringify(text))
@@ -66,8 +64,6 @@ const UpdateSlider = ({ isUpdateSlide, setIsUpdateSlide, slide }) => {
     dispatch({ type: constants.content.EDIT_SLIDER_RESET })
     setIsError(null)
   }
-
-  console.log({ slide })
 
   useEffect(() => {
     if (message) {

@@ -12,7 +12,9 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     let fileName
     if (file.originalname === 'blob') {
-      fileName = `${file.fieldname}-${Date.now()}-.png`
+      fileName = `${file.fieldname}-${Date.now()}-.${
+        file.mimetype.split('/')[1]
+      }`
     } else {
       fileName = `${file.fieldname}-${Date.now()}-${path.extname(
         file.originalname
@@ -85,7 +87,7 @@ export const chatRoomImageHandler = multer({
 export const chatUploadHandler = multer({
   storage,
   limits: {
-    fileSize: 5000000,
+    fileSize: 2000000,
   },
   // fileFilter(req, file, cb){
   //     if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|doc|docx|pdf|xlsx|pptx)$/)) {

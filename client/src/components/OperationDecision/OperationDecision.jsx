@@ -9,7 +9,7 @@ import constants from '../../constants'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-const OperationDecision = ({ show, onHide, id, notificationId }) => {
+const OperationDecision = ({ show, setIsStateOn, id, notificationId }) => {
   const dispatch = useDispatch()
   const { loading, error, operation } = useSelector(
     (state) => state.getOperation
@@ -52,13 +52,23 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
   }
 
   useEffect(() => {
+    message && setTimeout(() => setIsStateOn(false), 1000)
+  }, [message])
+
+  useEffect(() => {
     id && dispatch(actions.operations.getOperation(id))
-    return () => clearAlert()
   }, [id])
 
+  useEffect(() => {
+    !show && clearAlert()
+  }, [show])
+
   return (
-    <Modal show={show} onHide={onHide}>
-      <span className={style.decision__close} onClick={onHide}>
+    <Modal show={show} onHide={() => setIsStateOn(false)}>
+      <span
+        className={style.decision__close}
+        onClick={() => setIsStateOn(false)}
+      >
         <Times />
       </span>
 
@@ -95,7 +105,6 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
 
         {operation && (
           <>
-            {' '}
             <h2>{t('operation-details')}</h2>
             <div className={style.decision__peers}>
               <div className={style.decision__peer}>
@@ -116,18 +125,14 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
                     : operation.initiator.user.fullNameInEnglish}
                 </h3>
                 <p>
-                  <span>
-                    {' '}
-                    {t(operation.initiator.type).toLocaleUpperCase()}{' '}
-                  </span>
+                  <span>{t(operation.initiator.type).toLocaleUpperCase()}</span>
                   <span
                     style={{
                       backgroundColor: operation.initiator.user.colorCode.code,
                       color: textColor[operation.initiator.user.colorCode.code],
                     }}
                   >
-                    {' '}
-                    {stateName[operation.initiator.user.colorCode.code]}{' '}
+                    {stateName[operation.initiator.user.colorCode.code]}
                   </span>
                 </p>
               </div>
@@ -144,7 +149,6 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
                   />
                 </div>
                 <h3>
-                  {' '}
                   {lang === 'ar'
                     ? operation.peer.user.fullNameInArabic
                     : operation.peer.user.fullNameInEnglish}
@@ -157,7 +161,6 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
                       color: textColor[operation.peer.user.colorCode.code],
                     }}
                   >
-                    {' '}
                     {stateName[operation.peer.user.colorCode.code]}{' '}
                   </span>
                 </p>
@@ -192,15 +195,13 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
             >
               <button onClick={approveOperationHandler}>
                 <span>
-                  {' '}
-                  <CheckDouble />{' '}
+                  <CheckDouble />
                 </span>
                 <span>{t('decision-approve')}</span>
               </button>
               <button onClick={declineOperationHandler}>
                 <span>
-                  {' '}
-                  <Times />{' '}
+                  <Times />
                 </span>
                 <span>{t('decision-decline')}</span>
               </button>

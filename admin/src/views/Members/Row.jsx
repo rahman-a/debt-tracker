@@ -19,7 +19,7 @@ const Row = ({ user, idx }) => {
   const lang = i18next.language
   const variant = {
     '#037A12': { color: 'success', text: lang === 'ar' ? 'مؤهل' : 'OK' },
-    ' #fffb00': { color: 'warning', text: lang === 'ar' ? 'تحذير' : 'WARNING' },
+    '#fffb00': { color: 'warning', text: lang === 'ar' ? 'تحذير' : 'WARNING' },
     '#ec4a0d': { color: 'danger', text: lang === 'ar' ? 'خطر' : 'DANGER' },
   }
 

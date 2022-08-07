@@ -263,7 +263,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
           >
             {record.state === 'pending' && isCurrentUserPeer() && (
               <>
-                <span class={style.row__state_decision}>
+                <span className={style.row__state_decision}>
                   <Check />
                   <Times />
                 </span>

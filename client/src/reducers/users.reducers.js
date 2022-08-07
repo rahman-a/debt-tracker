@@ -298,7 +298,7 @@ const login = (state, action) => {
     [constants.users.VERIFY_LOGIN_CODE_RESET]: {
       loading: false,
       error: null,
-      user: null,
+      user: action.payload ? action.payload : null,
       isAuth: false,
     },
   }

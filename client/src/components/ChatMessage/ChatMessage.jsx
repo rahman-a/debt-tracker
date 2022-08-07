@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import constants from '../../constants'
 import AudioFile from '../Audio/Audio'
 import { Check, DoubleCheck } from '../../icons'
@@ -25,6 +26,7 @@ const Message = ({
   const [fileName, setFileName] = useState(null)
   const [fileType, setFileType] = useState(null)
   const [audioURL, setAudioURL] = useState(null)
+  const location = useLocation()
   const { conversations } = useSelector((state) => state.listConversations)
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -50,11 +52,13 @@ const Message = ({
         response = await saveMessageToDatabase(message.conversation, {
           type,
           content,
+          receiver,
         })
       } else {
         const data = new FormData()
         data.append('type', type)
         data.append('file', content)
+        data.append('receiver', receiver)
         response = await saveMessageToDatabase(message.conversation, data)
       }
 
@@ -80,7 +84,9 @@ const Message = ({
           setIsMessageDelivered(true)
         }
       )
-    } catch (error) {}
+    } catch (error) {
+      console.log('error-sent-message: ', error)
+    }
   }
 
   const fileMetadata = (file) => {

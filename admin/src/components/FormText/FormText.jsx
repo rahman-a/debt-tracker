@@ -32,7 +32,6 @@ const FormText = () => {
   const { t } = useTranslation()
   const handleInput = (e) => {
     const { name, value } = e.target
-    console.log({ [name]: value })
     setData({ ...data, [name]: value })
   }
 

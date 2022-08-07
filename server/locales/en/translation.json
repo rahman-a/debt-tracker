@@ -124,6 +124,7 @@
     "email_is_required": "E-mail is Required",
     "message_is_required": "Message is Required",
     "contact_message_sent": "Your Message has been sent Successfully",
+    "cannot_change_role_of_manager": "You can't change role of manager",
     "/9": "///////// ARTICLE ///////////",
     "article_exist": "Article already exist",
     "article_created": "Article has been created",

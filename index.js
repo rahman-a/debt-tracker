@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'socket.io'
+import mongoose from 'mongoose'
 import chatFunctions from './server/src/chat/socket.io.js'
 import { Database } from './server/database.connection.js'
 import {
@@ -43,11 +44,13 @@ const httpServer = createServer(app)
 
 ////////////////////////////////////////////////////////
 /////////////// INITIATE SOCKET IO //////////////////
-const io = new Server(httpServer, {
-  cors: {
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
-  },
-})
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: ['http://localhost:3000', 'http://localhost:3001'],
+//   },
+// })
+
+const io = new Server(httpServer, { cors: { origin: '*' } })
 
 ////////////////////////////////////////////////////////
 /////////////// CHAT FUNCTIONS //////////////////
@@ -56,11 +59,12 @@ chatFunctions(io)
 ////////////////////////////////////////////////////////
 /////////////// MIDDLEWARES //////////////////
 app.use(express.json())
-app.use(
-  cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
-  })
-)
+// app.use(
+//   cors({
+//     origin: ['http://localhost:3000', 'http://localhost:3001'],
+//   })
+// )
+app.use(cors())
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(i18nextMiddleware.handle(i18next))

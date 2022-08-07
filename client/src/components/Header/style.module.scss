@@ -327,7 +327,7 @@
     right: 2rem;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 9;
+    z-index: 999;
     &:hover {
       animation: bounceIcon 1s ease-in-out backwards infinite;
     }

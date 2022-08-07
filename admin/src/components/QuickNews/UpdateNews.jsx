@@ -23,7 +23,6 @@ const UpdateNews = ({ isUpdateNews, setIsUpdateNews, news }) => {
       return
     }
     setData({ ...data, [name]: value })
-    console.log({ data })
   }
 
   const handleSubmit = (e) => {

@@ -7,14 +7,12 @@ import { DateTime } from 'luxon'
 import cron from 'node-cron'
 import { fileURLToPath } from 'url'
 import User from '../models/users.model.js'
-import Operation from '../models/operations.model.js'
 import Notification from '../models/notifications.model.js'
 import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
 import { labels } from '../config/labels.js'
 import { v4 as uuidv4 } from 'uuid'
-import { setTimeout } from 'timers/promises'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const documentsInArabic = {
@@ -509,7 +507,7 @@ export const verifyAuthLink = async (req, res, next) => {
     } else if (type === 'reset') {
       user.password = password
       await user.save()
-      // send success from server
+
       res.json({
         success: true,
         code: 200,

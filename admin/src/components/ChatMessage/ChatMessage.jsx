@@ -49,12 +49,14 @@ const Message = ({
       if (type === 'text') {
         response = await saveMessageToDatabase(message.conversation, {
           type,
+          receiver,
           content,
         })
       } else {
         const data = new FormData()
         data.append('type', type)
         data.append('file', content)
+        data.append('receiver', receiver)
         response = await saveMessageToDatabase(message.conversation, data)
       }
 
@@ -80,7 +82,9 @@ const Message = ({
           setIsMessageDelivered(true)
         }
       )
-    } catch (error) {}
+    } catch (error) {
+      console.log('error-sent-message: ', error)
+    }
   }
 
   const fileMetadata = (file) => {
@@ -238,6 +242,7 @@ const Message = ({
 
   useEffect(() => {
     isFetched = false
+    return () => (isFetched = false)
   }, [])
 
   return (

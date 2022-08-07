@@ -160,4 +160,15 @@
       }
     }
   }
+
+  &__track {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    p {
+      text-align: center;
+      font-size: 1.4rem;
+      color: #adb5bd;
+    }
+  }
 }

@@ -49,7 +49,6 @@ const AboutItem = ({ show, setIsShow, id }) => {
 
     itemData.append('body', JSON.stringify(body))
     image && itemData.append('image', image)
-    console.log('id: ', id)
     dispatch(actions.about.updateAboutItem(id, itemData))
   }
 
@@ -62,7 +61,6 @@ const AboutItem = ({ show, setIsShow, id }) => {
   const getItem = () => {
     if (content) {
       const item = content.items.find((item) => item._id.toString() === id)
-      console.log('item: ', item)
       if (item) {
         setData({
           englishHeader: item.title.en,

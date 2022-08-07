@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import style from './style.module.scss'
 import { Button, Form, Alert } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Loader } from '../../components'
@@ -12,6 +12,9 @@ const ResetEmail = () => {
   const [resetPassword, setResetPassword] = useState(null)
   const [confirmPassword, setConfirmPassword] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [redirectTime, setRedirectTime] = useState(5)
+  const redirectInterval = useRef(null)
+  const navigate = useNavigate()
   const { loading, error, message } = useSelector(
     (state) => state.VerifyAuthLink
   )
@@ -52,6 +55,28 @@ const ResetEmail = () => {
     )
   }
 
+  useEffect(() => {
+    if (message) {
+      redirectInterval.current = setTimeout(
+        () => setRedirectTime(redirectTime - 1),
+        1000
+      )
+    }
+    if (redirectTime <= 0) {
+      clearInterval(redirectInterval.current)
+      navigate('/login')
+    }
+  }, [redirectTime, navigate, message])
+
+  useEffect(() => {
+    return () => {
+      setErrorMessage(null)
+      setResetPassword(null)
+      setConfirmPassword(null)
+      dispatch({ type: constants.users.VERIFY_AUTH_LINK_RESET })
+    }
+  }, [])
+
   return (
     <div className={style.reset}>
       <div className='container'>
@@ -83,9 +108,20 @@ const ResetEmail = () => {
             </Alert>
           ) : (
             message && (
-              <Alert variant='success' style={{ textAlign: 'center' }}>
-                {t('success_reset_pass')}
-              </Alert>
+              <>
+                <Alert variant='success' style={{ textAlign: 'center' }}>
+                  {t('success_reset_pass')}
+                </Alert>
+                <p
+                  style={{
+                    fontSize: '1.4rem',
+                    textAlign: 'center',
+                    color: '#adb5bd',
+                  }}
+                >
+                  {t('redirect-login', { time: redirectTime })}
+                </p>
+              </>
             )
           )}
         </div>

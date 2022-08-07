@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react'
-import { io } from 'socket.io-client'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import style from './Chat.module.scss'
 import { ChatSidebar, Conversation, BackButton } from '../../components'
 import constants from '../../constants'
-import { useTranslation } from 'react-i18next'
 
-const socket = io('http://localhost:5000/chat')
-// const socket = io('https://chat.swtle.com')
-
-function Chat() {
+function Chat({ socket }) {
   const [unSeenMessage, setUnSeenMessage] = useState(null)
   const { user } = useSelector((state) => state.login)
   const { conversation } = useSelector((state) => state.listMessages)
   const dispatch = useDispatch()
+
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { id } = useParams()
@@ -26,16 +23,16 @@ function Chat() {
   }
 
   useEffect(() => {
-    socket.emit('join', user._id, (error) => {
+    socket.emit('join-chat', user._id, (error) => {
       if (error) alert(error)
     })
-
     return () => {
-      socket.emit('left', user._id)
-      socket.off()
+      socket.emit('left-chat', user._id, (error) => {
+        if (error) alert(error)
+      })
       dispatch({ type: constants.chat.LIST_CONVERSATION_MESSAGES_RESET })
     }
-  }, [dispatch, user._id])
+  }, [])
 
   useEffect(() => {
     conversation &&

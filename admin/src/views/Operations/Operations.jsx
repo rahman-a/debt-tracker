@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import {
   Table,
   Pagination,
@@ -29,6 +30,8 @@ const Operations = () => {
   })
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const location = useLocation()
+  const state = new URLSearchParams(location.search).get('state')
   const { loading, error, count, operations } = useSelector(
     (state) => state.listAllOperations
   )
@@ -50,7 +53,11 @@ const Operations = () => {
   }
 
   useEffect(() => {
-    dispatch(actions.operations.listAllOperations())
+    state && dispatch(actions.operations.listAllOperations({ state }))
+  }, [state])
+
+  useEffect(() => {
+    !state && dispatch(actions.operations.listAllOperations())
   }, [])
 
   return (

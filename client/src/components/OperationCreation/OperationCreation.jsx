@@ -122,8 +122,12 @@ const Details = ({ peerInfo }) => {
                 label: 'peer-select-type',
                 icon: <Info />,
                 items: [
-                  { icon: <HandDollar />, text: 'credit', value: 'credit' },
-                  { icon: <HandPlus />, text: 'debt', value: 'debt' },
+                  {
+                    icon: <HandDollar />,
+                    text: 'credit-sales',
+                    value: 'credit',
+                  },
+                  { icon: <HandPlus />, text: 'debt-purchase', value: 'debt' },
                 ],
               }}
             />

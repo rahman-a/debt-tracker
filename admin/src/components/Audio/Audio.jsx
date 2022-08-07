@@ -65,7 +65,7 @@ const AudioFile = ({
       if (currentTime >= duration) {
         setTrackRunningAudio('')
         setIsPlaying(false)
-        setDuration(Math.round(audioFile.duration))
+        setAudioTrack(Math.round(audioFile.duration))
       }
     })
   }

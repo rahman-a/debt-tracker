@@ -403,10 +403,10 @@ export const updateOperationState = async (req, res, next) => {
     const initiator = await User.findById(operation.initiator.user)
     const peer = await User.findById(operation.peer.user)
 
-    if (isAdmin) {
-      operation.state = state
-      await operation.save()
-    }
+    // if (isAdmin) {
+    //   operation.state = state
+    //   await operation.save()
+    // }
 
     operation.state = state
 

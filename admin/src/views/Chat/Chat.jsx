@@ -1,28 +1,36 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { io } from 'socket.io-client'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import style from './Chat.module.scss'
-import { Conversation, ChatSidebar } from '../../components'
+import { Conversation, ChatSidebar, BackButton } from '../../components'
 import constants from '../../constants'
 
-const socket = io('http://localhost:5000/chat')
-// const socket = io('https://chat.swtle.com')
-
-function Chat() {
+function Chat({ socket }) {
   const [unSeenMessage, setUnSeenMessage] = useState(null)
   const { staff } = useSelector((state) => state.login)
   const { conversation } = useSelector((state) => state.listMessages)
   const dispatch = useDispatch()
 
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const { t } = useTranslation()
+
+  const handleNavigationBack = () => {
+    if (id) {
+      navigate(-2)
+    } else navigate(-1)
+  }
+
   useEffect(() => {
-    socket.emit('join', staff._id, (error) => {
+    socket.emit('join-chat', staff._id, (error) => {
       if (error) alert(error)
     })
-
     return () => {
-      socket.emit('left', staff._id)
-      socket.off()
+      socket.emit('left-chat', staff._id, (error) => {
+        if (error) alert(error)
+      })
       dispatch({ type: constants.chat.LIST_CONVERSATION_MESSAGES_RESET })
     }
   }, [])
@@ -44,6 +52,7 @@ function Chat() {
 
   return (
     <div className={style.chat}>
+      <BackButton page={() => handleNavigationBack()} text={t('go-back')} />
       <div className={style.chat__container}>
         <ChatSidebar
           socket={socket}

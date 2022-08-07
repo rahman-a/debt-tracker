@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.scss'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Header, Footer } from './components'
+import { io } from 'socket.io-client'
+import { Header } from './components'
+import chatSound from './audio/chat.mp3'
 
 import {
   Home,
@@ -27,9 +29,47 @@ import {
   Swiper,
   PrivacyPolicy,
 } from './views'
+import actions from './actions'
+
+const socket = io('http://localhost:5000')
 
 function App() {
-  const { isAuth } = useSelector((state) => state.login)
+  const { isAuth, user } = useSelector((state) => state.login)
+  const dispatch = useDispatch()
+
+  const displayChat = useCallback(
+    (data) => {
+      const newMessage = {
+        conversation: data.conversation,
+        createdAt: data.createdAt,
+        isRead: false,
+        message: data._id,
+        body: data.content,
+        title: 'New Message',
+      }
+      dispatch(actions.chat.latestMessages(newMessage))
+      const tone = new Audio(chatSound)
+      tone.volume = 1
+      tone.play()
+    },
+    [dispatch]
+  )
+
+  useEffect(() => {
+    if (user?._id) {
+      socket.emit('join', user._id, (error) => {
+        if (error) alert(error)
+      })
+    }
+    socket.on('message-notification', (data) => {
+      displayChat(data)
+    })
+    return () => {
+      if (socket?.connected) {
+        socket.off()
+      }
+    }
+  }, [user, socket])
 
   return (
     <div className='App' data-theme='dark'>
@@ -39,7 +79,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route
           path='/login'
-          element={!isAuth ? <Login /> : <Navigate to='/' />}
+          element={!isAuth ? <Login /> : <Navigate to='/operation' />}
         />
         <Route path='/operation'>
           <Route
@@ -89,10 +129,17 @@ function App() {
           />
         </Route>
         <Route path='/chat'>
-          <Route index element={isAuth ? <Chat /> : <Navigate to='/login' />} />
+          <Route
+            index
+            element={
+              isAuth ? <Chat socket={socket} /> : <Navigate to='/login' />
+            }
+          />
           <Route
             path=':id'
-            element={isAuth ? <Chat /> : <Navigate to='/login' />}
+            element={
+              isAuth ? <Chat socket={socket} /> : <Navigate to='/login' />
+            }
           />
         </Route>
         <Route path='/articles/:id' element={<Article />} />
@@ -100,8 +147,8 @@ function App() {
         <Route path='/reset' element={<ResetPassword />} />
         <Route path='/terms-conditions' element={<TermsAndConditions />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        <Route path='/test' element={<Test />} />
-        <Route path='/swiper' element={<Swiper />} />
+        {/* <Route path='/test' element={<Test />} />
+        <Route path='/swiper' element={<Swiper />} /> */}
       </Routes>
       {/* <Footer /> */}
     </div>

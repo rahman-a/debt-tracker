@@ -31,10 +31,6 @@ const Footer = () => {
     dispatch(actions.content.listSocial())
   }, [])
 
-  useEffect(() => {
-    socials && console.log({ socials })
-  }, [socials])
-
   return (
     <div className={style.footer}>
       <figure>
@@ -45,23 +41,27 @@ const Footer = () => {
           <span>
             <AddressCard />
           </span>
-          <span>13 ST ganuo City, Dubia Governamer</span>
+          <span>
+            M M Tower office no. 303 - Al Maktoum Road - Clock Tower - Deira -
+            Dubai
+          </span>
         </li>
         <li>
           <span>
             <Phone />
           </span>
-          <span>+9715486328</span>
+          <span>00971566325325</span>
         </li>
       </ul>
-      <div className={style.footer__social}>
-        {socials?.length &&
-          socials.map((social) => (
+      {socials?.length > 0 && (
+        <div className={style.footer__social}>
+          {socials.map((social) => (
             <a href={social.link} key={social._id}>
               {socialsList[social.name]}
             </a>
           ))}
-      </div>
+        </div>
+      )}
       <ul className={style.footer__laws}>
         <li>
           <Link to='/privacy-policy'>Privacy Policy</Link>

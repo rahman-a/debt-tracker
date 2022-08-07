@@ -18,7 +18,9 @@
     display: grid;
     place-items: center;
     img {
-      width: 6.5rem;
+      width: 6rem;
+      height: 6rem;
+      object-fit: cover;
       clip-path: circle();
     }
   }

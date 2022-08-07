@@ -1,6 +1,5 @@
 import constants from '../constants'
 import api from '../api'
-import { InputGroup } from 'react-bootstrap'
 
 const listConversation = () => async (dispatch) => {
   dispatch({ type: constants.chat.LIST_CONVERSATION_REQUEST })
@@ -80,12 +79,24 @@ const listMessages = (id) => async (dispatch, getState) => {
   }
 }
 
-const latestMessages = (_) => async (dispatch) => {
-  dispatch({ type: constants.chat.LATEST_MESSAGES_REQUEST })
+const latestMessages = (message) => async (dispatch, getState) => {
+  const { count, messages } = getState().latestMessages
+  if (message) {
+    const updatedMessages = messages?.length
+      ? [message, ...messages]
+      : [message]
+    console.log('updatedMessages: ', updatedMessages)
+    dispatch({
+      type: constants.chat.LATEST_MESSAGES_SUCCESS,
+      messages: updatedMessages,
+      count: count ? count + 1 : 1,
+    })
+    return
+  }
 
   try {
+    dispatch({ type: constants.chat.LATEST_MESSAGES_REQUEST })
     const { data } = await api.chat.latest()
-
     dispatch({
       type: constants.chat.LATEST_MESSAGES_SUCCESS,
       messages: data.messages,

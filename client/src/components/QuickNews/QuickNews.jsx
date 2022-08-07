@@ -51,7 +51,7 @@ const QuickNews = () => {
           className={`${style.news__cards} ${true && style.news__cards_center}`}
         >
           {news?.length &&
-            news.map((card) => <Card key={card.id} card={card} />)}
+            news.map((card) => <Card key={card._id} card={card} />)}
         </div>
       </div>
     </div>

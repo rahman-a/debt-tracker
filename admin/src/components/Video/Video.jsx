@@ -59,7 +59,6 @@ const Video = () => {
         ar: data.arabicBody,
       }
 
-      console.log({ header, body, video: data.video, type })
       dispatch(
         actions.content.createContent({ header, body, video: data.video, type })
       )

@@ -143,7 +143,6 @@ const listSlider = () => async (dispatch) => {
 const addSlider = (info) => async (dispatch, getState) => {
   dispatch({ type: constants.content.ADD_SLIDER_REQUEST })
   try {
-    console.log('info action', info)
     const { data } = await api.content.addSlider(info)
     const { sliders } = getState().listSliders
     if (sliders) {

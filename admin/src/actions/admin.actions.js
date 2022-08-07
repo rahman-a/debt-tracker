@@ -226,7 +226,6 @@ const memberUpdate = (id, info) => async (dispatch, getState) => {
 
   try {
     const { data } = await api.admin.update(id, info)
-    console.log('action data: ', data)
     const { member } = getState().member
     if (member) {
       const updatedMember = { ...member }

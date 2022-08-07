@@ -220,14 +220,14 @@ const login = (id, info) => async (dispatch) => {
   }
 }
 
-const logout = () => async (dispatch) => {
+const logout = (id) => async (dispatch) => {
   dispatch({ type: constants.users.USER_LOGOUT_REQUEST })
   try {
     await api.users.logout()
     localStorage.removeItem('user')
     localStorage.removeItem('expiryAt')
     dispatch({ type: constants.users.USER_LOGOUT_SUCCESS })
-    dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET })
+    dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET, payload: id })
   } catch (error) {
     dispatch({
       type: constants.users.USER_LOGOUT_FAIL,

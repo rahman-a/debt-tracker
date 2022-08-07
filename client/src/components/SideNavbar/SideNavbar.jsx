@@ -26,6 +26,7 @@ const SideNavbar = ({
   const navigate = useNavigate()
   const [isReportMenu, setIsReportMenu] = useState(false)
   const reportRef = useRef(null)
+  const { user } = useSelector((state) => state.login)
   const { loading, error, isLogout } = useSelector((state) => state.logout)
   const language = i18next.language
 
@@ -34,7 +35,7 @@ const SideNavbar = ({
   const logoutHandler = (e) => {
     e.stopPropagation()
     if (!loading) {
-      dispatch(actions.users.logout())
+      dispatch(actions.users.logout(user._id))
     }
   }
 

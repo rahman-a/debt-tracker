@@ -3,7 +3,6 @@ import style from './style.module.scss'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Badge } from 'react-bootstrap'
 import { Copy, Check, Edit, Trash, Link } from '../../icons'
 import { Loader } from '../../components'
 

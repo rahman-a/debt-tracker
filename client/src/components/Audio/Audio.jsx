@@ -27,23 +27,35 @@ const AudioFile = ({
   }
 
   const pauseAudioHandler = () => {
+    console.log('pauseAudioHandler...')
     audioFile.pause()
     setIsPlaying(false)
     setTrackRunningAudio('')
   }
 
   const playAudioHandler = () => {
-    audioFile.play()
-    setIsPlaying(true)
+    const playPromise = audioFile.play()
+    console.log('playPromise: ', playPromise)
+    if (playPromise !== undefined) {
+      playPromise
+        .then((_) => {
+          audioFile.play()
+          setIsPlaying(true)
+        })
+        .catch((error) => {
+          console.log('error: ', error)
+          pauseAudioHandler()
+        })
+    }
   }
 
   const createAudioFile = () => {
     const audio = new Audio()
-    audio.setAttribute('controls', true)
+    audio.setAttribute('controls', false)
     audio.setAttribute('preload', 'metadata')
     const source = document.createElement('source')
     source.setAttribute('src', url)
-    source.setAttribute('type', 'audio/mp3')
+    source.setAttribute('type', 'audio/mpeg')
     audio.appendChild(source)
     setAudioFile(audio)
   }
@@ -60,13 +72,16 @@ const AudioFile = ({
   const trackAudioTime = () => {
     audioFile.addEventListener('timeupdate', async (e) => {
       const currentTime = Math.round(audioFile.currentTime)
+      console.log('currentTime: ', currentTime)
       const progress = Math.ceil((currentTime / duration) * 100)
+      console.log('progress: ', progress)
       setAudioTrack(duration - currentTime)
+      console.log('duration: ', duration)
       setProgressWidth(progress)
       if (currentTime >= duration) {
         setTrackRunningAudio('')
         setIsPlaying(false)
-        setDuration(Math.round(audioFile.duration))
+        setAudioTrack(Math.round(audioFile.duration))
       }
     })
   }

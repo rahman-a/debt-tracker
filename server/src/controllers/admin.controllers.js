@@ -155,6 +155,11 @@ export const changeUserRole = async (req, res, next) => {
       throw new Error(req.t('no_user_found'))
     }
 
+    if (user.roles.includes('manager')) {
+      res.status(400)
+      throw new Error(req.t('cannot_change_role_of_manager'))
+    }
+
     if (user.roles.includes(role)) {
       res.status(400)
       throw new Error(
