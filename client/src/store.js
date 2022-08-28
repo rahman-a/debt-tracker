@@ -51,10 +51,11 @@ const initState = {
   },
 }
 
-const store = createStore(
-  rootReducer,
-  initState,
-  composeWithDevTools(applyMiddleware(...middlewares))
-)
+const devTools =
+  process.env.NODE_ENV === 'production'
+    ? applyMiddleware(...middlewares)
+    : composeWithDevTools(applyMiddleware(...middlewares))
+
+const store = createStore(rootReducer, initState, devTools)
 
 export default store

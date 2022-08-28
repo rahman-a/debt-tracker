@@ -29,8 +29,10 @@ import {
 } from './views'
 import actions from './actions'
 
-const socket = io('http://localhost:5000')
-// const socket = io('https://chat.swtle.com')
+const socket =
+  process.env.NODE_ENV === 'production'
+    ? io('https://chat.swtle.com')
+    : io('http://localhost:5000')
 
 function App() {
   const { isAuth, user } = useSelector((state) => state.login)
