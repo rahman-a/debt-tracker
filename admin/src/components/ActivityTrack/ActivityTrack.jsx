@@ -60,7 +60,6 @@ const ActivityTrack = ({ setSideMenu }) => {
     if (trackLogoutWarnTime <= 0) {
       trackLogoutTimeRef.current && clearTimeout(trackLogoutTimeRef.current)
       dispatch(actions.admin.logout())
-      console.log('initiate logout process after warn....?!')
     }
   }, [trackLogoutWarnTime])
 
