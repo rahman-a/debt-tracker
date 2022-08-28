@@ -19,6 +19,9 @@
     tr {
       display: inline-block;
     }
+    tr:nth-child(even) > td {
+      background-color: #ebebeb;
+    }
     th {
       width: 15rem;
       height: 8rem;

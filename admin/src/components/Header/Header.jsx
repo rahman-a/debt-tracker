@@ -9,6 +9,7 @@ import {
   SideNavbar,
   NotificationContainer,
   PushNotification,
+  ActivityTrack,
 } from '../../components'
 import actions from '../../actions'
 
@@ -135,6 +136,7 @@ const Header = () => {
 
   return (
     <>
+      {isAuth && <ActivityTrack setSideMenu={setSideMenu} />}
       {pushNotifications &&
         pushNotifications.length > 0 &&
         pushNotifications.map((notification, idx) => (

@@ -62,6 +62,9 @@ const userAPI = {
   updatePhoneNumber(id, phone) {
     return service().patch(`users/${id}/phone/update?phone=${phone}`)
   },
+  getMutuals(id, skip) {
+    return service().get(`users/${id}/clients?skip=${skip}`)
+  },
 }
 
 export default userAPI

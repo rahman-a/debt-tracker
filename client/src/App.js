@@ -25,14 +25,12 @@ import {
   Chat,
   Article,
   TermsAndConditions,
-  Test,
-  Swiper,
   PrivacyPolicy,
 } from './views'
 import actions from './actions'
 
-// const socket = io('http://localhost:5000')
-const socket = io('https://chat.swtle.com')
+const socket = io('http://localhost:5000')
+// const socket = io('https://chat.swtle.com')
 
 function App() {
   const { isAuth, user } = useSelector((state) => state.login)
@@ -148,8 +146,6 @@ function App() {
         <Route path='/reset' element={<ResetPassword />} />
         <Route path='/terms-conditions' element={<TermsAndConditions />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        {/* <Route path='/test' element={<Test />} />
-        <Route path='/swiper' element={<Swiper />} /> */}
       </Routes>
       {/* <Footer /> */}
     </div>

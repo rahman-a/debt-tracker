@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight } from '../../icons'
 const QuickNews = () => {
   const [lang, setLang] = useState(i18next.language)
   const { news } = useSelector((state) => state.listNews)
+  const { mode } = useSelector((state) => state.appearance)
   const dispatch = useDispatch()
   const containerRef = useRef(null)
 
@@ -19,6 +20,12 @@ const QuickNews = () => {
     type === 'prev'
       ? (container.scrollLeft += width)
       : (container.scrollLeft -= width)
+  }
+
+  const classes = {
+    news() {
+      return [style.news, mode === 'day' ? style.news_mode : ''].join(' ')
+    },
   }
 
   useEffect(() => {
@@ -32,7 +39,7 @@ const QuickNews = () => {
   }, [])
 
   return (
-    <div className={style.news}>
+    <div className={classes.news()}>
       <h2>{t('quick-news')}</h2>
       <button
         onClick={() => sliderMoveHandler('next')}

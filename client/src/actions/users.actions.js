@@ -324,6 +324,25 @@ const sendContactEmail = (info) => async (dispatch) => {
   }
 }
 
+const getMutualsPeers = (id, skip) => async (dispatch) => {
+  dispatch({ type: constants.users.GET_MUTUALS_REQUEST })
+  try {
+    const { data } = await api.users.getMutuals(id, skip)
+    dispatch({
+      type: constants.users.GET_MUTUALS_SUCCESS,
+      payload: {
+        mutuals: data.mutuals,
+        count: data.count,
+      },
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.users.GET_MUTUALS_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
 const actions = {
   registerUser,
   checkInfo,
@@ -343,6 +362,7 @@ const actions = {
   updateAddressAndPhone,
   sendContactEmail,
   updatePhoneNumber,
+  getMutualsPeers,
 }
 
 export default actions

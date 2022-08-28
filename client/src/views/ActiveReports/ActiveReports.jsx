@@ -117,8 +117,7 @@ const Reports = () => {
               onClick={() => setIsFilter(true)}
             >
               <span>
-                {' '}
-                <FilterSearch />{' '}
+                <FilterSearch />
               </span>
               <span> {t('filter')} </span>
             </button>

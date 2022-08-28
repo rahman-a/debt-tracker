@@ -23,6 +23,12 @@
     @include media.mq(sm) {
       margin-top: 10rem;
     }
+
+    &_mode {
+      p {
+        color: #000 !important;
+      }
+    }
   }
 
   &__text {
@@ -91,6 +97,7 @@
   &__illustration {
     flex-basis: 60%;
     height: 50rem;
+    position: relative;
     animation: bounce 3.5s infinite;
     img {
       width: 100%;
@@ -157,7 +164,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-image: linear-gradient(to left, #a5b3c0, #73a9d4);
+        background-image: linear-gradient(to left, #ffffff, #eeeeee);
         transition: all 0.3s;
       }
 
@@ -171,6 +178,11 @@
       }
       &:hover::after {
         width: 100%;
+      }
+
+      &_mode {
+        color: #000;
+        background-color: #fff;
       }
     }
 
@@ -208,6 +220,10 @@
     animation: bounce 3.5s infinite;
     @include media.mq(sm) {
       display: flex;
+    }
+    &_mode {
+      border-color: #212529;
+      color: #000;
     }
   }
 }

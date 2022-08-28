@@ -2,16 +2,17 @@ import React, { useEffect, useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import i18next from 'i18next'
 import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown } from '../../icons'
-import Particles from './Particles'
+import { Particles } from '../../components'
+import { classes } from './classes'
 
 const Carousel = ({ aboutRef }) => {
-  const navigate = useNavigate()
   const { isLoading, sliders } = useSelector((state) => state.listSliders)
+  const { mode } = useSelector((state) => state.appearance)
   const dispatch = useDispatch()
   const [currentSlider, setCurrentSlider] = useState(1)
   const [keywords, setKeywords] = useState([])
@@ -59,11 +60,9 @@ const Carousel = ({ aboutRef }) => {
 
   return (
     <>
-      <div
-        className={`${style.slider} ${lang === 'ar' ? style.slider_ar : ''}`}
-      >
-        <Particles />
-        <div className={style.slider__content}>
+      <div className={classes.slider(lang)}>
+        <Particles mode={mode} />
+        <div className={classes.content(mode)}>
           <div className={style.slider__text} ref={aboutRef}>
             <h1>{slider?.title[lang]}</h1>
             <p>{slider?.text[lang]}</p>
@@ -74,18 +73,20 @@ const Carousel = ({ aboutRef }) => {
             )}
           </div>
           <div className={style.slider__illustration}>
+            {/* <img
+              src='/images/carousel/slider-1657493344300-.svg'
+              alt='slider'
+            /> */}
             <img src={`/api/files/${slider?.image}`} alt='slider' />
           </div>
         </div>
-        <div className={style.slider__outline}>
+        <div className={classes.outline(mode)}>
           {keywords.length &&
             keywords.map((keyword, idx) => (
               <div
                 key={keyword['en']}
                 onClick={() => changeSlider(idx + 1)}
-                className={`${style.slider__outline_segment} ${
-                  currentSlider === idx + 1 ? style.slider__outline_active : ''
-                }`}
+                className={classes.segment(idx, mode, currentSlider)}
               >
                 {keyword[lang]}
               </div>
@@ -96,7 +97,7 @@ const Carousel = ({ aboutRef }) => {
           ></div>
         </div>
         <div
-          className={style.slider__tap}
+          className={classes.tap(mode)}
           onClick={() => aboutRef.current.scrollIntoView()}
         >
           <ArrowDown />

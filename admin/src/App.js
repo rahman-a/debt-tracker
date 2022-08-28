@@ -28,8 +28,8 @@ import {
 } from './views'
 import actions from './actions'
 
-// const socket = io('http://localhost:5000')
-const socket = io('https://chat.swtle.com')
+const socket = io('http://localhost:5000')
+// const socket = io('https://chat.swtle.com')
 
 function App() {
   const { isAuth, staff } = useSelector((state) => state.login)

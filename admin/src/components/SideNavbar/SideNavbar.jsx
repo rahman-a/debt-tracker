@@ -58,9 +58,9 @@ const SideNavbar = ({
 
   useEffect(() => {
     if (isLogout) {
-      setSideMenu(false)
       navigate('/login')
     }
+    return () => setSideMenu(false)
   }, [isLogout])
 
   const showReportsMenu = (e) => {

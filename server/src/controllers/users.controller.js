@@ -8,6 +8,7 @@ import cron from 'node-cron'
 import { fileURLToPath } from 'url'
 import User from '../models/users.model.js'
 import Notification from '../models/notifications.model.js'
+import MutualClients from '../models/mutualClients.js'
 import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
@@ -679,7 +680,7 @@ export const updateUserPreferredLanguage = async (req, res, next) => {
 }
 
 ////////////////////////////////////////////////////
-//////////////// Dashboard Routers
+// Dashboard Routers
 ///////////////////////////////////////////////////
 
 // LIST ALL USERS FOR ADMIN DASHBOARD
@@ -921,12 +922,55 @@ export const sendContactEmail = async (req, res, next) => {
   }
 }
 
+export const getPreviousClients = async (req, res, next) => {
+  const { id } = req.params
+  const { skip } = req.query
+  const skipValue = skip !== 'undefined' ? parseInt(skip) : 0
+  const lang = req.headers['accept-language']
+  try {
+    const user = await User.findById(id)
+    if (!user) {
+      res.status(404)
+      throw new Error(req.t('no_user_found'))
+    }
+    const mutuals = await MutualClients.find({ clients: { $in: [user._id] } })
+      .populate({
+        path: 'clients',
+        match: { _id: { $ne: user._id } },
+        select: 'fullNameInEnglish fullNameInArabic avatar colorCode.code',
+      })
+      .limit(5)
+      .skip(skipValue)
+      .sort({ updatedAt: -1 })
+
+    const countDocuments = await MutualClients.count({
+      clients: { $in: [user._id] },
+    })
+
+    res.send({
+      code: 200,
+      success: true,
+      count: countDocuments,
+      mutuals: mutuals.map((m) => ({
+        _id: m.clients[0]._id,
+        arabicName: m.clients[0].fullNameInArabic,
+        name: m.clients[0].fullNameInEnglish,
+        image: m.clients[0].avatar,
+        operations: m.operations.length,
+        color: m.clients[0].colorCode.code,
+      })),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 /*******************************************************************/
 /******************** HELPER FUNCTION 
 /******************************************************************/
 
 ///////////////////////////////////////////
-/////////// PHONE VERIFICATION PROCESS
+// PHONE VERIFICATION PROCESS
 ///////////////////////////////////////////
 async function sendConfirmCodeToPhone(id, email) {
   try {
@@ -953,7 +997,7 @@ async function sendConfirmCodeToPhone(id, email) {
 }
 
 ///////////////////////////////////////////
-/////////// E-MAIL VERIFICATION PROCESS
+// E-MAIL VERIFICATION PROCESS
 ///////////////////////////////////////////
 async function sendConfirmLinkToEmail(id, req) {
   try {
@@ -966,7 +1010,7 @@ async function sendConfirmLinkToEmail(id, req) {
 }
 
 ///////////////////////////////////////////
-/////////// E-MAIL CODE PROCESS
+// E-MAIL CODE PROCESS
 ///////////////////////////////////////////
 async function sendLoginCodeToEmail(id) {
   try {

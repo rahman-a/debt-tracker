@@ -6,8 +6,17 @@ import actions from '../../actions'
 import constants from '../../constants'
 import { Loader } from '..'
 
-const Input = ({ filter, setPeerInfo, searchValue, setSearchValue, lang }) => {
+const Input = ({
+  filter,
+  setPeerInfo,
+  searchValue,
+  setSearchValue,
+  lang,
+  mutuals,
+}) => {
   const [isError, setIsError] = useState(null)
+  const [peers, setPeers] = useState(null)
+  const [isListFocused, setIsListFocused] = useState(false)
   const { loading, error, users } = useSelector((state) => state.searchUsers)
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -24,12 +33,19 @@ const Input = ({ filter, setPeerInfo, searchValue, setSearchValue, lang }) => {
     setSearchValue('')
   }
 
+  const initiateSearchOnKeyDown = (e) =>
+    e.keyCode === 13 && searchPeersHandler()
+
   const initiateOperation = (user) => {
     if (user.color.toLocaleLowerCase() !== '#ec4a0d') {
       setPeerInfo(user)
       return
     } else setIsError(t('no-operation-with-red'))
   }
+
+  useEffect(() => {
+    users && setPeers(users)
+  }, [users])
 
   useEffect(() => {
     return () => {
@@ -51,6 +67,9 @@ const Input = ({ filter, setPeerInfo, searchValue, setSearchValue, lang }) => {
         type='text'
         placeholder={placeholder[filter]}
         value={searchValue}
+        onFocus={() => setPeers(mutuals)}
+        onKeyDown={initiateSearchOnKeyDown}
+        onBlur={() => !isListFocused && setPeers(null)}
         onChange={(e) => setSearchValue(e.target.value)}
       />
 
@@ -69,14 +88,17 @@ const Input = ({ filter, setPeerInfo, searchValue, setSearchValue, lang }) => {
           </li>
         </ul>
       ) : (
-        users &&
-        users && (
-          <ul className={style.search__data}>
-            {users.map((user) => (
-              <li key={user._id} onClick={() => initiateOperation(user)}>
-                <img src={`/api/files/${user.image}`} alt='second peer' />
-                <p>{lang === 'ar' ? user.arabicName : user.name}</p>
-                <span style={{ backgroundColor: user.color }}></span>
+        peers?.length !== 0 && (
+          <ul
+            className={style.search__data}
+            onMouseEnter={() => setIsListFocused(true)}
+            onMouseLeave={() => setIsListFocused(false)}
+          >
+            {peers?.map((peer) => (
+              <li key={peer._id} onClick={() => initiateOperation(peer)}>
+                <img src={`/api/files/${peer.image}`} alt='second peer' />
+                <p>{lang === 'ar' ? peer.arabicName : peer.name}</p>
+                <span style={{ backgroundColor: peer.color }}></span>
               </li>
             ))}
           </ul>

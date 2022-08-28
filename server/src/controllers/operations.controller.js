@@ -3,7 +3,7 @@ import Operation from '../models/operations.model.js'
 import Report from '../models/reports.model.js'
 import Notification from '../models/notifications.model.js'
 import User from '../models/users.model.js'
-
+import MutualClients from '../models/mutualClients.js'
 import { takeAction } from '../config/takeAction.js'
 
 const peerTypeInArabic = {
@@ -49,6 +49,9 @@ export const createOperation = async (req, res, next) => {
     }
 
     let operation = await newOperation.save()
+
+    await addToMutualDocuments(operation)
+
     operation = await Operation.findById(operation._id)
       .populate('currency', 'name')
       .populate({
@@ -771,5 +774,25 @@ const sendNotificationToAdminPanel = async (roles, data) => {
     }
   } catch (error) {
     throw new Error(error)
+  }
+}
+
+const addToMutualDocuments = async (operation) => {
+  const isMutualDocumentFound = await MutualClients.findOne({
+    clients: { $all: [operation.initiator.user, operation.peer.user] },
+  })
+
+  if (isMutualDocumentFound) {
+    await MutualClients.updateOne(
+      { _id: isMutualDocumentFound._id },
+      { $push: { operations: { operation: operation._id } } },
+      { updatedAt: Date.now() }
+    )
+  } else {
+    const newMutualClient = new MutualClients({
+      clients: [operation.initiator.user, operation.peer.user],
+      operations: [{ operation: operation._id }],
+    })
+    await newMutualClient.save()
   }
 }

@@ -14,6 +14,9 @@
   @include media.mq(sm) {
     padding: 5rem 2rem 20rem 1rem;
   }
+  &_mode p {
+    color: #000 !important;
+  }
   &__header {
     margin: 5rem 0;
     position: relative;
@@ -31,6 +34,14 @@
       }
       @include media.mq(sm) {
         font-size: 4rem;
+      }
+    }
+
+    &_mode {
+      h2 {
+        background: -webkit-linear-gradient(#35709d, #5b5d5e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
 
@@ -178,6 +189,15 @@
       }
       @include media.mq(sm) {
         max-width: 100%;
+      }
+    }
+
+    &_mode {
+      h2,
+      h3 {
+        background: -webkit-linear-gradient(#35709d, #5b5d5e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
   }

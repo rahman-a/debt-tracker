@@ -19,6 +19,7 @@
     tr {
       display: inline-flex !important;
       margin-top: 0.3rem;
+
       td {
         width: 15rem;
         height: 8rem;
@@ -35,6 +36,9 @@
       }
       td {
         border-bottom: 2px solid var.$second-color;
+      }
+      &:nth-child(even) td {
+        background-color: #ebebeb;
       }
     }
     th {

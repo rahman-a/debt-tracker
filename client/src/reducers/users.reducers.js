@@ -468,6 +468,45 @@ const sendContactEmail = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
+const mutualsPeers = (state, action) => {
+  const cases = {
+    [constants.users.GET_MUTUALS_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.users.GET_MUTUALS_SUCCESS]: {
+      loading: false,
+      error: null,
+      mutuals: action.payload?.mutuals,
+      count: action.payload?.count,
+    },
+    [constants.users.GET_MUTUALS_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.users.GET_MUTUALS_RESET]: {
+      loading: false,
+      error: null,
+      message: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const appearance = (state, actions) => {
+  switch (actions.type) {
+    case 'SET_DAY_MODE':
+      localStorage.setItem('mode', 'day')
+      return { mode: 'day' }
+    case 'SET_NIGHT_MODE':
+      localStorage.setItem('mode', 'night')
+      return { mode: 'night' }
+    default:
+      return { ...state }
+  }
+}
+
 const reducers = {
   checkInfo,
   registerUser,
@@ -487,6 +526,8 @@ const reducers = {
   updateAddressAndPhone,
   sendContactEmail,
   updatePhoneNumber,
+  mutualsPeers,
+  appearance,
 }
 
 export default reducers

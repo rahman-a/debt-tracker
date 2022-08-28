@@ -117,5 +117,4 @@ const Operation = () => {
   )
 }
 
-// Math.ceil(count / 5)
 export default Operation

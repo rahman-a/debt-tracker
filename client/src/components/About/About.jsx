@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import i18next, { t } from 'i18next'
 import actions from '../../actions'
+import { classes } from './classes'
 
 const About = ({ aboutRef }) => {
   const [images, setImages] = useState([])
   const [lang, setLang] = useState(i18next.language)
+  const { mode } = useSelector((state) => state.appearance)
   const { isLoading, aboutUs: content } = useSelector(
     (state) => state.getAboutUs
   )
@@ -31,12 +33,8 @@ const About = ({ aboutRef }) => {
   }, [content])
 
   return (
-    <div className={style.about} ref={aboutRef}>
-      <div
-        className={`${style.about__header} ${
-          lang === 'ar' ? style.about__header_ar : ''
-        }`}
-      >
+    <div className={classes.about(mode)} ref={aboutRef}>
+      <div className={classes.header(lang, mode)}>
         <div className={style.about__header_text}>
           <h2>{t('about-us')}</h2>
           {content?.link && (
@@ -53,26 +51,17 @@ const About = ({ aboutRef }) => {
       <div className={style.about__content}>
         <ul className={style.about__list}>
           {content?.items.map((item, idx) => (
-            <li className={style.about__item} key={item._id}>
+            <li className={classes.item(mode)} key={item._id}>
               <h2>{idx + 1}</h2>
               <h3>{item.title[lang]}</h3>
               <p>{item.body[lang]}</p>
             </li>
           ))}
         </ul>
-        <div
-          className={`${style.about__images} ${
-            lang === 'ar' ? style.about__images_ar : ''
-          }`}
-        >
+        <div className={classes.images(lang)}>
           {images.length &&
             images.map((image, idx) => (
-              <div
-                key={image}
-                className={`${style.about__images_item} ${
-                  lang === 'ar' ? style.about__images_item_ar : ''
-                }`}
-              >
+              <div key={image} className={classes.imagesItems(lang)}>
                 <img src={`api/files/${image}`} alt='security' />
               </div>
             ))}

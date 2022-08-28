@@ -1,0 +1,35 @@
+.track {
+  text-align: center;
+  &__header {
+    height: 10rem;
+    background-color: indianred;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    svg {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+    span {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-top: 1.2rem;
+    }
+  }
+
+  &__message {
+    padding: 2rem 0;
+    font-size: 2.1rem;
+  }
+
+  &__btn {
+    border: 0;
+    background-color: indianred;
+    color: #fff;
+    border-radius: 2rem;
+    padding: 0.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}

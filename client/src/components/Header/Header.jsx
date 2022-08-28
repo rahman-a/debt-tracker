@@ -3,15 +3,18 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { MenuBars, Bell, Envelope, ChatSupport } from '../../icons'
 import {
   Loader,
   SideNavbar,
   NotificationContainer,
   PushNotification,
+  ActivityTrack,
+  ModeSwitch,
 } from '../../components'
 import actions from '../../actions'
-import { useTranslation } from 'react-i18next'
+import classes from './classes'
 
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)
@@ -169,7 +172,7 @@ const Header = () => {
             data={notification}
           />
         ))}
-
+      {isAuth && <ActivityTrack setSideMenu={setSideMenu} />}
       <div
         className={style.header__bg}
         ref={headerBgRef}
@@ -177,9 +180,7 @@ const Header = () => {
       ></div>
 
       <div
-        className={`${style.header} ${
-          language === 'ar' ? style.header__ar : ''
-        }`}
+        className={classes.header(language)}
         style={{
           backgroundColor: navbarColor,
           display: page === '/login' || page === '/register' ? 'none' : 'block',
@@ -188,11 +189,7 @@ const Header = () => {
         <div className='container'>
           <div className={style.header__wrapper}>
             {/* display the main icon */}
-            <div
-              className={`${style.header__icon} ${
-                language === 'ar' ? style.header__icon_ar : ''
-              }`}
-            >
+            <div className={classes.icon(language)}>
               <span onClick={() => navigate('/')}>
                 <img src='/images/swtle.png' alt='logo' />
               </span>
@@ -220,19 +217,13 @@ const Header = () => {
 
             {/* display the actions buttons */}
             <div className={style.header__actions}>
+              {/* Appearance Mode Switch */}
+              {page === '/' && <ModeSwitch />}
               {/* display the main languages */}
-              <div
-                className={`${style.header__language}
-                            ${!isAuth ? style.header__language_show : ''}`}
-              >
+              <div className={classes.lang(isAuth)}>
                 {/* display the other main language */}
                 <div
-                  className={`${style.header__language_flag} 
-                                ${
-                                  language === 'ar'
-                                    ? style.header__language_flag_ar
-                                    : ''
-                                }`}
+                  className={classes.flag(language)}
                   onClick={showLanguageHandler}
                 >
                   {language === 'ar' ? (
@@ -244,12 +235,7 @@ const Header = () => {
 
                 {/* the dropdown to select the language */}
                 <div
-                  className={`${style.header__language_menu} 
-                                ${
-                                  language === 'ar'
-                                    ? style.header__language_menu_ar
-                                    : ''
-                                }`}
+                  className={classes.menu(language)}
                   style={{ display: langDropDown ? 'block' : 'none' }}
                 >
                   {loadingState && (
@@ -333,11 +319,7 @@ const Header = () => {
                 </div>
               ) : (
                 // display the credential buttons [login - sign up]
-                <div
-                  className={`${style.header__credential} ${
-                    language === 'ar' ? style.header__credential_ar : ''
-                  }`}
-                >
+                <div className={classes.credential(language)}>
                   <Link to='register'>{t('signup')}</Link>
                   <Link to='login'>{t('login')}</Link>
                 </div>
