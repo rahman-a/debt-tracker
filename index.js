@@ -9,6 +9,9 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'socket.io'
 import mongoose from 'mongoose'
+import cluster from 'cluster'
+import os from 'os'
+import compression from 'compression'
 import chatFunctions from './server/src/chat/socket.io.js'
 import { Database } from './server/database.connection.js'
 import {
@@ -37,40 +40,35 @@ dotenv.config()
 // Database connection
 Database()
 
-// initiate app
+/***************************************************/
+/***************** INITIATE THE APP
+/***************************************************/
 const app = express()
-
 const httpServer = createServer(app)
 
-////////////////////////////////////////////////////////
-/////////////// INITIATE SOCKET IO //////////////////
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: ['http://localhost:3000', 'http://localhost:3001'],
-//   },
-// })
-
+/***************************************************/
+/***************** INITIATE SOCKET IO
+/***************************************************/
 const io = new Server(httpServer, { cors: { origin: '*' } })
 
-////////////////////////////////////////////////////////
-/////////////// CHAT FUNCTIONS //////////////////
+/***************************************************/
+/***************** CHAT FUNCTIONS
+/***************************************************/
 chatFunctions(io)
 
-////////////////////////////////////////////////////////
-/////////////// MIDDLEWARES //////////////////
+/***************************************************/
+/***************** MIDDLEWARES
+/***************************************************/
 app.use(express.json())
-// app.use(
-//   cors({
-//     origin: ['http://localhost:3000', 'http://localhost:3001'],
-//   })
-// )
 app.use(cors())
 app.use(cookieParser())
 app.use(morgan('dev'))
+// app.use(compression())
 app.use(i18nextMiddleware.handle(i18next))
 
-////////////////////////////////////////////////////////
-/////////////// SERVING PRODUCTION BUILD FRONTEND //////////////////
+/***************************************************/
+/***************** SERVING PRODUCTION BUILD FRONTEND
+/***************************************************/
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, 'client/build')))
 
@@ -85,12 +83,14 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-////////////////////////////////////////////////////////
-/////////////// SERVING ASSETS//////////////////
+/***************************************************/
+/***************** SERVING ASSETS
+/***************************************************/
 app.use('/api/files', express.static(path.resolve(__dirname, 'server/uploads')))
 
-////////////////////////////////////////////////////////
-///////////////ENDPOINT //////////////////
+/***************************************************/
+/***************** ENDPOINTS
+/***************************************************/
 app.use(verifyAPIKey)
 app.use('/api/users', userRouter)
 app.use('/api/operations', operationRouter)
@@ -104,15 +104,33 @@ app.use('/api/about', AboutRouter)
 app.use('/api/article', articleRouter)
 app.use('/api/social', socialRouter)
 
-////////////////////////////////////////////////////////
-/////////////// ERROR HANDLER //////////////////
+/***************************************************/
+/***************** ERROR HANDLING
+/***************************************************/
 app.use(notFound)
 app.use(errorHandler)
 
-////////////////////////////////////////////////////////
-/////////////// START APP //////////////////
+/***************************************************/
+/***************** SERVING THE APP
+/***************************************************/
 const port = process.env.PORT || 5000
 
+// if (cluster.isPrimary) {
+//   const cpuNum = os.cpus().length
+//   for (let i = 0; i < cpuNum; i++) {
+//     cluster.fork()
+//   }
+//   cluster.on('listening', (worker, address) => {
+//     console.log(worker.id)
+//     console.log(address)
+//     console.log(
+//       `Worker ${worker.process.pid} connected to ${address.address}:${address.port}`
+//     )
+//   })
+// } else {
+//   httpServer.listen(port)
+// }
+
 httpServer.listen(port, () => {
-  console.log(`Server start at port ${port}`)
+  console.log(`Server running on port ${port}`)
 })

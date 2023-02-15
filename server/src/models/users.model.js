@@ -116,6 +116,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isGuest: {
+      type: Boolean,
+      default: false,
+    },
     preferredLanguage: {
       type: String,
       default: 'en',

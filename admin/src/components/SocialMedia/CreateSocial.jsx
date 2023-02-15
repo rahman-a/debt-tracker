@@ -55,6 +55,7 @@ const CreateSocial = ({ isCreate, setIsCreate }) => {
             >
               <option value=''>.......</option>
               <option value='facebook'>Facebook</option>
+              <option value='messenger'>Messenger</option>
               <option value='twitter'>Twitter</option>
               <option value='instagram'>Instagram</option>
               <option value='youtube'>Youtube</option>

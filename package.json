@@ -15,21 +15,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rahman-a/debt-tracker.git"
+    "url": "git+https://github.com/rahman-a/swtle.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rahman-a/debt-tracker/issues"
+    "url": "https://github.com/rahman-a/swtle/issues"
   },
-  "homepage": "https://github.com/rahman-a/debt-tracker#readme",
+  "homepage": "https://github.com/rahman-a/swtle#readme",
   "dependencies": {
     "@types/mongoose": "^5.11.97",
     "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.3",
     "chalk": "^5.0.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^12.0.4",
@@ -55,6 +56,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
+    "nexe": "^4.0.0-rc.1",
     "nodemon": "^2.0.15",
     "uglify-js": "^3.15.4"
   }

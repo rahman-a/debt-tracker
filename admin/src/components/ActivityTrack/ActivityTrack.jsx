@@ -12,7 +12,6 @@ const ActivityTrack = ({ setSideMenu }) => {
   const [trackLogoutWarnTime, setTrackLogoutWarnTime] = useState(10)
   const trackLogoutTimeRef = useRef(null)
   const { isAuth } = useSelector((state) => state.login)
-  const { isLogout } = useSelector((state) => state.logout)
   const dispatch = useDispatch()
 
   const logoutHandler = () => {
@@ -46,7 +45,7 @@ const ActivityTrack = ({ setSideMenu }) => {
     if (timeout.current) {
       clearTimeout(timeout.current)
     }
-    timeout.current = isAuth ? setTimeout(logoutHandler, 50000) : null
+    timeout.current = isAuth ? setTimeout(logoutHandler, 290000) : null
   }
 
   useEffect(() => {

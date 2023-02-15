@@ -8,6 +8,7 @@ import {
   Twitter,
   Instagram,
   Youtube,
+  Messenger,
 } from '../../icons'
 import actions from '../../actions'
 import i18next from 'i18next'
@@ -18,13 +19,13 @@ const Social = () => {
   const lang = i18next.language
   const socialIcon = {
     facebook: <Facebook />,
+    messenger: <Messenger />,
     linkedin: <Linkedin />,
     whatsup: <Whatsapp />,
     twitter: <Twitter />,
     instagram: <Instagram />,
     youtube: <Youtube />,
   }
-
   useEffect(() => {
     dispatch(actions.content.listSocial())
   }, [])

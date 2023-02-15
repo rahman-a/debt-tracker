@@ -46,7 +46,7 @@ const ActivityTrack = ({ setSideMenu }) => {
     if (timeout.current) {
       clearTimeout(timeout.current)
     }
-    timeout.current = isAuth ? setTimeout(logoutHandler, 50000) : null
+    timeout.current = isAuth ? setTimeout(logoutHandler, 290000) : null
   }
 
   useEffect(() => {

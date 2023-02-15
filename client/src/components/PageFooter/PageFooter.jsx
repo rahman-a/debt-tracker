@@ -12,14 +12,16 @@ import {
   Instagram,
   Youtube,
   Linkedin,
+  Messenger,
 } from '../../icons'
 
 const Footer = () => {
-  const { isLoading, error, socials } = useSelector((state) => state.listSocial)
+  const { socials } = useSelector((state) => state.listSocial)
   const dispatch = useDispatch()
 
   const socialsList = {
     facebook: <Facebook />,
+    messenger: <Messenger />,
     twitter: <Twitter />,
     linkedin: <Linkedin />,
     whatsapp: <Whatsapp />,
