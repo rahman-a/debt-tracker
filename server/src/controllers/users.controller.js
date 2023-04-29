@@ -70,8 +70,10 @@ export const registerNewUser = async (req, res, next) => {
     user.country && (user.country = JSON.parse(country))
     user.emails = JSON.parse(emails)
     user.insidePhones = JSON.parse(insidePhones)
-    outsidePhones && (user.outsidePhones = JSON.parse(outsidePhones))
-
+    outsidePhones &&
+      (user.outsidePhones = JSON.parse(outsidePhones).map(
+        (value) => value.phone
+      ))
     const code = createUserCode()
     user.code = code
 
@@ -267,12 +269,12 @@ export const updatePhoneNumber = async (req, res, next) => {
     const user = await User.findById(id)
     user.insidePhones.map((ph) => {
       if (ph.isPrimary === true) {
-        if (ph.phone === phone) {
+        if (ph.phone === `+${phone.trim()}`) {
           res.status(400)
           throw new Error(req.t('phone_already_exist', { phone }))
         }
 
-        ph.phone = phone
+        ph.phone = `+${phone.trim()}`
       }
       return ph
     })
@@ -460,6 +462,7 @@ export const findUserHandler = async (req, res, next) => {
     const allUsers = users.map((user) => ({
       _id: user._id,
       name: user.fullNameInEnglish,
+      code: user.code,
       arabicName: user.fullNameInArabic,
       image: user.avatar,
       color: user.colorCode.code,
@@ -514,6 +517,8 @@ export const verifyAuthLink = async (req, res, next) => {
         code: 200,
         message: req.t('pass_reset_success'),
       })
+    } else {
+      res.status(204).send()
     }
   } catch (error) {
     next(error)
@@ -523,7 +528,7 @@ export const verifyAuthLink = async (req, res, next) => {
 // verify the code that sent to email during every authentication
 //  to add more security when authenticate user
 export const verifyLoginCodeHandler = async (req, res, next) => {
-  const { code, rememberDays } = req.body
+  const { code, isRemembered } = req.body
   const { id } = req.params
   try {
     const user = await User.findById(id)
@@ -547,17 +552,17 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
       color: user.colorCode.code,
       isProvider: user.isProvider,
     }
-    const tokenExpiry = rememberDays ? `${rememberDays} days` : '1d'
+    const tokenExpiry = isRemembered ? `7 days` : '1d'
     const token = user.generateToken(tokenExpiry)
     res.cookie('token', token, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * (rememberDays || 1),
+      maxAge: 1000 * 60 * 60 * 24 * (isRemembered ? 7 : 1),
     })
     res.json({
       success: true,
       code: 200,
       user: userData,
-      expiryAt: expireAt(rememberDays || 1),
+      expiryAt: expireAt(isRemembered ? 7 : 1),
     })
   } catch (error) {
     next(error)
@@ -1028,7 +1033,7 @@ async function sendLoginCodeToEmail(id) {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
     }
-    // await sendEmail(info, 'code')
+    await sendEmail(info, 'code')
   } catch (error) {
     throw new Error(error)
   }
@@ -1058,7 +1063,7 @@ async function sendAuthLink(user, req, type) {
     // compose the url
     const resetUrl = `${req.protocol}://${req.get(
       'host'
-    )}/#/${type}?TOKEN=${token}`
+    )}/${type}?TOKEN=${token}`
     const info = {
       link: resetUrl,
       name: user.fullNameInEnglish,

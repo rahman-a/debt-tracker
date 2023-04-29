@@ -13,7 +13,8 @@ const sendSMS = (phone, code) => {
     .create({
       body: template.verification(code),
       from: '+19402863101',
-      to: `+2${phone}`,
+      to: phone,
+      // to: `+2${phone.substring(4)}`,
     })
     .then((message) =>
       console.log(`message sent to ${phone} with sid ${message.sid}`)

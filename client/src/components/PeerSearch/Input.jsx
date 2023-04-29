@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import actions from '../../actions'
 import constants from '../../constants'
 import { Loader } from '..'
+import { Check } from '../../icons'
 
 const Input = ({
   filter,
@@ -13,12 +14,8 @@ const Input = ({
   setSearchValue,
   lang,
   mutuals,
+  type,
 }) => {
-  const [isError, setIsError] = useState(null)
-  const [peers, setPeers] = useState(null)
-  const [isListFocused, setIsListFocused] = useState(false)
-  const { loading, error, users } = useSelector((state) => state.searchUsers)
-  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const placeholder = {
@@ -26,6 +23,14 @@ const Input = ({
     mobile: t('search-mobile'),
     code: t('search-user-code'),
   }
+  const [isError, setIsError] = useState(null)
+  const [peers, setPeers] = useState(null)
+  const [isListFocused, setIsListFocused] = useState(false)
+  const [isPeerSelectedForPrinting, setIsPeerSelectedForPrinting] =
+    useState(false)
+  const [inputPlaceholder, setInputPlaceholder] = useState(placeholder[filter])
+  const { loading, error, users } = useSelector((state) => state.searchUsers)
+  const dispatch = useDispatch()
 
   const searchPeersHandler = (_) => {
     setIsError(null)
@@ -37,6 +42,13 @@ const Input = ({
     e.keyCode === 13 && searchPeersHandler()
 
   const initiateOperation = (user) => {
+    if (type === 'reports') {
+      setInputPlaceholder(user['name'])
+      setPeerInfo(user)
+      setPeers(null)
+      setIsPeerSelectedForPrinting(true)
+      return
+    }
     if (user.color.toLocaleLowerCase() !== '#ec4a0d') {
       setPeerInfo(user)
       return
@@ -46,6 +58,11 @@ const Input = ({
   useEffect(() => {
     users && setPeers(users)
   }, [users])
+
+  useEffect(() => {
+    setInputPlaceholder(placeholder[filter])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
 
   useEffect(() => {
     return () => {
@@ -65,14 +82,18 @@ const Input = ({
     >
       <input
         type='text'
-        placeholder={placeholder[filter]}
+        placeholder={inputPlaceholder}
         value={searchValue}
         onFocus={() => setPeers(mutuals)}
         onKeyDown={initiateSearchOnKeyDown}
         onBlur={() => !isListFocused && setPeers(null)}
         onChange={(e) => setSearchValue(e.target.value)}
       />
-
+      {type === 'reports' && isPeerSelectedForPrinting && (
+        <span className={style['search__report--selected']}>
+          <Check />
+        </span>
+      )}
       <button onClick={searchPeersHandler}>{t('search')}</button>
 
       {loading || isError ? (

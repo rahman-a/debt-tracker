@@ -4,13 +4,17 @@ import i18next from 'i18next'
 import Input from './Input'
 import Filters from './Filters'
 
-const Search = ({ setPeerInfo, mutuals }) => {
+const Search = ({ setPeerInfo, mutuals, type }) => {
   const [filter, setFilter] = useState('username')
   const [searchValue, setSearchValue] = useState('')
   const lang = i18next.language
 
   return (
-    <div className={style.search}>
+    <div
+      className={`${style.search} ${
+        type === 'reports' ? style.search__reports : ''
+      }`}
+    >
       <Filters
         filter={filter}
         setFilter={setFilter}
@@ -25,6 +29,7 @@ const Search = ({ setPeerInfo, mutuals }) => {
         setSearchValue={setSearchValue}
         mutuals={mutuals}
         lang={lang}
+        type={type}
       />
     </div>
   )

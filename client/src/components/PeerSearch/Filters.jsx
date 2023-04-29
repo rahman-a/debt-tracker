@@ -23,19 +23,19 @@ const Filters = ({ filter, setFilter, setSearchValue, lang }) => {
         className={filter === 'username' ? style.search__filter_active : ''}
         onClick={() => setFilterHandler('username')}
       >
-        {t('username')}
+        <span>{t('username')}</span>
       </button>
       <button
         className={filter === 'mobile' ? style.search__filter_active : ''}
         onClick={() => setFilterHandler('mobile')}
       >
-        {t('mobile')}
+        <span>{t('mobile')}</span>
       </button>
       <button
         className={filter === 'code' ? style.search__filter_active : ''}
         onClick={() => setFilterHandler('code')}
       >
-        {t('user-code')}
+        <span>{t('user-code')}</span>
       </button>
     </div>
   )

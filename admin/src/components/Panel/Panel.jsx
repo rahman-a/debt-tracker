@@ -169,7 +169,7 @@ const Panel = ({ record, report }) => {
                 ref={firstNameRef}
                 onClick={() => setShowFirstName(!showFirstName)}
               >
-                {initiatorName().substring(0, 15) + '...'}
+                {initiatorName()?.substring(0, 15) + '...'}
                 <span
                   className={`${style.panel__label} ${
                     lang === 'ar' ? style.panel__label_ar : ''
@@ -208,7 +208,7 @@ const Panel = ({ record, report }) => {
                 ref={secondNameRef}
                 onClick={() => setShowSecondName(!showSecondName)}
               >
-                {peerName().substring(0, 15) + '...'}
+                {peerName()?.substring(0, 15) + '...'}
                 <span
                   className={`${style.panel__label} ${
                     lang === 'ar' ? style.panel__label_ar : ''

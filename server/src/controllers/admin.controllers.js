@@ -229,7 +229,6 @@ export const updateMemberData = async (req, res, next) => {
       user.company = company
       updatedData = { company }
     }
-    console.log({ updatedData })
     await user.save()
     res.send({
       success: true,

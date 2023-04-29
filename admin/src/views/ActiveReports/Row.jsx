@@ -69,7 +69,7 @@ const Row = ({ report, idx, due }) => {
           <CopyToClipboard text={report._id} onCopy={copyIdHandler}>
             <span>{isCopied ? <Check /> : <Copy />}</span>
           </CopyToClipboard>
-          {report._id.substring(0, 12) + '...'}
+          {report._id?.substring(0, 12) + '...'}
         </td>
 
         <td style={{ padding: '0' }}>
@@ -86,7 +86,7 @@ const Row = ({ report, idx, due }) => {
               {t(report.operation.initiator.type)}
             </span>
             <span title={initiatorName}>
-              {initiatorName.substring(0, 13) + '...'}
+              {initiatorName?.substring(0, 13) + '...'}
             </span>
             <span>
               <Badge bg='dark'>
@@ -134,7 +134,7 @@ const Row = ({ report, idx, due }) => {
             >
               {t(report.operation.peer.type)}
             </span>
-            <span title={peerName}>{peerName.substring(0, 13) + '...'}</span>
+            <span title={peerName}>{peerName?.substring(0, 13) + '...'}</span>
             <span>
               <Badge bg='dark'>
                 {report.operation.peer.code || report.operation.peer.user?.code}

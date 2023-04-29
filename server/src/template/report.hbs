@@ -1,0 +1,225 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; -webkit-box-sizing:
+      border-box; -moz-box-sizing: border-box; margin: 0; padding: 0; } body {
+      font-family: 'Open Sans', sans-serif; /* line-height: 1.25; */ }
+      .container { width: 800px; margin: 0 auto;padding:0 1rem; } .logo {
+      background-color: #1a374d; position: relative; } .logo img { position:
+      relative; width: 135px; height: 50px; z-index: 999; top: -7px; left: 35px;
+      } .logo__overlay { position: absolute; background-color: #dee3f3; width:
+      800px; height: 35px; right: 0; bottom: 0; box-shadow: -2px 0px 6px 0px
+      rgb(0 0 0 / 30%); } .logo__path { background-color: #1a374d; position:
+      absolute; width: 235px; height: 64px; left: 0; clip-path: polygon(0 0,
+      100% 0, 92% 100%, 0% 100%); z-index: 0; } .logo__numbering { font-size:
+      10px; margin: 0 auto; text-align: center; color: #fff; transform:
+      translate(10px, 10px); } .meta { text-align: end; margin: 2rem 0; }
+      .meta__title { font-size: 25px; color: #3f4f8b; border-bottom: 1px solid;
+      margin-bottom: 1rem; padding-bottom: 0.5rem; } .meta__info { list-style:
+      none; display: flex; align-items: center; flex-wrap: wrap;
+      justify-content: flex-end; gap: 1rem; } .meta__info_item { width: 45%;
+      display: inline-block; font-size: 12px; color: #3f4f8b; border-bottom: 1px
+      solid #ccc; font-weight: 600; } .meta__info_block { display: flex;
+      flex-direction: row-reverse; align-items: center; gap: 0.5rem; }
+      .meta__info--slot { font-family: monospace, 'Courier New', Courier;
+      font-size: 0.8rem; font-weight: 900; padding: 0.3rem 0; color: #000; }
+      .fl-table { border-radius: 5px; font-size: 12px; font-weight: normal;
+      border: none; border-collapse: collapse; width: 100%; max-width: 100%;
+      white-space: nowrap; background-color: white; } .fl-table td, .fl-table th
+      { text-align: center; padding: 8px; } .fl-table td { border-right: 1px
+      solid #e9e9e9; font-size: 8px; } .fl-table thead th { color: #ffffff;
+      background: #324960;font-size: 10px; } .fl-table thead th span { display:
+      block; padding: 0.1rem 0; } .fl-table tr:nth-child(even) { background:
+      #f8f8f8; } .table .note { width: 100px; white-space: normal; text-align:
+      center; } .green { background-color: #b6f2b6;} .red { background-color: #f2c3b6;}
+    </style>
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='meta'>
+        <h1 class='meta__title'>
+          كشف حساب<br />
+          Account Statement
+        </h1>
+        <ul class='meta__info'>
+          <li class='meta__info_item'>
+            <div class='meta__info_block'>
+              <p>فترة كشف الحساب</p>
+              <p>statement Period</p>
+            </div>
+            <p class='meta__info--slot'>
+                {{#if statement_period}}
+                  {{statement_period.from}} - {{statement_period.to}}
+                {{else}}
+                  N/A
+                {{/if}}
+            </p>
+          </li>
+          <li class='meta__info_item'>
+            <div class='meta__info_block'>
+              <p>رقم الحساب</p>
+              <p>Account Number</p>
+            </div>
+            <p class='meta__info--slot'>
+                {{user.account_number}}
+            </p>
+          </li>
+          <li class='meta__info_item'>
+            <div class='meta__info_block'>
+              <p>صاحب الحساب</p>
+              <p>Account Holder</p>
+            </div>
+            <p class='meta__info--slot'>
+                {{user.account_holder}}
+            </p>
+          </li>
+          <li class='meta__info_item'>
+            <div class='meta__info_block'>
+              <p>كود صاحب الحساب</p>
+              <p>Account Holder Code</p>
+            </div>
+            <p class='meta__info--slot'>
+                {{user.account_code}}
+            </p>
+          </li>
+          <li class='meta__info_item'>
+            <div class='meta__info_block'>
+              <p>تاريخ طباعة الكشف</p>
+              <p>Printing Date</p>
+            </div>
+            <p class='meta__info--slot'>
+                {{user.printing_date}}
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class='table-wrapper'>
+        <table class='fl-table'>
+          <thead>
+            <tr>
+              <th></th>
+              <th>
+                <span>تاريخ المعاملة</span>
+                <span>Operation Date</span>
+              </th>
+              <th>
+                <span>مدين</span>
+                <span>Debt</span>
+              </th>
+              <th>
+                <span>دائن</span>
+                <span>Credit</span>
+              </th>
+              <th>
+                <span>المستفيد</span>
+                <span>Beneficiary</span>
+              </th>
+              <th>
+                <span>العملة</span>
+                <span>Currency</span>
+              </th>
+              <th>
+                <span>ملاحظة</span>
+                <span>Note</span>
+              </th>
+              <th>
+                <span>حالة العملية</span>
+                <span>Operation status</span>
+              </th>
+              <th>
+                <span>تاريخ الإستحقاق</span>
+                <span>Due Date</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each transactions}}
+              <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.report_date}}</td>
+                <td>
+                  {{#if this.debt}}
+                    {{this.debt}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if this.credit}}
+                    {{this.credit}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td
+                  style='width:100px; white-space:normal; text-align:center'
+                >{{this.beneficiary}}</td>
+                <td>{{this.currency}}</td>
+                <td style='width:100px; white-space:normal; text-align:center'>
+                  {{#if this.note}}
+                    {{this.note}}
+                  {{else}}
+                    N/A
+                  {{/if}}
+                </td>
+                <td class=
+                {{#if this.isPaid}}
+                  "green"
+                {{else}}
+                  "red"
+                {{/if}}>
+                  {{#if this.isPaid}}
+                    Paid
+                  {{else}}
+                    Unpaid
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if this.due_date}}
+                    {{this.due_date}}
+                  {{else}}
+                    N/A
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer class='container' style='margin:1rem'>
+      <div
+        class='disclaimer'
+        style='display:flex; align-items:center; gap:1.4rem'
+      >
+        <ul
+          style="list-style:none;font-size:12.5px; font-family:'Courier New', Courier, monospace"
+        >
+          <li>This is an Electronic Statement initiated by SWTLE and is valid
+            without a signature and seal.</li>
+          <li>any alteration or erasure renders this statement invalid.</li>
+          <li>This document was issued upon the request of the account owner
+            without any responsibility towards SWTLE Electronic Services
+            company.</li>
+          <li>This document is approved on SWTLE's website and is considered an
+            official document without the need for manual signature.</li>
+        </ul>
+        <ul
+          style="list-style:none;font-size:12.5px; font-family:'Courier New', Courier, monospace; direction:rtl"
+        >
+          <li>مستند الكترونى معتمد وصادر بدون توقيع من شركة سويتل</li>
+          <li>أى قشط أو حذف يعتبر المستند ملغى</li>
+          <li>صدر هذا المستند بناءاً على طلب صاحب الحساب دون أدنى مسئولية تجاه
+            شركة سويتل للتعامل الإلكترونى</li>
+          <li>يًًٌََُُُعتمد هذا المستند على موقع سويتل ويعد مستند رسمى دون
+            الحاجة الى توقيعه</li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

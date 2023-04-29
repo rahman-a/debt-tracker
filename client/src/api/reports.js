@@ -38,6 +38,12 @@ const reportsAPI = {
     console.log('id: ', id)
     return service().patch(`reports/close/${id}`)
   },
+  reportsData(data) {
+    return service().post(`reports/generate_report`, data)
+  },
+  reportsPrint(data) {
+    return service().post(`reports/print_report`, data)
+  },
 }
 
 export default reportsAPI

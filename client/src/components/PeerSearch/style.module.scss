@@ -10,6 +10,9 @@
   @include media.mq(xxs) {
     margin-left: 2rem;
   }
+  &__reports {
+    flex-direction: column;
+  }
   button {
     all: unset;
     display: block;
@@ -64,6 +67,18 @@
     }
   }
 
+  &__reports &__filter {
+    display: flex;
+    gap: 1rem;
+    button:last-child {
+      transform: rotate(180deg);
+      span {
+        display: block;
+        transform: rotate(180deg);
+      }
+    }
+  }
+
   &__input {
     display: flex;
     position: relative;
@@ -109,6 +124,7 @@
       top: 7.5rem;
       overflow-y: auto;
       box-shadow: 1px 0px 5px 1px rgb(0 0 0 / 30%);
+      z-index: 2;
       li {
         position: relative;
         display: flex;
@@ -161,5 +177,12 @@
         }
       }
     }
+  }
+
+  &__report--selected {
+    position: absolute;
+    right: 30%;
+    top: 30%;
+    color: green;
   }
 }

@@ -1,3 +1,4 @@
+import download from 'js-file-download'
 import constants from '../constants'
 import api from '../api'
 
@@ -98,12 +99,51 @@ const approveDueDate = (id, date) => async (dispatch) => {
   }
 }
 
+const getReportsData = (info) => async (dispatch) => {
+  dispatch({ type: constants.reports.GET_REPORTS_DATA_REQUEST })
+
+  try {
+    const { data } = await api.reports.reportsData(info)
+    dispatch({
+      type: constants.reports.GET_REPORTS_DATA_SUCCESS,
+      payload: data.reports,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.reports.GET_REPORTS_DATA_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const printReportsData = (info) => async (dispatch) => {
+  console.log('🚀printReportsData ~ info:', info)
+  dispatch({ type: constants.reports.PRINT_REPORTS_DATA_REQUEST })
+
+  try {
+    const { data } = await api.reports.reportsPrint(info)
+    const pdfBuffer = new Uint8Array(data.pdf.data)
+    download(pdfBuffer.buffer, 'report.pdf')
+    dispatch({
+      type: constants.reports.PRINT_REPORTS_DATA_SUCCESS,
+      payload: data.pdf,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.reports.PRINT_REPORTS_DATA_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
 const actions = {
   listAllReports,
   updateReport,
   changeDueDate,
   approveDueDate,
   closeReport,
+  getReportsData,
+  printReportsData,
 }
 
 export default actions

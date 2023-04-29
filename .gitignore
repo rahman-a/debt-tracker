@@ -34,4 +34,4 @@ demo
 uploads
 test.jsx
 guest.json
-user.txt
+*.txt

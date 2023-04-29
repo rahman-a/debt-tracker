@@ -58,7 +58,12 @@ const Footer = () => {
       {socials?.length > 0 && (
         <div className={style.footer__social}>
           {socials.map((social) => (
-            <a href={social.link} key={social._id}>
+            <a
+              href={social.link}
+              key={social._id}
+              target='_blank'
+              rel='noreferrer'
+            >
               {socialsList[social.name]}
             </a>
           ))}

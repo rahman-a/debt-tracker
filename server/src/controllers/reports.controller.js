@@ -1,6 +1,10 @@
+import fs from 'fs'
+import path from 'path'
 import { DateTime } from 'luxon'
 import cron from 'node-cron'
 import mongoose from 'mongoose'
+import handlebars from 'handlebars'
+import puppeteer from 'puppeteer'
 import Report from '../models/reports.model.js'
 import Operation from '../models/operations.model.js'
 import User from '../models/users.model.js'
@@ -923,6 +927,391 @@ export const listAllReports = async (req, res, next) => {
     })
   } catch (error) {
     next(error)
+  }
+}
+/** required data */
+// user_code[admin], peer_code,
+// request_type [single_transaction, selected_transactions, full_report],
+// transaction_code,
+// act_as, transaction_type, isAdmin[admin]
+// note
+// period:{from, to}
+// lang
+export const generateReportsForPrinting = async (req, res, next) => {
+  const {
+    user_code,
+    peer_code,
+    request_type,
+    transaction_code,
+    act_as,
+    transaction_type,
+    period,
+    lang,
+    isAdmin,
+  } = req.body
+  try {
+    console.log('generateReportsForPrinting', req.body)
+    let transactions = []
+    const roles = ['manager', 'hr', 'cs']
+    if (isAdmin) {
+      if (!roles.some((role) => req.user.roles.includes(role))) {
+        res.status(401)
+        throw new Error('Not authorized to access this request')
+      }
+      if (!user_code) {
+        res.status(400)
+        throw new Error('First party code is required')
+      }
+    }
+    if (user_code && !isAdmin) {
+      res.status(401)
+      throw new Error('Not authorized to access this request')
+    }
+    const user = await User.findOne({ code: user_code || req.user.code })
+    const peer = await User.findOne({ code: peer_code })
+    const user_data = structureUserData({ user, request_type, period, lang })
+    if (request_type === 'single_transaction') {
+      if (!transaction_code) {
+        res.status(400)
+        throw new Error('Transaction code is required')
+      }
+      const transaction = await Report.findById(transaction_code)
+      const data = await mapDataFromReport({
+        user: user._id,
+        report: transaction,
+        lang,
+      })
+      if (data.error) {
+        res.status(400)
+        throw new Error(data.error)
+      }
+      transactions.push(data)
+    }
+    if (request_type === 'selected_transactions') {
+      const reports = await generateFilteredReports({
+        user,
+        peer,
+        act_as,
+        transaction_type,
+        period,
+      })
+      for (const report of reports) {
+        const data = await mapDataFromReport({
+          user: user._id,
+          report,
+          lang,
+        })
+        transactions.push(data)
+      }
+    }
+    if (request_type === 'full_report') {
+      const reports = await generateFilteredReports({ user })
+      for (const report of reports) {
+        const data = await mapDataFromReport({
+          user: user._id,
+          report,
+          lang,
+        })
+        transactions.push(data)
+      }
+    }
+
+    if (transactions.length === 0) {
+      res.status(404)
+      throw new Error('No transactions found')
+    }
+
+    res.send({
+      success: true,
+      code: 200,
+      reports: {
+        user: user_data,
+        transactions,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const generatePDFBuffer = async (req, res, next) => {
+  try {
+    const { user, transactions } = req.body
+    const template = fs.readFileSync(
+      path.join(process.cwd(), 'server/src', 'template/report.hbs'),
+      'utf-8'
+    )
+    const reportData = transactions.map((input, idx) => ({
+      ...input,
+      id: idx + 1,
+    }))
+    const logoBinary = fs
+      .readFileSync(path.join(process.cwd(), 'server', 'uploads/swtle.png'))
+      .toString('base64')
+    const html = handlebars.compile(template)({
+      title: 'Accounts Report',
+      transactions: reportData,
+      user,
+    })
+    const browser = await puppeteer.launch({ headless: true })
+    const page = await browser.newPage()
+    const headerTemplate = `
+    <style>
+      html {
+        -webkit-print-color-adjust: exact;
+      }
+      #header {
+        padding:0 !important;
+      }
+      </style>
+      <header style="width:100%;margin:0;padding:0;background-color: #1a374d;position: relative">
+      <div style="position: absolute;background-color: #dee3f3;width: 800px;height: 35px;right: 0;bottom: -8px;box-shadow: -2px 0px 6px 0px rgb(0 0 0 / 30%)"></div>
+      <div style="background-color: #1a374d;position: absolute;width: 235px;height: 58px;left: 0;z-index: 0;clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%)"></div>
+      <img style="position:relative; width:135px; height:50px; z-index:999; top:5px; left:35px" src="data:image/png;base64,${logoBinary}" alt="logo" />
+    </header>
+    `
+    await page.emulateMediaType('screen')
+    await page.setContent(html, { waitUntil: 'domcontentloaded' })
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '130px',
+        bottom: '115px',
+      },
+      displayHeaderFooter: true,
+      headerTemplate,
+      footerTemplate:
+        "<p style='font-size: 10px; margin:0 auto;'>Page <span class='pageNumber'></span> of <span class='totalPages'></span></p>",
+    })
+    await browser.close()
+    res.send({
+      success: true,
+      code: 200,
+      pdf: pdfBuffer,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const structureUserData = (payload) => {
+  const { user, request_type, period, lang } = payload
+  return {
+    account_number: user._id,
+    account_code: user.code,
+    account_holder:
+      lang === 'en' ? user.fullNameInEnglish : user.fullNameInArabic,
+    printing_date: DateTime.now()
+      .setLocale(lang)
+      .setZone('Asia/Dubai')
+      .toLocaleString(DateTime.DATETIME_MED),
+    statement_period:
+      request_type === 'selected_transactions' && period
+        ? {
+            from: DateTime.fromJSDate(new Date(period.from))
+              .setLocale(lang)
+              .setZone('Asia/Dubai')
+              .toLocaleString(DateTime.DATE_MED),
+            to: DateTime.fromJSDate(new Date(period.to))
+              .setLocale(lang)
+              .setZone('Asia/Dubai')
+              .toLocaleString(DateTime.DATE_MED),
+          }
+        : null,
+  }
+}
+
+const generateFilteredReports = async (payload) => {
+  const { user, peer, act_as, transaction_type, period } = payload
+
+  let searchFilter = {
+    $or: [
+      {
+        'operation.initiator.user': user._id,
+      },
+      {
+        'operation.peer.user': user._id,
+      },
+    ],
+  }
+
+  if (peer) {
+    searchFilter = {
+      ...searchFilter,
+      $or: [
+        {
+          'operation.initiator.user': peer._id,
+          'operation.peer.user': user._id,
+        },
+        {
+          'operation.peer.user': peer._id,
+          'operation.initiator.user': user._id,
+        },
+      ],
+    }
+  }
+
+  if (transaction_type?.length === 1) {
+    searchFilter = {
+      ...searchFilter,
+      isActive: transaction_type.includes('unpaid'),
+    }
+  }
+
+  if (act_as?.length && peer) {
+    searchFilter = {
+      ...searchFilter,
+      $and: [
+        {
+          $or: [
+            {
+              $and: [
+                { 'operation.initiator.user': user._id },
+                {
+                  'operation.initiator.type': { $in: act_as },
+                },
+              ],
+            },
+            {
+              $and: [
+                { 'operation.peer.user': user._id },
+                {
+                  'operation.peer.type': { $in: act_as },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          $or: [
+            {
+              'operation.initiator.user': peer._id,
+              'operation.peer.user': user._id,
+            },
+            {
+              'operation.peer.user': peer._id,
+              'operation.initiator.user': user._id,
+            },
+          ],
+        },
+      ],
+    }
+  }
+
+  if (act_as?.length && !peer) {
+    searchFilter = {
+      ...searchFilter,
+      $or: [
+        {
+          $and: [
+            { 'operation.initiator.user': user._id },
+            {
+              'operation.initiator.type': { $in: act_as },
+            },
+          ],
+        },
+        {
+          $and: [
+            { 'operation.peer.user': user._id },
+            {
+              'operation.peer.type': { $in: act_as },
+            },
+          ],
+        },
+      ],
+    }
+  }
+
+  if (period?.from || period?.to) {
+    const from = period.from ? { $gte: new Date(period.from) } : {}
+    const to = period.to ? { $lte: new Date(period.to) } : {}
+    searchFilter = {
+      ...searchFilter,
+      createdAt: {
+        ...from,
+        ...to,
+      },
+    }
+  }
+
+  const reports = await Report.aggregate([
+    {
+      $lookup: {
+        from: 'operations',
+        let: { operation_id: '$operation' },
+        pipeline: [
+          {
+            $match: { $expr: { $eq: ['$_id', '$$operation_id'] } },
+          },
+          {
+            $project: {
+              initiator: 1,
+              peer: 1,
+            },
+          },
+        ],
+        as: 'operation',
+      },
+    },
+    {
+      $unwind: '$operation',
+    },
+    {
+      $match: { ...searchFilter },
+    },
+  ])
+
+  return reports
+}
+//  payload = {user, report, note, lang}
+const mapDataFromReport = async (payload) => {
+  const { user, report, lang, peer_id } = payload
+  const operation = await Operation.findOne({ _id: report.operation }).populate(
+    'currency',
+    'name abbr'
+  )
+  if (
+    user.toString() !== operation.peer.user.toString() &&
+    user.toString() !== operation.initiator.user.toString()
+  ) {
+    return {
+      error: 'You are not allowed to view this report',
+    }
+  }
+  const peerId =
+    operation.initiator.user.toString() === user.toString()
+      ? operation.peer.user
+      : operation.initiator.user
+  const peer = await User.findById(peerId)
+  const act_as =
+    operation.initiator.user.toString() === user.toString()
+      ? operation.initiator
+      : operation.peer
+  if (peer_id) {
+    if (peerId.toString() !== peer_id.toString()) return null
+  }
+  return {
+    _id: report._id,
+    report_date: DateTime.fromJSDate(new Date(report.createdAt)).toLocaleString(
+      DateTime.DATE_MED
+    ),
+    debt:
+      act_as.type === 'debt' ? (report.debt ? report.debt : report.credit) : 0,
+    credit:
+      act_as.type === 'credit'
+        ? report.credit
+          ? report.credit
+          : report.debt
+        : 0,
+    beneficiary: lang === 'en' ? peer.fullNameInEnglish : peer.fullNameInArabic,
+    currency: operation.currency.name,
+    isPaid: !report.isActive,
+    due_date: report.dueDate
+      ? DateTime.fromJSDate(new Date(report.dueDate)).toLocaleString(
+          DateTime.DATE_MED
+        )
+      : null,
   }
 }
 

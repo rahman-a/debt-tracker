@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
-import { Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -10,14 +10,16 @@ import {
   Filter,
   Loader,
   HeaderAlert,
+  ReportPrinting,
 } from '../../components'
-import { FilterSearch, Times } from '../../icons'
+import { FilterSearch, Times, Printer } from '../../icons'
 import actions from '../../actions'
 import constants from '../../constants'
 
 const Reports = () => {
   const [isFilter, setIsFilter] = useState(false)
   const [isDueDate, setIsDueDate] = useState(true)
+  const [isPrinting, setIsPrinting] = useState(false)
   const [searchFilter, setSearchFilter] = useState({
     code: null,
     type: null,
@@ -88,10 +90,22 @@ const Reports = () => {
           resetFilterOperations={resetFilterOperations}
         />
       </Modal>
+      <ReportPrinting
+        show={isPrinting}
+        hideHandler={() => setIsPrinting(false)}
+      />
       <div className={style.reports}>
         {/* <button className={style.reports__end}>
                 close report
             </button> */}
+        <Button
+          variant='success'
+          className={style.reports__print}
+          onClick={() => setIsPrinting(true)}
+        >
+          <Printer />
+          <span>{t('print')}</span>
+        </Button>
         <h1>{t('active-reports-records')}</h1>
         <div
           className={style.reports__wrapper}

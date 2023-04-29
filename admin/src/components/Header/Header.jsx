@@ -126,12 +126,10 @@ const Header = () => {
 
   useEffect(() => {
     ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
-    console.log('nonRead: ', nonRead)
   }, [nonRead])
 
   useEffect(() => {
     ;(count || count === 0) && setMessagesCount(count)
-    console.log('count: ', count)
   }, [count])
 
   return (
