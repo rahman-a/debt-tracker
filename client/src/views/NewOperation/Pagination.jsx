@@ -6,7 +6,7 @@ import actions from '../../actions'
 
 const PaginationItems = () => {
   const [active, setActive] = useState(1)
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const { count } = useSelector((state) => state.mutualsPeers)
   const dispatch = useDispatch()
   const getMutualsPeers = (page) => {

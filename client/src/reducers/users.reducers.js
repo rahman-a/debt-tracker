@@ -1,34 +1,5 @@
 import constants from '../constants'
 
-const registerUser = (state, action) => {
-  const cases = {
-    [constants.users.REGISTER_USER_REQUEST]: { loading: true, error: null },
-
-    [constants.users.REGISTER_USER_SUCCESS]: {
-      loading: false,
-      error: null,
-      success: action.payload?.success,
-      userId: action.payload?.id,
-      phone: action.payload?.phone,
-    },
-
-    [constants.users.REGISTER_USER_FAIL]: {
-      loading: false,
-      error: action.payload,
-    },
-
-    [constants.users.REGISTER_USER_RESET]: {
-      loading: false,
-      error: null,
-      success: false,
-      userId: null,
-      phone: null,
-    },
-  }
-
-  return cases[action.type] || { ...state }
-}
-
 const checkInfo = (state, action) => {
   const cases = {
     [constants.users.CHECK_INFO_REQUEST]: { loading: true, error: null },
@@ -78,7 +49,6 @@ const updateDocuments = (state, action) => {
 
   return cases[action.type] || { ...state }
 }
-
 const sendPhoneCode = (state, action) => {
   const cases = {
     [constants.users.SEND_PHONE_CODE_REQUEST]: { loading: true, error: null },
@@ -104,22 +74,22 @@ const sendPhoneCode = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
-const sendEmailLink = (state, action) => {
+const verifyPhoneCode = (state, action) => {
   const cases = {
-    [constants.users.SEND_EMAIL_LINK_REQUEST]: { loading: true, error: null },
+    [constants.users.VERIFY_PHONE_CODE_REQUEST]: { loading: true, error: null },
 
-    [constants.users.SEND_EMAIL_LINK_SUCCESS]: {
+    [constants.users.VERIFY_PHONE_CODE_SUCCESS]: {
       loading: false,
       error: null,
       message: action.payload,
     },
 
-    [constants.users.SEND_EMAIL_LINK_FAIL]: {
+    [constants.users.VERIFY_PHONE_CODE_FAIL]: {
       loading: false,
       error: action.payload,
     },
 
-    [constants.users.SEND_EMAIL_LINK_RESET]: {
+    [constants.users.VERIFY_PHONE_CODE_RESET]: {
       loading: false,
       error: null,
       message: null,
@@ -154,97 +124,25 @@ const sendResetLink = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
-const VerifyPhoneCode = (state, action) => {
+const sendLoginCredentials = (state, action) => {
   const cases = {
-    [constants.users.VERIFY_PHONE_CODE_REQUEST]: { loading: true, error: null },
-
-    [constants.users.VERIFY_PHONE_CODE_SUCCESS]: {
-      loading: false,
+    [constants.users.USER_SEND_CREDENTIALS_REQUEST]: {
+      loading: true,
       error: null,
-      message: action.payload,
     },
 
-    [constants.users.VERIFY_PHONE_CODE_FAIL]: {
-      loading: false,
-      error: action.payload,
-    },
-
-    [constants.users.VERIFY_PHONE_CODE_RESET]: {
-      loading: false,
-      error: null,
-      message: null,
-    },
-  }
-
-  return cases[action.type] || { ...state }
-}
-
-const updatePhoneNumber = (state, action) => {
-  const cases = {
-    [constants.users.UPDATE_PHONE_REQUEST]: { loading: true, error: null },
-
-    [constants.users.UPDATE_PHONE_SUCCESS]: {
-      loading: false,
-      error: null,
-      message: action.payload,
-    },
-
-    [constants.users.UPDATE_PHONE_FAIL]: {
-      loading: false,
-      error: action.payload,
-    },
-
-    [constants.users.UPDATE_PHONE_RESET]: {
-      loading: false,
-      error: null,
-      message: null,
-    },
-  }
-
-  return cases[action.type] || { ...state }
-}
-
-const VerifyAuthLink = (state, action) => {
-  const cases = {
-    [constants.users.VERIFY_AUTH_LINK_REQUEST]: { loading: true, error: null },
-
-    [constants.users.VERIFY_AUTH_LINK_SUCCESS]: {
-      loading: false,
-      error: null,
-      message: action.payload,
-    },
-
-    [constants.users.VERIFY_AUTH_LINK_FAIL]: {
-      loading: false,
-      error: action.payload,
-    },
-
-    [constants.users.VERIFY_AUTH_LINK_RESET]: {
-      loading: false,
-      error: null,
-      message: null,
-    },
-  }
-
-  return cases[action.type] || { ...state }
-}
-
-const loginInit = (state, action) => {
-  const cases = {
-    [constants.users.USER_LOGIN_REQUEST]: { loading: true, error: null },
-
-    [constants.users.USER_LOGIN_SUCCESS]: {
+    [constants.users.USER_SEND_CREDENTIALS_SUCCESS]: {
       loading: false,
       error: null,
       userId: action.payload,
     },
 
-    [constants.users.USER_LOGIN_FAIL]: {
+    [constants.users.USER_SEND_CREDENTIALS_FAIL]: {
       loading: false,
       error: action.payload,
     },
 
-    [constants.users.USER_LOGIN_RESET]: {
+    [constants.users.USER_SEND_CREDENTIALS_RESET]: {
       loading: false,
       error: null,
       userId: null,
@@ -279,15 +177,14 @@ const sendLoginCode = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
-const login = (state, action) => {
+const verifyLoginCode = (state, action) => {
   const cases = {
     [constants.users.VERIFY_LOGIN_CODE_REQUEST]: { loading: true, error: null },
 
     [constants.users.VERIFY_LOGIN_CODE_SUCCESS]: {
       loading: false,
+      isVerified: true,
       error: null,
-      user: action.payload,
-      isAuth: true,
     },
 
     [constants.users.VERIFY_LOGIN_CODE_FAIL]: {
@@ -296,6 +193,32 @@ const login = (state, action) => {
     },
 
     [constants.users.VERIFY_LOGIN_CODE_RESET]: {
+      loading: false,
+      isVerified: false,
+      error: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const isAuth = (state, action) => {
+  const cases = {
+    [constants.users.USER_IS_AUTH_REQUEST]: { loading: true, error: null },
+
+    [constants.users.USER_IS_AUTH_SUCCESS]: {
+      loading: false,
+      error: null,
+      user: action.payload,
+      isAuth: true,
+    },
+
+    [constants.users.USER_IS_AUTH_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+
+    [constants.users.USER_IS_AUTH_RESET]: {
       loading: false,
       error: null,
       user: action.payload ? action.payload : null,
@@ -325,6 +248,31 @@ const userProfile = (state, action) => {
       loading: false,
       error: null,
       user: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const updatePhoneNumber = (state, action) => {
+  const cases = {
+    [constants.users.UPDATE_PHONE_REQUEST]: { loading: true, error: null },
+
+    [constants.users.UPDATE_PHONE_SUCCESS]: {
+      loading: false,
+      error: null,
+      message: action.payload,
+    },
+
+    [constants.users.UPDATE_PHONE_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+
+    [constants.users.UPDATE_PHONE_RESET]: {
+      loading: false,
+      error: null,
+      message: null,
     },
   }
 
@@ -509,25 +457,23 @@ const appearance = (state, actions) => {
 
 const reducers = {
   checkInfo,
-  registerUser,
-  sendPhoneCode,
-  sendEmailLink,
-  sendResetLink,
-  VerifyPhoneCode,
-  VerifyAuthLink,
   userProfile,
-  loginInit,
-  sendLoginCode,
   updatePassword,
   updateDocuments,
-  login,
+  updatePhoneNumber,
+  isAuth,
   logout,
   searchUsers,
   updateAddressAndPhone,
   sendContactEmail,
-  updatePhoneNumber,
   mutualsPeers,
   appearance,
+  sendPhoneCode,
+  verifyPhoneCode,
+  sendResetLink,
+  sendLoginCredentials,
+  sendLoginCode,
+  verifyLoginCode,
 }
 
 export default reducers

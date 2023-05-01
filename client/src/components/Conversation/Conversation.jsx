@@ -41,7 +41,7 @@ const Chat = ({ socket, setUnSeenMessage }) => {
   const { loading, error, conversation } = useSelector(
     (state) => state.listMessages
   )
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const lang = i18next.language
   const { t } = useTranslation()
 

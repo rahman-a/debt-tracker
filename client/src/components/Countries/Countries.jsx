@@ -49,10 +49,6 @@ const Countries = ({ selectedCountry, country, styles, wrapperClassName }) => {
   }
 
   useEffect(() => {
-    country && console.log({ country })
-  }, [country])
-
-  useEffect(() => {
     setList(countries())
   }, [])
 

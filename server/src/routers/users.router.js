@@ -26,6 +26,7 @@ import {
   updatePhoneAndAddress,
   updatePhoneNumber,
   getPreviousClients,
+  checkIsUserLoggedIn,
 } from '../controllers/users.controller.js'
 
 import {
@@ -85,6 +86,7 @@ router.patch(
 router.post('/contact', sendContactEmail)
 router.patch('/info/update', isAuth, updatePhoneAndAddress)
 router.get('/:id/clients', isAuth, getPreviousClients)
+router.get('/is-logged-in', isAuth, checkIsUserLoggedIn)
 
 // DASHBOARD ROUTERS
 router.post('/staff/login', staffLogin)

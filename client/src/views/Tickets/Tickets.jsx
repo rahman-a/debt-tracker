@@ -30,7 +30,7 @@ const Tickets = () => {
 
   const [skipValue, setSkipValue] = useState(0)
 
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const { loading, error, count, tickets } = useSelector(
     (state) => state.listTickets
   )

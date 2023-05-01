@@ -26,6 +26,7 @@ export const isAuth = async (req, res, next) => {
       req.token = token
       next()
     } else {
+      console.log('is-Logged-In: ', req.cookies['token'])
       res.status(401)
       throw new Error(req.t('please_login_first'))
     }

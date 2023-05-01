@@ -10,7 +10,7 @@ import Mutuals from './Mutuals'
 const OperationInit = () => {
   const [peerInfo, setPeerInfo] = useState(null)
   const [showMutuals, setShowMutuals] = useState(false)
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const { mutuals } = useSelector((state) => state.mutualsPeers)
   const { t } = useTranslation()
   const dispatch = useDispatch()

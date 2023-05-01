@@ -5,7 +5,6 @@ import notificationsActions from './notifications.actions'
 import reportsActions from './reports.actions'
 import ticketsActions from './tickets.actions'
 import chatActions from './chat.actions'
-import contentActions from './content.actions'
 
 const actions = {
   users: userActions,
@@ -15,7 +14,6 @@ const actions = {
   reports: reportsActions,
   tickets: ticketsActions,
   chat: chatActions,
-  content: contentActions,
 }
 
 export default actions

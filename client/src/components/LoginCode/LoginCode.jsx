@@ -1,167 +1,128 @@
-import React, { useState, useEffect, useRef } from 'react'
-import style from './style.module.scss'
-import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { Alert } from 'react-bootstrap'
+import { useEffect, useRef, useState } from 'react'
+import {
+  Box,
+  HStack,
+  PinInput,
+  PinInputField,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
+import Countdown, { zeroPad } from 'react-countdown'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import actions from '../../actions'
-import constants from '../../constants'
-import { Loader } from '../../components'
-import TrackCode from './TrackCode'
 
-const LoginCode = ({ userId, setIsLoginCode }) => {
-  const [isRememberOn, setIsRememberOn] = useState(false)
-  const [rememberDays, setRememberDays] = useState(1)
-  const [loginCode, setLoginCode] = useState('')
-  const { loading, error, message } = useSelector(
-    (state) => state.sendLoginCode
-  )
-  const { loading: login_loading, error: login_error } = useSelector(
-    (state) => state.login
-  )
-  const dispatch = useDispatch()
+export default function LoginCode({
+  verifyLoginCodeHandler,
+  sendLoginCodeHandler,
+  sendCodeLoading,
+  verifyLoginCodeLoading,
+}) {
+  const pinInputRef = useRef(null)
+  const [stopCounter, setStopCounter] = useState(false)
+  const [counterDate, setCounterDate] = useState(119000)
+  const counterRef = useRef(null)
   const { t } = useTranslation()
   const lang = i18next.language
-  const defineRememberDays = (days) => {
-    setRememberDays(days)
-  }
-
-  const clearAlert = (_) => {
-    dispatch({ type: constants.users.SEND_LOGIN_CODE_RESET })
-  }
-
-  const clearLoginAlert = (_) => {
-    dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET })
-  }
-
-  const rememberPanelHandler = (e) => {
-    if (isRememberOn) setRememberDays(1)
-    setIsRememberOn((prev) => !prev)
-  }
-
-  const loginHandler = (_) => {
-    dispatch(actions.users.login(userId, { code: loginCode, rememberDays }))
-  }
 
   useEffect(() => {
-    if (userId && !message) {
-      dispatch(actions.users.sendLoginCode(userId))
+    pinInputRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    let stopCounterInterval
+    if (stopCounter && counterRef.current) {
+      counterRef.current.pause()
+      stopCounterInterval = setTimeout(() => {
+        setStopCounter(false)
+        clearTimeout(stopCounterInterval)
+      }, 5000)
+    } else {
+      counterRef.current?.start()
     }
-  }, [userId, message, dispatch])
+    return () => clearTimeout(stopCounterInterval)
+  }, [stopCounter])
+
+  useEffect(() => {
+    !sendCodeLoading && counterRef.current?.start()
+  }, [sendCodeLoading])
 
   return (
-    <div className={style.loginCode}>
-      {loading ? (
-        <Loader
-          size='10'
-          center
-          options={{ animation: 'border' }}
-          text={t('sending-login-code')}
-          textStyle={{
-            marginLeft: lang === 'ar' ? '0' : '-5rem',
-            marginRight: lang === 'ar' ? '-5rem' : '0',
+    <Box textAlign='center'>
+      <Text as='h2' mb='5' fontSize={{ base: '2xl', md: '3xl' }}>
+        {t('sent-login-code')}
+      </Text>
+      <HStack
+        spacing={6}
+        w='100%'
+        justifyContent='center'
+        m='0'
+        position='relative'
+      >
+        <PinInput
+          type='alphanumeric'
+          variant='filled'
+          focusBorderColor='teal.500'
+          size={{ base: 'md', sm: 'lg' }}
+          onComplete={(code) => {
+            setCounterDate(119000)
+            verifyLoginCodeHandler(code)
+          }}
+          onChange={() => setStopCounter(true)}
+          isDisabled={verifyLoginCodeLoading}
+        >
+          <PinInputField bg='gray.600' ref={pinInputRef} />
+          <PinInputField bg='gray.600' />
+          <PinInputField bg='gray.600' />
+          <PinInputField bg='gray.600' />
+          <PinInputField bg='gray.600' />
+          <PinInputField bg='gray.600' />
+          <PinInputField bg='gray.600' />
+        </PinInput>
+        <Spinner
+          color='gray.500'
+          position='absolute'
+          left='50%'
+          transform='translateX(-50%)'
+          display={verifyLoginCodeLoading || sendCodeLoading ? 'block' : 'none'}
+        />
+      </HStack>
+      {(!verifyLoginCodeLoading || !sendCodeLoading) && (
+        <Countdown
+          date={Date.now() + counterDate}
+          ref={counterRef}
+          onPause={(date) => {
+            setCounterDate(date.total)
+          }}
+          renderer={({ seconds, minutes }) => {
+            return (
+              <HStack
+                my={4}
+                spacing={2}
+                flexWrap='wrap'
+                w='100%'
+                justifyContent='center'
+                flexDirection={lang === 'en' ? 'row' : 'row-reverse'}
+                gap='0.5rem'
+              >
+                <Text as='p' fontSize={{ base: 'xl', md: '2xl' }}>
+                  {t('code-send-in-time')}
+                </Text>
+                <Text as='span' fontWeight='bold' color='red.300'>
+                  {zeroPad(minutes) + ':' + zeroPad(seconds)}
+                </Text>
+                <Text as='p' fontSize={{ base: 'xl', md: '2xl' }}>
+                  {minutes === 0 ? t('seconds') : t('minutes')}{' '}
+                  {t('code-not-received')}
+                </Text>
+              </HStack>
+            )
+          }}
+          onComplete={() => {
+            setCounterDate(119000)
+            sendLoginCodeHandler()
           }}
         />
-      ) : error ? (
-        <Alert variant='danger' onClose={clearAlert} dismissible>
-          {error}
-        </Alert>
-      ) : (
-        message && (
-          <>
-            {login_error && (
-              <Alert variant='danger' onClose={clearLoginAlert}>
-                {login_error}
-              </Alert>
-            )}
-
-            <p>{t('code-sent')}</p>
-            <p style={{ marginLeft: 'unset', width: 'auto' }}>
-              {t('type-code')}
-            </p>
-            <div
-              className={`${style.loginCode__group} 
-            ${lang === 'ar' ? style.loginCode__group_ar : ''}`}
-            >
-              <div className={style.loginCode__group_input}>
-                <span
-                  className={
-                    lang === 'ar' ? style.loginCode__group_input_ar : ''
-                  }
-                >
-                  {t('login-code')}
-                </span>
-                <input
-                  type='text'
-                  placeholder={t('enter-code-sent-email')}
-                  onChange={(e) => setLoginCode(e.target.value)}
-                />
-              </div>
-              <button onClick={loginHandler}>
-                {login_loading ? (
-                  <Loader size='4' options={{ animation: 'border' }} />
-                ) : (
-                  t('phone-verify')
-                )}
-              </button>
-            </div>
-
-            <div
-              className={`${style.loginCode__remember} 
-            ${lang === 'ar' ? style.loginCode__remember_ar : ''}`}
-            >
-              <input
-                type='checkbox'
-                id='remember'
-                onChange={rememberPanelHandler}
-              />
-              <label htmlFor='remember'>{t('remember-me')}</label>
-            </div>
-          </>
-        )
       )}
-      <TrackCode userId={userId} />
-      {isRememberOn && (
-        <div className={style.loginCode__remember_panel}>
-          <p>{t('choice-if-trust-pc')}</p>
-          <p>{t('remember-credential')}</p>
-          <div className={style.loginCode__remember_panel_period}>
-            <button
-              className={
-                rememberDays === 7
-                  ? style.loginCode__remember_panel_period_select
-                  : ''
-              }
-              onClick={() => defineRememberDays(7)}
-            >
-              {t('remember-7')}
-            </button>
-            <button
-              className={
-                rememberDays === 15
-                  ? style.loginCode__remember_panel_period_select
-                  : ''
-              }
-              onClick={() => defineRememberDays(15)}
-            >
-              {t('remember-15')}
-            </button>
-            <button
-              className={
-                rememberDays === 30
-                  ? style.loginCode__remember_panel_period_select
-                  : ''
-              }
-              onClick={() => defineRememberDays(30)}
-            >
-              {t('remember-30')}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </Box>
   )
 }
-
-export default LoginCode

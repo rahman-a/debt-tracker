@@ -544,6 +544,7 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
       user.isEmailConfirmed = true
       await user.save()
     }
+
     const userData = {
       _id: user._id,
       fullNameInEnglish: user.fullNameInEnglish,
@@ -556,13 +557,36 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
     const token = user.generateToken(tokenExpiry)
     res.cookie('token', token, {
       httpOnly: true,
+      domain: 'localhost',
+      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * (isRemembered ? 7 : 1),
     })
     res.json({
       success: true,
       code: 200,
       user: userData,
-      expiryAt: expireAt(isRemembered ? 7 : 1),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const checkIsUserLoggedIn = async (req, res, next) => {
+  try {
+    const userData = {
+      _id: req.user._id,
+      fullNameInEnglish: req.user.fullNameInEnglish,
+      fullNameInArabic: req.user.fullNameInArabic,
+      avatar: req.user.avatar,
+      color: req.user.colorCode.code,
+      isProvider: req.user.isProvider,
+    }
+    console.log('🚀checkIsUserLoggedIn:', userData)
+
+    res.json({
+      success: true,
+      code: 200,
+      user: userData,
     })
   } catch (error) {
     next(error)
@@ -1033,7 +1057,7 @@ async function sendLoginCodeToEmail(id) {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
     }
-    await sendEmail(info, 'code')
+    // await sendEmail(info, 'code')
   } catch (error) {
     throw new Error(error)
   }

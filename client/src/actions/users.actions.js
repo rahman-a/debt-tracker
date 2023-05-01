@@ -1,22 +1,6 @@
 import constants from '../constants'
 import api from '../api'
 
-const registerUser = (info) => async (dispatch) => {
-  dispatch({ type: constants.users.REGISTER_USER_REQUEST })
-  try {
-    const { data } = await api.users.registerUser(info)
-    dispatch({
-      type: constants.users.REGISTER_USER_SUCCESS,
-      payload: { success: data.success, id: data.id, phone: data.phone },
-    })
-  } catch (error) {
-    dispatch({
-      type: constants.users.REGISTER_USER_FAIL,
-      payload: error.response && error.response.data.message,
-    })
-  }
-}
-
 const checkInfo = (info) => async (dispatch) => {
   dispatch({ type: constants.users.CHECK_INFO_REQUEST })
   try {
@@ -67,13 +51,10 @@ const updateDocuments = (id, info, type) => async (dispatch, getState) => {
   }
 }
 
-const sendCodeToPhone = (id, email) => async (dispatch) => {
+const sendCodeToPhone = (email) => async (dispatch) => {
   dispatch({ type: constants.users.SEND_PHONE_CODE_REQUEST })
   try {
-    const { data } =
-      !id && email
-        ? await api.users.sendVerifyCodeToPhone(undefined, email)
-        : await api.users.sendVerifyCodeToPhone(id)
+    const { data } = await api.users.sendVerifyCodeToPhone(email)
     dispatch({
       type: constants.users.SEND_PHONE_CODE_SUCCESS,
       payload: data.message,
@@ -86,33 +67,17 @@ const sendCodeToPhone = (id, email) => async (dispatch) => {
   }
 }
 
-const updatePhoneNumber = (id, phone) => async (dispatch) => {
-  dispatch({ type: constants.users.UPDATE_PHONE_REQUEST })
+const verifyPhoneCode = (code, email) => async (dispatch) => {
+  dispatch({ type: constants.users.VERIFY_PHONE_CODE_REQUEST })
   try {
-    const { data } = await api.users.updatePhoneNumber(id, phone)
+    const { data } = await api.users.verifyPhoneCode(code, email)
     dispatch({
-      type: constants.users.UPDATE_PHONE_SUCCESS,
+      type: constants.users.VERIFY_PHONE_CODE_SUCCESS,
       payload: data.message,
     })
   } catch (error) {
     dispatch({
-      type: constants.users.UPDATE_PHONE_FAIL,
-      payload: error.response && error.response.data.message,
-    })
-  }
-}
-
-const sendEmailLink = (id) => async (dispatch) => {
-  dispatch({ type: constants.users.SEND_EMAIL_LINK_REQUEST })
-  try {
-    const { data } = await api.users.sendVerifyEmailLink(id)
-    dispatch({
-      type: constants.users.SEND_EMAIL_LINK_SUCCESS,
-      payload: data.message,
-    })
-  } catch (error) {
-    dispatch({
-      type: constants.users.SEND_EMAIL_LINK_FAIL,
+      type: constants.users.VERIFY_PHONE_CODE_FAIL,
       payload: error.response && error.response.data.message,
     })
   }
@@ -134,51 +99,17 @@ const sendResetLink = (email) => async (dispatch) => {
   }
 }
 
-const verifyPhoneCode = (id, code, email) => async (dispatch) => {
-  dispatch({ type: constants.users.VERIFY_PHONE_CODE_REQUEST })
+const sendLoginCredentials = (info) => async (dispatch) => {
+  dispatch({ type: constants.users.USER_SEND_CREDENTIALS_REQUEST })
   try {
-    const { data } =
-      !id && email
-        ? await api.users.verifyPhoneCode(undefined, code, email)
-        : await api.users.verifyPhoneCode(id, code)
-    localStorage.removeItem('uid')
-    localStorage.removeItem('isInfo')
+    const { data } = await api.users.sendLoginCredentials(info)
     dispatch({
-      type: constants.users.VERIFY_PHONE_CODE_SUCCESS,
-      payload: data.message,
+      type: constants.users.USER_SEND_CREDENTIALS_SUCCESS,
+      payload: data.user,
     })
   } catch (error) {
     dispatch({
-      type: constants.users.VERIFY_PHONE_CODE_FAIL,
-      payload: error.response && error.response.data.message,
-    })
-  }
-}
-
-const verifyAuthLink = (info) => async (dispatch) => {
-  dispatch({ type: constants.users.VERIFY_AUTH_LINK_REQUEST })
-  try {
-    const { data } = await api.users.verifyAuthLink(info)
-    dispatch({
-      type: constants.users.VERIFY_AUTH_LINK_SUCCESS,
-      payload: data.message,
-    })
-  } catch (error) {
-    dispatch({
-      type: constants.users.VERIFY_AUTH_LINK_FAIL,
-      payload: error.response && error.response.data.message,
-    })
-  }
-}
-
-const LoginInit = (info) => async (dispatch) => {
-  dispatch({ type: constants.users.USER_LOGIN_REQUEST })
-  try {
-    const { data } = await api.users.loginInit(info)
-    dispatch({ type: constants.users.USER_LOGIN_SUCCESS, payload: data.user })
-  } catch (error) {
-    dispatch({
-      type: constants.users.USER_LOGIN_FAIL,
+      type: constants.users.USER_SEND_CREDENTIALS_FAIL,
       payload: error.response && error.response.data.message,
     })
   }
@@ -200,21 +131,40 @@ const sendLoginCode = (id) => async (dispatch) => {
   }
 }
 
-const login = (id, info) => async (dispatch) => {
+const verifyLoginCode = (id, info) => async (dispatch) => {
   dispatch({ type: constants.users.VERIFY_LOGIN_CODE_REQUEST })
   try {
-    const { data } = await api.users.login(id, info)
-    localStorage.setItem('user', JSON.stringify(data.user))
-    localStorage.setItem('expiryAt', data.expiryAt)
+    const { data } = await api.users.verifyLoginCode(id, info)
     dispatch({
       type: constants.users.VERIFY_LOGIN_CODE_SUCCESS,
+    })
+    dispatch({
+      type: constants.users.USER_IS_AUTH_SUCCESS,
       payload: data.user,
       isAuth: true,
     })
-    dispatch({ type: constants.users.USER_LOGIN_RESET })
+    dispatch({ type: constants.users.USER_SEND_CREDENTIALS_RESET })
   } catch (error) {
     dispatch({
       type: constants.users.VERIFY_LOGIN_CODE_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const isUserAuth = () => async (dispatch) => {
+  dispatch({ type: constants.users.USER_IS_AUTH_REQUEST })
+  try {
+    const { data } = await api.users.isLoggedIn()
+    console.log('🚀isUserLoggedIn ~ data:', data)
+    dispatch({
+      type: constants.users.USER_IS_AUTH_SUCCESS,
+      payload: data.user,
+      isAuth: true,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.users.USER_IS_AUTH_FAIL,
       payload: error.response && error.response.data.message,
     })
   }
@@ -231,6 +181,22 @@ const logout = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: constants.users.USER_LOGOUT_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const updatePhoneNumber = (id, phone) => async (dispatch) => {
+  dispatch({ type: constants.users.UPDATE_PHONE_REQUEST })
+  try {
+    const { data } = await api.users.updatePhoneNumber(id, phone)
+    dispatch({
+      type: constants.users.UPDATE_PHONE_SUCCESS,
+      payload: data.message,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.users.UPDATE_PHONE_FAIL,
       payload: error.response && error.response.data.message,
     })
   }
@@ -344,25 +310,23 @@ const getMutualsPeers = (id, skip) => async (dispatch) => {
 }
 
 const actions = {
-  registerUser,
   checkInfo,
-  sendCodeToPhone,
-  sendEmailLink,
-  sendResetLink,
-  verifyPhoneCode,
-  verifyAuthLink,
   getUserProfile,
-  LoginInit,
-  sendLoginCode,
   updatePassword,
   updateDocuments,
-  login,
+  isUserAuth,
   logout,
   SearchForUsers,
   updateAddressAndPhone,
   sendContactEmail,
-  updatePhoneNumber,
   getMutualsPeers,
+  updatePhoneNumber,
+  sendCodeToPhone,
+  verifyPhoneCode,
+  sendResetLink,
+  sendLoginCredentials,
+  sendLoginCode,
+  verifyLoginCode,
 }
 
 export default actions

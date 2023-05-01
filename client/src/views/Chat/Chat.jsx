@@ -8,7 +8,7 @@ import constants from '../../constants'
 
 function Chat({ socket }) {
   const [unSeenMessage, setUnSeenMessage] = useState(null)
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const { conversation } = useSelector((state) => state.listMessages)
   const dispatch = useDispatch()
 

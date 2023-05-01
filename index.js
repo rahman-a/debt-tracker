@@ -70,7 +70,7 @@ app.use(i18nextMiddleware.handle(i18next))
 /***************** SERVING PRODUCTION BUILD FRONTEND
 /***************************************************/
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.resolve(__dirname, 'client/build')))
+  app.use(express.static(path.resolve(__dirname, 'client/dist')))
 
   app.use(express.static(path.resolve(__dirname, 'admin/build')))
 

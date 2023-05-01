@@ -9,7 +9,7 @@ import actions from '../../actions'
 const ActivityTrack = ({ setSideMenu }) => {
   const timeout = useRef(null)
   const [warn, setWarn] = useState(false)
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const [trackLogoutWarnTime, setTrackLogoutWarnTime] = useState(10)
   const trackLogoutTimeRef = useRef(null)
   const { isAuth } = useSelector((state) => state.login)

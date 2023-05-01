@@ -1,299 +1,214 @@
-import React, { useEffect, useState } from 'react'
-import style from './style.module.scss'
-import { Modal, Alert, Button } from 'react-bootstrap'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { AtSignIcon, LockIcon } from '@chakra-ui/icons'
+import {
+  Button,
+  Checkbox,
+  Image,
+  FormControl,
+  FormErrorMessage,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Text,
+  VStack,
+  useDisclosure,
+  useBreakpointValue,
+} from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Loader } from '../../components'
-import { Lock, AtSymbol } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
-import { sanitizeInput } from '../../config/sanitize'
+import { useNavigate } from 'react-router-dom'
+import { EyeIcon, EyeSlashIcon } from '../../icons'
+import ResetPassword from '../SendResetPasswordLink/SendResetPasswordLink'
 
-const LoginForm = () => {
-  const [isForget, setIsForget] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [resetLink, setResetLink] = useState('')
-  const [confirmCodeEmail, setConfirmCodeEmail] = useState('')
-  const [phoneCode, setPhoneCode] = useState('')
-  const [errors, setErrors] = useState(null)
-  const { loading, error } = useSelector((state) => state.loginInit)
-  const {
-    loading: reset_loading,
-    error: reset_error,
-    message,
-  } = useSelector((state) => state.sendResetLink)
+export default function LoginForm({
+  submitHandler,
+  setIsRememberMe,
+  isRememberMe,
+  sendingLoginCredentialLoading,
+}) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
   const lang = i18next.language
-
+  const navigate = useNavigate()
+  const formWidth = useBreakpointValue({
+    base: '100%',
+    sm: '80%',
+    md: '50%',
+    lg: '35%',
+  })
+  const formStyle = {
+    width: formWidth,
+    margin: 0,
+  }
   const {
-    loading: phone_loading,
-    error: phone_error,
-    message: phone_message,
-  } = useSelector((state) => state.sendPhoneCode)
-
-  const {
-    loading: verify_loading,
-    error: verify_error,
-    message: verify_message,
-  } = useSelector((state) => state.VerifyPhoneCode)
-
-  const dispatch = useDispatch()
-
-  const clearAlert = (_) => {
-    dispatch({ type: constants.users.USER_LOGIN_RESET })
-  }
-
-  const submitLoginHandler = (e) => {
-    const data = { email, password }
-    dispatch(actions.users.LoginInit(data))
-  }
-
-  const sendPhoneCodeHandler = (_) => {
-    dispatch(actions.users.sendCodeToPhone(undefined, confirmCodeEmail))
-  }
-
-  const verifyPhoneCodeHandler = (_) => {
-    dispatch(
-      actions.users.verifyPhoneCode(undefined, phoneCode, confirmCodeEmail)
-    )
-  }
-
-  const submitLoginOnKeyHandler = (e) => {
-    if (e.keyCode === 13 || e.which === 13) {
-      const data = {
-        email: sanitizeInput(email),
-        password: sanitizeInput(password),
-      }
-      dispatch(actions.users.LoginInit(data))
-    }
-  }
-
-  const submitResetPasswordEmail = () => {
-    if (!resetLink) {
-      setErrors(t('type-primary-email'))
-      return
-    }
-    dispatch(actions.users.sendResetLink(resetLink))
-  }
-
-  useEffect(() => {
-    if (verify_message) {
-      setTimeout(() => {
-        dispatch({ type: constants.users.SEND_PHONE_CODE_RESET })
-        dispatch({ type: constants.users.USER_LOGIN_RESET })
-      }, 3000)
-    }
-  }, [verify_message])
-
-  useEffect(() => {
-    reset_error && setErrors(reset_error)
-  }, [reset_error])
-
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: 'all',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
   return (
     <>
-      <Modal show={isForget} onHide={() => setIsForget(false)}>
-        <Modal.Header>
-          <h3 className={style.loginForm__reset_header}>
-            {t('enter-email-reset-pass')}
-          </h3>
-        </Modal.Header>
-
-        <Modal.Body>
-          {reset_loading && (
-            <Loader
-              size='10'
-              center
-              options={{ animation: 'border' }}
-              custom={{ zIndex: '99' }}
-            />
-          )}
-          {message && (
-            <p
-              className={style.loginForm__reset_msg}
-              style={{ color: '#025902', backgroundColor: '#d0f8eb' }}
-            >
-              {message}
-            </p>
-          )}
-          {errors && (
-            <p
-              className={style.loginForm__reset_msg}
-              style={{ color: '#590202', backgroundColor: '#f8d0d0' }}
-            >
-              {errors}
-            </p>
-          )}
-          <div
-            className={`${style.loginForm__reset_input} ${
-              lang === 'ar' ? style.loginForm__reset_input_ar : ''
-            }`}
-          >
-            <span>
-              <AtSymbol />
-            </span>
-            <input
+      <ResetPassword isOpen={isOpen} onClose={onClose} />
+      <form style={formStyle} onSubmit={handleSubmit(submitHandler)} noValidate>
+        <FormControl
+          isRequired
+          id='email'
+          isInvalid={!!errors.email?.message}
+          mb='5'
+        >
+          <InputGroup>
+            <InputLeftElement mt={2} pointerEvents='none'>
+              <AtSignIcon boxSize='6' color='gray.800' />
+            </InputLeftElement>
+            <Input
               type='email'
-              name='email'
-              onChange={(e) => setResetLink(e.target.value)}
-              placeholder={t('enter-email')}
-            />
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <button
-            className={style.loginForm__reset_btn}
-            disabled={reset_loading}
-            onClick={submitResetPasswordEmail}
-          >
-            {t('send-reset-pass-btn')}
-          </button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Enter Phone Code for Verification */}
-      {phone_message && (
-        <div className={style.loginForm__verify}>
-          {verify_error && (
-            <p
-              className={style.loginForm__verify_alert}
-              style={{ color: '#610202', backgroundColor: '#ffe1e1' }}
-            >
-              {verify_error}
-            </p>
-          )}
-          {verify_message && (
-            <p
-              className={style.loginForm__verify_alert}
-              style={{ color: '#1a5501', backgroundColor: '#e2ffe1' }}
-            >
-              {verify_message}
-            </p>
-          )}
-          <div>
-            <input
-              type='number'
-              name='otp'
-              placeholder={t('enter-code')}
-              onChange={(e) => setPhoneCode(e.target.value)}
-            />
-
-            <Button
               size='lg'
-              variant='dark'
-              style={{ marginLeft: '1.5rem' }}
-              onClick={verifyPhoneCodeHandler}
+              variant='filled'
+              color='#000'
+              _focus={{ color: '#fff' }}
+              py={6}
+              placeholder={`${t('enter-email')} *`}
+              {...register('email', {
+                required: t('please-enter-email'),
+                validate: (value) => {
+                  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                  return regex.test(value) || t('enter-valid-email')
+                },
+              })}
+            />
+          </InputGroup>
+          {errors.email?.message && (
+            <FormErrorMessage
+              flexDirection={lang === 'en' ? 'row' : 'row-reverse'}
+              fontSize='xl'
             >
-              {verify_loading ? (
-                <Loader size='4' options={{ animation: 'border' }} />
+              {errors.email?.message}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl
+          isRequired
+          id='password'
+          isInvalid={!!errors.password?.message}
+        >
+          <InputGroup>
+            <InputLeftElement mt={2} pointerEvents='none'>
+              <LockIcon boxSize='6' color='gray.800' />
+            </InputLeftElement>
+            <Input
+              type={isPasswordVisible ? 'text' : 'password'}
+              size='lg'
+              variant='filled'
+              color='#000'
+              _focus={{ color: '#fff' }}
+              py={6}
+              placeholder={`${t('enter-pass')} *`}
+              {...register('password', {
+                required: t('please-enter-pass'),
+                validate: (value) => {
+                  const regex = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/
+                  return !regex.test(value) || t('enter-valid-pass')
+                },
+              })}
+            />
+            <InputRightElement
+              cursor='pointer'
+              mt={2}
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            >
+              {isPasswordVisible ? (
+                <EyeIcon color='gray.600' boxSize={6} />
               ) : (
-                t('phone-verify')
+                <EyeSlashIcon color='gray.600' boxSize={6} />
               )}
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {!phone_message &&
-      error &&
-      error === ('phone not confirmed' || 'الهاتف غير مفعل') ? (
-        <Alert variant='light' onClose={clearAlert} dismissible>
-          <Alert.Heading>{t('phone-not-confirmed')}</Alert.Heading>
-          <p>{t('email-send-code-phone')}</p>
-
-          <input
-            type='email'
-            name='email'
-            placeholder={t('type-primary-email')}
-            style={{
-              display: 'block',
-              margin: '1.5rem 0',
-              padding: '0.5rem',
-              width: '100%',
-              borderRadius: '1rem',
-              border: '1px solid #1a374d',
-            }}
-            onChange={(e) => setConfirmCodeEmail(e.target.value)}
-          />
-
-          {phone_error && <p style={{ color: 'red' }}>{phone_error}</p>}
-
-          <Button
-            variant='dark'
+            </InputRightElement>
+          </InputGroup>
+          {errors.password?.message && (
+            <FormErrorMessage
+              flexDirection={lang === 'en' ? 'row' : 'row-reverse'}
+              fontSize='xl'
+            >
+              {errors.password?.message}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+        <HStack
+          flexDirection={lang === 'en' ? 'row' : 'row-reverse'}
+          mt='4'
+          justifyContent='space-between'
+        >
+          <Checkbox
+            flexDirection={lang === 'en' ? 'row' : 'row-reverse'}
+            gap={lang === 'en' ? '0' : '0.5rem'}
             size='lg'
-            disabled={phone_loading ? true : false}
-            onClick={sendPhoneCodeHandler}
+            onChange={() => setIsRememberMe(!isRememberMe)}
           >
-            {t('send-phone-code')}
+            <Text as='span' fontSize='2xl'>
+              {t('remember-me')}
+            </Text>
+          </Checkbox>
+          <Button
+            fontSize='xl'
+            onClick={onOpen}
+            variant='link'
+            color='secondary'
+          >
+            {t('forget-pass')}
           </Button>
-
-          {phone_loading && (
-            <Loader size='10' center options={{ animation: 'border' }} />
-          )}
-        </Alert>
-      ) : (
-        error &&
-        !phone_message && (
-          <p
-            className={style.loginForm__verify_alert}
-            style={{ color: '#610202', backgroundColor: '#ffe1e1' }}
+        </HStack>
+        <HStack mt={8} width='100%' justifyContent='center'>
+          <Button
+            width='50%'
+            type='submit'
+            bg='primary'
+            color='white'
+            fontSize='xl'
+            py={8}
+            _hover={{ bg: 'secondary' }}
+            borderRadius='5rem'
+            isLoading={sendingLoginCredentialLoading}
+            isDisabled={sendingLoginCredentialLoading}
+            _disabled={{
+              opacity: 0.4,
+              cursor: 'not-allowed',
+              _hover: {
+                bg: 'secondary',
+              },
+            }}
           >
-            {error}
-          </p>
-        )
-      )}
-
-      <div className={style.loginForm} onKeyDown={submitLoginOnKeyHandler}>
-        <div
-          className={`${style.loginForm__group} ${
-            lang === 'ar' ? style.loginForm__group_ar : ''
-          }`}
+            {t('login')}
+          </Button>
+        </HStack>
+      </form>
+      <VStack spacing={6} mt='2rem !important' width='100%'>
+        <Button variant='link'>
+          <Image src='/images/uae-pass.png' alt='use digital pass' />
+        </Button>
+        <Text as='p'>{t('dont-have-account')}</Text>
+        <Button
+          fontSize='xl'
+          px={10}
+          py={6}
+          variant='primary'
+          borderRadius='5rem'
+          onClick={() =>
+            (window.location.href = `${
+              import.meta.env.VITE_LANDING_PAGE_URL
+            }/register`)
+          }
         >
-          <span>
-            <AtSymbol />
-          </span>
-          <input
-            type='email'
-            name='email'
-            placeholder={t('enter-email')}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div
-          className={`${style.loginForm__group} ${
-            lang === 'ar' ? style.loginForm__group_ar : ''
-          }`}
-        >
-          <span>
-            <Lock />
-          </span>
-          <input
-            type='password'
-            placeholder={t('enter-pass')}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button
-          className={style.loginForm__submit}
-          onClick={submitLoginHandler}
-        >
-          {loading ? (
-            <Loader size='4' options={{ animation: 'border' }} />
-          ) : (
-            t('login-submit')
-          )}
-        </button>
-        <button
-          className={style.loginForm__forget}
-          onClick={() => setIsForget(true)}
-        >
-          {t('forget-pass')}
-        </button>
-      </div>
+          {t('signup')}
+        </Button>
+      </VStack>
     </>
   )
 }
-
-export default LoginForm

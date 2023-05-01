@@ -19,7 +19,6 @@ import classes from './classes'
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
-  const [navbarColor, setNavbarColor] = useState('rgba(26,55,77,0.7)')
   const [showSideMenu, setSideMenu] = useState(false)
   const [toggleNotification, setToggleNotification] = useState(false)
   const [notificationsCount, setNotificationsCount] = useState(0)
@@ -28,7 +27,6 @@ const Header = () => {
   const headerBgRef = useRef(null)
   const sideMenuRef = useRef(null)
   const dispatch = useDispatch()
-  const { isAuth } = useSelector((state) => state.login)
   const { notifications: pushNotifications } = useSelector(
     (state) => state.pushNotifications
   )
@@ -74,11 +72,12 @@ const Header = () => {
   const changeLanguageHandler = (e, lang) => {
     e.stopPropagation()
     setLoadingState(true)
-    setTimeout(() => {
+    const changeLanguage = setTimeout(() => {
       dispatch({ type: 'CHANGE_LANGUAGE_HANDLER', payload: lang })
       i18next.changeLanguage(lang)
       setLangDropDown((prev) => !prev)
       setLoadingState(false)
+      clearTimeout(changeLanguage)
     }, 500)
   }
 
@@ -105,12 +104,10 @@ const Header = () => {
   }
 
   window.addEventListener('click', () => {
-    if (isAuth) {
-      setLangDropDown(false)
-      setSideMenu(false)
-      document.body.style.height = null
-      document.body.style.overflow = null
-    }
+    setLangDropDown(false)
+    setSideMenu(false)
+    document.body.style.height = null
+    document.body.style.overflow = null
   })
 
   useEffect(() => {
@@ -124,22 +121,14 @@ const Header = () => {
   }, [pushNotifications])
 
   useEffect(() => {
-    const initNotifications =
-      isAuth &&
-      setTimeout(() => {
-        dispatch(actions.notifications.pushNotification())
-      }, 5000)
+    const initNotifications = setTimeout(() => {
+      dispatch(actions.notifications.pushNotification())
+    }, 5000)
     !nonRead && dispatch(actions.notifications.listNotification())
     !count && dispatch(actions.chat.latestMessages())
 
-    page === '/'
-      ? setNavbarColor('rgba(26,55,77,0.7)')
-      : setNavbarColor('#1A374D')
-
-    page === '/login' && setSideMenu(false)
-
     return () => clearTimeout(initNotifications)
-  }, [page, isAuth])
+  }, [page])
 
   useEffect(() => {
     language === 'ar'
@@ -170,7 +159,7 @@ const Header = () => {
             data={notification}
           />
         ))}
-      {/* {isAuth && <ActivityTrack setSideMenu={setSideMenu} />} */}
+      {/* {<ActivityTrack setSideMenu={setSideMenu} />} */}
       <div
         className={style.header__bg}
         ref={headerBgRef}
@@ -180,8 +169,7 @@ const Header = () => {
       <div
         className={classes.header(language)}
         style={{
-          backgroundColor: navbarColor,
-          display: page === '/login' || page === '/register' ? 'none' : 'block',
+          backgroundColor: '#1A374D',
         }}
       >
         <div className='container'>
@@ -191,34 +179,27 @@ const Header = () => {
               <span onClick={() => navigate('/')}>
                 <img src='/images/swtle.png' alt='logo' />
               </span>
-
-              {isAuth && (
-                <span
-                  className={style.header__bars}
-                  onClick={toggleSideMenuHandler}
-                >
-                  <MenuBars />
-                </span>
-              )}
+              <span
+                className={style.header__bars}
+                onClick={toggleSideMenuHandler}
+              >
+                <MenuBars />
+              </span>
             </div>
 
             {/* display side menu */}
-            {isAuth && (
-              <SideNavbar
-                changeLanguageHandler={changeLanguageHandler}
-                loadingState={loadingState}
-                showSideMenu={showSideMenu}
-                setSideMenu={setSideMenu}
-                sideMenuRef={sideMenuRef}
-              />
-            )}
-
+            <SideNavbar
+              changeLanguageHandler={changeLanguageHandler}
+              loadingState={loadingState}
+              showSideMenu={showSideMenu}
+              setSideMenu={setSideMenu}
+              sideMenuRef={sideMenuRef}
+            />
             {/* display the actions buttons */}
             <div className={style.header__actions}>
               {/* Appearance Mode Switch */}
-              {page === '/' && <ModeSwitch />}
               {/* display the main languages */}
-              <div className={classes.lang(isAuth)}>
+              <div className={style.header__language}>
                 {/* display the other main language */}
                 <div
                   className={classes.flag(language)}
@@ -258,70 +239,61 @@ const Header = () => {
                   </figure>
                 </div>
               </div>
-
-              {isAuth ? (
-                //   display the messages and notifications
-                <div className={style.header__notify}>
-                  <div className={style.header__notify_list}></div>
-                  <span onClick={() => toggleNotifyData('notification')}>
-                    {notificationsCount > 0 && (
-                      <span className={style.header__notify_num}>
-                        {notificationsCount < 100 ? notificationsCount : `99+`}
-                      </span>
-                    )}
-                    <Bell />
-                  </span>
-
-                  <span onClick={() => toggleNotifyData('messages')}>
-                    {messagesCount > 0 && (
-                      <span className={style.header__notify_num}>
-                        {messagesCount}
-                      </span>
-                    )}
-                    <Envelope />
-                  </span>
-
-                  <span>
-                    <img
-                      src={
-                        avatar
-                          ? `/api/files/${avatar}`
-                          : '/images/photos/photo-1.png'
-                      }
-                      alt='personal avatar'
-                    />
-                  </span>
-
-                  {/* Notification List */}
-                  {toggleNotification && (
-                    <NotificationContainer
-                      setToggleNotification={setToggleNotification}
-                      title='Notification'
-                      loading={notify_loading}
-                      error={notify_error}
-                      data={notifications}
-                    />
+              {/* display the messages and notifications */}
+              <div className={style.header__notify}>
+                <div className={style.header__notify_list}></div>
+                <span onClick={() => toggleNotifyData('notification')}>
+                  {notificationsCount > 0 && (
+                    <span className={style.header__notify_num}>
+                      {notificationsCount < 100 ? notificationsCount : `99+`}
+                    </span>
                   )}
+                  <Bell />
+                </span>
 
-                  {/* Messages List */}
-                  {toggleMessages && (
-                    <NotificationContainer
-                      setToggleNotification={setToggleNotification}
-                      setToggleMessages={setToggleMessages}
-                      loading={latest_loading}
-                      error={latest_error}
-                      title='Messages'
-                      data={messages}
-                    />
+                <span onClick={() => toggleNotifyData('messages')}>
+                  {messagesCount > 0 && (
+                    <span className={style.header__notify_num}>
+                      {messagesCount}
+                    </span>
                   )}
-                </div>
-              ) : (
-                // display the credential buttons [login - sign up]
-                <div className={classes.credential(language)}>
-                  <Link to='register'>{t('signup')}</Link>
-                  <Link to='login'>{t('login')}</Link>
-                </div>
-              )}
+                  <Envelope />
+                </span>
+
+                <span>
+                  <img
+                    src={
+                      avatar
+                        ? `/api/files/${avatar}`
+                        : '/images/photos/photo-1.png'
+                    }
+                    alt='personal avatar'
+                  />
+                </span>
+
+                {/* Notification List */}
+                {toggleNotification && (
+                  <NotificationContainer
+                    setToggleNotification={setToggleNotification}
+                    title='Notification'
+                    loading={notify_loading}
+                    error={notify_error}
+                    data={notifications}
+                  />
+                )}
+
+                {/* Messages List */}
+                {toggleMessages && (
+                  <NotificationContainer
+                    setToggleNotification={setToggleNotification}
+                    setToggleMessages={setToggleMessages}
+                    loading={latest_loading}
+                    error={latest_error}
+                    title='Messages'
+                    data={messages}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -329,7 +301,7 @@ const Header = () => {
 
       <div
         className={style.header__support}
-        style={{ display: page.includes('chat') || !isAuth ? 'none' : 'block' }}
+        style={{ display: page.includes('chat') ? 'none' : 'block' }}
       >
         {support_loading ? (
           <Loader size='5' options={{ animation: 'border' }} />

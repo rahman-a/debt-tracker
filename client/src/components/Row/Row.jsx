@@ -22,7 +22,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
   const [isDescribeOn, setIsDescribeOn] = useState(false)
   const [isDueChange, setIsDueChange] = useState(false)
   const [isReportClose, setIsReportClose] = useState(false)
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const lang = i18next.language
   const { t } = useTranslation()
 

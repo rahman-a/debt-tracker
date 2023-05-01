@@ -30,7 +30,7 @@ const Details = ({ peerInfo }) => {
   const [note, setNote] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const { t } = useTranslation()
   const lang = i18next.language
   const {

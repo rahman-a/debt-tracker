@@ -5,7 +5,6 @@ import notifications from './notifications.constants'
 import reports from './reports.constants'
 import tickets from './tickets.constants'
 import chat from './chat.constants'
-import content from './content.constants'
 
 const constants = {
   users,
@@ -15,7 +14,6 @@ const constants = {
   reports,
   tickets,
   chat,
-  content,
 }
 
 export default constants

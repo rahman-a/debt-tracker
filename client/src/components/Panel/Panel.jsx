@@ -17,7 +17,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
   const [isDecision, setIsDecision] = useState(false)
   const [isShow, setIsShow] = useState(false)
   const [note, setNote] = useState('')
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const lang = i18next.language
   const { t } = useTranslation()
 

@@ -111,28 +111,29 @@ const OperationDecision = ({ show, setIsStateOn, id, notificationId }) => {
                 <div className={style.decision__peer_photo}>
                   <span
                     style={{
-                      backgroundColor: operation.initiator.user.colorCode.code,
+                      backgroundColor: operation.initiator.user?.colorCode.code,
                     }}
                   ></span>
                   <img
-                    src={`/api/files/${operation.initiator.user.avatar}`}
+                    src={`/api/files/${operation.initiator.user?.avatar}`}
                     alt='peer'
                   />
                 </div>
                 <h3>
                   {lang === 'ar'
-                    ? operation.initiator.user.fullNameInArabic
-                    : operation.initiator.user.fullNameInEnglish}
+                    ? operation.initiator.user?.fullNameInArabic
+                    : operation.initiator.user?.fullNameInEnglish}
                 </h3>
                 <p>
                   <span>{t(operation.initiator.type).toLocaleUpperCase()}</span>
                   <span
                     style={{
-                      backgroundColor: operation.initiator.user.colorCode.code,
-                      color: textColor[operation.initiator.user.colorCode.code],
+                      backgroundColor: operation.initiator.user?.colorCode.code,
+                      color:
+                        textColor[operation.initiator.user?.colorCode.code],
                     }}
                   >
-                    {stateName[operation.initiator.user.colorCode.code]}
+                    {stateName[operation.initiator.user?.colorCode.code]}
                   </span>
                 </p>
               </div>
@@ -140,28 +141,28 @@ const OperationDecision = ({ show, setIsStateOn, id, notificationId }) => {
                 <div className={style.decision__peer_photo}>
                   <span
                     style={{
-                      backgroundColor: operation.peer.user.colorCode.code,
+                      backgroundColor: operation.peer.user?.colorCode.code,
                     }}
                   ></span>
                   <img
-                    src={`/api/files/${operation.peer.user.avatar}`}
+                    src={`/api/files/${operation.peer.user?.avatar}`}
                     alt='peer'
                   />
                 </div>
                 <h3>
                   {lang === 'ar'
-                    ? operation.peer.user.fullNameInArabic
-                    : operation.peer.user.fullNameInEnglish}
+                    ? operation.peer.user?.fullNameInArabic
+                    : operation.peer.user?.fullNameInEnglish}
                 </h3>
                 <p>
                   <span> {t(operation.peer.type).toLocaleUpperCase()} </span>
                   <span
                     style={{
-                      backgroundColor: operation.peer.user.colorCode.code,
-                      color: textColor[operation.peer.user.colorCode.code],
+                      backgroundColor: operation.peer.user?.colorCode.code,
+                      color: textColor[operation.peer.user?.colorCode.code],
                     }}
                   >
-                    {stateName[operation.peer.user.colorCode.code]}{' '}
+                    {stateName[operation.peer.user?.colorCode.code]}{' '}
                   </span>
                 </p>
               </div>

@@ -32,7 +32,7 @@ const Operation = () => {
   const { loading, error, count, operations } = useSelector(
     (state) => state.listOperations
   )
-  const { user } = useSelector((state) => state.login)
+  const { user } = useSelector((state) => state.isAuth)
   const filterOperationHandler = (skip) => {
     let query = { ...searchFilter }
     if (skip) query.skip = skip.skip
@@ -73,7 +73,7 @@ const Operation = () => {
         <h1>{t('operations-records')}</h1>
         <div className={style.operation__wrapper}>
           <div className={style.operation__actions}>
-            {user.color !== '#ec4a0d' && (
+            {user?.color !== '#ec4a0d' && (
               <button onClick={() => navigate('/operation/new')}>
                 {t('new-operation')}
               </button>
@@ -83,8 +83,7 @@ const Operation = () => {
               onClick={() => setIsFilter(true)}
             >
               <span>
-                {' '}
-                <FilterSearch />{' '}
+                <FilterSearch />
               </span>
               <span> {t('filter')} </span>
             </button>
@@ -104,7 +103,6 @@ const Operation = () => {
           {operations && (
             <>
               <Table records={operations} due op />
-
               <Pagination
                 count={Math.ceil(count / 5)}
                 moveToPageHandler={(skip) => filterOperationHandler(skip)}

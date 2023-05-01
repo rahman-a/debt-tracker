@@ -12,13 +12,6 @@ const classes = {
     ].join(' ')
   },
   ///////////////////////////////////////////
-  lang(isAuth) {
-    return [
-      style.header__language,
-      !isAuth ? style.header__language_show : '',
-    ].join(' ')
-  },
-  ///////////////////////////////////////////
   flag(lang) {
     return [
       style.header__language_flag,

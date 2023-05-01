@@ -4,13 +4,9 @@ import './App.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
-import { Header } from './components'
+import { Header, AuthorizationRouter } from './components'
 import chatSound from './audio/chat.mp3'
-
 import {
-  Home,
-  Register,
-  Login,
   Operation,
   Profile,
   Notifications,
@@ -18,24 +14,19 @@ import {
   NewOperation,
   ActiveReports,
   ClosedReports,
-  EmailActivation,
-  ResetPassword,
   Tickets,
   Ticket,
   Chat,
-  Article,
-  TermsAndConditions,
-  PrivacyPolicy,
 } from './views'
 import actions from './actions'
 
-const socket =
-  import.meta.env.MODE === 'production'
-    ? io('https://chat.swtle.com')
-    : io('http://localhost:5000')
+const socket = io('http://localhost:5000')
+// import.meta.env.MODE === 'production'
+//   ? io('https://chat.swtle.com')
+//   : io('http://localhost:5000')
 
 function App() {
-  const { isAuth, user } = useSelector((state) => state.login)
+  const { isAuth, user } = useSelector((state) => state.isAuth)
   const dispatch = useDispatch()
 
   const displayChat = useCallback(
@@ -74,80 +65,32 @@ function App() {
 
   return (
     <div className='App' data-theme='dark'>
-      <Header />
+      {isAuth && <Header />}
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/register' element={<Register />} />
-        <Route
-          path='/login'
-          element={!isAuth ? <Login /> : <Navigate to='/operation' />}
-        />
-        <Route path='/operation'>
-          <Route
-            index
-            element={isAuth ? <Operation /> : <Navigate to='/login' />}
-          />
-          <Route
-            path='new'
-            element={isAuth ? <NewOperation /> : <Navigate to='/login' />}
-          />
-        </Route>
-        <Route path='/reports'>
-          <Route
-            path='active'
-            element={isAuth ? <ActiveReports /> : <Navigate to='/login' />}
-          >
-            <Route
-              path=':id'
-              element={isAuth ? <ActiveReports /> : <Navigate to='/login' />}
-            />
+        <Route path='/' element={<AuthorizationRouter />}>
+          <Route index element={<Operation />} />
+          <Route path='/operation'>
+            <Route index element={<Operation />} />
+            <Route path='new' element={<NewOperation />} />
           </Route>
-          <Route
-            path='closed'
-            element={isAuth ? <ClosedReports /> : <Navigate to='/login' />}
-          />
+          <Route path='/reports'>
+            <Route path='active' element={<ActiveReports />}>
+              <Route path=':id' element={<ActiveReports />} />
+            </Route>
+            <Route path='closed' element={<ClosedReports />} />
+          </Route>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/notifications' element={<Notifications />} />
+          <Route path='/messages' element={<Messages />} />
+          <Route path='/tickets'>
+            <Route index element={<Tickets />} />
+            <Route path=':id' element={<Ticket />} />
+          </Route>
+          <Route path='/chat'>
+            <Route index element={<Chat socket={socket} />} />
+            <Route path=':id' element={<Chat socket={socket} />} />
+          </Route>
         </Route>
-        <Route
-          path='/profile'
-          element={isAuth ? <Profile /> : <Navigate to='/login' />}
-        />
-        <Route
-          path='/notifications'
-          element={isAuth ? <Notifications /> : <Navigate to='/login' />}
-        />
-        <Route
-          path='/messages'
-          element={isAuth ? <Messages /> : <Navigate to='/login' />}
-        />
-        <Route path='/tickets'>
-          <Route
-            index
-            element={isAuth ? <Tickets /> : <Navigate to='/login' />}
-          />
-          <Route
-            path=':id'
-            element={isAuth ? <Ticket /> : <Navigate to='/login' />}
-          />
-        </Route>
-        <Route path='/chat'>
-          <Route
-            index
-            element={
-              isAuth ? <Chat socket={socket} /> : <Navigate to='/login' />
-            }
-          />
-          <Route
-            path=':id'
-            element={
-              isAuth ? <Chat socket={socket} /> : <Navigate to='/login' />
-            }
-          />
-        </Route>
-        <Route path='/articles/:id' element={<Article />} />
-        <Route path='/activate' element={<EmailActivation />} />
-        <Route path='/reset' element={<ResetPassword />} />
-        <Route path='/terms-conditions' element={<TermsAndConditions />} />
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
       </Routes>
       {/* <Footer /> */}
     </div>
