@@ -5,7 +5,6 @@ import { Provider } from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'simplebar-react/dist/simplebar.min.css'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
-import { ChakraProvider } from '@chakra-ui/react'
 import store from './store'
 import App from './App'
 import './i18next'
@@ -20,8 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <HashRouter>
         <App />
       </HashRouter>
-      {/* <ChakraProvider>
-      </ChakraProvider> */}
     </Provider>
   </React.StrictMode>
 )

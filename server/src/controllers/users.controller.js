@@ -1077,6 +1077,7 @@ async function sendAuthLink(user, req, type) {
       process.env.RESET_TOKEN,
       { expiresIn: '1 day' }
     )
+    console.log('🚀sendAuthLink ~ token:', token)
 
     // crypt this random string
     const cryptResetCode = await bcrypt.hash(resetCode, 10)

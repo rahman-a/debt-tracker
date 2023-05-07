@@ -3,13 +3,14 @@ import styles from './style.module.scss'
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChakraProvider } from '@chakra-ui/react'
-import chakraTheme from '../../Chakra-Config/theme'
+import useChakraTheme from '../../hooks/useChakraTheme'
 import { Login } from '../../views'
 import actions from '../../actions'
 
 let isMounted = true
 function AuthorizationRouter() {
-  const { isAuth, error, user } = useSelector((state) => state.isAuth)
+  const { isAuth, error } = useSelector((state) => state.isAuth)
+  const chakraTheme = useChakraTheme()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,7 +21,6 @@ function AuthorizationRouter() {
   }, [])
 
   if (error) {
-    console.log('🚀AuthorizationRouter ~ error:', error)
     return (
       <ChakraProvider resetCSS theme={chakraTheme}>
         <Login />
@@ -29,7 +29,6 @@ function AuthorizationRouter() {
   }
 
   if (isAuth) {
-    console.log('🚀AuthorizationRouter ~ user:', user)
     return <Outlet />
   }
 
