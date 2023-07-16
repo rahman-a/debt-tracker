@@ -20,10 +20,10 @@ import {
 } from './views'
 import actions from './actions'
 
-const socket = io('http://localhost:5000')
-// import.meta.env.MODE === 'production'
-//   ? io('https://chat.swtle.com')
-//   : io('http://localhost:5000')
+const socket =
+  import.meta.env.MODE === 'production'
+    ? io('https://chat.swtle.com')
+    : io('http://localhost:5000')
 
 function App() {
   const { isAuth, user } = useSelector((state) => state.isAuth)

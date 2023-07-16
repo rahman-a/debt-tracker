@@ -85,6 +85,7 @@
   "not_allowed_create_operation_with_red_member": "غير مصرح لك بإنشاء إدخال جديد مع عميل بكود أحمر",
   "/6": "///////// REPORTS ///////////",
   "report_already_exist": "المعاملة المالية المرتبط بهذة الإدخال موجود بالفعل",
+  "report_already_closed": "المعاملة المالية مغلقة بالفعل",
   "operation_not_exist": "الإدخال غير موجودة من فضلك أختر إدخال آخر",
   "report_created": "تم إنشاء المعاملة المالية بنجاح",
   "no_reports_found": "لم يتم العثور على اى معاملة مالية",

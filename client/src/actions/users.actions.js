@@ -156,7 +156,6 @@ const isUserAuth = () => async (dispatch) => {
   dispatch({ type: constants.users.USER_IS_AUTH_REQUEST })
   try {
     const { data } = await api.users.isLoggedIn()
-    console.log('🚀isUserLoggedIn ~ data:', data)
     dispatch({
       type: constants.users.USER_IS_AUTH_SUCCESS,
       payload: data.user,

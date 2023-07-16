@@ -85,6 +85,7 @@
   "not_allowed_create_operation_with_red_member": "Not allowed to create a new entry with red flag member",
   "/6": "///////// REPORTS ///////////",
   "report_already_exist": "Transactions already Exist with this entry",
+  "report_already_closed": "Report Already Closed",
   "operation_not_exist": "This Entry isn't Exist, please choose another entry",
   "report_created": "The Transaction has been created",
   "no_reports_found": "No Transactions Found",

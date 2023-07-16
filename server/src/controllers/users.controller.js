@@ -581,8 +581,6 @@ export const checkIsUserLoggedIn = async (req, res, next) => {
       color: req.user.colorCode.code,
       isProvider: req.user.isProvider,
     }
-    console.log('🚀checkIsUserLoggedIn:', userData)
-
     res.json({
       success: true,
       code: 200,

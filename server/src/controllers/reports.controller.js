@@ -398,7 +398,7 @@ export const closeReportHandler = async (req, res, next) => {
     }
     if (!report.isActive) {
       res.status(400)
-      throw new Error(req.t('operation_already_closed'))
+      throw new Error(req.t('"report_already_closed"'))
     }
     const operation = await Operation.findById(report.operation)
     const userId =
@@ -1456,3 +1456,14 @@ const scanReportsDueDate = async () => {
 cron.schedule('10 6 * * *', scanReportsDueDate, {
   timezone: 'Asia/Dubai',
 })
+
+const calculateDelayedFee = (amount, currency, description) => {
+  const delayedFeePercentage = 10
+  return {
+    amount: (amount * delayedFeePercentage) / 100,
+    currency,
+    description,
+    finedAt: new Date(),
+    paidAt: null,
+  }
+}

@@ -124,6 +124,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'en',
     },
+    delayedFee: [
+      {
+        amount: Number,
+        currency: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Currency',
+        },
+        description: {
+          en: String,
+          ar: String,
+        },
+        finedAt: Date,
+        paidAt: Date,
+      },
+    ],
     phoneCode: String,
     emailCode: String,
     authString: String,
