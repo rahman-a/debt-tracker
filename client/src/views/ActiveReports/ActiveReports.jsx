@@ -73,6 +73,11 @@ const Reports = () => {
     return () => dispatch({ type: constants.reports.REPORTS_ALL_RESET })
   }, [])
 
+  // for only test
+  useEffect(() => {
+    console.log('Reports: ', reports)
+  }, [reports])
+
   return (
     <>
       <Modal show={isFilter} onHide={() => setIsFilter(false)}>

@@ -61,6 +61,9 @@
     display: flex;
     align-items: center;
     margin: 1.5rem 0;
+    &_data {
+      width: 100%;
+    }
     &_photo {
       width: 8rem;
       height: 8rem;
@@ -79,6 +82,12 @@
         margin-right: unset;
         margin-left: 1.5rem;
       }
+    }
+    &_money {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     &_value {
       display: flex;
@@ -105,6 +114,10 @@
           margin-right: 0.5rem !important;
         }
       }
+    }
+    &_fine {
+      color: red;
+      cursor: pointer;
     }
     &_name {
       display: flex;

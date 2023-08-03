@@ -40,22 +40,38 @@ const closeReport = (id) => async (dispatch, getState) => {
   dispatch({ type: constants.reports.CLOSE_REPORT_REQUEST })
   try {
     const { data } = await api.reports.close(id)
-    console.log('data: ', data)
+    console.log('close reports data: ', data)
     const { reports, count } = getState().listAllReports
-    if (reports) {
-      const copiedReports = JSON.parse(JSON.stringify(reports))
-      const filteredReports = copiedReports.filter(
-        (reports) => reports._id !== id
-      )
+    if (reports?.length && !data.fineNotPaid) {
+      const filteredReports = reports.filter((reports) => reports._id !== id)
       dispatch({
         type: constants.reports.REPORTS_ALL_SUCCESS,
         reports: filteredReports,
         count: count - 1,
       })
     }
+    if (reports?.length && data.fineNotPaid) {
+      const updatedReports = reports.map((report) => {
+        if (report._id === id) {
+          return {
+            ...report,
+            paymentDate: data.paidAt,
+          }
+        }
+        return report
+      })
+      dispatch({
+        type: constants.reports.REPORTS_ALL_SUCCESS,
+        reports: updatedReports,
+        count,
+      })
+    }
     dispatch({
       type: constants.reports.CLOSE_REPORT_SUCCESS,
-      payload: data.message,
+      payload: {
+        message: data.message,
+        fineNotPaid: data.fineNotPaid,
+      },
     })
   } catch (error) {
     dispatch({
@@ -117,7 +133,6 @@ const getReportsData = (info) => async (dispatch) => {
 }
 
 const printReportsData = (info) => async (dispatch) => {
-  console.log('🚀printReportsData ~ info:', info)
   dispatch({ type: constants.reports.PRINT_REPORTS_DATA_REQUEST })
 
   try {
@@ -136,6 +151,84 @@ const printReportsData = (info) => async (dispatch) => {
   }
 }
 
+const getStripePublishableKey = () => async (dispatch) => {
+  dispatch({ type: constants.reports.GET_STRIPE_PUBLISHABLE_KEY_REQUEST })
+
+  try {
+    const { data } = await api.reports.getStripePublishableKey()
+    dispatch({
+      type: constants.reports.GET_STRIPE_PUBLISHABLE_KEY_SUCCESS,
+      payload: data.publishableKey,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.reports.GET_STRIPE_PUBLISHABLE_KEY_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const getStripeClientKey = (info) => async (dispatch) => {
+  dispatch({ type: constants.reports.GET_STRIPE_CLIENT_KEY_REQUEST })
+
+  try {
+    const { data } = await api.reports.getStripeClientSecretKey(info)
+    dispatch({
+      type: constants.reports.GET_STRIPE_CLIENT_KEY_SUCCESS,
+      payload: data.clientSecret,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.reports.GET_STRIPE_CLIENT_KEY_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
+const finalizeFinePayment = (info) => async (dispatch, getState) => {
+  dispatch({ type: constants.reports.FINALIZE_FINE_PAYMENT_REQUEST })
+
+  try {
+    const { data } = await api.reports.finalizeFinePayment(info)
+    const { reports, count } = getState().listAllReports
+    // update the payment status of the delayed fine in the reports list
+    // when the main transaction is still active and not paid yet
+    if (reports?.length > 0 && data.isTransactionActive) {
+      const updatedReports = reports.map((report) => {
+        if (report._id === info.reportId) {
+          if (
+            report.operation.initiator.type === 'debt' &&
+            report.operation.initiator.delayedFine?.amount
+          ) {
+            report.operation.initiator.delayedFine.paidAt = data.paidAt
+          } else if (report.operation.peer.delayedFine?.amount) {
+            report.operation.peer.delayedFine.paidAt = data.paidAt
+          }
+        }
+        return report
+      })
+      dispatch({
+        type: constants.reports.REPORTS_ALL_SUCCESS,
+        reports: updatedReports,
+        count,
+      })
+    }
+    dispatch({
+      type: constants.reports.FINALIZE_FINE_PAYMENT_SUCCESS,
+      payload: {
+        message: data.message,
+        isTransactionActive: data.isTransactionActive,
+        isSuccess: data.success,
+      },
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.reports.FINALIZE_FINE_PAYMENT_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
 const actions = {
   listAllReports,
   updateReport,
@@ -144,6 +237,9 @@ const actions = {
   closeReport,
   getReportsData,
   printReportsData,
+  getStripePublishableKey,
+  getStripeClientKey,
+  finalizeFinePayment,
 }
 
 export default actions

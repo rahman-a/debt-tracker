@@ -45,7 +45,7 @@ const Decision = ({ isDecision, setIsDecision, id }) => {
       <Modal show={isDecision} onHide={() => setIsDecision(false)}>
         <Modal.Body>
           {loading && (
-            <div className={style.panel__overflow}>
+            <div className='loading__overflow'>
               <Loader
                 size='4'
                 center

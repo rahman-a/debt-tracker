@@ -2,15 +2,15 @@ export const messages = {
   payLate(report, type, user) {
     if (type === 'admin') {
       return {
-        en: `member ${user.englishName} with code #${user.code}# has passed the Due Date of operation number #${report}# without payment`,
-        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# تجاوز تاريخ الاستحقاق لعملية رقم #${report}# بدون دقع`,
+        en: `member ${user.englishName} with code #${user.code}# has passed the Due Date of operation number #${report._id}# without payment`,
+        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# تجاوز تاريخ الاستحقاق لعملية رقم #${report._id}# بدون دقع`,
       }
     }
 
     return {
-      en: `Due Date Passed, Please Complete Your Payment for payment operation number #${report}#, 
+      en: `Due Date Passed, Please Complete Your Payment for payment operation number #${report._id}#, 
             you have one week before your badge turn into red`,
-      ar: `قد تجاوزت تاريخ الاستحقاق لعميلة الدفع رقم #${report}# من فضلك اكمل عملية الدفع أمامك اسبوع من الآن 
+      ar: `قد تجاوزت تاريخ الاستحقاق لعميلة الدفع رقم #${report._id}# من فضلك اكمل عملية الدفع أمامك اسبوع من الآن 
             قبل ان تتحول شارة الحساب الى اللون الأحمر`,
     }
   },
@@ -19,58 +19,59 @@ export const messages = {
     if (type === 'admin') {
       return {
         en: `${user.englishName} with code #${user.code}#, his account badge has turned into red`,
-        ar: `شارة حساب العضو ${user.arabicName} بكود رقم #${user.code}# قد تحولت اللى اللون الاحمر لمرور اسبوع على تاريخ الاستحقاق لعملية بكود #${report}# ولم يتم الدفع`,
+        ar: `شارة حساب العضو ${user.arabicName} بكود رقم #${user.code}# قد تحولت اللى اللون الاحمر لمرور اسبوع على تاريخ الاستحقاق لعملية بكود #${report._id}# ولم يتم الدفع`,
       }
     }
 
     return {
       en: `You account badge has turned into red because one week passed from the due date of 
-            payment operation number #${report}# and you didn't complete you payment`,
-      ar: `لقد تحولت شارة حسابك الى اللون الاحمر, قد مر اسبوع على تاريخ الاستحقاق لعملية الدفع رقم #${report}# ولم تتم عملية الدفع`,
+            payment operation number #${report._id}# and you didn't complete you payment.
+            PLUS: you have to pay a delayed fine of ${report.fine} ${report.currency}`,
+      ar: `لقد تحولت شارة حسابك الى اللون الاحمر, قد مر اسبوع على تاريخ الاستحقاق لعملية الدفع رقم #${report._id}#وقد تم فرض غرامة تاخير قيمتها ${report.currency} ${report.fine}ولم تتم عملية الدفع`,
     }
   },
 
   doneLatePayment(report, type, user) {
     if (type === 'admin') {
       return {
-        en: `${user.englishName} with code #${user.code}# has complete the payment process of operation #${report}#`,
-        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report}#`,
+        en: `${user.englishName} with code #${user.code}# has complete the payment process of operation #${report._id}#`,
+        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report._id}#`,
       }
     }
 
     return {
-      en: `Confirmation of payment process number #${report}#, if your state has no other issues, 
+      en: `Confirmation of payment process number #${report._id}#, if your state has no other issues, 
                 the badge will change to green`,
-      ar: `تاكيد عملية الدفع رقم #${report}#, وفى حالة عدم وجود اى مشاكل آخرى ستتحول الشارة الى اللون الأخضر`,
+      ar: `تاكيد عملية الدفع رقم #${report._id}#, وفى حالة عدم وجود اى مشاكل آخرى ستتحول الشارة الى اللون الأخضر`,
     }
   },
 
   doneExpiredPayment(report, type, user) {
     if (type === 'admin') {
       return {
-        en: `${user.englishName} with code #${user.code}# has complete the payment process of operation #${report}#`,
-        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report}#`,
+        en: `${user.englishName} with code #${user.code}# has complete the payment process of operation #${report._id}#`,
+        ar: `العضو ${user.arabicName} بكود رقم #${user.code}# قد أكمل عملية الدفع لعملية رقم #${report._id}#`,
       }
     }
 
     return {
-      en: `Confirmation of payment process number #${report}#, your account badge has turned into yellow and it will turned into
+      en: `Confirmation of payment process number #${report._id}#, your account badge has turned into yellow and it will turned into
             green after one month of payment date`,
-      ar: `تاكيد عملية الدفع للتقرير #${report}#, شارة حسابك تحولت الى اللون الأصفر وستتحول الى اللون الأخضر بعد شهر من تاريخ الدفع`,
+      ar: `تاكيد عملية الدفع للتقرير #${report._id}#, شارة حسابك تحولت الى اللون الأصفر وستتحول الى اللون الأخضر بعد شهر من تاريخ الدفع`,
     }
   },
 
   clear(report, type, user) {
     if (type === 'admin') {
       return {
-        en: `month restriction of account ${user.englishName} with code #${user.code}# has over since last payment of operation #${report}#`,
-        ar: `انتهت فترة الشهر لحساب ${user.arabicName} بكود رقم #${user.code}# منذ آخر عملية الدفع لعملية رقم #${report}#`,
+        en: `month restriction of account ${user.englishName} with code #${user.code}# has over since last payment of operation #${report._id}#`,
+        ar: `انتهت فترة الشهر لحساب ${user.arabicName} بكود رقم #${user.code}# منذ آخر عملية الدفع لعملية رقم #${report._id}#`,
       }
     }
 
     return {
-      en: `A month has over since last payment date of operation #${report}# and if there's no other issues, the badge will turn into green`,
-      ar: `لقد مر شهر منذ آخر عملية دفع لعملية رقم #${report}#, وفى حالة عدم وجود مشاكل آخرى سيتم تحويل شارة الحساب الى اللون الأخضر`,
+      en: `A month has over since last payment date of operation #${report._id}# and if there's no other issues, the badge will turn into green`,
+      ar: `لقد مر شهر منذ آخر عملية دفع لعملية رقم #${report._id}#, وفى حالة عدم وجود مشاكل آخرى سيتم تحويل شارة الحساب الى اللون الأخضر`,
     }
   },
 

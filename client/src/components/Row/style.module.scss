@@ -70,7 +70,8 @@
     }
   }
 
-  &__desc {
+  &__desc,
+  &__fine {
     position: relative;
     display: flex;
     width: 100%;
@@ -93,6 +94,10 @@
       display: grid;
       display: -ms-grid;
     }
+  }
+
+  &__fine {
+    justify-content: center;
   }
 
   &__label,

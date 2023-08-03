@@ -5,7 +5,13 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Currency, ChangeDue, Description, CloseReport } from '../../components'
+import {
+  Currency,
+  ChangeDue,
+  Description,
+  CloseReport,
+  PayFine,
+} from '../../components'
 import {
   Copy,
   Check,
@@ -13,8 +19,21 @@ import {
   HandshakeSlash,
   Times,
   Chat as ChatIcon,
+  CashRegister,
 } from '../../icons'
 import Decision from './Decision'
+import {
+  getUserData,
+  getMemberName,
+  getPeerId,
+  getStateColor,
+  isCurrentUserPeer,
+  isCurrentUserCredit,
+  formatFineAmount,
+  peerType,
+  defineValue,
+  formatPaymentDate,
+} from '../../utils/table'
 import Chat from './Chat'
 
 const Row = ({ record, idx, reports, due, op, closed }) => {
@@ -22,9 +41,22 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
   const [isDescribeOn, setIsDescribeOn] = useState(false)
   const [isDueChange, setIsDueChange] = useState(false)
   const [isReportClose, setIsReportClose] = useState(false)
+  const [isFine, setIsFine] = useState(false)
   const { user } = useSelector((state) => state.isAuth)
   const lang = i18next.language
   const { t } = useTranslation()
+  const isCredit = isCurrentUserCredit(record, op, user)
+  const isPeer = isCurrentUserPeer(record, user)
+  const memberName = getMemberName(record, user, lang)
+  const peer_Type = peerType(record, user)
+  const peer_Id = getPeerId(record, user)
+  const creditorData = getUserData(record, 'credit')
+  const debtorData = getUserData(record, 'debt')
+  const creditValue = defineValue(record, peer_Type, 'credit')
+  const debtValue = defineValue(record, peer_Type, 'debt')
+  const fineAmount = formatFineAmount(debtorData.delayedFine)
+  const finePaymentDate = formatPaymentDate(debtorData.delayedFine?.paidAt)
+  const recordPaymentDate = formatPaymentDate(record.paymentDate)
 
   const copyIdHandler = (_) => {
     setIsCopied(true)
@@ -33,108 +65,17 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
     }, 500)
   }
 
-  const isCurrentUserPeer = (_) => {
-    return (
-      record.peer.user._id === user._id ||
-      record.operation?.peer._id === user._id
-    )
-  }
-
-  const peerType = (_) => {
-    const type =
-      record.initiator?.user?._id === user._id ||
-      record.operation?.initiator?._id === user._id
-        ? record.peer?.type || record.operation.peer.type
-        : record.peer?.user?._id === user._id ||
-          record.operation.peer._id === user._id
-        ? record.initiator?.type || record.operation.initiator.type
-        : 'N/A'
-
-    return type
-  }
-
-  const defineValue = (type, field) => {
-    let value = 0
-    if (type === 'credit' && field === 'credit') {
-      if (record.credit) {
-        value = record.credit
-      } else if (record.debt) {
-        value = record.debt
-      } else if (record.initiator?.value) {
-        value = record.initiator?.value
-      } else {
-        value = record.peer?.value
-      }
-    } else {
-      value = '0.0'
-    }
-
-    if (type === 'debt' && field === 'debt') {
-      if (record.debt) {
-        value = record.debt
-      } else if (record.credit) {
-        value = record.credit
-      } else if (record.initiator?.value) {
-        value = record.initiator?.value
-      } else {
-        value = record.peer?.value
-      }
-    } else if (field === 'debt') {
-      value = '0.0'
-    }
-    return value
-  }
-
-  const isCurrentUserCredit = (_) => {
-    if (!op) {
-      const creditor =
-        record.operation.initiator.type === 'credit'
-          ? record.operation.initiator._id
-          : record.operation.peer._id
-      if (creditor === user._id) return true
-    }
-
-    return false
-  }
-
-  const getMemberName = (_) => {
-    if (lang === 'ar') {
-      return (record.peer?.user?._id || record.operation.peer._id) === user._id
-        ? record.initiator?.user?.fullNameInArabic ||
-            record.operation.initiator.fullNameInArabic
-        : record.peer?.user?.fullNameInArabic ||
-            record.operation.peer.fullNameInArabic
-    } else {
-      return (record.peer?.user?._id || record.operation.peer._id) === user._id
-        ? record.initiator?.user?.fullNameInEnglish ||
-            record.operation.initiator.fullNameInEnglish
-        : record.peer?.user?.fullNameInEnglish ||
-            record.operation.peer.fullNameInEnglish
-    }
-  }
-
-  const getPeerId = (_) => {
-    const id =
-      (record.peer?.user?._id || record.operation.peer._id) === user._id
-        ? record.initiator?.user?._id || record.operation.initiator._id
-        : record.peer?.user?._id || record.operation.peer._id
-
-    return id
-  }
-
-  const getStateColor = (state) => {
-    const states = {
-      pending: '#FBFCD4',
-      approved: '#C7FFCE',
-      decline: '#FCD4DB',
-      active: '#C7FFCE',
-      closed: '#FCD4DB',
-    }
-    return states[state]
-  }
-
   return (
     <>
+      <PayFine
+        isFine={isFine}
+        setIsFine={setIsFine}
+        fine={{
+          amount: debtorData.delayedFine?.amount,
+          report: debtorData.delayedFine?.report,
+          currency: record.currency.abbr,
+        }}
+      />
       <Description
         note={record?.note || record?.operation?.note}
         isDescribeOn={isDescribeOn}
@@ -170,35 +111,33 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
           <span
             className={style.row__label}
             style={{
-              backgroundColor: peerType() === 'debt' ? '#198754' : '#1a374d',
+              backgroundColor: peer_Type === 'debt' ? '#198754' : '#1a374d',
             }}
           >
-            {(record.peer?.user?._id || record.operation.peer._id) === user._id
+            {isPeer
               ? t(record.initiator?.type) || t(record.operation.initiator.type)
               : t(record.peer?.type) || t(record.operation.peer.type)}
           </span>
           <span className={style.row__chatIcon}>
             <ChatIcon />
           </span>
-          <Chat id={getPeerId()} />
-          {getMemberName()}
+          <Chat id={peer_Id} />
+          {memberName}
         </td>
 
         {/* Operation Second Peer or Initiator Photo */}
         <td className={style.row__photo} style={{ padding: '1rem 0' }}>
           <span
             style={{
-              backgroundColor:
-                (record.peer?.user?._id || record.operation.peer._id) ===
-                user._id
-                  ? record.initiator?.user?.color ||
-                    record.operation.initiator.color
-                  : record.peer?.user?.color || record.operation.peer.color,
+              backgroundColor: isPeer
+                ? record.initiator?.user?.color ||
+                  record.operation.initiator.color
+                : record.peer?.user?.color || record.operation.peer.color,
             }}
           ></span>
           <img
             src={
-              (record.peer?.user?._id || record.operation.peer._id) === user._id
+              isPeer
                 ? `/api/files/${
                     record.initiator?.user?.avatar ||
                     record.operation.initiator.avatar
@@ -234,12 +173,10 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
         </td>
 
         {/* Creditor amount value*/}
-        <td style={{ textTransform: 'capitalize' }}>
-          {defineValue(peerType(), 'credit')}
-        </td>
+        <td style={{ textTransform: 'capitalize' }}>{creditValue}</td>
 
         {/* Debtor amount value*/}
-        <td> {defineValue(peerType(), 'debt')} </td>
+        <td> {debtValue} </td>
 
         {/* Operation Currency [usd, euro, aed]*/}
         <td
@@ -261,7 +198,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
               textTransform: 'uppercase',
             }}
           >
-            {record.state === 'pending' && isCurrentUserPeer() && (
+            {record.state === 'pending' && isPeer && (
               <>
                 <span className={style.row__state_decision}>
                   <Check />
@@ -273,7 +210,32 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
             {t(record.state)}
           </td>
         )}
-
+        {/* Delayed fine when due date over and debtor didn't pay */}
+        {reports && due && (
+          <td
+            style={{
+              color: fineAmount && !isCredit ? 'red' : 'green',
+              padding:
+                fineAmount && !isCredit && !finePaymentDate ? '0' : '2.5rem 0',
+            }}
+          >
+            {finePaymentDate && !isCredit ? (
+              <Badge bg='success'>{finePaymentDate}</Badge>
+            ) : fineAmount && !isCredit ? (
+              <p
+                onClick={() => setIsFine(true)}
+                className={fineAmount ? style.row__fine : ''}
+              >
+                <span title='click to pay'>
+                  <CashRegister />
+                </span>
+                <i>{fineAmount}</i>
+              </p>
+            ) : (
+              <Badge bg='dark'>N/A</Badge>
+            )}
+          </td>
+        )}
         {/* Operation Due Date */}
         {(due || closed) && (
           <td
@@ -283,8 +245,8 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
               new Date(record.paymentDate).toLocaleDateString()
             ) : record.dueDate ? (
               <span
-                className={isCurrentUserCredit() ? style.row__due : ''}
-                onClick={() => isCurrentUserCredit() && setIsDueChange(true)}
+                className={isCredit ? style.row__due : ''}
+                onClick={() => isCredit && setIsDueChange(true)}
               >
                 {new Date(record.dueDate).toLocaleDateString()}
               </span>
@@ -295,13 +257,17 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
         )}
         {reports && (
           <td>
-            <span
-              className={`${style.row__close} 
-                   ${!isCurrentUserCredit() ? style.row__close_disabled : ''}`}
-              onClick={() => isCurrentUserCredit() && setIsReportClose(true)}
-            >
-              <HandshakeSlash />
-            </span>
+            {record.paymentDate ? (
+              <Badge bg='success'>{recordPaymentDate}</Badge>
+            ) : (
+              <span
+                className={`${style.row__close} 
+                     ${!isCredit ? style.row__close_disabled : ''}`}
+                onClick={() => isCredit && setIsReportClose(true)}
+              >
+                <HandshakeSlash />
+              </span>
+            )}
           </td>
         )}
       </tr>

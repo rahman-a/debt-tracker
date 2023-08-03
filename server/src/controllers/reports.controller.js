@@ -5,6 +5,7 @@ import cron from 'node-cron'
 import mongoose from 'mongoose'
 import handlebars from 'handlebars'
 import puppeteer from 'puppeteer'
+import stripe from '../config/stripe.js'
 import Report from '../models/reports.model.js'
 import Operation from '../models/operations.model.js'
 import User from '../models/users.model.js'
@@ -197,7 +198,6 @@ export const listAllMemberReports = async (req, res, next) => {
         }
       }
     }
-
     const aggregateOptions = [
       // JOIN CURRENCY COLLECTION
       {
@@ -212,15 +212,24 @@ export const listAllMemberReports = async (req, res, next) => {
       {
         $lookup: {
           from: 'operations',
-          let: { operationId: '$operation' },
+          let: { operationId: '$operation', reportId: '$_id' },
           pipeline: [
+            {
+              $addFields: {
+                reportId: { $toObjectId: '$$reportId' },
+              },
+            },
             {
               $match: { $expr: { $eq: ['$_id', '$$operationId'] } },
             },
             {
               $lookup: {
                 from: 'users',
-                let: { userId: '$initiator.user', type: '$initiator.type' },
+                let: {
+                  userId: '$initiator.user',
+                  type: '$initiator.type',
+                  reportId: '$reportId',
+                },
                 pipeline: [
                   { $match: { $expr: { $eq: ['$_id', '$$userId'] } } },
                   {
@@ -230,6 +239,22 @@ export const listAllMemberReports = async (req, res, next) => {
                       color: '$colorCode.code',
                       avatar: 1,
                       type: '$$type',
+                      delayedFine: {
+                        $filter: {
+                          input: '$delayedFine',
+                          as: 'fine',
+                          limit: 1,
+                          cond: {
+                            $eq: ['$$fine.report', '$$reportId'],
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: '$delayedFine',
+                      preserveNullAndEmptyArrays: true,
                     },
                   },
                 ],
@@ -239,7 +264,11 @@ export const listAllMemberReports = async (req, res, next) => {
             {
               $lookup: {
                 from: 'users',
-                let: { userId: '$peer.user', type: '$peer.type' },
+                let: {
+                  userId: '$peer.user',
+                  type: '$peer.type',
+                  reportId: '$reportId',
+                },
                 pipeline: [
                   { $match: { $expr: { $eq: ['$_id', '$$userId'] } } },
                   {
@@ -249,6 +278,22 @@ export const listAllMemberReports = async (req, res, next) => {
                       color: '$colorCode.code',
                       avatar: 1,
                       type: '$$type',
+                      delayedFine: {
+                        $filter: {
+                          input: '$delayedFine',
+                          as: 'fine',
+                          limit: 1,
+                          cond: {
+                            $eq: ['$$fine.report', '$$reportId'],
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: '$delayedFine',
+                      preserveNullAndEmptyArrays: true,
                     },
                   },
                 ],
@@ -269,12 +314,14 @@ export const listAllMemberReports = async (req, res, next) => {
                 'initiator.color': 1,
                 'initiator.avatar': 1,
                 'initiator.type': 1,
+                'initiator.delayedFine': 1,
                 'peer._id': 1,
                 'peer.fullNameInEnglish': 1,
                 'peer.fullNameInArabic': 1,
                 'peer.color': 1,
                 'peer.avatar': 1,
                 'peer.type': 1,
+                'peer.delayedFine': 1,
                 note: 1,
               },
             },
@@ -387,9 +434,124 @@ export const updateReportValues = async (req, res, next) => {
   }
 }
 
+export const sentStripePublishableKey = async (req, res, next) => {
+  try {
+    if (!process.env.STRIPE_PUBLISHABLE_KEY) {
+      res.status(404)
+      throw new Error(req.t('stripe_publishable_key_not_found'))
+    }
+    res.send({
+      success: true,
+      code: 200,
+      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+export const createFineIntent = async (req, res, next) => {
+  const { reportId } = req.body
+  try {
+    if (!reportId) {
+      res.status(400)
+      throw new Error(req.t('report_id_required'))
+    }
+    const fine = req.user.delayedFine.find(
+      (fine) => fine.report.toString() === reportId
+    )
+    if (!fine) {
+      res.status(404)
+      throw new Error(req.t('no_fine_found'))
+    }
+    const report = await Report.findById(reportId).populate('currency', 'abbr')
+    if (!report) {
+      res.status(404)
+      throw new Error(req.t('no_report_found'))
+    }
+    const fineIntent = await stripe.paymentIntents.create({
+      currency: report.currency.abbr.toLocaleLowerCase(),
+      amount: fine.amount * 100,
+      automatic_payment_methods: {
+        enabled: true,
+      },
+      receipt_email: req.user.emails.find((email) => email.isPrimary).email,
+      description: 'A delayed Fine payment',
+    })
+
+    res.send({
+      success: true,
+      code: 200,
+      clientSecret: fineIntent.client_secret,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+// payment id - report id - paidBy
+export const finalizeFinePayment = async (req, res, next) => {
+  const { paymentId, reportId, paidBy } = req.body
+  const lang = req.headers['accept-language']
+
+  try {
+    if (!paymentId) {
+      res.status(400)
+      throw new Error(req.t('payment_id_required'))
+    }
+    if (!reportId) {
+      res.status(400)
+      throw new Error(req.t('report_id_required'))
+    }
+    const user = await User.findById(req.user._id)
+    const paymentDate = new Date()
+    const delayedFine = user.delayedFine.map((fine) => {
+      if (fine.report.toString() === reportId) {
+        fine.paymentId = paymentId
+        fine.paidBy = paidBy
+        fine.paidAt = paymentDate
+      }
+      return fine
+    })
+
+    let colorCode = user.colorCode
+
+    const report = await Report.findById(reportId)
+    if (Boolean(report.paymentDate)) {
+      report.isActive = false
+      colorCode.state = user.colorCode.state.filter(
+        (st) => st.report?.toString() !== report._id.toString()
+      )
+      const waitingPeriod = DateTime.now()
+        .setZone('Asia/Dubai')
+        .plus({ months: 1 })
+        .toISO()
+      report.waitingForClear = waitingPeriod
+      await user.update({ delayedFine, colorCode })
+      await takeAction(
+        user._id,
+        'yellow',
+        'doneExpiredPayment',
+        report._id,
+        lang
+      )
+    }
+    const updatedReport = await report.save()
+    !Boolean(updatedReport.paymentDate) && (await user.update({ delayedFine }))
+    res.send({
+      success: true,
+      code: 200,
+      paidAt: paymentDate,
+      isTransactionActive: Boolean(updatedReport.isActive),
+      message: req.t('fine_payment_success'),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const closeReportHandler = async (req, res, next) => {
   const { id } = req.params
   const lang = req.headers['accept-language']
+
   try {
     const report = await Report.findById(id)
     if (!report) {
@@ -416,15 +578,18 @@ export const closeReportHandler = async (req, res, next) => {
       throw new Error(req.t('must_be_credit_to_close_report'))
     }
 
+    const paymentDate = new Date()
+
     const color = debtor.colorCode.code.trim().toLocaleLowerCase()
 
     if (color === code['green'].toLocaleLowerCase()) {
       report.isActive = false
-      report.paymentDate = new Date()
+      report.paymentDate = paymentDate
       await report.save()
       res.send({
         success: true,
         code: 200,
+        paidAt: paymentDate,
         message: req.t('report_closed'),
       })
 
@@ -437,25 +602,40 @@ export const closeReportHandler = async (req, res, next) => {
       )
       await debtor.save()
       report.isActive = false
-      report.paymentDate = new Date()
+      report.paymentDate = paymentDate
       await report.save()
 
       await takeAction(debtor._id, 'green', 'doneLatePayment', report._id)
       res.send({
         success: true,
         code: 200,
+        paidAt: paymentDate,
         message: req.t('report_closed'),
       })
       return
     }
 
     if (color === code['red'].toLocaleLowerCase()) {
+      const isFinePaid = debtor.delayedFine.find(
+        (fine) => fine.report.toString() === report._id.toString()
+      ).paidAt
+      if (!Boolean(isFinePaid)) {
+        report.paymentDate = paymentDate
+        await report.save()
+        res.send({
+          success: true,
+          code: 200,
+          paidAt: paymentDate,
+          fineNotPaid: true,
+        })
+        return
+      }
       debtor.colorCode.state = debtor.colorCode.state.filter(
         (st) => st.report?.toString() !== report._id.toString()
       )
       await debtor.save()
       report.isActive = false
-      report.paymentDate = new Date()
+      report.paymentDate = paymentDate
       const waitingPeriod = DateTime.now()
         .setZone('Asia/Dubai')
         .plus({ months: 1 })
@@ -473,6 +653,7 @@ export const closeReportHandler = async (req, res, next) => {
       res.send({
         success: true,
         code: 200,
+        paidAt: paymentDate,
         message: req.t('report_closed'),
       })
       return
@@ -950,7 +1131,6 @@ export const generateReportsForPrinting = async (req, res, next) => {
     isAdmin,
   } = req.body
   try {
-    console.log('generateReportsForPrinting', req.body)
     let transactions = []
     const roles = ['manager', 'hr', 'cs']
     if (isAdmin) {
@@ -1331,6 +1511,7 @@ const scanReportsDueDate = async () => {
       const now = DateTime.now().setZone('Asia/Dubai').ts
 
       for (const report of reports) {
+        console.log('report Id', report._id)
         const dueDateObject = new Date(report.dueDate)
         const dueDate =
           DateTime.fromJSDate(dueDateObject).setZone('Asia/Dubai').ts
@@ -1350,18 +1531,20 @@ const scanReportsDueDate = async () => {
               ? operation.initiator.user
               : operation.peer.user
           const debtor = await User.findById(userId)
-          const info = {
-            name: debtor.fullNameInEnglish,
-            email: debtor.emails.find((email) => email.isPrimary === true)
-              .email,
-            date: dueDateObject.toLocaleString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric',
-            }),
-            report: report._id,
+          if (debtor) {
+            const info = {
+              name: debtor.fullNameInEnglish,
+              email: debtor.emails.find((email) => email.isPrimary === true)
+                .email,
+              date: dueDateObject.toLocaleString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              }),
+              report: report._id,
+            }
+            await sendEmail(info, 'debt')
           }
-          await sendEmail(info, 'debt')
         }
 
         if (now > dueDate && report.isActive) {
@@ -1396,8 +1579,25 @@ const scanReportsDueDate = async () => {
                   st.label.en === 'Expired Payment' &&
                   st.report.toString() === report._id.toString()
               )
-              !isStateFound &&
-                (await takeAction(debtor._id, 'red', 'payExpired', report._id))
+              if (!isStateFound) {
+                const transactionValue = report.debt
+                  ? report.debt
+                  : report.credit
+                const delayedFine = calculateDelayedFine(
+                  transactionValue,
+                  report._id
+                )
+                await takeAction(
+                  debtor._id,
+                  'red',
+                  'payExpired',
+                  report._id,
+                  delayedFine.amount
+                )
+                await debtor.updateOne({
+                  delayedFine: [...debtor.delayedFine, delayedFine],
+                })
+              }
             }
           }
         }
@@ -1453,16 +1653,15 @@ const scanReportsDueDate = async () => {
   }
 }
 
-cron.schedule('10 6 * * *', scanReportsDueDate, {
+cron.schedule('0 0 6 * * *', scanReportsDueDate, {
   timezone: 'Asia/Dubai',
 })
 
-const calculateDelayedFee = (amount, currency, description) => {
+const calculateDelayedFine = (amount, reportId) => {
   const delayedFeePercentage = 10
   return {
     amount: (amount * delayedFeePercentage) / 100,
-    currency,
-    description,
+    report: reportId,
     finedAt: new Date(),
     paidAt: null,
   }

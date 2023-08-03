@@ -61,7 +61,8 @@ const closeReport = (state, action) => {
     [constants.reports.CLOSE_REPORT_SUCCESS]: {
       loading: false,
       error: null,
-      message: action.payload,
+      message: action.payload?.message,
+      fineNotPaid: action.payload?.fineNotPaid,
     },
     [constants.reports.CLOSE_REPORT_FAIL]: {
       loading: false,
@@ -71,6 +72,7 @@ const closeReport = (state, action) => {
       loading: false,
       error: null,
       message: null,
+      fineNotPaid: null,
     },
   }
 
@@ -177,6 +179,83 @@ const printReportsData = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
+const getStripePublishableKey = (state, action) => {
+  const cases = {
+    [constants.reports.GET_STRIPE_PUBLISHABLE_KEY_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.reports.GET_STRIPE_PUBLISHABLE_KEY_SUCCESS]: {
+      loading: false,
+      error: null,
+      stripePublishableKey: action.payload,
+    },
+    [constants.reports.GET_STRIPE_PUBLISHABLE_KEY_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.reports.GET_STRIPE_PUBLISHABLE_KEY_RESET]: {
+      loading: false,
+      error: null,
+      stripePublishableKey: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const getStripeClientKey = (state, action) => {
+  const cases = {
+    [constants.reports.GET_STRIPE_CLIENT_KEY_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.reports.GET_STRIPE_CLIENT_KEY_SUCCESS]: {
+      loading: false,
+      error: null,
+      stripeClientKey: action.payload,
+    },
+    [constants.reports.GET_STRIPE_CLIENT_KEY_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.reports.GET_STRIPE_CLIENT_KEY_RESET]: {
+      loading: false,
+      error: null,
+      stripeClientKey: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
+const finalizeFinePayment = (state, action) => {
+  const cases = {
+    [constants.reports.FINALIZE_FINE_PAYMENT_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.reports.FINALIZE_FINE_PAYMENT_SUCCESS]: {
+      loading: false,
+      error: null,
+      isTransactionActive: action.payload?.isTransactionActive,
+      isSuccess: action.payload?.isSuccess,
+    },
+    [constants.reports.FINALIZE_FINE_PAYMENT_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.reports.FINALIZE_FINE_PAYMENT_RESET]: {
+      loading: false,
+      error: null,
+      isTransactionActive: false,
+      isSuccess: false,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
 const reducer = {
   listAllReports,
   updateReport,
@@ -185,6 +264,9 @@ const reducer = {
   closeReport,
   getReportsData,
   printReportsData,
+  getStripePublishableKey,
+  getStripeClientKey,
+  finalizeFinePayment,
 }
 
 export default reducer

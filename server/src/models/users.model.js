@@ -124,17 +124,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'en',
     },
-    delayedFee: [
+    delayedFine: [
       {
         amount: Number,
-        currency: {
+        report: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Currency',
+          ref: 'Report',
         },
-        description: {
-          en: String,
-          ar: String,
+        paidBy: {
+          type: String,
+          enum: ['stripe', 'cash', 'paypal'],
         },
+        paymentId: String,
         finedAt: Date,
         paidAt: Date,
       },

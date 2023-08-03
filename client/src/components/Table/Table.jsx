@@ -19,6 +19,7 @@ const Table = ({ records, due, op, closed, reports }) => {
             <th>{t('debt')}</th>
             <th>{t('operation-currency')}</th>
             {op && <th>{t('operation-status')}</th>}
+            {reports && due && <th>Delayed Fine</th>}
             {(due || closed) && (
               <th> {closed ? t('payment-date') : t('due-date')} </th>
             )}

@@ -9,4 +9,43 @@
     font-weight: 300;
     padding: 0.5rem 0;
   }
+  &__fine {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 1rem;
+    ul {
+      padding: 0 0.5rem;
+    }
+    h2 {
+      width: 100%;
+      text-align: center;
+      color: var.$code-green-color;
+      font-weight: 400;
+    }
+    p {
+      font-weight: 300;
+      padding: 0.5rem 0;
+    }
+  }
+  &__msg {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New';
+    background-color: #ffcfcf;
+    color: #5e0202;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  &__success {
+    background-color: #a8feb1;
+    color: #022600;
+  }
+  &__text {
+    color: gray;
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
 }

@@ -73,6 +73,18 @@ body {
   }
 }
 
+.loading__overflow {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 //  React Data-Picker
 .react-date-picker {
   width: 100%;
@@ -137,10 +149,4 @@ body {
 // CROP SLIDER
 .crop__slider {
   width: 100%;
-}
-
-.crop__slider__wrap {
-}
-
-.crop__slider__wrap:last-child {
 }

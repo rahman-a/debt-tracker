@@ -1,5 +1,6 @@
 import ObjectID from 'bson-objectid'
 import User from '../models/users.model.js'
+import Report from '../models/reports.model.js'
 import sendEmail from '../emails/email.js'
 import Notification from '../models/notifications.model.js'
 import { code } from './code.js'
@@ -32,17 +33,31 @@ const renderStateMessage = (text) => {
   return fullText.join('-').replace(/\s/g, '').replace(/-/g, ' ')
 }
 
-export const takeAction = async (id, state, messageState, report) => {
+export const takeAction = async (id, state, messageState, report, fine) => {
   const color = code[state]
   let newNotification = null
   let adminNotification = null
   let label = null
   let message = null
   let info = null
-
+  let reportInfo = null
   const user = await User.findById(id)
   if (!user) {
     throw new Error("id passed isn't valid at (takeAction Function)")
+  }
+
+  if (report) {
+    const reportData = await Report.findById(report).populate(
+      'currency',
+      'abbr'
+    )
+    reportInfo = reportData
+      ? {
+          _id: reportData._id,
+          fine,
+          currency: reportData.currency.abbr,
+        }
+      : null
   }
 
   if (messageState) {
@@ -53,10 +68,12 @@ export const takeAction = async (id, state, messageState, report) => {
     }
 
     label = labels[messageState]
-    message = report ? messages[messageState](report) : messages[messageState]()
+    message = report
+      ? messages[messageState](reportInfo)
+      : messages[messageState]()
 
     const adminMessage = report
-      ? messages[messageState](report, 'admin', userInfo)
+      ? messages[messageState](reportInfo, 'admin', userInfo)
       : messages[messageState]('admin', userInfo)
 
     newNotification = {

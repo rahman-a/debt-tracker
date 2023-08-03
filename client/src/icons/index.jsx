@@ -88,6 +88,9 @@ export { default as ArrowUp } from './ArrowUp'
 export { default as Vault } from './Vault'
 export { default as Messenger } from './Messenger'
 export { default as Printer } from './Printer'
+export { default as FineIcon } from './Fine'
+export { default as FineSolidIcon } from './FineSolid'
+export { default as PoweredByStripe } from './PoweredByStripe'
 export const EyeIcon = (props) => <Icon as={BsFillEyeFill} {...props} />
 export const EyeSlashIcon = (props) => (
   <Icon as={BsFillEyeSlashFill} {...props} />

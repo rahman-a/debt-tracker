@@ -35,7 +35,6 @@ const reportsAPI = {
     return service().patch(`reports/${id}/due/approve`, date)
   },
   close(id) {
-    console.log('id: ', id)
     return service().patch(`reports/close/${id}`)
   },
   reportsData(data) {
@@ -43,6 +42,15 @@ const reportsAPI = {
   },
   reportsPrint(data) {
     return service().post(`reports/print_report`, data)
+  },
+  getStripePublishableKey() {
+    return service().get('reports/get_stripe_publishable_key')
+  },
+  getStripeClientSecretKey(data) {
+    return service().post('reports/create_fine_intent', data)
+  },
+  finalizeFinePayment(data) {
+    return service().post('reports/finalize_fine_payment', data)
   },
 }
 
