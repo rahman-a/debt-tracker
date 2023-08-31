@@ -4,6 +4,9 @@
   "email-already-exist": "{{email}} already exist please choose another email",
   "phone_already_exist": "phone {{phone}} already found, please choose another one",
   "phone_updated_successfully": "phone updated successfully",
+  "name_already_found": "Company name {{name}} already exist, please choose another name",
+  "email_already_found": "Company E-mail {{email}} already exist, please choose another email",
+  "phone_already_found": "Company phone {{phone}} already exist, please choose another phone",
   "provide_required_data": "Please Provide the Required Data",
   "value_not_recognized": "{{value}} is not recognized",
   "phone_code_sent": "Code has been sent to your phone",
@@ -33,7 +36,7 @@
   "member_already_set_as": "Member Already set as {{role}}",
   "user_has_set_as": "User has been set as {{role}}",
   "please_login_first": "Please Login First",
-  "upload_image_extension": "please upload image with following extension [png, jpg, jpeg, svg]",
+  "upload_image_extension": "please upload file with following extension [png, jpg, jpeg, svg, pdf]",
   "upload_document_extension": "please upload image with following extension [png, jpg, jpeg, svg, pdf, docx. xlsx, pptx]",
   "upload_chat_image_extension": "please upload image with following extension [png, jpg, jpeg]",
   "invalid_login": "invalid login or password",
@@ -148,5 +151,12 @@
   "social_platform_deleted": "Social Platform has been deleted",
   "item_updated": "Item has been updated",
   "item_created": "Item has been created",
-  "item_deleted": "Item has been deleted"
+  "item_deleted": "Item has been deleted",
+  "/11": "///////// Employees ///////////",
+  "employee_account_created": "Employee Account has been Created",
+  "not_associated_with_company": "This Account not associated with any company",
+  "no_employees_found": "No Employees have been found",
+  "employee_not_found": "No Employee has been found",
+  "employee_not_associated_with_company": "This Employee not associated with any company",
+  "employee_deleted": "Employee has been successfully deleted"
 }

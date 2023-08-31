@@ -1,0 +1,66 @@
+@use '../../../sass/variables' as var;
+@use '../../../sass/media' as media;
+
+.audio {
+  display: flex;
+  align-items: center;
+  width: 28rem;
+  margin-top: 0.5rem;
+  gap: 1.5rem;
+  @include media.mq(xxs) {
+    width: 22rem;
+  }
+  &__actions {
+    span {
+      color: var.$main-color;
+      cursor: pointer;
+    }
+    svg {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: var(--white-color);
+    height: 5px;
+    width: 100%;
+    border-radius: 2px;
+    span {
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 0;
+      height: 100%;
+      background-color: var(--main-color);
+      border-radius: 2px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 0.8rem;
+        height: 0.8rem;
+        background-color: var(--main-color);
+        clip-path: circle();
+      }
+    }
+    em {
+      position: absolute;
+      bottom: -2rem;
+      font-size: 1rem;
+      color: var.$main-color;
+    }
+  }
+
+  &_ar {
+    flex-direction: row-reverse;
+
+    & > div:last-child {
+      flex-direction: row-reverse;
+    }
+  }
+}

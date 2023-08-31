@@ -76,7 +76,7 @@ const Profile = () => {
                   'identity-back': member['identity-back'],
                 }}
               />
-              <Company company={member.company} />
+              <Company company={member.companyName} />
               {!staff.roles.includes('cs') && (
                 <Actions
                   data={{

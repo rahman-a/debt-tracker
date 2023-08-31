@@ -14,6 +14,7 @@ import {
   Globe,
   CashRegister,
   HandshakeSlash,
+  Employees,
 } from '../../icons'
 
 const SideNavbar = ({
@@ -49,16 +50,6 @@ const SideNavbar = ({
 
     return style
   }
-
-  useEffect(() => {
-    if (isLogout) {
-      document.body.style.height = null
-      document.body.style.overflow = null
-      setSideMenu(false)
-      navigate('/')
-      dispatch({ type: 'RESET_STORE' })
-    }
-  }, [isLogout])
 
   const showReportsMenu = (e) => {
     e.stopPropagation()
@@ -125,6 +116,18 @@ const SideNavbar = ({
             </ul>
             {/* ///////////////////////////////////// */}
           </li>
+          {/*/////////////////////////////////////*/}
+          {user?.company?.isManager && (
+            <li className={style.navbar__menu_item}>
+              <div onClick={() => navigate('/employees')}>
+                <span>
+                  <Employees />
+                </span>
+                <span>{t('employees')}</span>
+              </div>
+            </li>
+          )}
+          {/*/////////////////////////////////////*/}
           <li className={style.navbar__menu_item}>
             <div onClick={() => navigate('/profile')}>
               <span>

@@ -5,12 +5,17 @@ import { ProfileContainer, ProfileSegment, EditMember } from '../../components'
 import { Copy, Check, Wrench } from '../../icons'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 
 const Personal = ({ data }) => {
   const [isCopied, setIsCopied] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const { t } = useTranslation()
   const lang = i18next.language
+
+  const profilePersonalClasses = classnames(style.profile__personal, {
+    [style.profile__personal_ar]: lang === 'ar',
+  })
 
   const copyIdHandler = (_) => {
     setIsCopied(true)
@@ -21,11 +26,7 @@ const Personal = ({ data }) => {
   return (
     <>
       <EditMember isEdit={isEdit} setIsEdit={setIsEdit} type='name' />
-      <div
-        className={`${style.profile__personal} ${
-          lang === 'ar' ? style.profile__personal_ar : ''
-        }`}
-      >
+      <div className={profilePersonalClasses}>
         <ProfileContainer
           title='personal-info'
           ribbon={{ color: data.color.code, states: data.color.state }}

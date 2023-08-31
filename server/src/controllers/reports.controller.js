@@ -233,11 +233,35 @@ export const listAllMemberReports = async (req, res, next) => {
                 pipeline: [
                   { $match: { $expr: { $eq: ['$_id', '$$userId'] } } },
                   {
+                    $lookup: {
+                      from: 'companies',
+                      localField: 'company.data',
+                      foreignField: '_id',
+                      as: 'company.data',
+
+                      pipeline: [
+                        {
+                          $project: {
+                            name: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: '$company.data',
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
                     $project: {
                       fullNameInEnglish: 1,
                       fullNameInArabic: 1,
                       color: '$colorCode.code',
+                      company: 1,
                       avatar: 1,
+                      isEmployee: 1,
                       type: '$$type',
                       delayedFine: {
                         $filter: {
@@ -272,11 +296,35 @@ export const listAllMemberReports = async (req, res, next) => {
                 pipeline: [
                   { $match: { $expr: { $eq: ['$_id', '$$userId'] } } },
                   {
+                    $lookup: {
+                      from: 'companies',
+                      localField: 'company.data',
+                      foreignField: '_id',
+                      as: 'company.data',
+
+                      pipeline: [
+                        {
+                          $project: {
+                            name: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: '$company.data',
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
                     $project: {
                       fullNameInEnglish: 1,
                       fullNameInArabic: 1,
                       color: '$colorCode.code',
+                      company: 1,
                       avatar: 1,
+                      isEmployee: 1,
                       type: '$$type',
                       delayedFine: {
                         $filter: {
@@ -314,10 +362,14 @@ export const listAllMemberReports = async (req, res, next) => {
                 'initiator.color': 1,
                 'initiator.avatar': 1,
                 'initiator.type': 1,
+                'initiator.company': 1,
+                'initiator.isEmployee': 1,
                 'initiator.delayedFine': 1,
                 'peer._id': 1,
                 'peer.fullNameInEnglish': 1,
                 'peer.fullNameInArabic': 1,
+                'peer.company': 1,
+                'peer.isEmployee': 1,
                 'peer.color': 1,
                 'peer.avatar': 1,
                 'peer.type': 1,
@@ -1511,7 +1563,6 @@ const scanReportsDueDate = async () => {
       const now = DateTime.now().setZone('Asia/Dubai').ts
 
       for (const report of reports) {
-        console.log('report Id', report._id)
         const dueDateObject = new Date(report.dueDate)
         const dueDate =
           DateTime.fromJSDate(dueDateObject).setZone('Asia/Dubai').ts
@@ -1645,7 +1696,6 @@ const scanReportsDueDate = async () => {
     date = DateTime.now()
       .setZone('Africa/Cairo')
       .toLocaleString(DateTime.DATETIME_MED)
-    console.log(error)
     console.error(
       '\x1b[31m',
       `Done Reports Scanning!!!! at ${date} with ERROR: ${error.message}`

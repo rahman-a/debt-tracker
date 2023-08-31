@@ -73,11 +73,6 @@ const Reports = () => {
     return () => dispatch({ type: constants.reports.REPORTS_ALL_RESET })
   }, [])
 
-  // for only test
-  useEffect(() => {
-    console.log('Reports: ', reports)
-  }, [reports])
-
   return (
     <>
       <Modal show={isFilter} onHide={() => setIsFilter(false)}>
@@ -152,7 +147,14 @@ const Reports = () => {
           />
 
           {loading && <Loader size='8' options={{ animation: 'border' }} />}
-          {error && <HeaderAlert size='2' text={error} type='danger' />}
+          {error && (
+            <HeaderAlert
+              position='relative'
+              size='2'
+              text={error}
+              type='danger'
+            />
+          )}
 
           {reports && (
             <>

@@ -12,7 +12,6 @@ import Address from './Address'
 import Personal from './Personal'
 import Credential from './Credential'
 import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
 
 const Provider = () => {
   const [info, setInfo] = useState({

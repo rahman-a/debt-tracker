@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
-import { ProfileContainer, DocumentSegment } from '../../components'
 import i18next from 'i18next'
+import classnames from 'classnames'
+import { ProfileContainer, DocumentSegment } from '../../components'
 
 const Documents = ({ data }) => {
   const [documents, setDocuments] = useState([])
@@ -24,16 +25,16 @@ const Documents = ({ data }) => {
     setDocuments(allDocuments)
   }
 
+  const profileDocumentsClasses = classnames(style.profile__documents, {
+    [style.profile__documents_ar]: lang === 'ar',
+  })
+
   useEffect(() => {
     createDocuments()
   }, [data])
 
   return (
-    <div
-      className={`${style.profile__documents} ${
-        lang === 'ar' ? style.profile__documents_ar : ''
-      }`}
-    >
+    <div className={profileDocumentsClasses}>
       <ProfileContainer title='verification-document'>
         <div className={style.profile__documents_wrapper}>{documents}</div>
       </ProfileContainer>

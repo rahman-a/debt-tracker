@@ -6,6 +6,14 @@ import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Copy, Check } from '../../icons'
 import { Currency, ChangeDueDate } from '../../components'
+import {
+  panelBodyDateClasses,
+  panelBodyNameClasses,
+  panelBodyValueClasses,
+  panelCodeClasses,
+  panelLabelClasses,
+  panelNoteClasses,
+} from './classes'
 
 const Panel = ({ record, report }) => {
   const [isCopied, setIsCopied] = useState(false)
@@ -160,20 +168,15 @@ const Panel = ({ record, report }) => {
         </div>
         <div className={style.panel__body}>
           <div className={style.panel__body_parties}>
-            <div
-              className={`${style.panel__body_name} ${
-                lang === 'ar' ? style.panel__body_name_ar : ''
-              }`}
-            >
+            <div className={panelBodyNameClasses}>
               <p
                 ref={firstNameRef}
                 onClick={() => setShowFirstName(!showFirstName)}
               >
                 {initiatorName()?.substring(0, 15) + '...'}
+
                 <span
-                  className={`${style.panel__label} ${
-                    lang === 'ar' ? style.panel__label_ar : ''
-                  }`}
+                  className={panelLabelClasses}
                   style={{
                     backgroundColor:
                       initiatorType === 'debt' ? '#198754' : '#1a374d',
@@ -189,30 +192,21 @@ const Panel = ({ record, report }) => {
                   text={initiatorCode}
                   onCopy={() => copyCodeHandler(initiatorCode)}
                 >
-                  <span
-                    className={`${style.panel__code} ${
-                      lang === 'ar' ? style.panel__code_ar : ''
-                    }`}
-                  >
+                  <span className={panelCodeClasses}>
                     {copyCode === initiatorCode ? <Check /> : <Copy />}
                   </span>
                 </CopyToClipboard>
               </p>
             </div>
-            <div
-              className={`${style.panel__body_name} ${
-                lang === 'ar' ? style.panel__body_name_ar : ''
-              }`}
-            >
+
+            <div className={panelBodyNameClasses}>
               <p
                 ref={secondNameRef}
                 onClick={() => setShowSecondName(!showSecondName)}
               >
                 {peerName()?.substring(0, 15) + '...'}
                 <span
-                  className={`${style.panel__label} ${
-                    lang === 'ar' ? style.panel__label_ar : ''
-                  }`}
+                  className={panelLabelClasses}
                   style={{
                     backgroundColor:
                       peerType === 'debt' ? '#198754' : '#1a374d',
@@ -228,11 +222,7 @@ const Panel = ({ record, report }) => {
                   text={peerCode}
                   onCopy={() => copyCodeHandler(peerCode)}
                 >
-                  <span
-                    className={`${style.panel__code} ${
-                      lang === 'ar' ? style.panel__code_ar : ''
-                    }`}
-                  >
+                  <span className={panelCodeClasses}>
                     {copyCode === peerCode ? <Check /> : <Copy />}
                   </span>
                 </CopyToClipboard>
@@ -240,19 +230,12 @@ const Panel = ({ record, report }) => {
             </div>
           </div>
           <div className={style.panel__body_data}>
-            <div
-              className={`${style.panel__body_value} ${
-                lang === 'ar' ? style.panel__body_value_ar : ''
-              }`}
-            >
+            <div className={panelBodyValueClasses}>
               <h3>{operationValue()}</h3>
               {<Currency currency={record.currency} inline noName />}
             </div>
-            <div
-              className={`${style.panel__body_date} ${
-                lang === 'ar' ? style.panel__body_date_ar : ''
-              }`}
-            >
+
+            <div className={panelBodyDateClasses}>
               {record.paymentDate ? (
                 <>
                   {t('payment-date')}:
@@ -296,12 +279,7 @@ const Panel = ({ record, report }) => {
           </div>
         </div>
         {note && (
-          <div
-            className={`${style.panel__note} ${
-              isShow ? style.panel__note_show : ''
-            }`}
-            Content
-          >
+          <div className={panelNoteClasses(isShow)} Content>
             <span onClick={() => setIsShow((prev) => !prev)}>
               {isShow ? note : note.substring(0, 100) + '...'}
             </span>

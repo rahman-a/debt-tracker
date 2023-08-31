@@ -3,7 +3,8 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, Envelope } from '../../icons'
+import classnames from 'classnames'
+import { MenuBars, Bell, ChatHelp } from '../../icons'
 import {
   Loader,
   SideNavbar,
@@ -18,9 +19,7 @@ const Header = () => {
   const [loadingState, setLoadingState] = useState(false)
   const [showSideMenu, setSideMenu] = useState(false)
   const [toggleNotification, setToggleNotification] = useState(false)
-  const [toggleMessages, setToggleMessages] = useState(false)
   const [notificationsCount, setNotificationsCount] = useState(0)
-  const [messagesCount, setMessagesCount] = useState(0)
   const headerBgRef = useRef(null)
   const sideMenuRef = useRef(null)
   const dispatch = useDispatch()
@@ -29,12 +28,6 @@ const Header = () => {
     (state) => state.pushNotifications
   )
   const { nonRead } = useSelector((state) => state.listNotifications)
-  const {
-    loading: latest_loading,
-    error: latest_error,
-    count,
-    messages,
-  } = useSelector((state) => state.latestMessages)
   const navigate = useNavigate()
   const page = useLocation().pathname
   const language = i18next.language
@@ -45,18 +38,41 @@ const Header = () => {
     notifications,
   } = useSelector((state) => state.listNotifications)
 
-  const toggleNotifyData = (type) => {
-    if (type === 'notification') {
-      if (page !== '/notifications') {
-        setToggleNotification((prev) => !prev)
-        !toggleNotification &&
-          dispatch(actions.notifications.listNotification())
-      }
-    } else if (type === 'messages') {
-      if (page !== '/chat') {
-        setToggleMessages((prev) => !prev)
-        !toggleMessages && dispatch(actions.chat.latestMessages())
-      }
+  const headerClasses = classnames(style.header, {
+    [style.header__ar]: language === 'ar',
+  })
+
+  const headerLanguageClasses = classnames(style.header__language_flag, {
+    [style.header__language_flag_ar]: language === 'ar',
+  })
+
+  const headerIconClasses = classnames(style.header__icon, {
+    [style.header__icon_ar]: language === 'ar',
+  })
+
+  const headerMenuClasses = classnames(style.header__language_menu, {
+    [style.header__language_menu_ar]: language === 'ar',
+  })
+
+  const headerCredentialClasses = classnames(style.header__credential, {
+    [style.header__credential_ar]: language === 'ar',
+  })
+
+  const staffAvatar = staff?.avatar
+    ? `/api/files/${staff.avatar}`
+    : '/images/photos/photo-1.png'
+
+  const languageFlag =
+    language === 'en' ? (
+      <img src='/images/usa-flag.jpg' alt='usa flag' />
+    ) : (
+      <img src='/images/uae-flag.png' alt='uae flag' />
+    )
+
+  const toggleNotifyData = () => {
+    if (page !== '/notifications') {
+      setToggleNotification((prev) => !prev)
+      !toggleNotification && dispatch(actions.notifications.listNotification())
     }
   }
 
@@ -103,7 +119,7 @@ const Header = () => {
       }, 1000 * 30)
     }
     return () => clearTimeout(intervalNotificationsRequest)
-  }, [pushNotifications])
+  }, [pushNotifications, dispatch])
 
   useEffect(() => {
     language === 'ar'
@@ -119,22 +135,18 @@ const Header = () => {
       }, 5000)
 
     !nonRead && dispatch(actions.notifications.listNotification())
-    !count && dispatch(actions.chat.latestMessages())
-
     return () => clearTimeout(initNotifications)
-  }, [page, isAuth])
+  }, [page, isAuth, dispatch, nonRead])
 
   useEffect(() => {
     ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
   }, [nonRead])
 
-  useEffect(() => {
-    ;(count || count === 0) && setMessagesCount(count)
-  }, [count])
-
   return (
     <>
-      {isAuth && <ActivityTrack setSideMenu={setSideMenu} />}
+      {isAuth && process.env.NODE_ENV === 'production' && (
+        <ActivityTrack setSideMenu={setSideMenu} />
+      )}
       {pushNotifications &&
         pushNotifications.length > 0 &&
         pushNotifications.map((notification, idx) => (
@@ -148,19 +160,13 @@ const Header = () => {
       ></div>
 
       <div
-        className={`${style.header} ${
-          language === 'ar' ? style.header__ar : ''
-        }`}
+        className={headerClasses}
         style={{ display: page === '/login' ? 'none' : 'block' }}
       >
         <div className='container'>
           <div className={style.header__wrapper}>
             {/* display the main icon */}
-            <div
-              className={`${style.header__icon} ${
-                language === 'ar' ? style.header__icon_ar : ''
-              }`}
-            >
+            <div className={headerIconClasses}>
               <span onClick={() => navigate('/')}>
                 <img src='/images/swtle.png' alt='logo' />
               </span>
@@ -193,29 +199,15 @@ const Header = () => {
               <div className={style.header__language}>
                 {/* display the other main language */}
                 <div
-                  className={`${style.header__language_flag} 
-                                ${
-                                  language === 'ar'
-                                    ? style.header__language_flag_ar
-                                    : ''
-                                }`}
+                  className={headerLanguageClasses}
                   onClick={showLanguageHandler}
                 >
-                  {language === 'en' ? (
-                    <img src='/images/usa-flag.jpg' alt='usa flag' />
-                  ) : (
-                    <img src='/images/uae-flag.png' alt='uae flag' />
-                  )}
+                  {languageFlag}
                 </div>
 
                 {/* the dropdown to select the language */}
                 <div
-                  className={`${style.header__language_menu} 
-                                ${
-                                  language === 'ar'
-                                    ? style.header__language_menu_ar
-                                    : ''
-                                }`}
+                  className={headerMenuClasses}
                   style={{ display: langDropDown ? 'block' : 'none' }}
                 >
                   {loadingState && (
@@ -245,33 +237,24 @@ const Header = () => {
                 //   display the messages and notifications
                 <div className={style.header__notify}>
                   <div className={style.header__notify_list}></div>
-                  <span onClick={() => toggleNotifyData('notification')}>
+                  <span onClick={() => toggleNotifyData()}>
                     {notificationsCount > 0 && (
                       <span className={style.header__notify_num}>
                         {notificationsCount < 100 ? notificationsCount : `99+`}
                       </span>
                     )}
-                    <Bell />
-                  </span>
-
-                  <span onClick={() => toggleNotifyData('messages')}>
-                    {messagesCount > 0 && (
-                      <span className={style.header__notify_num}>
-                        {messagesCount}
-                      </span>
-                    )}
-                    <Envelope />
+                    <Bell width='2rem' height='2rem' />
                   </span>
 
                   <span>
-                    <img
-                      src={
-                        staff && staff.avatar
-                          ? `/api/files/${staff.avatar}`
-                          : '/images/photos/photo-1.png'
-                      }
-                      alt='personal avatar'
-                    />
+                    {false && (
+                      <span className={style.header__notify_num}>{10}</span>
+                    )}
+                    <ChatHelp width='2.5rem' height='2.5rem' />
+                  </span>
+
+                  <span>
+                    <img src={staffAvatar} alt='personal avatar' />
                   </span>
 
                   {/* Notification List */}
@@ -284,26 +267,10 @@ const Header = () => {
                       data={notifications}
                     />
                   )}
-
-                  {/* Messages List */}
-                  {toggleMessages && (
-                    <NotificationContainer
-                      setToggleNotification={setToggleNotification}
-                      setToggleMessages={setToggleMessages}
-                      loading={latest_loading}
-                      error={latest_error}
-                      title='Messages'
-                      data={messages}
-                    />
-                  )}
                 </div>
               ) : (
                 // display the credential buttons [login - sign up]
-                <div
-                  className={`${style.header__credential} ${
-                    language === 'ar' ? style.header__credential_ar : ''
-                  }`}
-                >
+                <div className={headerCredentialClasses}>
                   <Link to='register'>Sign up</Link>
                   <Link to='login'>Login</Link>
                 </div>

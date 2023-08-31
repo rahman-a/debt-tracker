@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'simplebar-react/dist/simplebar.min.css'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import store from './store'
+import 'stream-chat-react/dist/scss/v2/index.scss'
 import App from './App'
 import './i18next'
 

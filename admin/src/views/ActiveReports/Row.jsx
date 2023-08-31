@@ -4,6 +4,7 @@ import { Badge } from 'react-bootstrap'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 import { Currency, Note } from '../../components'
 import { Check, Copy, Reader } from '../../icons'
 import ChangeDueDate from './ChangeDueDate'
@@ -21,6 +22,9 @@ const Row = ({ report, idx, due }) => {
     month: 'short',
     year: 'numeric',
   }
+  const reportsCodeClasses = classnames(style.reports__code, {
+    [style.reports__code_ar]: lang === 'ar',
+  })
   const copyIdHandler = (_) => {
     setIsCopied(true)
     setTimeout(() => {
@@ -105,11 +109,7 @@ const Row = ({ report, idx, due }) => {
                   )
                 }
               >
-                <span
-                  className={`${style.reports__code} ${
-                    lang === 'ar' ? style.reports__code_ar : ''
-                  }`}
-                >
+                <span className={reportsCodeClasses}>
                   {copyCode ===
                   (report.operation.initiator.code ||
                     report.operation.initiator.user?.code) ? (
@@ -150,11 +150,7 @@ const Row = ({ report, idx, due }) => {
                   )
                 }
               >
-                <span
-                  className={`${style.reports__code} ${
-                    lang === 'ar' ? style.reports__code_ar : ''
-                  }`}
-                >
+                <span className={reportsCodeClasses}>
                   {copyCode ===
                   (report.operation.peer.code ||
                     report.operation.peer.user?.code) ? (

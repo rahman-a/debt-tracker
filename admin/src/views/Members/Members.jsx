@@ -68,6 +68,10 @@ const Members = () => {
     return () => dispatch({ type: constants.admin.USER_DELETE_RESET })
   }, [])
 
+  useEffect(() => {
+    console.log('Members: ', members)
+  }, [members])
+
   return (
     <>
       <SideAlert

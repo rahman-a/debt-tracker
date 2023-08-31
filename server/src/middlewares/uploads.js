@@ -32,7 +32,9 @@ export const uploadDocumentsHandler = multer({
   fileFilter(req, file, cb) {
     console.log('file original name: ', file.originalname)
     if (
-      file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|svg|SVG)$/) ||
+      file.originalname.match(
+        /\.(png|jpg|jpeg|PNG|JPG|JPEG|svg|SVG|pdf|PDF)$/
+      ) ||
       file.originalname === 'blob'
     ) {
       cb(undefined, true)
@@ -69,30 +71,4 @@ export const fileUploadHandler = multer({
     }
     cb(undefined, true)
   },
-})
-
-export const chatRoomImageHandler = multer({
-  storage,
-  limits: {
-    fileSize: 500000,
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|)$/)) {
-      cb(new Error(req.t('upload_chat_image_extension')))
-    }
-    cb(undefined, true)
-  },
-})
-
-export const chatUploadHandler = multer({
-  storage,
-  limits: {
-    fileSize: 2000000,
-  },
-  // fileFilter(req, file, cb){
-  //     if(!file.originalname.match(/\.(png|jpg|jpeg|PNG|JPG|JPEG|doc|docx|pdf|xlsx|pptx)$/)) {
-  //         cb(new Error('please upload image with following extension [png, jpg, jpeg, svg, pdf, docx. xlsx, pptx]'))
-  //     }
-  //     cb(undefined, true)
-  // }
 })

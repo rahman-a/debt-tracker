@@ -22,7 +22,6 @@ const updateDocuments = (id, info, type) => async (dispatch, getState) => {
   try {
     const { data } = await api.users.updateDocuments(id, info, type)
     const { user } = getState().userProfile
-    console.log({ data })
     if (user) {
       const copiedUser = { ...user }
 
@@ -138,12 +137,12 @@ const verifyLoginCode = (id, info) => async (dispatch) => {
     dispatch({
       type: constants.users.VERIFY_LOGIN_CODE_SUCCESS,
     })
+    dispatch({ type: constants.users.USER_SEND_CREDENTIALS_RESET })
     dispatch({
       type: constants.users.USER_IS_AUTH_SUCCESS,
       payload: data.user,
       isAuth: true,
     })
-    dispatch({ type: constants.users.USER_SEND_CREDENTIALS_RESET })
   } catch (error) {
     dispatch({
       type: constants.users.VERIFY_LOGIN_CODE_FAIL,
@@ -177,6 +176,8 @@ const logout = (id) => async (dispatch) => {
     localStorage.removeItem('expiryAt')
     dispatch({ type: constants.users.USER_LOGOUT_SUCCESS })
     dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET, payload: id })
+    dispatch({ type: constants.users.USER_IS_AUTH_RESET })
+    dispatch({ type: 'RESET_STORE' })
   } catch (error) {
     dispatch({
       type: constants.users.USER_LOGOUT_FAIL,
@@ -308,6 +309,23 @@ const getMutualsPeers = (id, skip) => async (dispatch) => {
   }
 }
 
+const createEmployee = (info) => async (dispatch) => {
+  dispatch({ type: constants.users.CREATE_EMPLOYEE_REQUEST })
+
+  try {
+    const { data } = await api.users.createEmployee(info)
+    dispatch({
+      type: constants.users.CREATE_EMPLOYEE_SUCCESS,
+      payload: data.message,
+    })
+  } catch (error) {
+    dispatch({
+      type: constants.users.CREATE_EMPLOYEE_FAIL,
+      payload: error.response && error.response.data.message,
+    })
+  }
+}
+
 const actions = {
   checkInfo,
   getUserProfile,
@@ -326,6 +344,7 @@ const actions = {
   sendLoginCredentials,
   sendLoginCode,
   verifyLoginCode,
+  createEmployee,
 }
 
 export default actions

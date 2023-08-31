@@ -3,18 +3,18 @@
 
 .header {
   position: relative;
-  top:0;
-  left:0;
-  z-index:999;
-  width:100%;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
   transition: all 0.3s ease;
   background-color: var.$main-color;
   &__wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
-    @include media.mq(md){
+
+    @include media.mq(md) {
       padding: 1rem 0;
     }
 
@@ -22,19 +22,19 @@
       padding: 1rem;
     }
   }
-  
+
   &__actions {
     display: flex;
     align-items: center;
   }
 
   &__icon {
-    color:var.$white-color;
+    color: var.$white-color;
 
-    @include media.mq(md){
+    @include media.mq(md) {
       margin-left: 6rem;
     }
-    @include media.mq(sm){
+    @include media.mq(sm) {
       margin-left: 2rem;
     }
     span {
@@ -44,14 +44,14 @@
       border-radius: 1rem;
       overflow: hidden;
       img {
-        width:100%;
+        width: 100%;
         height: 100%;
         object-fit: cover;
       }
     }
     svg {
-      width:3rem;
-      height:3rem;
+      width: 3rem;
+      height: 3rem;
       @include media.mq(sm) {
         width: 2.5rem;
         height: 2.5rem;
@@ -59,7 +59,7 @@
     }
     &_ar {
       span:first-child {
-        margin-left:2rem;
+        margin-left: 2rem;
       }
     }
   }
@@ -70,13 +70,13 @@
       display: inline;
     }
     svg {
-      width:2.5rem;
+      width: 2.5rem;
       height: 2.5rem;
     }
   }
 
   &__language {
-    padding:1.5rem;
+    padding: 1.5rem;
     position: relative;
     @include media.mq(sm) {
       display: none;
@@ -86,23 +86,23 @@
       display: flex;
       cursor: pointer;
       img {
-        width:3.5rem;
+        width: 3.5rem;
       }
-      @include media.mq(md){
+      @include media.mq(md) {
         display: none;
       }
       &_ar {
         margin-right: unset;
-        margin-left:4rem;
+        margin-left: 4rem;
       }
     }
 
     &_loader {
-      position:absolute;
-      top:0;
-      left:0;
+      position: absolute;
+      top: 0;
+      left: 0;
       background-color: rgba(var.$white-color, 50%);
-      width:100%;
+      width: 100%;
       height: 100%;
     }
 
@@ -121,28 +121,27 @@
         display: flex;
         align-items: center;
         padding: 1rem 2rem;
-        margin:0;
+        margin: 0;
         cursor: pointer;
         &:hover {
           background-color: lighten(var.$full-light-color, 10);
           box-shadow: inset -1px 0px 2px 2px rgb(0 0 0 / 30%);
-
         }
       }
-      
+
       img {
         width: 3rem;
         margin-right: 1rem;
       }
 
       p {
-        color:var.$main-color;
+        color: var.$main-color;
         font-family: var.$second-font;
       }
 
       &_ar {
         img {
-          margin-left:1rem;
+          margin-left: 1rem;
           margin-right: 0;
         }
       }
@@ -151,34 +150,34 @@
 
   &__credential {
     a {
-      all:unset;
+      all: unset;
       cursor: pointer;
     }
     a:first-child {
-        margin-right: 2rem;
-        color:var.$white-color;
-        font-weight: 400;
-        border-bottom: 1px solid transparent;
-        &:hover {
-          border-color:var.$white-color;
-        }
-        @include media.mq(sm) {
-          font-size:1.4rem;
-        }
+      margin-right: 2rem;
+      color: var.$white-color;
+      font-weight: 400;
+      border-bottom: 1px solid transparent;
+      &:hover {
+        border-color: var.$white-color;
+      }
+      @include media.mq(sm) {
+        font-size: 1.4rem;
+      }
     }
     a:last-child {
-        background-color: var.$full-light-color;
-        padding:0.5rem 2rem;
-        border-radius: 2rem;
-        color:var.$main-color;
-        font-size:1.4rem;
-        &:hover {
-          background-color: lighten(var.$full-light-color, 10);
-        }
-        @include media.mq(sm) {
-          font-size:1.4rem;
-          padding:0.3rem 2rem;
-        }
+      background-color: var.$full-light-color;
+      padding: 0.5rem 2rem;
+      border-radius: 2rem;
+      color: var.$main-color;
+      font-size: 1.4rem;
+      &:hover {
+        background-color: lighten(var.$full-light-color, 10);
+      }
+      @include media.mq(sm) {
+        font-size: 1.4rem;
+        padding: 0.3rem 2rem;
+      }
     }
 
     &_ar {
@@ -189,89 +188,82 @@
     }
   }
 
-  
-
- &__notify {
-   position: relative;
-   span {
-     position: relative;
-     cursor: pointer;
-     color:var.$full-light-color;
-     margin-left:3rem;
-     svg {
-       width:2rem;
-       height:2rem;
-     }
-
-   }
-   img {
-     width:4rem;
-    clip-path: circle();
-     @include media.mq(xs){
-       width:4rem;
-     }
-   }
-
-   &_num {
-    position: absolute !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:1.5rem;
-    height: 1.5rem;
-    padding:1.2rem;
-    border-radius: 50%;
-    background-color: var.$white-color;
-    color:var.$main-color !important;
-    border:1px solid var.$light-color;
-    top: -1.2rem;
-    left: -2.2rem;
-    font-size:1.3rem;
-    @include media.mq(md) {
-      top:-12px;
-      left:-2.2rem;
+  &__notify {
+    position: relative;
+    span {
+      position: relative;
+      cursor: pointer;
+      color: var.$full-light-color;
+      margin-left: 3rem;
     }
- }
+    img {
+      width: 4rem;
+      clip-path: circle();
+      @include media.mq(xs) {
+        width: 4rem;
+      }
+    }
+
+    &_num {
+      position: absolute !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 1.2rem;
+      border-radius: 50%;
+      background-color: var.$white-color;
+      color: var.$main-color !important;
+      border: 1px solid var.$light-color;
+      top: -1.2rem;
+      left: -2.2rem;
+      font-size: 1.3rem;
+      @include media.mq(md) {
+        top: -12px;
+        left: -2.2rem;
+      }
+    }
 
     &_container {
-        background-color: var.$white-color;
-        position: absolute;
-        top:5.1rem;
-        right:5rem;
-        width:30rem;
+      background-color: var.$white-color;
+      position: absolute;
+      top: 5.1rem;
+      right: 5rem;
+      width: 30rem;
 
-        @include media.mq(md){
-          top:5.6rem;
-          right:0;
-        }
+      @include media.mq(md) {
+        top: 5.6rem;
+        right: 0;
+      }
 
-        h4 {
-          font-size: 1.4rem;
-          font-weight: 500;
-          padding: 1rem 0 1rem 1rem;
-          border-bottom: 1px solid var.$full-light-color;
-          color:var.$full-light-color;
-          font-style: italic;
+      h4 {
+        font-size: 1.4rem;
+        font-weight: 500;
+        padding: 1rem 0 1rem 1rem;
+        border-bottom: 1px solid var.$full-light-color;
+        color: var.$full-light-color;
+        font-style: italic;
+      }
+      button {
+        all: unset;
+        padding: 1rem;
+        font-size: 1.3rem;
+        cursor: pointer;
+        font-weight: 400;
+        &:hover {
+          text-decoration: underline;
         }
-        button {
-          all: unset;
-          padding: 1rem;
-          font-size: 1.3rem;
-          cursor: pointer;
-          font-weight: 400;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
+      }
     }
 
     &_list {
       list-style: none;
-      padding:0;
-      margin:0;
+      padding: 0;
+      margin: 0;
     }
     &_item {
-      padding:1rem 1rem 0 1rem;
+      padding: 1rem 1rem 0 1rem;
       border-bottom: 1px solid var.$full-light-color;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -280,28 +272,27 @@
         box-shadow: 0px 0px 0px 1px rgb(0 0 0 / 30%);
       }
       h3 {
-        font-size:1.4rem
+        font-size: 1.4rem;
       }
       p {
-        font-size:1.3rem;
+        font-size: 1.3rem;
       }
     }
- }
-  
-  
+  }
+
   &__bg {
     display: none;
-    margin-top:5.6rem;
-    background-color: rgba(0,0,0,0.7);
+    margin-top: 5.6rem;
+    background-color: rgba(0, 0, 0, 0.7);
     position: fixed;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 999;
 
-    @include media.mq(md){
-      top:-1rem;
+    @include media.mq(md) {
+      top: -1rem;
     }
     @include media.mq(sm) {
       margin-top: 6.5rem;

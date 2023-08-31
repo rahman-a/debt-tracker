@@ -42,6 +42,19 @@ body {
   direction: rtl !important;
 }
 
+.main-header {
+  text-align: center;
+  font-size: 5rem;
+  padding: 3rem 0;
+  font-weight: 200;
+  @include mq(md) {
+    font-size: 4rem;
+  }
+  @include mq(sm) {
+    font-size: 3rem;
+  }
+}
+
 .container {
   max-width: 80%;
   margin: 0 auto;

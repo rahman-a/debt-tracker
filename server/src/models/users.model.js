@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
       minlength: [8, 'Password must be at least 8 character'],
     },
 
-    company: String,
+    companyName: String,
 
     country: {
       name: String,
@@ -68,12 +68,6 @@ const userSchema = new mongoose.Schema(
       image: String,
       expireAt: Date,
     },
-
-    residential: {
-      image: String,
-      expireAt: Date,
-    },
-
     verificationImage: String,
 
     roles: Array,
@@ -116,6 +110,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isEmployee: {
+      type: Boolean,
+      default: false,
+    },
     isGuest: {
       type: Boolean,
       default: false,
@@ -144,6 +142,21 @@ const userSchema = new mongoose.Schema(
     emailCode: String,
     authString: String,
     lastEmailSend: Date,
+    company: {
+      data: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+      },
+      isManager: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    accountType: {
+      type: String,
+      default: 'personal',
+      enum: ['personal', 'business', 'business_plus'],
+    },
   },
   { timestamps: true }
 )
@@ -153,7 +166,6 @@ userSchema.methods.toJSON = function () {
   delete user.password
   delete user.isPhoneConfirmed
   delete user.isEmailConfirmed
-  // delete user.isProvider
   delete user.roles
   delete user.verificationImage
   delete user.phoneCode

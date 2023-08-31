@@ -121,7 +121,12 @@ const Tickets = () => {
                 custom={{ transform: 'unset' }}
               />
             ) : error ? (
-              <HeaderAlert type='danger' size='3' text={error} />
+              <HeaderAlert
+                position='relative'
+                type='danger'
+                size='3'
+                text={error}
+              />
             ) : (
               tickets &&
               tickets.map((ticket, idx) => (

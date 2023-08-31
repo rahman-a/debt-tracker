@@ -33,6 +33,7 @@ import {
   peerType,
   defineValue,
   formatPaymentDate,
+  isPeerUserEmployee,
 } from '../../utils/table'
 import Chat from './Chat'
 
@@ -57,6 +58,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
   const fineAmount = formatFineAmount(debtorData.delayedFine)
   const finePaymentDate = formatPaymentDate(debtorData.delayedFine?.paidAt)
   const recordPaymentDate = formatPaymentDate(record.paymentDate)
+  const { isEmployee, company } = isPeerUserEmployee(record, user)
 
   const copyIdHandler = (_) => {
     setIsCopied(true)
@@ -177,6 +179,14 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
 
         {/* Debtor amount value*/}
         <td> {debtValue} </td>
+
+        <td>
+          {isEmployee ? (
+            <Badge bg='success'>{company.name}</Badge>
+          ) : (
+            <Badge bg='dark'>N/A</Badge>
+          )}
+        </td>
 
         {/* Operation Currency [usd, euro, aed]*/}
         <td

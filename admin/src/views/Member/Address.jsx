@@ -1,16 +1,16 @@
 import React from 'react'
 import style from './style.module.scss'
-import { ProfileContainer, ProfileSegment } from '../../components'
 import i18next from 'i18next'
+import classnames from 'classnames'
+import { ProfileContainer, ProfileSegment } from '../../components'
 
 const Address = ({ data }) => {
   const lang = i18next.language
+  const profileAddressClasses = classnames(style.profile__address, {
+    [style.profile__address_ar]: lang === 'ar',
+  })
   return (
-    <div
-      className={`${style.profile__address} ${
-        lang === 'ar' ? style.profile__address_ar : ''
-      }`}
-    >
+    <div className={profileAddressClasses}>
       <ProfileContainer title='addresses'>
         <ProfileSegment title='country' type='country' text={data.country} />
 

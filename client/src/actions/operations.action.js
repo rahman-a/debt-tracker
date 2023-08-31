@@ -79,7 +79,6 @@ const updateOperationState =
         nonRead,
         count: nfCount,
       } = getState().listNotifications
-      console.log('notifications actions: ', notifications)
       if (operations) {
         const copiedOperations = [...operations]
         const index = copiedOperations.findIndex(

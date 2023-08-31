@@ -7,22 +7,10 @@ import { Chat as ChatIcon } from '../../icons'
 
 const Chat = ({ id }) => {
   const dispatch = useDispatch()
-  const { loading, conversation } = useSelector(
-    (state) => state.initiateConversation
-  )
-  const navigate = useNavigate()
-  const initiateConversationHandler = (_) => {
-    dispatch(actions.chat.initiateConversation(id))
-  }
 
-  useEffect(() => {
-    if (conversation) {
-      navigate(`/chat/${conversation}`)
-      setTimeout(() => {
-        dispatch({ type: constants.chat.INITIATE_CONVERSATION_RESET })
-      }, 250)
-    }
-  }, [conversation])
+  const navigate = useNavigate()
+
+  const initiateConversationHandler = () => {}
   return (
     <>
       <span onClick={initiateConversationHandler}>

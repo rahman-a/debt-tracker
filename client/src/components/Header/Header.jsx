@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import style from './style.module.scss'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { useTranslation } from 'react-i18next'
-import { MenuBars, Bell, Envelope, ChatSupport } from '../../icons'
+import { MenuBars, Bell, ChatSupport, Chat } from '../../icons'
 import {
   Loader,
   SideNavbar,
   NotificationContainer,
   PushNotification,
   ActivityTrack,
-  ModeSwitch,
 } from '../../components'
 import actions from '../../actions'
+import constants from '../../constants'
 import classes from './classes'
 
 const Header = () => {
@@ -22,26 +21,17 @@ const Header = () => {
   const [showSideMenu, setSideMenu] = useState(false)
   const [toggleNotification, setToggleNotification] = useState(false)
   const [notificationsCount, setNotificationsCount] = useState(0)
-  const [messagesCount, setMessagesCount] = useState(0)
-  const [toggleMessages, setToggleMessages] = useState(false)
   const headerBgRef = useRef(null)
   const sideMenuRef = useRef(null)
   const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.isAuth)
+  const { chatClient } = useSelector((state) => state.chatOptions)
+  const { unreadCount } = useSelector((state) => state.unreadCount)
   const { notifications: pushNotifications } = useSelector(
     (state) => state.pushNotifications
   )
   const { nonRead } = useSelector((state) => state.listNotifications)
-  const {
-    loading: latest_loading,
-    error: latest_error,
-    count,
-    messages,
-  } = useSelector((state) => state.latestMessages)
-  const { loading: support_loading, conversation } = useSelector(
-    (state) => state.support
-  )
   const language = i18next.language
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const page = useLocation().pathname
 
@@ -50,9 +40,6 @@ const Header = () => {
     error: notify_error,
     notifications,
   } = useSelector((state) => state.listNotifications)
-  const avatar = localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')).avatar
-    : null
 
   const toggleNotifyData = (type) => {
     if (type === 'notification') {
@@ -60,11 +47,6 @@ const Header = () => {
         setToggleNotification((prev) => !prev)
         !toggleNotification &&
           dispatch(actions.notifications.listNotification())
-      }
-    } else if (type === 'messages') {
-      if (page !== '/chat') {
-        setToggleMessages((prev) => !prev)
-        !toggleMessages && dispatch(actions.chat.latestMessages())
       }
     }
   }
@@ -99,10 +81,6 @@ const Header = () => {
     setLangDropDown((prev) => !prev)
   }
 
-  const createSupportGroup = (_) => {
-    dispatch(actions.chat.createSupportGroup())
-  }
-
   window.addEventListener('click', () => {
     setLangDropDown(false)
     setSideMenu(false)
@@ -125,7 +103,6 @@ const Header = () => {
       dispatch(actions.notifications.pushNotification())
     }, 5000)
     !nonRead && dispatch(actions.notifications.listNotification())
-    !count && dispatch(actions.chat.latestMessages())
 
     return () => clearTimeout(initNotifications)
   }, [page])
@@ -137,16 +114,21 @@ const Header = () => {
   }, [language])
 
   useEffect(() => {
-    conversation && navigate(`/chat/${conversation}`)
-  }, [conversation])
-
-  useEffect(() => {
     ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
   }, [nonRead])
 
   useEffect(() => {
-    ;(count || count === 0) && setMessagesCount(count)
-  }, [count])
+    if (chatClient) {
+      chatClient.on((event) => {
+        if (event.type === 'message.new') {
+          dispatch({
+            type: constants.chat.GET_UNREAD_COUNT,
+            payload: event.unread_count,
+          })
+        }
+      })
+    }
+  }, [chatClient])
 
   return (
     <>
@@ -159,7 +141,9 @@ const Header = () => {
             data={notification}
           />
         ))}
-      {/* {<ActivityTrack setSideMenu={setSideMenu} />} */}
+      {process.env.NODE_ENV == 'production' && (
+        <ActivityTrack setSideMenu={setSideMenu} />
+      )}
       <div
         className={style.header__bg}
         ref={headerBgRef}
@@ -251,20 +235,20 @@ const Header = () => {
                   <Bell />
                 </span>
 
-                <span onClick={() => toggleNotifyData('messages')}>
-                  {messagesCount > 0 && (
+                <span onClick={() => navigate('/chat')}>
+                  {unreadCount > 0 && (
                     <span className={style.header__notify_num}>
-                      {messagesCount}
+                      {unreadCount}
                     </span>
                   )}
-                  <Envelope />
+                  <Chat />
                 </span>
 
                 <span>
                   <img
                     src={
-                      avatar
-                        ? `/api/files/${avatar}`
+                      user.avatar
+                        ? `/api/files/${user.avatar}`
                         : '/images/photos/photo-1.png'
                     }
                     alt='personal avatar'
@@ -281,35 +265,10 @@ const Header = () => {
                     data={notifications}
                   />
                 )}
-
-                {/* Messages List */}
-                {toggleMessages && (
-                  <NotificationContainer
-                    setToggleNotification={setToggleNotification}
-                    setToggleMessages={setToggleMessages}
-                    loading={latest_loading}
-                    error={latest_error}
-                    title='Messages'
-                    data={messages}
-                  />
-                )}
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div
-        className={style.header__support}
-        style={{ display: page.includes('chat') ? 'none' : 'block' }}
-      >
-        {support_loading ? (
-          <Loader size='5' options={{ animation: 'border' }} />
-        ) : (
-          <span onClick={createSupportGroup}>
-            <ChatSupport />
-          </span>
-        )}
       </div>
     </>
   )

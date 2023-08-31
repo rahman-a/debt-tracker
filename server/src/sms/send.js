@@ -8,6 +8,7 @@ const client = twilio(
   process.env.TWILIO_AUTH_TOKEN
 )
 
+// TODO: add uae code to phone number +971
 const sendSMS = (phone, code) => {
   client.messages
     .create({

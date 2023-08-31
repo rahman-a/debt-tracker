@@ -5,6 +5,7 @@ import notificationReducer from './notifications.reducer'
 import reportsReducer from './reports.reducer'
 import ticketsReducer from './tickets.reducer'
 import chatReducer from './chat.reducer'
+import employeesReducer from './employees.reducer'
 
 export const globalReducer = {
   ...userReducers,
@@ -14,4 +15,5 @@ export const globalReducer = {
   ...reportsReducer,
   ...ticketsReducer,
   ...chatReducer,
+  ...employeesReducer,
 }

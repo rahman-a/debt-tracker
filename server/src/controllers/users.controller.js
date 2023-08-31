@@ -6,8 +6,10 @@ import bcrypt from 'bcrypt'
 import { DateTime } from 'luxon'
 import cron from 'node-cron'
 import { fileURLToPath } from 'url'
+import { chatClient } from '../config/stream.chat.js'
 import User from '../models/users.model.js'
 import Notification from '../models/notifications.model.js'
+import Company from '../models/Company.model.js'
 import MutualClients from '../models/mutualClients.js'
 import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
@@ -24,9 +26,29 @@ const documentsInArabic = {
 
 // check if username, email, phone exist
 export const checkIfExist = async (req, res, next) => {
-  const { username, emails, phones } = req.body
-
+  const { username, emails, phones, name, email, phone } = req.body
   try {
+    if (name) {
+      const isNameFound = await Company.findOne({ name })
+      if (isNameFound) {
+        res.status(400)
+        throw new Error(req.t('name_already_found', { name }))
+      }
+    }
+    if (email) {
+      const isEmailFound = await Company.findOne({ email })
+      if (isEmailFound) {
+        res.status(400)
+        throw new Error(req.t('email_already_found', { email }))
+      }
+    }
+    if (phone) {
+      const isPhoneFound = await Company.findOne({ phone })
+      if (isPhoneFound) {
+        res.status(400)
+        throw new Error(req.t('phone_already_found', { phone }))
+      }
+    }
     if (username) {
       const isUsernameFound = await User.findOne({ username })
       if (isUsernameFound) {
@@ -64,7 +86,7 @@ export const checkIfExist = async (req, res, next) => {
 }
 
 export const registerNewUser = async (req, res, next) => {
-  const { country, emails, insidePhones, outsidePhones } = req.body
+  const { country, emails, insidePhones, outsidePhones, accountType } = req.body
   const user = req.body
   try {
     user.country && (user.country = JSON.parse(country))
@@ -74,6 +96,10 @@ export const registerNewUser = async (req, res, next) => {
       (user.outsidePhones = JSON.parse(outsidePhones).map(
         (value) => value.phone
       ))
+    if (user.company) {
+      user.companyName = user.company
+      delete user.company
+    }
     const code = createUserCode()
     user.code = code
 
@@ -88,9 +114,44 @@ export const registerNewUser = async (req, res, next) => {
       back: req.files['identity-back'][0].filename,
       expireAt: expireAt['identity'],
     }
+    let updatedUser = user
+    let companyData = null
+    if (accountType === 'business') {
+      const { name, email, phone, address, type, expiryDate, ...rest } = user
+      updatedUser = { ...rest }
+      companyData = {
+        name,
+        email,
+        phone,
+        address,
+        type,
+        accountType: accountType,
+        expireAt: expiryDate,
+        traderLicense: req.files['traderLicense'][0].filename,
+        manager: null,
+        establishmentContract: req.files['establishmentContract']?.length
+          ? req.files['establishmentContract'][0].filename
+          : null,
+      }
+    }
 
-    const newUser = new User(user)
+    const newUser = new User(updatedUser)
     const savedUser = await newUser.save()
+    if (companyData) {
+      companyData.manager = savedUser._id
+      const newCompany = new Company(companyData)
+      const savedCompany = await newCompany.save()
+      await savedUser.update({
+        company: { data: savedCompany._id, isManager: true },
+      })
+    }
+    await chatClient.upsertUser({
+      id: savedUser._id,
+      name: savedUser.fullNameInEnglish,
+      role: 'user',
+      arabicName: savedUser.fullNameInArabic,
+      image: savedUser.avatar,
+    })
     const notification = {
       title: {
         en: 'New Registration',
@@ -126,7 +187,6 @@ export const updateDocuments = async (req, res, next) => {
 
   try {
     const expireAt = JSON.parse(req.body.expireAt)
-    console.log('expireAt: ', expireAt)
 
     const documentExpire = new Date(expireAt[type]).getTime()
     const now = new Date().getTime()
@@ -374,6 +434,10 @@ export const login = async (req, res, next) => {
 // logout handler
 export const logoutHandler = async (req, res, next) => {
   try {
+    const user = req.user
+    if (user) {
+      await chatClient.revokeUserToken(user._id.toString(), new Date())
+    }
     res.clearCookie('token')
     res.send({
       success: true,
@@ -434,7 +498,7 @@ export const findUserHandler = async (req, res, next) => {
         'insidePhones.phone': mobile,
         _id: { $ne: req.user._id },
         isProvider: false,
-      })
+      }).populate('company.data', 'name')
       if (users.length === 0) {
         res.status(404)
         throw new Error(req.t('no_user_found_search_again'))
@@ -453,7 +517,7 @@ export const findUserHandler = async (req, res, next) => {
         ...searchFilter,
         _id: { $ne: req.user._id },
         isProvider: false,
-      })
+      }).populate('company.data', 'name')
       if (users.length === 0) {
         res.status(404)
         throw new Error(req.t('no_user_found_search_again'))
@@ -466,6 +530,8 @@ export const findUserHandler = async (req, res, next) => {
       arabicName: user.fullNameInArabic,
       image: user.avatar,
       color: user.colorCode.code,
+      company: user.company.data,
+      isEmployee: user.isEmployee,
     }))
     res.send({
       success: true,
@@ -483,7 +549,6 @@ export const verifyAuthLink = async (req, res, next) => {
     // decode the token to extract user id
     const decode = jwt.verify(token, process.env.RESET_TOKEN, (err, decode) => {
       if (err) {
-        console.log('err: ', err)
         throw new Error(req.t('link_invalid'))
       }
       return decode
@@ -545,16 +610,25 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
       await user.save()
     }
 
+    const { users } = await chatClient.queryUsers({ id: user._id.toString() })
+    const chat_token = users.length
+      ? chatClient.createToken(user._id.toString())
+      : null
+
     const userData = {
       _id: user._id,
+      username: user.username,
       fullNameInEnglish: user.fullNameInEnglish,
       fullNameInArabic: user.fullNameInArabic,
       avatar: user.avatar,
       color: user.colorCode.code,
+      company: user.company,
       isProvider: user.isProvider,
+      chat_token,
     }
     const tokenExpiry = isRemembered ? `7 days` : '1d'
     const token = user.generateToken(tokenExpiry)
+    console.log('token: ', token)
     res.cookie('token', token, {
       httpOnly: true,
       domain: 'localhost',
@@ -572,14 +646,21 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
 }
 
 export const checkIsUserLoggedIn = async (req, res, next) => {
+  const { users } = await chatClient.queryUsers({ id: req.user._id.toString() })
+  const chat_token = users.length
+    ? chatClient.createToken(req.user._id.toString())
+    : null
   try {
     const userData = {
       _id: req.user._id,
+      username: req.user.username,
       fullNameInEnglish: req.user.fullNameInEnglish,
       fullNameInArabic: req.user.fullNameInArabic,
       avatar: req.user.avatar,
       color: req.user.colorCode.code,
+      company: req.user.company,
       isProvider: req.user.isProvider,
+      chat_token,
     }
     res.json({
       success: true,
@@ -603,7 +684,7 @@ export const sendUserData = async (req, res, next) => {
         req.user.roles.includes('hr') ||
         req.user.roles.includes('cs')
       ) {
-        const userData = await User.findById(id)
+        const userData = await User.findById(id).populate('company.data')
         user = { ...userData._doc }
       } else {
         res.status(401)
@@ -977,19 +1058,20 @@ export const getPreviousClients = async (req, res, next) => {
     const countDocuments = await MutualClients.count({
       clients: { $in: [user._id] },
     })
-
     res.send({
       code: 200,
       success: true,
       count: countDocuments,
-      mutuals: mutuals.map((m) => ({
-        _id: m.clients[0]._id,
-        arabicName: m.clients[0].fullNameInArabic,
-        name: m.clients[0].fullNameInEnglish,
-        image: m.clients[0].avatar,
-        operations: m.operations.length,
-        color: m.clients[0].colorCode.code,
-      })),
+      mutuals: mutuals.length
+        ? mutuals.map((m) => ({
+            _id: m.clients[0]._id,
+            arabicName: m.clients[0].fullNameInArabic,
+            name: m.clients[0].fullNameInEnglish,
+            image: m.clients[0].avatar,
+            operations: m.operations.length,
+            color: m.clients[0].colorCode.code,
+          }))
+        : [],
     })
   } catch (error) {
     next(error)
@@ -1035,7 +1117,6 @@ async function sendConfirmLinkToEmail(id, req) {
     const user = await User.findById(id)
     await sendAuthLink(user, req, 'activate')
   } catch (error) {
-    console.log('error: ', error)
     throw new Error(error)
   }
 }
@@ -1046,7 +1127,7 @@ async function sendConfirmLinkToEmail(id, req) {
 async function sendLoginCodeToEmail(id) {
   try {
     const user = await User.findById(id)
-    const code = generateRandomCode(7, 'string')
+    const code = user.isGuest ? 'GU85nEr' : generateRandomCode(7, 'string')
     user.emailCode = code
     await user.save()
 
@@ -1055,7 +1136,9 @@ async function sendLoginCodeToEmail(id) {
       name: user.fullNameInEnglish,
       email: user.emails.find((email) => email.isPrimary === true).email,
     }
-    // await sendEmail(info, 'code')
+    if (process.env.NODE_ENV === 'production') {
+      !user.isGuest && (await sendEmail(info, 'code'))
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -1075,7 +1158,6 @@ async function sendAuthLink(user, req, type) {
       process.env.RESET_TOKEN,
       { expiresIn: '1 day' }
     )
-    console.log('🚀sendAuthLink ~ token:', token)
 
     // crypt this random string
     const cryptResetCode = await bcrypt.hash(resetCode, 10)
@@ -1169,7 +1251,7 @@ const generateRandomCode = (count, type) => {
 }
 
 // CREATE USER UNIQUE CODE
-const createUserCode = () => {
+export const createUserCode = () => {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
   const randomCharacters = () =>
     alphabet[Math.floor(Math.random() * alphabet.length)].toLocaleUpperCase()
@@ -1218,7 +1300,6 @@ const scanUserDocuments = async () => {
       '\x1b[31m',
       `Done Users Scanning!!!! at ${date} with ERROR: ${error.message}`
     )
-    console.log(error)
   }
 }
 

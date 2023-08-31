@@ -15,7 +15,6 @@ const reportsAPI = {
         }
       }
       queryString = '?' + new URLSearchParams(queryObj).toString()
-      console.log('queryString: ', queryString)
     }
 
     return service().get(`reports${queryString}`)
