@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { Badge } from 'react-bootstrap'
 import actions from '../../actions'
 import constants from '../../constants'
 import { Loader } from '..'
 import { Check } from '../../icons'
+import CompanyLabel from './CompanyLabel'
+import StatusLabel from './StatusLabel'
 
 const Input = ({
   filter,
@@ -119,7 +122,8 @@ const Input = ({
               <li key={peer._id} onClick={() => initiateOperation(peer)}>
                 <img src={`/api/files/${peer.image}`} alt='second peer' />
                 <p>{lang === 'ar' ? peer.arabicName : peer.name}</p>
-                <span style={{ backgroundColor: peer.color }}></span>
+                <StatusLabel color={peer.color} />
+                {peer.isEmployee && <CompanyLabel name={peer.company.name} />}
               </li>
             ))}
           </ul>

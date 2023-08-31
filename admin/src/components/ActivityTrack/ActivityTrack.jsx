@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Modal } from 'react-bootstrap'
-import { Danger, Logout } from '../../icons'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
+import { Logout } from '../../icons'
 import style from './style.module.scss'
 import actions from '../../actions'
 
@@ -11,6 +13,7 @@ const ActivityTrack = ({ setSideMenu }) => {
   const [warn, setWarn] = useState(false)
   const [trackLogoutWarnTime, setTrackLogoutWarnTime] = useState(10)
   const trackLogoutTimeRef = useRef(null)
+  const { t } = useTranslation()
   const { isAuth } = useSelector((state) => state.login)
   const dispatch = useDispatch()
 
@@ -91,13 +94,13 @@ const ActivityTrack = ({ setSideMenu }) => {
           <div className={style.track}>
             <div className={style.track__header}>
               <Logout />
-              <span>Logout</span>
+              <span>{t('logout')}</span>
             </div>
             <div className={style.track__message}>
-              You're about to logout in {trackLogoutWarnTime} seconds
+              {t('about-to-logout', { time: trackLogoutWarnTime })}
             </div>
             <button className={style.track__btn} onClick={stopLogoutHandler}>
-              Cancel
+              {t('cancel-btn')}
             </button>
           </div>
         </Modal.Body>

@@ -1,0 +1,20 @@
+.chat {
+  background-color: #dadbd3;
+  padding: 6rem 0;
+  min-height: 100vh;
+  position: relative;
+  &__container {
+    display: flex;
+    background-color: #fff;
+    height: 80vh;
+    width: 95vw;
+    margin: 0 auto;
+    box-shadow: -1px 4px 20px -6px rgba(0, 0, 0, 0.75);
+  }
+  &__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

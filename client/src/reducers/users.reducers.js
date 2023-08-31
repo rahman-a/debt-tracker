@@ -455,6 +455,31 @@ const appearance = (state, actions) => {
   }
 }
 
+const createEmployee = (state, action) => {
+  const cases = {
+    [constants.users.CREATE_EMPLOYEE_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.users.CREATE_EMPLOYEE_SUCCESS]: {
+      loading: false,
+      error: null,
+      message: action.payload,
+    },
+    [constants.users.CREATE_EMPLOYEE_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.users.CREATE_EMPLOYEE_RESET]: {
+      loading: false,
+      error: null,
+      message: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
 const reducers = {
   checkInfo,
   userProfile,
@@ -474,6 +499,7 @@ const reducers = {
   sendLoginCredentials,
   sendLoginCode,
   verifyLoginCode,
+  createEmployee,
 }
 
 export default reducers

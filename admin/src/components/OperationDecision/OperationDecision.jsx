@@ -84,7 +84,6 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
 
         {operation && (
           <>
-            {' '}
             <h2>Operation Details</h2>
             <div className={style.decision__peers}>
               <div className={style.decision__peer}>
@@ -103,8 +102,7 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
                 <p>
                   <span> {operation.initiator.type.toLocaleUpperCase()} </span>
                   <span>
-                    {' '}
-                    {stateName[operation.initiator.user.colorCode.code]}{' '}
+                    {stateName[operation.initiator.user.colorCode.code]}
                   </span>
                 </p>
               </div>
@@ -129,11 +127,11 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
             </div>
             <ul className={style.decision__details}>
               <li>
-                <span>Operation Value:</span>{' '}
+                <span>Operation Value:</span>
                 <span>{operation.peer.value}</span>
               </li>
               <li>
-                <span>Value Currency:</span>{' '}
+                <span>Value Currency:</span>
                 <Currency currency={operation.currency} />
               </li>
               <li>
@@ -148,15 +146,13 @@ const OperationDecision = ({ show, onHide, id, notificationId }) => {
             <div className={style.decision__actions}>
               <button onClick={approveOperationHandler}>
                 <span>
-                  {' '}
-                  <CheckDouble />{' '}
+                  <CheckDouble />
                 </span>
                 <span>Approve</span>
               </button>
               <button onClick={declineOperationHandler}>
                 <span>
-                  {' '}
-                  <Times />{' '}
+                  <Times />
                 </span>
                 <span>Decline</span>
               </button>

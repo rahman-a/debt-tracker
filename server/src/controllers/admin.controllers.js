@@ -182,7 +182,6 @@ export const changeUserRole = async (req, res, next) => {
 
 export const updateMemberData = async (req, res, next) => {
   const { id } = req.params
-  console.log('id: ', id)
   const {
     englishName,
     arabicName,
@@ -193,7 +192,6 @@ export const updateMemberData = async (req, res, next) => {
     phones,
   } = req.body
   try {
-    console.log({ body: req.body })
     let updatedData = {}
     const user = await User.findById(id)
     if (!user) {

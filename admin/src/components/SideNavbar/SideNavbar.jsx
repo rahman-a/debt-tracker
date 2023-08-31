@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import classnames from 'classnames'
 import actions from '../../actions'
 import { Loader } from '../../components'
 
@@ -37,6 +38,15 @@ const SideNavbar = ({
   const dispatch = useDispatch()
   const lang = i18next.language
   const { t } = useTranslation()
+
+  const navbarLogoutClasses = classnames(style.navbar__menu_item_logout, {
+    [style.navbar__menu_item_logout_ar]: language === 'ar',
+  })
+
+  const navbarMenuItemClasses = classnames(
+    style.navbar__menu_item,
+    style.navbar__menu_item_lang
+  )
 
   const logoutHandler = (e) => {
     e.stopPropagation()
@@ -171,45 +181,20 @@ const SideNavbar = ({
             </li>
           )}
           <li className={style.navbar__menu_item}>
-            <div onClick={() => navigate('/content?type=slider')}>
-              <span>
-                <Website />
-              </span>
-              <span>{t('content')}</span>
-            </div>
-          </li>
-
-          <li className={style.navbar__menu_item}>
-            <div onClick={() => navigate('/articles')}>
-              <span>
-                <Article />
-              </span>
-              <span>{t('article')}</span>
-            </div>
-          </li>
-          <li className={style.navbar__menu_item}>
             <div onClick={logoutHandler}>
               {loading && (
                 <span className={style.navbar__menu_item_loading}>
                   <Loader center size='5' options={{ animation: 'border' }} />
                 </span>
               )}
-              <span
-                className={`${style.navbar__menu_item_logout} ${
-                  language === 'ar' ? style.navbar__menu_item_logout_ar : ''
-                }`}
-              >
+
+              <span className={navbarLogoutClasses}>
                 <Logout />
               </span>
               <span>{t('logout')}</span>
             </div>
           </li>
-          <li
-            className={`
-                ${style.navbar__menu_item} 
-                ${style.navbar__menu_item_lang}
-                `}
-          >
+          <li className={navbarMenuItemClasses}>
             <div>
               {loadingState && (
                 <span className={style.navbar__menu_item_loading}>

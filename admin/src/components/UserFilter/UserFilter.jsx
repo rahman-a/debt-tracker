@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import { Input, DropdownMenu } from '../../components'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 
 const Filter = ({
   hidden,
@@ -56,11 +57,12 @@ const Filter = ({
   const { t } = useTranslation()
   const lang = i18next.language
 
+  const filterClasses = classnames(style.filter, {
+    [style.filter__hidden]: hidden,
+  })
+
   return (
-    <div
-      className={`${style.filter} ${hidden ? style.filter__hidden : ''}`}
-      onKeyDown={startFilterProcessOnEnter}
-    >
+    <div className={filterClasses} onKeyDown={startFilterProcessOnEnter}>
       <div className={style.filter__input}>
         <Input
           name='code'

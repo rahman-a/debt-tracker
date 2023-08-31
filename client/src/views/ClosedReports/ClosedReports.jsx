@@ -114,7 +114,14 @@ const Reports = () => {
           />
 
           {loading && <Loader size='8' options={{ animation: 'border' }} />}
-          {error && <HeaderAlert size='2' text={error} type='danger' />}
+          {error && (
+            <HeaderAlert
+              position='relative'
+              size='2'
+              text={error}
+              type='danger'
+            />
+          )}
 
           {reports && (
             <>

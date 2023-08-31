@@ -1,0 +1,145 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.employees {
+  min-height: calc(100vh - 10rem);
+  text-align: -webkit-center;
+  margin-bottom: 5rem;
+  position: relative;
+  top: 5rem;
+  &__create {
+    position: absolute;
+    right: 5rem;
+    top: 10rem;
+  }
+  &__table {
+    width: 100%;
+    @include media.mq(sm) {
+      display: none;
+    }
+    @include media.mq(xxl) {
+      overflow: auto;
+    }
+    &__show {
+      @include media.mq(sm) {
+        display: block;
+      }
+    }
+    table {
+      text-align: center;
+      tr {
+        display: inline-flex !important;
+        margin-top: 0.3rem;
+
+        td {
+          width: 15rem;
+          height: 8rem;
+          font-size: 1.3rem;
+          text-align: center;
+          background-color: var.$white-color;
+          color: var.$main-color;
+          border-right: 1px solid var.$full-light-color;
+          border-left: 1px solid var.$full-light-color;
+          padding: 2.5rem 0;
+          display: inline-block;
+          font-weight: 400;
+          line-break: anywhere;
+        }
+        td {
+          border-bottom: 2px solid var.$second-color;
+        }
+        &:nth-child(even) td {
+          background-color: #ebebeb;
+        }
+      }
+      th {
+        width: 15rem;
+        height: 8rem;
+        font-size: 1.3rem;
+        text-align: center;
+        background-color: var.$white-color;
+        color: var.$main-color;
+        border-right: 1px solid var.$full-light-color;
+        border-left: 1px solid var.$full-light-color;
+        border-bottom: 2px solid var.$full-light-color;
+        padding: 2.5rem 0;
+        display: inline-block;
+        font-weight: 500;
+      }
+    }
+  }
+  &__content {
+    position: relative;
+    display: none;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    @include media.mq(sm) {
+      display: block;
+    }
+  }
+  &__photo {
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+    img {
+      width: 6rem;
+      height: 6rem;
+      object-fit: cover;
+      clip-path: circle();
+    }
+  }
+  &__code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  &__actions {
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    span {
+      cursor: pointer;
+    }
+    span:first-child {
+      color: var.$main-color;
+    }
+    span:nth-child(2) {
+      color: var.$code-yellow-color;
+    }
+    span:last-child {
+      color: var.$code-red-color;
+    }
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  &__delete {
+    text-align: center;
+    h2 {
+      font-weight: 400;
+      color: var.$code-red-color;
+    }
+    p {
+      font-weight: 300;
+      padding: 0.5rem 0;
+    }
+  }
+
+  &__employee {
+    span {
+      color: #dc3545;
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      svg {
+        width: 1.4rem;
+        height: 1.4rem;
+      }
+    }
+  }
+}

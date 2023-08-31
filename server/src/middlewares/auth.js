@@ -16,7 +16,7 @@ export const isAuth = async (req, res, next) => {
           return decode
         }
       )
-      const user = await User.findById(decode._id)
+      const user = await User.findById(decode._id).populate('company.data')
       if (!user) {
         res.status(401)
         throw new Error(req.t('please_login_first'))

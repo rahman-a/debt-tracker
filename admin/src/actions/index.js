@@ -3,7 +3,6 @@ import notificationActions from './notifications.actions'
 import operationsActions from './operations.actions'
 import reportsActions from './reports.actions'
 import ticketActions from './tickets.actions'
-import chatActions from './chat.actions'
 import contentActions from './content.actions'
 import articleActions from './article.actions'
 import aboutActions from './about.actions'
@@ -14,7 +13,6 @@ const actions = {
   operations: operationsActions,
   reports: reportsActions,
   tickets: ticketActions,
-  chat: chatActions,
   content: contentActions,
   article: articleActions,
   about: aboutActions,

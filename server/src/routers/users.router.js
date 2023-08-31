@@ -55,6 +55,8 @@ const imagesFields = [
   { name: 'passport', maxCount: 1 },
   { name: 'identity-front', maxCount: 1 },
   { name: 'identity-back', maxCount: 1 },
+  { name: 'traderLicense', maxCount: 1 },
+  { name: 'establishmentContract', maxCount: 1 },
 ]
 
 router.post('/check-if-exist', checkIfExist)

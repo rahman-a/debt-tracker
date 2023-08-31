@@ -68,7 +68,7 @@ const Profile = () => {
                   { file: user.passport, type: 'passport' },
                 ]}
               />
-              <Company company={user.company} />
+              <Company company={user.companyName} />
               <Social />
             </div>
           )

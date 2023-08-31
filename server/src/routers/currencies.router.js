@@ -1,24 +1,23 @@
 import express from 'express'
-const router =  express.Router()
-
+const router = express.Router()
 
 import {
-    createCurrency,
-    listAllCurrency,
-    deleteCurrency
+  createCurrency,
+  listAllCurrency,
+  deleteCurrency,
 } from '../controllers/currencies.controller.js'
 
-import {
-    isAuth,
-} from '../middlewares/auth.js'
+import { isAuth, checkRoles } from '../middlewares/auth.js'
 
-import {
-    uploadHandler
-} from '../middlewares/uploads.js'
+import { uploadHandler } from '../middlewares/uploads.js'
 
-
-// TO DO ==> ADD ADMIN ROLE TO THIS ENDPOINT
-router.post('/new', isAuth, uploadHandler.single('flag'), createCurrency)
+router.post(
+  '/new',
+  isAuth,
+  checkRoles('manager'),
+  uploadHandler.single('flag'),
+  createCurrency
+)
 
 router.get('/', isAuth, listAllCurrency)
 

@@ -5,6 +5,7 @@ import notifications from './notifications.constants'
 import reports from './reports.constants'
 import tickets from './tickets.constants'
 import chat from './chat.constants'
+import employees from './employees.constants'
 
 const constants = {
   users,
@@ -14,6 +15,7 @@ const constants = {
   reports,
   tickets,
   chat,
+  employees,
 }
 
 export default constants

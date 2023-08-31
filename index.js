@@ -1,4 +1,6 @@
 import { createServer } from 'http'
+import cluster from 'cluster'
+import os from 'os'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -8,11 +10,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'socket.io'
-import mongoose from 'mongoose'
-import cluster from 'cluster'
-import os from 'os'
 import compression from 'compression'
-import chatFunctions from './server/src/chat/socket.io.js'
 import { Database } from './server/database.connection.js'
 import {
   notFound,
@@ -28,10 +26,7 @@ import currenciesRouter from './server/src/routers/currencies.router.js'
 import notificationsRouter from './server/src/routers/notifications.router.js'
 import ticketsRouter from './server/src/routers/tickets.router.js'
 import chatRouter from './server/src/routers/chat.router.js'
-import contentRouter from './server/src/routers/content.router.js'
-import AboutRouter from './server/src/routers/about.router.js'
-import articleRouter from './server/src/routers/article.router.js'
-import socialRouter from './server/src/routers/social.router.js'
+import employeesRouter from './server/src/routers/employees.router.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Environment Variables
@@ -44,26 +39,16 @@ Database()
 /***************** INITIATE THE APP
 /***************************************************/
 const app = express()
-const httpServer = createServer(app)
-
-/***************************************************/
-/***************** INITIATE SOCKET IO
-/***************************************************/
-const io = new Server(httpServer, { cors: { origin: '*' } })
-
-/***************************************************/
-/***************** CHAT FUNCTIONS
-/***************************************************/
-chatFunctions(io)
 
 /***************************************************/
 /***************** MIDDLEWARES
 /***************************************************/
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb' }))
 app.use(cors())
 app.use(cookieParser())
 app.use(morgan('dev'))
-// app.use(compression())
+app.use(compression())
 app.use(i18nextMiddleware.handle(i18next))
 
 /***************************************************/
@@ -99,10 +84,7 @@ app.use('/api/currencies', currenciesRouter)
 app.use('/api/notifications', notificationsRouter)
 app.use('/api/tickets', ticketsRouter)
 app.use('/api/chat', chatRouter)
-app.use('/api/content', contentRouter)
-app.use('/api/about', AboutRouter)
-app.use('/api/article', articleRouter)
-app.use('/api/social', socialRouter)
+app.use('/api/employees', employeesRouter)
 
 /***************************************************/
 /***************** ERROR HANDLING
@@ -117,6 +99,7 @@ const port = process.env.PORT || 5000
 
 // if (cluster.isPrimary) {
 //   const cpuNum = os.cpus().length
+//   console.log("CPU's: ", cpuNum)
 //   for (let i = 0; i < cpuNum; i++) {
 //     cluster.fork()
 //   }
@@ -131,6 +114,6 @@ const port = process.env.PORT || 5000
 //   httpServer.listen(port)
 // }
 
-httpServer.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })

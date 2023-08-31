@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import style from './style.module.scss'
 import { useTranslation } from 'react-i18next'
 import { Row, Panel } from '../../components'
@@ -17,6 +17,7 @@ const Table = ({ records, due, op, closed, reports }) => {
             <th>{t('note')}</th>
             <th>{t('credit')}</th>
             <th>{t('debt')}</th>
+            <th>{t('company')}</th>
             <th>{t('operation-currency')}</th>
             {op && <th>{t('operation-status')}</th>}
             {reports && due && <th>Delayed Fine</th>}

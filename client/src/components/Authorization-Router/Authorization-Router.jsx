@@ -9,7 +9,7 @@ import actions from '../../actions'
 
 let isMounted = true
 function AuthorizationRouter() {
-  const { isAuth, error } = useSelector((state) => state.isAuth)
+  const { isAuth, error, loading } = useSelector((state) => state.isAuth)
   const chakraTheme = useChakraTheme()
   const dispatch = useDispatch()
 
@@ -20,11 +20,20 @@ function AuthorizationRouter() {
     }
   }, [])
 
-  if (error) {
+  if (loading) {
     return (
-      <ChakraProvider resetCSS theme={chakraTheme}>
-        <Login />
-      </ChakraProvider>
+      <div className={styles.authorizationRouter}>
+        <div className={styles.container}>
+          <div className={styles.logo}>
+            <img src='/images/light_blue.png' alt='logo' />
+          </div>
+          <div className={styles.progress}>
+            <div className={styles.progress__bar}>
+              <div className={styles.progress__value}></div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -33,18 +42,9 @@ function AuthorizationRouter() {
   }
 
   return (
-    <div className={styles.authorizationRouter}>
-      <div className={styles.container}>
-        <div className={styles.logo}>
-          <img src='/images/light_blue.png' alt='logo' />
-        </div>
-        <div className={styles.progress}>
-          <div className={styles.progress__bar}>
-            <div className={styles.progress__value}></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ChakraProvider resetCSS theme={chakraTheme}>
+      <Login />
+    </ChakraProvider>
   )
 }
 

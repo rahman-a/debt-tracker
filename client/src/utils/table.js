@@ -122,6 +122,18 @@ export const isCurrentUserCredit = (record, op, user) => {
   return false
 }
 
+export function isPeerUserEmployee(record, user) {
+  const peerUser =
+    (record.peer?.user?._id || record.operation?.peer?._id) !== user._id
+      ? record.peer?.user || record.operation?.peer
+      : record.initiator?.user || record.operation?.initiator
+  return {
+    isEmployee: peerUser?.isEmployee,
+    isManager: peerUser?.company?.isManager,
+    company: peerUser?.company?.data,
+  }
+}
+
 export const formatPaymentDate = (date, lang) => {
   if (!date) return null
   const locale = lang === 'ar' ? 'ar-EG' : 'en-US'

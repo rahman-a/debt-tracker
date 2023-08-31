@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Modal, Alert } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
+import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { Loader } from '../../components'
@@ -28,6 +29,14 @@ const LoginForm = () => {
   const clearAlert = (_) => {
     dispatch({ type: constants.admin.ADMIN_LOGIN_RESET })
   }
+
+  const loginFormClasses = classnames(style.loginForm__reset_input, {
+    [style.loginForm__reset_input_ar]: lang === 'ar',
+  })
+
+  const loginFormGroupClasses = classnames(style.loginForm__group, {
+    [style.loginForm__group_ar]: lang === 'ar',
+  })
 
   const submitLoginHandler = (e) => {
     const data = { email, password }
@@ -87,11 +96,8 @@ const LoginForm = () => {
               {errors}
             </p>
           )}
-          <div
-            className={`${style.loginForm__reset_input} ${
-              lang === 'ar' ? style.loginForm__reset_input_ar : ''
-            }`}
-          >
+
+          <div className={loginFormClasses}>
             <span>
               <AtSymbol />
             </span>
@@ -120,11 +126,7 @@ const LoginForm = () => {
         </Alert>
       )}
       <div className={style.loginForm} onKeyDown={submitLoginOnKeyHandler}>
-        <div
-          className={`${style.loginForm__group} ${
-            lang === 'ar' ? style.loginForm__group_ar : ''
-          }`}
-        >
+        <div className={loginFormGroupClasses}>
           <span>
             <AtSymbol />
           </span>
@@ -135,11 +137,7 @@ const LoginForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div
-          className={`${style.loginForm__group} ${
-            lang === 'ar' ? style.loginForm__group_ar : ''
-          }`}
-        >
+        <div className={loginFormGroupClasses}>
           <span>
             <Lock />
           </span>

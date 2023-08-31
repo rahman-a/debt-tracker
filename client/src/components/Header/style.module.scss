@@ -211,19 +211,18 @@
     span {
       position: relative;
       cursor: pointer;
-      color: var.$full-light-color;
+      color: var.$light-color;
       margin-left: 3rem;
       svg {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
       }
     }
     img {
       width: 4rem;
+      height: 4rem;
+      object-fit: cover;
       clip-path: circle();
-      @include media.mq(xs) {
-        width: 4rem;
-      }
     }
 
     &_num {

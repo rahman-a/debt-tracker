@@ -40,7 +40,6 @@ const closeReport = (id) => async (dispatch, getState) => {
   dispatch({ type: constants.reports.CLOSE_REPORT_REQUEST })
   try {
     const { data } = await api.reports.close(id)
-    console.log('close reports data: ', data)
     const { reports, count } = getState().listAllReports
     if (reports?.length && !data.fineNotPaid) {
       const filteredReports = reports.filter((reports) => reports._id !== id)

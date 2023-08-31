@@ -22,8 +22,6 @@ const DocumentSegment = ({ img, document, isExpired }) => {
     }
   }, [isDone])
 
-  console.log({ document })
-
   return (
     <>
       <UpdateDocument

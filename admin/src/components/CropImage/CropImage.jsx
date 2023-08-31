@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Spinner } from 'react-bootstrap'
+import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Cropper from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
@@ -44,6 +45,18 @@ const CropImage = ({
     outputFile(file)
     closePanel()
   }
+
+  const cropClasses = classnames(style.crop__select, {
+    [style.crop__select_ar]: lang === 'ar',
+  })
+
+  const cropActionClasses = classnames(style.crop__action, {
+    [style.crop__action_ar]: lang === 'ar',
+  })
+
+  const cropResultClasses = classnames(style.crop__result, {
+    [style.crop__result_ar]: lang === 'ar',
+  })
 
   useEffect(() => {
     setIsLoading(true)
@@ -131,11 +144,7 @@ const CropImage = ({
       </div>
       <div className={style.crop__actions}>
         <div className={style.crop__adjustment}>
-          <div
-            className={`${style.crop__select} ${
-              lang === 'ar' ? style.crop__select_ar : ''
-            }`}
-          >
+          <div className={cropClasses}>
             <button
               disabled={Boolean(cropData)}
               onClick={selectPhotoWithoutCropHandler}
@@ -146,11 +155,7 @@ const CropImage = ({
               {t('select-photo')}
             </button>
           </div>
-          <div
-            className={`${style.crop__action} ${
-              lang === 'ar' ? style.crop__action_ar : ''
-            }`}
-          >
+          <div className={cropActionClasses}>
             <button disabled={Boolean(cropData)} onClick={getCropData}>
               <span>
                 <Crop />
@@ -211,11 +216,7 @@ const CropImage = ({
             </button>
           </div>
         </div>
-        <div
-          className={`${style.crop__result} ${
-            lang === 'ar' ? style.crop__result_ar : ''
-          }`}
-        >
+        <div className={cropResultClasses}>
           {cropData && (
             <>
               <button

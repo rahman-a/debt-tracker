@@ -3,6 +3,9 @@
   "username_already_found": "إسم المستخدم بالفعل موجود, من فضلك أختر اسم مستخدم آخر",
   "email-already-exist": "هذا البريد {{email}} بالفعل موجود من فضلك إختر بريداَ آخر",
   "phone_already_exist": "رقم الهاتف {{phone}} موجود بالفعل, من فضلك أختر رقماً آخر",
+  "name_already_found": "إسم الشركة {{name}} بالفعل موجود, من فضلك اختر إسماً آخر",
+  "email_already_found": "البريد الإلكتورنى {{email}} الخاص بالشركة بالفعل موجود, من فضلك إختر بريداً آخر",
+  "phone_already_found": "رقم الهاتف {{phone}} الخاص بالشركة بالفعل موجود, من فضلك إختر رقماً آخر",
   "phone_updated_successfully": "تم تحديث رقم الهاتف بنجاح",
   "provide_required_data": "من فضلك أدخل البيانات اللازمة",
   "value_not_recognized": "هذة القيمة {{value}} غير معروفة",
@@ -33,7 +36,7 @@
   "member_already_set_as": "العضو بالفعل معين كــ {{role}}",
   "user_has_set_as": "تم تعيين العضو كــ {{role}}",
   "please_login_first": "من فضلك سجل دخول أولاً",
-  "upload_image_extension": "من فضلك إرفع الصورة بالإمتدادات الأتية [png, jpg, jpeg, svg]",
+  "upload_image_extension": "من فضلك إرفع الملف بالإمتدادات الأتية [png, jpg, jpeg, svg, pdf]",
   "upload_document_extension": "من فضلك إرفع المستند بالإمتدادات الأتية [png, jpg, jpeg, svg, pdf, docx. xlsx, pptx]",
   "upload_chat_image_extension": "من فضلك إرفع الصورة بالإمتدادات الأتية [png, jpg, jpeg]",
   "invalid_login": "بيانات الدخول غير صحيحة",
@@ -148,5 +151,12 @@
   "social_platform_deleted": "تم حذف المنصة بنجاح",
   "item_updated": "تم تحديث الفقرة بنجاح",
   "item_created": "تم إنشاء الفقرة بنجاح",
-  "item_deleted": "تم حذف الفقرة بنجاح"
+  "item_deleted": "تم حذف الفقرة بنجاح",
+  "/11": "///////// Employees ///////////",
+  "employee_account_created": "تم إضافة موظف جديد لحساب الشركة",
+  "not_associated_with_company": "هذا الحساب غير مرتبط باى الشركة",
+  "no_employees_found": "لم يتم العثور على موظفين",
+  "employee_not_found": "لم يتم العثور على الموظف",
+  "employee_not_associated_with_company": "حساب هذا الموظف غير مرتبط باى شركة",
+  "employee_deleted": "تم حذف حساب الموظف بنجاح"
 }

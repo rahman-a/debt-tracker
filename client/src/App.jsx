@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { io } from 'socket.io-client'
-import { Header, AuthorizationRouter } from './components'
-import chatSound from './audio/chat.mp3'
+import { Routes, Route } from 'react-router-dom'
+import { StreamChat } from 'stream-chat'
+import constants from './constants'
+import { Header, AuthorizationRouter, ChatwootLiveChat } from './components'
 import {
   Operation,
   Profile,
@@ -17,61 +17,82 @@ import {
   Tickets,
   Ticket,
   Chat,
+  Employees,
+  NewEmployees,
+  NotFound,
 } from './views'
-import actions from './actions'
-
-const socket =
-  import.meta.env.MODE === 'production'
-    ? io('https://chat.swtle.com')
-    : io('http://localhost:5000')
+import { getUnreadMessages } from './utils/chat'
 
 function App() {
+  const { chatClient } = useSelector((state) => state.chatOptions)
   const { isAuth, user } = useSelector((state) => state.isAuth)
   const dispatch = useDispatch()
 
-  const displayChat = useCallback(
-    (data) => {
-      const newMessage = {
-        conversation: data.conversation,
-        createdAt: data.createdAt,
-        isRead: false,
-        message: data._id,
-        body: data.content,
-        title: 'New Message',
-      }
-      dispatch(actions.chat.latestMessages(newMessage))
-      const tone = new Audio(chatSound)
-      tone.volume = 1
-      tone.play()
-    },
-    [dispatch]
-  )
-
   useEffect(() => {
-    if (user?._id) {
-      socket.emit('join', user._id, (error) => {
-        if (error) alert(error)
+    let isInterrupted = false
+    const client = new StreamChat(import.meta.env.VITE_STREAM_API_KEY)
+    if (
+      client.tokenManager.token === user?.chat_token &&
+      client.userID === user?._id
+    )
+      return
+    const connectPromise = client
+      .connectUser(
+        {
+          id: user._id,
+          name: user.fullNameInEnglish,
+          image: user.avatar,
+        },
+        user.chat_token
+      )
+      .then(async () => {
+        if (isInterrupted) return
+        console.log('client connected')
+        const nonReadMessages = await getUnreadMessages(client, user._id)
+        dispatch({
+          type: constants.chat.GET_UNREAD_COUNT,
+          payload: nonReadMessages,
+        })
+        dispatch({
+          type: constants.chat.SET_CHAT_CLIENT,
+          payload: client,
+        })
+      })
+    return () => {
+      isInterrupted = true
+      dispatch({
+        type: constants.chat.RESET_CHAT_CLIENT,
+      })
+      connectPromise.then(() => {
+        console.log('client  disconnect')
+        client.disconnectUser()
       })
     }
-    socket.on('message-notification', (data) => {
-      displayChat(data)
-    })
-    return () => {
-      if (socket?.connected) {
-        socket.off()
-      }
-    }
-  }, [user, socket])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?._id, user?.chat_token])
 
   return (
     <div className='App' data-theme='dark'>
       {isAuth && <Header />}
+
       <Routes>
         <Route path='/' element={<AuthorizationRouter />}>
           <Route index element={<Operation />} />
           <Route path='/operation'>
             <Route index element={<Operation />} />
             <Route path='new' element={<NewOperation />} />
+          </Route>
+          <Route path='/employees'>
+            <Route
+              index
+              element={user?.company?.isManager ? <Employees /> : <NotFound />}
+            />
+            <Route
+              path='new'
+              element={
+                user?.company?.isManager ? <NewEmployees /> : <NotFound />
+              }
+            />
           </Route>
           <Route path='/reports'>
             <Route path='active' element={<ActiveReports />}>
@@ -87,12 +108,15 @@ function App() {
             <Route path=':id' element={<Ticket />} />
           </Route>
           <Route path='/chat'>
-            <Route index element={<Chat socket={socket} />} />
-            <Route path=':id' element={<Chat socket={socket} />} />
+            <Route
+              index
+              element={<Chat chatClient={chatClient} user={user} />}
+            />
           </Route>
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
-      {/* <Footer /> */}
+      <ChatwootLiveChat />
     </div>
   )
 }

@@ -2,93 +2,94 @@
 @use '../../sass/media' as media;
 
 .operation {
-    background-color: #F5F5F5;
-    min-height: 100vh;
-    overflow: hidden;
-    h1 {
-        text-align: center;
-        margin: 10rem 0 4rem 0;
-        font-size: 5rem;
-        font-weight: 200;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  overflow: hidden;
+  h1 {
+    text-align: center;
+    margin: 10rem 0 4rem 0;
+    font-size: 5rem;
+    font-weight: 200;
 
-        @include media.mq(xxs) {
-            font-size: 4rem;
-        }
+    @include media.mq(xxs) {
+      font-size: 4rem;
     }
-    &__wrapper {
+  }
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0;
+    @include media.mq(xs) {
+      padding: 0 1rem;
+    }
+  }
+
+  &__actions {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 5rem;
+    width: 100%;
+    @include media.mq(sm) {
+      margin: 2rem !important;
+      width: 95% !important;
+    }
+    button {
+      all: unset;
+      color: var.$main-color;
+      box-shadow: inset 0px -1px 2px 0px rgb(0 0 0 / 30%);
+      background-color: var.$white-color;
+      border-radius: 1.6rem;
+      text-align: center;
+      transition: all 0.3s ease-in;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.02);
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    button:first-child {
+      width: 25rem;
+      padding: 1.5rem 2.5rem;
+      @include media.mq(sm) {
+        width: 15rem;
+        padding: 0.5rem 2rem;
+      }
+    }
+
+    button:last-child {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 15rem;
+      padding: 0.5rem 2rem;
+      span {
+        margin-right: 1rem;
+      }
+
+      @include media.mq(sm) {
         display: flex;
-        align-items: center;
-        flex-direction: column;
-        padding:0;
-        @include media.mq(xs) {
-            padding: 0 1rem;
-        }
+      }
     }
-
-    &__actions {
-        align-self: flex-start;
-        display: flex;
-        align-items:center;
-        justify-content: space-between;
-        margin: 2rem 5rem;
-        width:100%;
-        @include media.mq(sm) {
-            margin:2rem !important;
-            width:95% !important;
-        }
-        button {
-            all: unset;
-            color: var.$main-color;
-            box-shadow: inset 0px -1px 2px 0px rgb(0 0 0 / 30%);
-            background-color: var.$white-color;
-            border-radius: 1.6rem;
-            text-align: center;
-            transition: all 0.3s ease-in;
-            cursor: pointer;
-           &:hover {
-            transform: scale(1.02);
-           }
-            &:active {
-                transform:scale(0.95)
-            }
-        }
-
-        button:first-child {
-             width: 25rem;
-             padding: 1.5rem 2.5rem;
-            @include media.mq(sm){
-                width:15rem;
-                padding: 0.5rem 2rem;
-            }
-        }
-
-        button:last-child {
-            display: none;
-            align-items:center;
-            justify-content: center;
-            width: 15rem;
-            padding: 0.5rem 2rem;
-            span {
-                margin-right:1rem;
-            }
-
-            @include media.mq(sm){
-                display: flex;
-            }
-        }   
-    }
-    &__close {
-        position: absolute;
-        top:2rem;
-        right:2rem;
-        box-shadow: 2px 4px 6px rgb(0 0 0 / 30%);
-        border-radius: 50%;
-        display: grid;
-        display: -ms-grid;
-        place-items: center;
-        color:var.$main-color;
-        padding:0.5rem;
-        z-index:9999;
-        cursor: pointer;
-    }
+  }
+  &__close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    box-shadow: 2px 4px 6px rgb(0 0 0 / 30%);
+    border-radius: 50%;
+    display: grid;
+    display: -ms-grid;
+    place-items: center;
+    color: var.$main-color;
+    padding: 0.5rem;
+    z-index: 9999;
+    cursor: pointer;
+  }
 }

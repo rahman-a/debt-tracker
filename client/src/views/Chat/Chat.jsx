@@ -1,66 +1,103 @@
-import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import style from './Chat.module.scss'
-import { ChatSidebar, Conversation, BackButton } from '../../components'
+/* eslint-disable react/prop-types */
+import { useEffect } from 'react'
+import style from './style.module.scss'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import i18next from 'i18next'
+import Dayjs from 'dayjs'
+import 'dayjs/locale/ar'
+import {
+  Chat as StreamChatComponent,
+  ChannelList,
+  Channel,
+  Window,
+  MessageList,
+  MessageInput,
+  LoadingIndicator,
+  Streami18n,
+} from 'stream-chat-react'
+import {
+  ChannelListWrapper,
+  ChannelWrapper,
+  ChatHeader,
+  ChatInput,
+  ChatSidebar,
+  CustomAttachment,
+  CustomTypingIndicator,
+} from '../../components/Chat'
+import { BackButton } from '../../components'
+import ChatContextProvider from '../../context/ChatContext'
 import constants from '../../constants'
+import { getUnreadMessages } from '../../utils/chat'
+import arabicTranslation from '../../localization/chat/ar.json'
 
-function Chat({ socket }) {
-  const [unSeenMessage, setUnSeenMessage] = useState(null)
-  const { user } = useSelector((state) => state.isAuth)
-  const { conversation } = useSelector((state) => state.listMessages)
-  const dispatch = useDispatch()
-
+const Chat = ({ chatClient, user }) => {
+  const lang = i18next.language
+  const i18Instance = new Streami18n({
+    language: lang,
+    DateTimeParser: Dayjs,
+    translationsForLanguage: lang === 'ar' ? arabicTranslation : null,
+  })
+  // console.log('i18Instance: ', i18Instance)
   const navigate = useNavigate()
-  const { t } = useTranslation()
-  const { id } = useParams()
-
-  const handleNavigationBack = () => {
-    if (id) {
-      navigate(-2)
-    } else navigate(-1)
-  }
-
-  useEffect(() => {
-    socket.emit('join-chat', user._id, (error) => {
-      if (error) alert(error)
+  const dispatch = useDispatch()
+  const unreadMessage = async () => {
+    dispatch({
+      type: constants.chat.GET_UNREAD_COUNT,
+      payload: await getUnreadMessages(chatClient, user._id),
     })
-    return () => {
-      socket.emit('left-chat', user._id, (error) => {
-        if (error) alert(error)
-      })
-      dispatch({ type: constants.chat.LIST_CONVERSATION_MESSAGES_RESET })
-    }
-  }, [])
-
+  }
   useEffect(() => {
-    conversation &&
-      conversation.metadata.isRoom &&
-      socket.emit(
-        'join-room',
-        {
-          _id: user._id,
-          room: conversation.metadata.conversation,
-        },
-        (error) => {
-          if (error) alert(error)
-        }
-      )
-  }, [conversation, user._id])
-
+    const timeout = setTimeout(() => {
+      unreadMessage()
+      clearTimeout(timeout)
+    }, 1000)
+  }, [])
   return (
-    <div className={style.chat}>
-      <BackButton page={() => handleNavigationBack()} text={t('go-back')} />
-      <div className={style.chat__container}>
-        <ChatSidebar
-          socket={socket}
-          unSeenMessage={unSeenMessage}
-          setUnSeenMessage={setUnSeenMessage}
-        />
-        <Conversation socket={socket} setUnSeenMessage={setUnSeenMessage} />
+    <ChatContextProvider>
+      <div className={style.chat}>
+        {chatClient ? (
+          <>
+            <BackButton page={() => navigate(-1)} text='Back' />
+            <div className={style.chat__container}>
+              <StreamChatComponent
+                client={chatClient}
+                i18nInstance={i18Instance}
+              >
+                <ChannelListWrapper>
+                  <ChannelList
+                    List={ChatSidebar}
+                    sendChannelsToList
+                    filters={{ members: { $in: [user._id] } }}
+                    sort={{ last_message_at: -1 }}
+                  />
+                </ChannelListWrapper>
+                <ChannelWrapper>
+                  <Channel
+                    TypingIndicator={CustomTypingIndicator}
+                    Input={ChatInput}
+                    Attachment={CustomAttachment}
+                  >
+                    <Window>
+                      <ChatHeader />
+                      <MessageList
+                        disableQuotedMessages={true}
+                        messageActions={['edit', 'delete', 'react']}
+                      />
+                      <MessageInput />
+                    </Window>
+                  </Channel>
+                </ChannelWrapper>
+              </StreamChatComponent>
+            </div>
+          </>
+        ) : (
+          <div className={style.chat__loading}>
+            <LoadingIndicator />
+          </div>
+        )}
       </div>
-    </div>
+    </ChatContextProvider>
   )
 }
 

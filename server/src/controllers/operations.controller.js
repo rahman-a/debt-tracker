@@ -267,11 +267,34 @@ export const listAllMemberOperations = async (req, res, next) => {
               },
             },
             {
+              $lookup: {
+                from: 'companies',
+                localField: 'company.data',
+                foreignField: '_id',
+                as: 'company.data',
+                pipeline: [
+                  {
+                    $project: {
+                      name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $unwind: {
+                path: '$company.data',
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
               $project: {
                 fullNameInEnglish: 1,
                 fullNameInArabic: 1,
+                company: 1,
                 color: '$colorCode.code',
                 avatar: 1,
+                isEmployee: 1,
               },
             },
           ],
@@ -290,11 +313,34 @@ export const listAllMemberOperations = async (req, res, next) => {
               },
             },
             {
+              $lookup: {
+                from: 'companies',
+                localField: 'company.data',
+                foreignField: '_id',
+                as: 'company.data',
+                pipeline: [
+                  {
+                    $project: {
+                      name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $unwind: {
+                path: '$company.data',
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
               $project: {
                 fullNameInEnglish: 1,
                 fullNameInArabic: 1,
+                company: 1,
                 color: '$colorCode.code',
                 avatar: 1,
+                isEmployee: 1,
               },
             },
           ],
@@ -406,10 +452,10 @@ export const updateOperationState = async (req, res, next) => {
     const initiator = await User.findById(operation.initiator.user)
     const peer = await User.findById(operation.peer.user)
 
-    // if (isAdmin) {
-    //   operation.state = state
-    //   await operation.save()
-    // }
+    if (isAdmin) {
+      operation.state = state
+      await operation.save()
+    }
 
     operation.state = state
 

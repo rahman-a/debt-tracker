@@ -1,10 +1,8 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import flags from 'country-flag-emoji-json'
-import { useTranslation } from 'react-i18next'
 
 const Country = ({ setInfo }) => {
-  const { t } = useTranslation()
   const countries = (_) => {
     return flags.map((flag) => ({
       name: flag.name,

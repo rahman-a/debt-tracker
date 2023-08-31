@@ -3,7 +3,6 @@ import operationAPI from './operations.api'
 import reportsAPI from './reports.api'
 import notificationsAPI from './notifications.api'
 import ticketAPI from './tickets.api'
-import chatAPI from './chat.api'
 import contentAPI from './content.api'
 import articleAPI from './article.api'
 import aboutAPI from './about.api'
@@ -14,7 +13,6 @@ const api = {
   reports: reportsAPI,
   notifications: notificationsAPI,
   tickets: ticketAPI,
-  chat: chatAPI,
   content: contentAPI,
   article: articleAPI,
   about: aboutAPI,
