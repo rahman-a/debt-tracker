@@ -7,6 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import { Copy, Check, Edit, Trash } from '../../icons'
 import { Loader } from '../../components'
 import Delete from './Delete'
+import {
+  panelBodyDateClasses,
+  panelBodyNameClasses,
+  panelBodyPhotoClasses,
+  panelHeaderIdClasses,
+  panelHeaderStateClasses,
+} from './classes'
 
 const Panel = ({ user }) => {
   const [isCopied, setIsCopied] = useState(false)
@@ -39,21 +46,13 @@ const Panel = ({ user }) => {
       />
       <div className={style.panel}>
         <div className={style.panel__header}>
-          <div
-            className={`${style.panel__header_id} ${
-              lang === 'ar' ? style.panel__header_id_ar : ''
-            }`}
-          >
+          <div className={panelHeaderIdClasses}>
             <CopyToClipboard text={user.code} onCopy={copyIdHandler}>
               <span>{isCopied ? <Check /> : <Copy />}</span>
             </CopyToClipboard>
             <span>{`#${user.code}`}</span>
           </div>
-          <div
-            className={`${style.panel__header_state} ${
-              lang === 'ar' ? style.panel__header_state_ar : ''
-            }`}
-          >
+          <div className={panelHeaderStateClasses}>
             {/* <span onClick={() => navigate(`/member/${user._id}`)}>
               <Edit />
             </span> */}
@@ -68,9 +67,7 @@ const Panel = ({ user }) => {
         </div>
         <div className={style.panel__body}>
           <figure
-            className={`${style.panel__body_photo} ${
-              lang === 'ar' ? style.panel__body_photo_ar : ''
-            }`}
+            className={panelBodyPhotoClasses}
             style={{ backgroundColor: user.status }}
           >
             <img
@@ -79,20 +76,12 @@ const Panel = ({ user }) => {
             />
           </figure>
           <div className={style.panel__body_data}>
-            <div
-              className={`${style.panel__body_name} ${
-                lang === 'ar' ? style.panel__body_name_ar : ''
-              }`}
-            >
+            <div className={panelBodyNameClasses}>
               <p>
                 {lang === 'ar' ? user.fullNameInArabic : user.fullNameInEnglish}
               </p>
             </div>
-            <div
-              className={`${style.panel__body_date} ${
-                lang === 'ar' ? style.panel__body_date_ar : ''
-              }`}
-            >
+            <div className={panelBodyDateClasses}>
               {t('registration-date')}:
               <p>
                 <span>

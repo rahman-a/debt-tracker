@@ -5,6 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 import {
   Currency,
   ChangeDue,
@@ -66,7 +67,9 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
       setIsCopied(false)
     }, 500)
   }
-
+  const rowCloseClasses = classnames(style.row__close, {
+    [style.row__close_disabled]: !isCredit,
+  })
   return (
     <>
       <PayFine
@@ -265,14 +268,14 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
             )}
           </td>
         )}
+
         {reports && (
           <td>
             {record.paymentDate ? (
               <Badge bg='success'>{recordPaymentDate}</Badge>
             ) : (
               <span
-                className={`${style.row__close} 
-                     ${!isCredit ? style.row__close_disabled : ''}`}
+                className={rowCloseClasses}
                 onClick={() => isCredit && setIsReportClose(true)}
               >
                 <HandshakeSlash />

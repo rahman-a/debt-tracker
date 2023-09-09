@@ -6,6 +6,7 @@ import actions from '../../actions'
 import { renderStateMessage } from '../../config/stateMessage'
 import DueDateChange from './DueDateChange'
 import { useTranslation } from 'react-i18next'
+import classnames from 'classnames'
 import i18next from 'i18next'
 
 const Notification = ({ data }) => {
@@ -40,6 +41,10 @@ const Notification = ({ data }) => {
     }
   }
 
+  const notificationClasses = classnames(style.notification, {
+    [style.notification_ar]: lang === 'ar',
+  })
+
   return (
     <>
       <OperationDecision
@@ -60,9 +65,7 @@ const Notification = ({ data }) => {
       />
 
       <div
-        className={`${style.notification} ${
-          lang === 'ar' ? style.notification_ar : ''
-        }`}
+        className={notificationClasses}
         onClick={takeDecisionHandler}
         style={{ backgroundColor: data.isRead ? '#fff' : '#e7f5ff' }}
       >

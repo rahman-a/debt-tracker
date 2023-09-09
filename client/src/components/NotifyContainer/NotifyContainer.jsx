@@ -6,6 +6,7 @@ import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Loader } from '../../components'
 import actions from '../../actions'
+import classnames from 'classnames'
 
 const NotifyContainer = ({
   title,
@@ -36,12 +37,12 @@ const NotifyContainer = ({
     }
   }
 
+  const notifyContainerClasses = classnames(style.notify__container, {
+    [style.notify__container_ar]: lang === 'ar',
+  })
+
   return (
-    <div
-      onClick={onclick ? onclick : null}
-      className={`${style.notify__container} 
-        ${lang === 'ar' ? style.notify__container_ar : ''}`}
-    >
+    <div onClick={onclick ? onclick : null} className={notifyContainerClasses}>
       <h4>{title}</h4>
       <ul
         className={style.notify__list}

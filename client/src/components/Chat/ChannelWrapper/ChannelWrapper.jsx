@@ -1,16 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useChatContext } from '../../../context/ChatContext'
+import classnames from 'classnames'
+
 const ChannelWrapper = ({ children }) => {
   const { isChatOpen } = useChatContext()
-  return (
-    <div
-      className={`str-chat__channel-wrapper ${
-        isChatOpen ? 'str-chat__open' : 'str-chat__close'
-      }`}
-    >
-      {children}
-    </div>
+  const streamChatChannelWrapperClasses = classnames(
+    'str-chat__channel-wrapper',
+    {
+      'str-chat__close': !isChatOpen,
+      'str-chat__open': isChatOpen,
+    }
   )
+  return <div className={streamChatChannelWrapperClasses}>{children}</div>
 }
 
 export default ChannelWrapper

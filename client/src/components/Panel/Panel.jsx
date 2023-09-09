@@ -21,6 +21,14 @@ import {
 } from '../../utils/table'
 import Decision from './Decision'
 import ChatComponent from './Chat'
+import {
+  panelBodyDateClasses,
+  panelBodyNameClasses,
+  panelBodyValueClasses,
+  panelNoteClasses,
+  panelCloseClasses,
+  panelBodyPhotoClasses,
+} from './classes'
 
 const Panel = ({ record, reports, due, op, closed }) => {
   const [isCopied, setIsCopied] = useState(false)
@@ -97,8 +105,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
             {reports && !record.paymentDate ? (
               <span
                 style={{ backgroundColor: 'darkgreen', color: '#fff' }}
-                className={`${style.panel__close} 
-                   ${!isCredit ? style.panel__disabled : ''}`}
+                className={panelCloseClasses(isCredit)}
                 onClick={() => isCredit && setIsReportClose(true)}
               >
                 {t('complete-payment')}
@@ -128,9 +135,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
         </div>
         <div className={style.panel__body}>
           <figure
-            className={`${style.panel__body_photo} ${
-              lang === 'ar' ? style.panel__body_photo_ar : ''
-            }`}
+            className={panelBodyPhotoClasses}
             style={{
               backgroundColor: isPeer
                 ? record.initiator?.user?.color ||
@@ -153,11 +158,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
             />
           </figure>
           <div className={style.panel__body_data}>
-            <div
-              className={`${style.panel__body_name} ${
-                lang === 'ar' ? style.panel__body_name_ar : ''
-              }`}
-            >
+            <div className={panelBodyNameClasses}>
               <p>{memberName.substring(0, 25) + '...'}</p>
               <span
                 className={style.panel__label}
@@ -172,11 +173,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
               </span>
             </div>
             <div className={style.panel__body_money}>
-              <div
-                className={`${style.panel__body_value} ${
-                  lang === 'ar' ? style.panel__body_value_ar : ''
-                }`}
-              >
+              <div className={panelBodyValueClasses}>
                 <h3>
                   {record.peer?.value ||
                     (record.debt > 0 ? record.debt : record.credit)}
@@ -195,9 +192,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
                       ? `Fine has been paid at ${finePaymentDate}`
                       : 'click to pay the delayed fine'
                   }
-                  className={`${style.panel__body_value} ${
-                    lang === 'ar' ? style.panel__body_value_ar : ''
-                  }`}
+                  className={panelBodyValueClasses}
                 >
                   <FineIcon width='3.5rem' height='3.5rem' />
                   {finePaymentDate ? (
@@ -208,11 +203,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
                 </div>
               )}
             </div>
-            <div
-              className={`${style.panel__body_date} ${
-                lang === 'ar' ? style.panel__body_date_ar : ''
-              }`}
-            >
+            <div className={panelBodyDateClasses}>
               {t('due-date')}:
               <p>
                 {record.paymentDate ? (
@@ -234,11 +225,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
           </div>
         </div>
         {note && (
-          <div
-            className={`${style.panel__note} ${
-              isShow ? style.panel__note_show : ''
-            }`}
-          >
+          <div className={panelNoteClasses(isShow)}>
             <span onClick={() => setIsShow((prev) => !prev)}>
               {isShow ? note : note.substring(0, 100) + '...'}
             </span>

@@ -13,6 +13,10 @@ const Filters = ({ filter, setFilter, setSearchValue, lang }) => {
     setSearchValue('')
   }
 
+  const activeClassHandler = (selector) => {
+    return filter === selector ? style.search__filter_active : ''
+  }
+
   return (
     <div
       className={`${style.search__filter} ${
@@ -20,19 +24,19 @@ const Filters = ({ filter, setFilter, setSearchValue, lang }) => {
       }`}
     >
       <button
-        className={filter === 'username' ? style.search__filter_active : ''}
+        className={activeClassHandler('username')}
         onClick={() => setFilterHandler('username')}
       >
         <span>{t('username')}</span>
       </button>
       <button
-        className={filter === 'mobile' ? style.search__filter_active : ''}
+        className={activeClassHandler('mobile')}
         onClick={() => setFilterHandler('mobile')}
       >
         <span>{t('mobile')}</span>
       </button>
       <button
-        className={filter === 'code' ? style.search__filter_active : ''}
+        className={activeClassHandler('code')}
         onClick={() => setFilterHandler('code')}
       >
         <span>{t('user-code')}</span>

@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 import { Camera } from '../../icons'
 import { CropImage } from '../../components'
 import Snapshot from './Snapshot'
@@ -23,14 +24,20 @@ const CameraPhoto = ({ isCamera, setIsCamera, uploadFileHandler }) => {
     setImgSrc('')
   }
 
+  const snapshotClasses = classnames(style.snapshot, {
+    [style.snapshot__ar]: lang === 'ar',
+  })
+
+  const snapshotTitleClassnames = classnames(style.snapshot__title, {
+    [style.snapshot__title_ar]: lang === 'ar',
+  })
+
   return (
     <Modal show={isCamera} centered>
       <Modal.Header>
         <Modal.Title>
           <p
-            className={`${style.snapshot__title} ${
-              lang === 'ar' ? style.snapshot__title_ar : ''
-            }`}
+            className={snapshotTitleClassnames}
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <Camera />
@@ -39,11 +46,7 @@ const CameraPhoto = ({ isCamera, setIsCamera, uploadFileHandler }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div
-          className={`${style.snapshot} ${
-            lang === 'ar' ? style.snapshot__ar : ''
-          }`}
-        >
+        <div className={snapshotClasses}>
           {isCropping ? (
             <CropImage
               setIsCropping={setIsCropping}

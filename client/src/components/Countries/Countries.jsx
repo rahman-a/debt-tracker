@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import flags from 'country-flag-emoji-json'
 import { v4 as uuidv4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
+import classnames from 'classnames'
 import { Globe } from '../../icons'
 
 const Countries = ({ selectedCountry, country, styles, wrapperClassName }) => {
@@ -48,17 +49,16 @@ const Countries = ({ selectedCountry, country, styles, wrapperClassName }) => {
       })
   }
 
+  const countriesClasses = classnames(style.countries, {
+    [wrapperClassName]: wrapperClassName,
+  })
+
   useEffect(() => {
     setList(countries())
   }, [])
 
   return (
-    <div
-      className={`${style.countries} ${
-        wrapperClassName ? wrapperClassName : ''
-      }`}
-      style={styles}
-    >
+    <div className={countriesClasses} style={styles}>
       <div className={style.countries__dropdown}>
         <input
           ref={inputRef}

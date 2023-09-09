@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 import actions from '../../actions'
 import { Loader } from '../../components'
 import {
@@ -62,6 +63,13 @@ const SideNavbar = ({
       setIsReportMenu(false)
     }
   }
+  const navbarMenuLogoutClasses = classnames(style.navbar__menu_item_logout, {
+    [style.navbar__menu_item_logout_ar]: language === 'ar',
+  })
+  const navbarMenuItems = classnames(
+    style.navbar__menu_item,
+    style.navbar__menu_item_lang
+  )
 
   return (
     <>
@@ -151,22 +159,14 @@ const SideNavbar = ({
                   <Loader center size='5' options={{ animation: 'border' }} />
                 </span>
               )}
-              <span
-                className={`${style.navbar__menu_item_logout} ${
-                  language === 'ar' ? style.navbar__menu_item_logout_ar : ''
-                }`}
-              >
+
+              <span className={navbarMenuLogoutClasses}>
                 <RightLogout />
               </span>
               <span>{t('logout')}</span>
             </div>
           </li>
-          <li
-            className={`
-                ${style.navbar__menu_item} 
-                ${style.navbar__menu_item_lang}
-                `}
-          >
+          <li className={navbarMenuItems}>
             <div>
               {loadingState && (
                 <span className={style.navbar__menu_item_loading}>

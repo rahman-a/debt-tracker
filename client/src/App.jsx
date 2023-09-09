@@ -60,12 +60,12 @@ function App() {
       })
     return () => {
       isInterrupted = true
-      dispatch({
-        type: constants.chat.RESET_CHAT_CLIENT,
-      })
       connectPromise.then(() => {
-        console.log('client  disconnect')
         client.disconnectUser()
+        dispatch({
+          type: constants.chat.RESET_CHAT_CLIENT,
+        })
+        console.log('client  disconnect')
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

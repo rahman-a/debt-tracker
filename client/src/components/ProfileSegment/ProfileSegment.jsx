@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Badge } from 'react-bootstrap'
+import classnames from 'classnames'
 import { Loader } from '../../components'
 import { Edit, ArrowRight, Plus, ArrowLeft } from '../../icons'
 import actions from '../../actions'
@@ -126,10 +127,12 @@ const ProfileSegment = ({ title, text, type, placeholder }) => {
     }
   }, [isDone, updatedAsset])
 
+  const segmentClasses = classnames(style.segment, {
+    [style.segment_ar]: lang === 'ar',
+  })
+
   return (
-    <div
-      className={`${style.segment} ${lang === 'ar' ? style.segment_ar : ''}`}
-    >
+    <div className={segmentClasses}>
       <h3>
         {t(title)}
         {type === 'password' && (
@@ -137,11 +140,13 @@ const ProfileSegment = ({ title, text, type, placeholder }) => {
             <Edit />
           </span>
         )}
-        {type && (type === 'outPhones' || type !== 'password') && placeholder && (
-          <span onClick={() => setIsEdit((prev) => !prev)}>
-            <Plus />
-          </span>
-        )}
+        {type &&
+          (type === 'outPhones' || type !== 'password') &&
+          placeholder && (
+            <span onClick={() => setIsEdit((prev) => !prev)}>
+              <Plus />
+            </span>
+          )}
       </h3>
 
       <p>

@@ -1,19 +1,20 @@
 import React from 'react'
+import i18next from 'i18next'
+import classnames from 'classnames'
 import style from './style.module.scss'
 import { Plus, Minus } from '../../icons'
 import { Loader } from '../../components'
-import i18next from 'i18next'
 
 const SideButton = ({ handler, text, minus, noIcon, loading, custom }) => {
   const lang = i18next.language
+  const buttonSideClasses = classnames(style.button__side, {
+    [style.button__side_ar]: lang === 'ar',
+    [style.button__side_noIcon]: noIcon,
+  })
   return (
     <button
       style={{ padding: loading ? '2.2rem 2rem' : '0', ...custom }}
-      className={`
-       ${style.button__side}
-       ${lang === 'ar' ? style.button__side_ar : ''}
-       ${noIcon && style.button__side_noIcon}
-       `}
+      className={buttonSideClasses}
       onClick={handler}
     >
       {minus ? (

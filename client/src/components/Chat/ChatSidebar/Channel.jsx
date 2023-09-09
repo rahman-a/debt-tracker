@@ -4,6 +4,7 @@ import { useChatContext } from 'stream-chat-react'
 import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import classnames from 'classnames'
 import { useChatContext as useBlockChatContext } from '../../../context/ChatContext'
 import constants from '../../../constants'
 import style from './style.module.scss'
@@ -105,15 +106,17 @@ const Channel = ({ isActive, channel }) => {
     setLastMessage(cutLongText(last_message?.text))
   }, [channel?.state.messageSets])
 
+  const chatSidebarClasses = classnames(style.sidebar__body_chat, {
+    [style.sidebar__body_chat_unseen]: isNewMessage,
+  })
+
   useEffect(() => {
     chatMemberInfo()
     getLastMessage()
   }, [channel, client, chatMemberInfo, getLastMessage])
   return (
     <div
-      className={`${style.sidebar__body_chat} ${
-        isNewMessage ? style.sidebar__body_chat_unseen : ''
-      }`}
+      className={chatSidebarClasses}
       style={{
         backgroundColor: isActive ? '#1a374d1a' : 'unset',
       }}

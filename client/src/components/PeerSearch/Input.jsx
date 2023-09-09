@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Badge } from 'react-bootstrap'
+import classnames from 'classnames'
 import actions from '../../actions'
 import constants from '../../constants'
 import { Loader } from '..'
@@ -77,12 +77,12 @@ const Input = ({
     error && setIsError(error)
   }, [error])
 
+  const inputClasses = classnames(style.search__input, {
+    [style.search__input_ar]: lang === 'ar',
+  })
+
   return (
-    <div
-      className={`${style.search__input} ${
-        lang === 'ar' ? style.search__input_ar : ''
-      }`}
-    >
+    <div className={inputClasses}>
       <input
         type='text'
         placeholder={inputPlaceholder}

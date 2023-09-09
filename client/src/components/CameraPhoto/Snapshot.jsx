@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap'
 import { v4 as uuidv4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import classnames from 'classnames'
 import { Portrait, Crop, User } from '../../icons'
 
 const Snapshot = ({
@@ -59,14 +60,16 @@ const Snapshot = ({
     }
   }
 
+  const snapshotImageClasses = classnames(style.snapshot__image, {
+    [style.snapshot__noImage]: mediaError || !isTaken,
+  })
+  const snapshotActionClasses = classnames(style.snapshot__actions, {
+    [style.snapshot__actions_ar]: lang === 'ar',
+  })
   return (
     <>
       <div className={style.snapshot__images}>
-        <div
-          className={`${style.snapshot__image} ${
-            mediaError ? style.snapshot__noImage : ''
-          }`}
-        >
+        <div className={snapshotImageClasses}>
           {!mediaError && (
             <Webcam
               key={uuidv4()}
@@ -87,11 +90,7 @@ const Snapshot = ({
             </>
           )}
         </div>
-        <div
-          className={`${style.snapshot__image} ${
-            !isTaken ? style.snapshot__noImage : ''
-          }`}
-        >
+        <div className={snapshotImageClasses}>
           {!isTaken && (
             <p>
               <span>
@@ -103,11 +102,7 @@ const Snapshot = ({
           {imgSrc && <img src={imgSrc} alt='avatar' />}
         </div>
       </div>
-      <div
-        className={`${style.snapshot__actions} ${
-          lang === 'ar' ? style.snapshot__actions_ar : ''
-        }`}
-      >
+      <div className={snapshotActionClasses}>
         <Button size='lg' variant='dark' onClick={takeVerificationPhotoHandler}>
           <span>
             <Portrait />

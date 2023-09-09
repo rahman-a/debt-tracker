@@ -3,20 +3,18 @@ import style from './style.module.scss'
 import { StarOfLife, File } from '../../icons'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import classnames from 'classnames'
 
 const Required = ({ text, styles, step }) => {
   const lang = i18next.language
   const { t } = useTranslation()
-
+  const requiredClasses = classnames(style.required, {
+    [style.required__text]: text,
+    [style.required__ar]: lang === 'ar',
+    [style.required__text_ar]: text && lang === 'ar',
+  })
   return (
-    <div
-      style={styles}
-      className={`
-        ${style.required} 
-        ${text && style.required__text}
-        ${lang === 'ar' && style.required__ar}
-        ${lang === 'ar' && text && style.required__text_ar}`}
-    >
+    <div style={styles} className={requiredClasses}>
       <div className={style.required__data}>
         <div className={style.required__label}>
           <div className={style.required__star}>
