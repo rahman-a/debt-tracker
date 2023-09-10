@@ -3,16 +3,21 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import classnames from 'classnames'
 import { MenuBars, Bell, ChatHelp } from '../../icons'
 import {
   Loader,
   SideNavbar,
   NotificationContainer,
-  PushNotification,
   ActivityTrack,
 } from '../../components'
 import actions from '../../actions'
+import {
+  headerClasses,
+  headerLanguageClasses,
+  headerIconClasses,
+  headerMenuClasses,
+  headerCredentialClasses,
+} from './classes'
 
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)
@@ -27,7 +32,6 @@ const Header = () => {
   const { notifications: pushNotifications } = useSelector(
     (state) => state.pushNotifications
   )
-  const { nonRead } = useSelector((state) => state.listNotifications)
   const navigate = useNavigate()
   const page = useLocation().pathname
   const language = i18next.language
@@ -35,28 +39,9 @@ const Header = () => {
   const {
     loading: notify_loading,
     error: notify_error,
+    nonRead,
     notifications,
   } = useSelector((state) => state.listNotifications)
-
-  const headerClasses = classnames(style.header, {
-    [style.header__ar]: language === 'ar',
-  })
-
-  const headerLanguageClasses = classnames(style.header__language_flag, {
-    [style.header__language_flag_ar]: language === 'ar',
-  })
-
-  const headerIconClasses = classnames(style.header__icon, {
-    [style.header__icon_ar]: language === 'ar',
-  })
-
-  const headerMenuClasses = classnames(style.header__language_menu, {
-    [style.header__language_menu_ar]: language === 'ar',
-  })
-
-  const headerCredentialClasses = classnames(style.header__credential, {
-    [style.header__credential_ar]: language === 'ar',
-  })
 
   const staffAvatar = staff?.avatar
     ? `/api/files/${staff.avatar}`
@@ -133,10 +118,11 @@ const Header = () => {
       setTimeout(() => {
         dispatch(actions.notifications.pushNotification())
       }, 5000)
-
+    console.log('non Read: ', nonRead)
     !nonRead && dispatch(actions.notifications.listNotification())
     return () => clearTimeout(initNotifications)
-  }, [page, isAuth, dispatch, nonRead])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, isAuth])
 
   useEffect(() => {
     ;(nonRead || nonRead === 0) && setNotificationsCount(nonRead)
@@ -147,12 +133,6 @@ const Header = () => {
       {isAuth && process.env.NODE_ENV === 'production' && (
         <ActivityTrack setSideMenu={setSideMenu} />
       )}
-      {pushNotifications &&
-        pushNotifications.length > 0 &&
-        pushNotifications.map((notification, idx) => (
-          <PushNotification key={idx} idx={idx} data={notification} />
-        ))}
-
       <div
         className={style.header__bg}
         ref={headerBgRef}

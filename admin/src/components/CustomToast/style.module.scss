@@ -1,0 +1,33 @@
+@use '../../sass/variables' as var;
+@use '../../sass/media' as media;
+
+.pushNotification {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  padding: 1.6rem;
+  background-color: rgba(var.$main-color, 0.9);
+  color: var.$white-color;
+  border-radius: 1rem;
+  cursor: pointer;
+  figure {
+    max-width: 5rem;
+    max-height: 5rem;
+    object-fit: cover;
+    margin-right: 1rem;
+    clip-path: circle();
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+  }
+  &__content {
+    h3 {
+      font-size: 1.45rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: lighten(var.$main-color, 70%);
+    }
+  }
+}

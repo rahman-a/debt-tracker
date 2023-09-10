@@ -3,17 +3,21 @@ import style from './style.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, ChatSupport, Chat } from '../../icons'
+import { MenuBars, Bell, Chat } from '../../icons'
 import {
   Loader,
   SideNavbar,
   NotificationContainer,
-  PushNotification,
   ActivityTrack,
 } from '../../components'
 import actions from '../../actions'
 import constants from '../../constants'
-import classes from './classes'
+import {
+  headerClasses,
+  headerIconClasses,
+  headerFlagClasses,
+  headerMenuClasses,
+} from './classes'
 
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)
@@ -132,15 +136,6 @@ const Header = () => {
 
   return (
     <>
-      {pushNotifications &&
-        pushNotifications.length > 0 &&
-        pushNotifications.map((notification, idx) => (
-          <PushNotification
-            key={notification._id}
-            idx={idx}
-            data={notification}
-          />
-        ))}
       {process.env.NODE_ENV == 'production' && (
         <ActivityTrack setSideMenu={setSideMenu} />
       )}
@@ -151,7 +146,7 @@ const Header = () => {
       ></div>
 
       <div
-        className={classes.header(language)}
+        className={headerClasses}
         style={{
           backgroundColor: '#1A374D',
         }}
@@ -159,7 +154,7 @@ const Header = () => {
         <div className='container'>
           <div className={style.header__wrapper}>
             {/* display the main icon */}
-            <div className={classes.icon(language)}>
+            <div className={headerIconClasses}>
               <span onClick={() => navigate('/')}>
                 <img src='/images/swtle.png' alt='logo' />
               </span>
@@ -186,7 +181,7 @@ const Header = () => {
               <div className={style.header__language}>
                 {/* display the other main language */}
                 <div
-                  className={classes.flag(language)}
+                  className={headerFlagClasses}
                   onClick={showLanguageHandler}
                 >
                   {language === 'ar' ? (
@@ -198,7 +193,7 @@ const Header = () => {
 
                 {/* the dropdown to select the language */}
                 <div
-                  className={classes.menu(language)}
+                  className={headerMenuClasses}
                   style={{ display: langDropDown ? 'block' : 'none' }}
                 >
                   {loadingState && (

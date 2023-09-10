@@ -7,6 +7,8 @@ import 'simplebar-react/dist/simplebar.min.css'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import store from './store'
 import 'stream-chat-react/dist/scss/v2/index.scss'
+import 'react-toastify/dist/ReactToastify.css'
+import './App.scss'
 import App from './App'
 import './i18next'
 

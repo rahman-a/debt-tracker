@@ -1,8 +1,8 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './App.scss'
+
 import { useSelector } from 'react-redux'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import { Header, Footer } from './components'
 import {
   Dashboard,
@@ -25,6 +25,20 @@ function App() {
 
   return (
     <div className='App'>
+      <ToastContainer
+        autoClose={false}
+        position='bottom-right'
+        hideProgressBar={true}
+        closeButton={false}
+        newestOnTop={true}
+        style={{
+          maxWidth: '45rem',
+          width: 'auto',
+          maxHeight: 'calc(100vh - 8rem)',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+        }}
+      />
       <Header />
       <Routes>
         <Route

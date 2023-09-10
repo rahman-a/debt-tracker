@@ -1,8 +1,11 @@
+import { toast } from 'react-toastify'
+import { CustomToast } from '../components'
 import constants from '../constants'
 import api from '../api'
 
 const listNotification = (query) => async (dispatch) => {
   dispatch({ type: constants.notifications.LIST_NOTIFICATIONS_REQUEST })
+
   try {
     const { data } = await api.notifications.index(query)
     dispatch({
@@ -42,7 +45,7 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
   try {
     const { data } = await api.notifications.updateState(id)
 
-    let { notifications, count, nonRead } = getState().listNotifications
+    let { notifications, nonRead, count } = getState().listNotifications
 
     if (notifications) {
       const copiedNotifications = JSON.parse(JSON.stringify(notifications))
@@ -52,6 +55,7 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
           notification.isRead = data.isRead
         }
       })
+
       dispatch({
         type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
         notifications: copiedNotifications,
@@ -59,7 +63,6 @@ const updateNotificationState = (id) => async (dispatch, getState) => {
         nonRead: data.isRead ? nonRead - 1 : nonRead + 1,
       })
     }
-
     dispatch({
       type: constants.notifications.UPDATE_NOTIFICATION_SUCCESS,
       payload: data.message,
@@ -79,7 +82,14 @@ const pushNotification = () => async (dispatch, getState) => {
     const { data } = await api.notifications.push()
 
     let { notifications, nonRead, count } = getState().listNotifications
-    if (notifications && notifications.length < 7) {
+    if (!notifications?.length) {
+      dispatch({
+        type: constants.notifications.LIST_NOTIFICATIONS_SUCCESS,
+        notifications: data.notifications,
+        count: data.notifications.length,
+        nonRead: data.notifications.length,
+      })
+    } else if (notifications && notifications.length < 7) {
       const reducedNotifications = data.notifications.slice(
         0,
         Math.abs(notifications.length - 7)
@@ -90,6 +100,15 @@ const pushNotification = () => async (dispatch, getState) => {
         notifications,
         count,
         nonRead: nonRead + data.notifications.length,
+      })
+    }
+
+    if (data?.notifications?.length) {
+      data.notifications.forEach((notification) => {
+        toast(<CustomToast />, {
+          data: notification,
+          style: { padding: 0 },
+        })
       })
     }
 

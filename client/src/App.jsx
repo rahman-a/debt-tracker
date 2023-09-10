@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './App.scss'
+import React, { useEffect } from 'react'
+
 import { useSelector, useDispatch } from 'react-redux'
 import { Routes, Route } from 'react-router-dom'
 import { StreamChat } from 'stream-chat'
+import { ToastContainer } from 'react-toastify'
 import constants from './constants'
 import { Header, AuthorizationRouter, ChatwootLiveChat } from './components'
 import {
@@ -74,7 +74,20 @@ function App() {
   return (
     <div className='App' data-theme='dark'>
       {isAuth && <Header />}
-
+      <ToastContainer
+        autoClose={false}
+        position='bottom-right'
+        hideProgressBar={true}
+        closeButton={false}
+        newestOnTop={true}
+        style={{
+          maxWidth: '45rem',
+          width: 'auto',
+          maxHeight: 'calc(100vh - 8rem)',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+        }}
+      />
       <Routes>
         <Route path='/' element={<AuthorizationRouter />}>
           <Route index element={<Operation />} />

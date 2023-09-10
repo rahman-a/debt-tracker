@@ -1368,6 +1368,6 @@ function expireAt(day) {
   return expiry.setDate(today.getDate() + day)
 }
 
-cron.schedule('10 6 * * *', scanUserDocuments, {
+cron.schedule('33 6 * * *', scanUserDocuments, {
   timezone: 'Asia/Dubai',
 })
