@@ -1,26 +1,26 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .back {
-    all: unset;
-    position: absolute;
-    direction: ltr;
-    @include media.mq(md) {
-        font-size: 1.4rem;
-    }
-    span {
-        transition: all 0.3s ease;
-    }
+  all: unset;
+  position: absolute;
+  direction: ltr;
+  @include media.mq(md) {
+    font-size: 1.4rem;
+  }
+  span {
+    transition: all 0.3s ease;
+  }
 
-    span:first-child {
-        display: inline-block;
-    }
+  span:first-child {
+    display: inline-block;
+  }
 
-    &:hover span:last-child {
-        border-bottom: 1px dashed var.$main-color;
-    }
+  &:hover span:last-child {
+    border-bottom: 1px dashed var.$main-color;
+  }
 
-    &:hover span:first-child {
-        transform:rotate(180deg) translate(5px, -2px);
-    }
+  &:hover span:first-child {
+    transform: rotate(180deg) translate(5px, -2px);
+  }
 }

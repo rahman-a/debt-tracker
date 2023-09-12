@@ -4,7 +4,7 @@ import { Badge } from 'react-bootstrap'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import { Required } from '../../components'
+import { Required } from '@/src/components'
 
 const Input = ({
   icon,

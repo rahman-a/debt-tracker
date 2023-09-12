@@ -5,10 +5,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Badge } from 'react-bootstrap'
 import classnames from 'classnames'
-import { Loader } from '../../components'
-import { Edit, ArrowRight, Plus, ArrowLeft } from '../../icons'
-import actions from '../../actions'
 import i18next from 'i18next'
+import { Loader } from '@/src/components'
+import { Edit, ArrowRight, Plus, ArrowLeft } from '@/src/icons'
+import actions from '@/src/actions'
 
 const Country = ({ country }) => {
   const { t } = useTranslation()

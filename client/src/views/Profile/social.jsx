@@ -2,7 +2,7 @@ import React from 'react'
 import style from './style.module.scss'
 import { useTranslation } from 'react-i18next'
 import { FacebookShareButton, WhatsappShareButton } from 'react-share'
-import { ProfileContainer } from '../../components'
+import { ProfileContainer } from '@/src/components'
 
 const Social = () => {
   const { t } = useTranslation()

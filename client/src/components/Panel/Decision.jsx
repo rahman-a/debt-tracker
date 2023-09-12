@@ -2,10 +2,10 @@ import React from 'react'
 import style from './style.module.scss'
 import { Modal, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../../actions'
-import constants from '../../constants'
-import { SideAlert, Loader } from '../../components'
 import { useTranslation } from 'react-i18next'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
+import { SideAlert, Loader } from '@/src/components'
 
 const Decision = ({ isDecision, setIsDecision, id }) => {
   const { loading, error, message } = useSelector(

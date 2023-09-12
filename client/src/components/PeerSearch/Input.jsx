@@ -3,12 +3,12 @@ import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import actions from '../../actions'
-import constants from '../../constants'
 import { Loader } from '..'
-import { Check } from '../../icons'
 import CompanyLabel from './CompanyLabel'
 import StatusLabel from './StatusLabel'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
+import { Check } from '@/src/icons'
 
 const Input = ({
   filter,

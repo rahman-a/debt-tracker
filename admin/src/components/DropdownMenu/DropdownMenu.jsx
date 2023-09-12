@@ -4,7 +4,7 @@ import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import classnames from 'classnames'
-import { ChevronDown } from '../../icons'
+import { ChevronDown } from '@/src/icons'
 
 const DropdownMenu = ({
   data,

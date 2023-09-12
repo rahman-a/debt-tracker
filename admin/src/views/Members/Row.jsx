@@ -3,11 +3,11 @@ import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Modal, Button, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Loader } from '../../components'
-import { Edit, Trash, Wrench } from '../../icons'
-import actions from '../../actions'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { Loader } from '@/src/components'
+import { Edit, Trash, Wrench } from '@/src/icons'
+import actions from '@/src/actions'
 
 const Row = ({ user, idx }) => {
   const [toggleDelete, setToggleDelete] = useState(false)

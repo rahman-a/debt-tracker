@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Loader } from '../../components'
-import actions from '../../actions'
 import classnames from 'classnames'
+import { Loader } from '@/src/components'
+import actions from '@/src/actions'
 
 const NotifyContainer = ({
   title,

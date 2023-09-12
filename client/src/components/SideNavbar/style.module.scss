@@ -1,11 +1,10 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .navbar {
   &__menu {
     position: fixed;
-    background-color: var.$main-color;
-    color: var.$white-color;
+    background-color: var.$white-color;
     height: 100vh;
     top: 5.6rem;
     z-index: 999;
@@ -36,11 +35,7 @@
         align-items: center;
         cursor: pointer;
         &:hover {
-          background-color: rgba(var.$full-light-color, 0.2);
-        }
-
-        &:hover span {
-          color: var.$white-color;
+          background-color: rgba(var.$full-light-color, 0.3);
         }
       }
       &_logout {
@@ -73,7 +68,7 @@
 
       span {
         font-size: 1.6rem;
-        color: var.$full-light-color;
+        color: var.$main-color;
       }
 
       svg {
@@ -92,7 +87,7 @@
 
     &_reports {
       list-style: none;
-      background-color: lighten(var.$main-color, 5);
+      background-color: lighten(var.$full-light-color, 15);
       padding: 0;
       margin: 0;
       height: 0;
@@ -101,14 +96,16 @@
       &_item {
         padding: 2rem;
         cursor: pointer;
-        border-bottom: 1px dashed rgb(150 150 150 / 30%);
-        box-shadow: 1px 0px 0px 1px rgb(0 0 0 / 30%);
+        box-shadow: 1px 0px 0px 1px rgb(0 0 0 / 10%);
         &:hover {
           background-color: rgba(var.$full-light-color, 0.2);
         }
         &:hover span {
-          color: var.$white-color;
+          color: var.$main-color;
         }
+      }
+      &_item:not(:last-child) {
+        border-bottom: 1px dashed rgb(150 150 150 / 5%);
       }
     }
   }

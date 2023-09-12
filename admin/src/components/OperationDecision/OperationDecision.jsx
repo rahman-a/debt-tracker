@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import style from './style.module.scss'
 import { Modal, Alert } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
-import { CheckDouble, Times } from '../../icons'
-import { Currency, Loader, HeaderAlert } from '../../components'
-import actions from '../../actions'
-import constants from '../../constants'
+import { CheckDouble, Times } from '@/src/icons'
+import { Currency, Loader, HeaderAlert } from '@/src/components'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const OperationDecision = ({ show, onHide, id, notificationId }) => {
   const dispatch = useDispatch()

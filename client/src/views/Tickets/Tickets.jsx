@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-
+import Row from './Row'
 import {
   AltTable,
   Pagination,
@@ -13,10 +13,8 @@ import {
   TicketsFilter,
   Replay,
   TicketCard,
-} from '../../components'
-import { FilterSearch } from '../../icons'
-import actions from '../../actions'
-import Row from './Row'
+} from '@/src/components'
+import actions from '@/src/actions'
 
 const Tickets = () => {
   const [isFilterModal, setIsFilterModal] = useState(false)

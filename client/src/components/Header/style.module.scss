@@ -1,5 +1,5 @@
-@use '../../sass/variables.scss' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .header {
   position: relative;
@@ -8,6 +8,7 @@
   z-index: 999;
   width: 100%;
   transition: all 0.3s ease;
+  background-color: var.$main-color;
   &__wrapper {
     display: flex;
     align-items: center;
@@ -211,7 +212,7 @@
     span {
       position: relative;
       cursor: pointer;
-      color: var.$light-color;
+      color: var.$second-color;
       margin-left: 3rem;
       svg {
         width: 2.5rem;

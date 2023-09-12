@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { Button, Form, Modal, Tab, Tabs, Alert } from 'react-bootstrap'
-import { PeerSearch } from '..'
 
 const ReportPrinting = ({ show, hideHandler, data }) => {
   const [activeTab, setActiveTab] = useState('single_transaction')

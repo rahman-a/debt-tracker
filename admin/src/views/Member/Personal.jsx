@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { ProfileContainer, ProfileSegment, EditMember } from '../../components'
-import { Copy, Check, Wrench } from '../../icons'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import { ProfileContainer, ProfileSegment, EditMember } from '@/src/components'
+import { Copy, Check, Wrench } from '@/src/icons'
 
 const Personal = ({ data }) => {
   const [isCopied, setIsCopied] = useState(false)

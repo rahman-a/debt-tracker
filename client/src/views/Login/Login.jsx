@@ -10,13 +10,13 @@ import {
   useDisclosure,
   Button,
 } from '@chakra-ui/react'
-import { LoginForm, LoginCode, PhoneConfirm, Language } from '../../components'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import actions from '../../actions'
-import constants from '../../constants'
+import { LoginForm, LoginCode, PhoneConfirm, Language } from '@/src/components'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 export default function Login(props) {
   const [userEmail, setUserEmail] = useState('')

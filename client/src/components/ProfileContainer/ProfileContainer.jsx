@@ -2,7 +2,7 @@ import React from 'react'
 import style from './style.module.scss'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import { Ribbon } from '../../components'
+import { Ribbon } from '@/src/components'
 
 const ProfileContainer = ({ children, title, ribbon, className }) => {
   const { t } = useTranslation()

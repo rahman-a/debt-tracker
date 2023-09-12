@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from 'react-bootstrap'
 import parser from 'html-react-parser'
-import { Copy, Check, LockOpen, Eye, Lock } from '../../icons'
-import { Loader } from '../../components'
-import msToTime from '../../config/msToTime'
 import CloseTicket from './CloseTicket'
+import { Copy, Check, LockOpen, Eye, Lock } from '@/src/icons'
+import { Loader } from '@/src/components'
+import msToTime from '@/src/config/msToTime'
 
 const Panel = ({ ticket }) => {
   const [isCopied, setIsCopied] = useState(false)

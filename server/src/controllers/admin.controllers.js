@@ -1,4 +1,6 @@
+// @ts-nocheck
 import User from '../models/users.model.js'
+import Session from '../models/sessions.model.js'
 import Operation from '../models/operations.model.js'
 import Report from '../models/reports.model.js'
 import Ticket from '../models/tickets.model.js'
@@ -12,11 +14,23 @@ export const login = async (req, res, next) => {
       throw new Error(req.t('not_authorized_to_access_dashboard'))
     }
 
-    const tokenExpiry = '7 days'
-
-    const token = staff.generateToken(tokenExpiry)
-
-    res.cookie('tkid', token, {
+    // create session document
+    const session = new Session()
+    // create authToken
+    const data = {
+      payload: { sessionId: session._id.toString() },
+      secret: process.env.JWT_TOKEN,
+    }
+    const tokenExpiry = `7 days`
+    const authToken = staff.generateToken(data, tokenExpiry)
+    const expireDate = expireAt(7)
+    // assign value to new session
+    session.authToken = authToken
+    session.expireAt = expireDate
+    session.user = staff._id
+    // save session
+    await session.save()
+    res.cookie('tkid', authToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     })
@@ -41,6 +55,10 @@ export const login = async (req, res, next) => {
 // logout handler
 export const logoutHandler = async (req, res, next) => {
   try {
+    const sessionId = req.sessionId
+    if (sessionId) {
+      await Session.findByIdAndRemove(sessionId)
+    }
     res.clearCookie('tkid')
     res.send({
       success: true,

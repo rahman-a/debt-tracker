@@ -4,7 +4,7 @@ import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../../actions'
+import actions from '@/src/actions'
 
 const Delete = ({ toggleDelete, setToggleDelete, setIsDeleting, id }) => {
   const dispatch = useDispatch()

@@ -6,8 +6,8 @@ import Scrollbar from 'simplebar-react'
 import { useTranslation } from 'react-i18next'
 import SearchInput from './searchInput'
 import User from './User'
-import Loader from '../../Loader/Loader'
-import { BrokenHeart } from '../../../icons'
+import Loader from '@/src/components/Loader/Loader'
+import { BrokenHeart } from '@/src/icons'
 
 const NewChat = ({ isNewChat, setIsNewChat }) => {
   const { loading, error, users } = useSelector((state) => state.createNewChat)

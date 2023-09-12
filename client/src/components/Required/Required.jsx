@@ -1,9 +1,9 @@
 import React from 'react'
 import style from './style.module.scss'
-import { StarOfLife, File } from '../../icons'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
+import { StarOfLife, File } from '@/src/icons'
 
 const Required = ({ text, styles, step }) => {
   const lang = i18next.language

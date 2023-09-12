@@ -5,11 +5,11 @@ import { Badge, Button, Modal, Alert } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Loader, EditMember } from '../../components'
-import labels from '../../config/label'
-import messages from '../../config/messages'
-import actions from '../../actions'
-import { Plus } from '../../icons'
+import { Loader, EditMember } from '@/src/components'
+import labels from '@/src/config/label'
+import messages from '@/src/config/messages'
+import actions from '@/src/actions'
+import { Plus } from '@/src/icons'
 
 const Country = ({ country }) => {
   const [isEdit, setIsEdit] = useState(false)

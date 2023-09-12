@@ -4,8 +4,6 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Copy, Check, Edit, Trash, Wrench } from '../../icons'
-import { Loader } from '../../components'
 import Delete from './Delete'
 import {
   panelBodyDateClasses,
@@ -14,6 +12,8 @@ import {
   panelHeaderIdClasses,
   panelHeaderStateClasses,
 } from './classes'
+import { Copy, Check, Edit, Trash, Wrench } from '@/src/icons'
+import { Loader } from '@/src/components'
 
 const Panel = ({ user }) => {
   const [isCopied, setIsCopied] = useState(false)

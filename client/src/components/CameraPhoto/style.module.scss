@@ -1,5 +1,5 @@
-@use '../../sass/media' as media;
-@use '../../sass/variables' as var;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .snapshot {
   &__title {

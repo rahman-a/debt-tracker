@@ -6,13 +6,15 @@ import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import Decision from './Decision'
+import Chat from './Chat'
 import {
   Currency,
   ChangeDue,
   Description,
   CloseReport,
   PayFine,
-} from '../../components'
+} from '@/src/components'
 import {
   Copy,
   Check,
@@ -21,8 +23,7 @@ import {
   Times,
   Chat as ChatIcon,
   CashRegister,
-} from '../../icons'
-import Decision from './Decision'
+} from '@/src/icons'
 import {
   getUserData,
   getMemberName,
@@ -35,8 +36,7 @@ import {
   defineValue,
   formatPaymentDate,
   isPeerUserEmployee,
-} from '../../utils/table'
-import Chat from './Chat'
+} from '@/src/utils/table'
 
 const Row = ({ record, idx, reports, due, op, closed }) => {
   const [isCopied, setIsCopied] = useState(false)

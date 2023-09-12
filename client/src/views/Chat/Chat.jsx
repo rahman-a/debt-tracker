@@ -24,12 +24,12 @@ import {
   ChatSidebar,
   CustomAttachment,
   CustomTypingIndicator,
-} from '../../components/Chat'
-import { BackButton } from '../../components'
-import ChatContextProvider from '../../context/ChatContext'
-import constants from '../../constants'
-import { getUnreadMessages } from '../../utils/chat'
-import arabicTranslation from '../../localization/chat/ar.json'
+} from '@/src/components/Chat'
+import { BackButton } from '@/src/components'
+import ChatContextProvider from '@/src/context/ChatContext'
+import constants from '@/src/constants'
+import { getUnreadMessages } from '@/src/utils/chat'
+import arabicTranslation from '@/src/localization/chat/ar.json'
 
 const Chat = ({ chatClient, user }) => {
   const lang = i18next.language
@@ -38,7 +38,6 @@ const Chat = ({ chatClient, user }) => {
     DateTimeParser: Dayjs,
     translationsForLanguage: lang === 'ar' ? arabicTranslation : null,
   })
-  // console.log('i18Instance: ', i18Instance)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const unreadMessage = async () => {

@@ -7,11 +7,11 @@ import i18next from 'i18next'
 import { useCallback, useState } from 'react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useChatContext as useChatBlockContext } from '../../../context/ChatContext'
-import userImage from '../../../asset/images/user.png'
-import chatImage from '../../../asset/images/chat.png'
-import { ArrowLeft } from '../../../icons'
 import style from './style.module.scss'
+import { useChatContext as useChatBlockContext } from '@/src/context/ChatContext'
+import userImage from '@/src/asset/images/user.png'
+import chatImage from '@/src/asset/images/chat.png'
+import { ArrowLeft } from '@/src/icons'
 
 const ChatHeader = () => {
   const [user, setUser] = useState(null)

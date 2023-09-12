@@ -4,8 +4,8 @@ import { Modal, Button } from 'react-bootstrap'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import { Camera } from '../../icons'
 import CropImage from './CropImage'
+import { Camera } from '@/src/icons'
 
 const CropModal = ({
   isCropPhoto,

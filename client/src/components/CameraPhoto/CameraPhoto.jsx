@@ -4,9 +4,9 @@ import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import { Camera } from '../../icons'
-import { CropImage } from '../../components'
 import Snapshot from './Snapshot'
+import { Camera } from '@/src/icons'
+import { CropImage } from '@/src/components'
 
 const CameraPhoto = ({ isCamera, setIsCamera, uploadFileHandler }) => {
   const [imgSrc, setImgSrc] = useState('')

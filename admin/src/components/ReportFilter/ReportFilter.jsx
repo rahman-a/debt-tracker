@@ -2,7 +2,7 @@ import React from 'react'
 import i18next, { t } from 'i18next'
 import classnames from 'classnames'
 import style from './style.module.scss'
-import { Input, DropdownMenu, DateInput } from '../../components'
+import { Input, DropdownMenu, DateInput } from '@/src/components'
 
 const Filter = ({
   hidden,

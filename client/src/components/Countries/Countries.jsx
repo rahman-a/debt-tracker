@@ -4,7 +4,7 @@ import flags from 'country-flag-emoji-json'
 import { v4 as uuidv4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import { Globe } from '../../icons'
+import { Globe } from '@/src/icons'
 
 const Countries = ({ selectedCountry, country, styles, wrapperClassName }) => {
   const [showDropDown, setShowDropDown] = useState(false)

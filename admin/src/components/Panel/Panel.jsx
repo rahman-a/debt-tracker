@@ -4,8 +4,6 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import { Badge, Overlay, Tooltip } from 'react-bootstrap'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check } from '../../icons'
-import { Currency, ChangeDueDate } from '../../components'
 import {
   panelBodyDateClasses,
   panelBodyNameClasses,
@@ -14,6 +12,8 @@ import {
   panelLabelClasses,
   panelNoteClasses,
 } from './classes'
+import { Copy, Check } from '@/src/icons'
+import { Currency, ChangeDueDate } from '@/src/components'
 
 const Panel = ({ record, report }) => {
   const [isCopied, setIsCopied] = useState(false)

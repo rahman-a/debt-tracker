@@ -151,10 +151,10 @@ const verifyLoginCode = (id, info) => async (dispatch) => {
   }
 }
 
-const isUserAuth = () => async (dispatch) => {
+const isUserAuth = (token) => async (dispatch) => {
   dispatch({ type: constants.users.USER_IS_AUTH_REQUEST })
   try {
-    const { data } = await api.users.isLoggedIn()
+    const { data } = await api.users.isLoggedIn(token)
     dispatch({
       type: constants.users.USER_IS_AUTH_SUCCESS,
       payload: data.user,
@@ -178,6 +178,7 @@ const logout = (id) => async (dispatch) => {
     dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET, payload: id })
     dispatch({ type: constants.users.USER_IS_AUTH_RESET })
     dispatch({ type: 'RESET_STORE' })
+    window.location.replace('http://localhost:3000/login')
   } catch (error) {
     dispatch({
       type: constants.users.USER_LOGOUT_FAIL,

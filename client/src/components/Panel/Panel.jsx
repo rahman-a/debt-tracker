@@ -5,8 +5,16 @@ import { Badge } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check, HandshakeSlash, FineIcon } from '../../icons'
-import { Currency, CloseReport, ChangeDue, PayFine } from '../../components'
+import Decision from './Decision'
+import ChatComponent from './Chat'
+import {
+  panelBodyDateClasses,
+  panelBodyNameClasses,
+  panelBodyValueClasses,
+  panelNoteClasses,
+  panelCloseClasses,
+  panelBodyPhotoClasses,
+} from './classes'
 import {
   getUserData,
   getMemberName,
@@ -18,17 +26,9 @@ import {
   peerType,
   defineValue,
   formatPaymentDate,
-} from '../../utils/table'
-import Decision from './Decision'
-import ChatComponent from './Chat'
-import {
-  panelBodyDateClasses,
-  panelBodyNameClasses,
-  panelBodyValueClasses,
-  panelNoteClasses,
-  panelCloseClasses,
-  panelBodyPhotoClasses,
-} from './classes'
+} from '@/src/utils/table'
+import { Copy, Check, HandshakeSlash, FineIcon } from '@/src/icons'
+import { Currency, CloseReport, ChangeDue, PayFine } from '@/src/components'
 
 const Panel = ({ record, reports, due, op, closed }) => {
   const [isCopied, setIsCopied] = useState(false)

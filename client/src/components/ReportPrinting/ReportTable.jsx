@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import styles from './style.module.scss'
-import { Edit } from '../../icons'
+import { Edit } from '@/src/icons'
 
 const ReportTable = ({ reports, setReportData }) => {
   const limitCharactersNumber = 50

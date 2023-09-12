@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import { Badge } from 'react-bootstrap'
-import { ProfileContainer } from '../../components'
 import { useTranslation } from 'react-i18next'
+import { ProfileContainer } from '@/src/components'
 
 const Company = ({ company }) => {
   const { t } = useTranslation()

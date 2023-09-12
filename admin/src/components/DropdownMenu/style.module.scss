@@ -1,105 +1,105 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .dropdown {
-    box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
+  box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
+  position: relative;
+  width: 100%;
+  &__actions {
     position: relative;
-    width:100%;
-    &__actions {
-        position: relative;
-        background-color: var.$white-color;
-        cursor: pointer;
-        padding:0.5rem;
-        border-radius: 0.8rem;
+    background-color: var.$white-color;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+  }
+
+  &__icon {
+    color: var.$full-light-color;
+    padding: 1.6rem;
+    svg {
+      width: 3.5rem;
+      height: 3.5rem;
     }
-    
-    &__icon {
+  }
+
+  &__label {
+    color: var.$full-light-color;
+    font-size: 1.4rem;
+  }
+
+  &__toggle {
+    position: absolute;
+    right: 0.5rem;
+    &_ar {
+      left: 0.5rem;
+      right: unset;
+    }
+  }
+
+  &__list {
+    position: absolute;
+    width: 100%;
+    max-height: 20rem;
+    overflow-y: auto;
+    background-color: var.$white-color;
+    padding: 0.5rem;
+    border-bottom-left-radius: 0.8rem;
+    border-bottom-right-radius: 0.8rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var.$full-light-color;
+    z-index: 999;
+    li {
+      padding: 0.5rem 0;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      border: 1px dashed #eee;
+      &:hover {
+        background-color: lighten(var.$full-light-color, 0.1);
+      }
+
+      &:hover span {
+        color: var.$main-color;
+      }
+      span {
+        margin-right: 1rem;
         color: var.$full-light-color;
-        padding:1.6rem;
         svg {
-            width:3.5rem;
-            height:3.5rem;
+          width: 1.6rem;
+          height: 1.6rem;
         }
-    }
-    
-    &__label {
-        color:var.$full-light-color;
-        font-size: 1.4rem;
-    }
-
-    &__toggle{
-        position: absolute;
-        right:0.5rem;
-        &_ar {
-            left:0.5rem;
-            right:unset;
-        }
-    }
-   
-    &__list {
-        position: absolute;
-        width:100%;
-        max-height: 20rem;
-        overflow-y: auto;
-        background-color: var.$white-color;
-        padding:0.5rem;
-        border-bottom-left-radius: 0.8rem;
-        border-bottom-right-radius: 0.8rem;
-        list-style: none;
-        padding:0;
-        margin:0;
-        border-top:1px solid var.$full-light-color;
-        z-index: 999;
-        li {
-            padding:0.5rem 0;
-            cursor: pointer;
-            padding:0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            border: 1px dashed #eee;
-            &:hover {
-                background-color: lighten(var.$full-light-color, 0.1);
-            }
-
-            &:hover span {
-                color:var.$main-color;
-            }
-            span {
-                margin-right:1rem;
-                color:var.$full-light-color;
-                svg {
-                    width:1.6rem;
-                    height: 1.6rem;
-                }
-            }
-            div {
-                color:var.$main-color;
-            }
-        }
-        
-        &_icon {
-            li {
-                padding:2rem 0
-            }
-        }
-
-        &_ar {
-            span {
-                margin-left:1rem;
-                margin-right:unset;
-            }
-        }
+      }
+      div {
+        color: var.$main-color;
+      }
     }
 
-    &__disabled {
-        .dropdown__actions {
-            background-color: #f1f1f1;
-        }
-        .dropdown__label {
-            color:#d1cece;
-        }
-        .dropdown__toggle {
-            color:#d1cece;
-        }
+    &_icon {
+      li {
+        padding: 2rem 0;
+      }
     }
+
+    &_ar {
+      span {
+        margin-left: 1rem;
+        margin-right: unset;
+      }
+    }
+  }
+
+  &__disabled {
+    .dropdown__actions {
+      background-color: #f1f1f1;
+    }
+    .dropdown__label {
+      color: #d1cece;
+    }
+    .dropdown__toggle {
+      color: #d1cece;
+    }
+  }
 }

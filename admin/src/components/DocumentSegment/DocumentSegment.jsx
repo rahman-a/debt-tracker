@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { Badge } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import ExpiredImageContainer from './ExpiredImageContainer'
 import ImageContainer from './ImageContainer'
-import { useTranslation } from 'react-i18next'
 
 const DocumentSegment = ({ img, document, isExpired }) => {
   const [imageContainer, setImageContainer] = useState(false)

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'react-bootstrap'
 import style from './style.module.scss'
-import { Plus } from '../../icons'
+import { Plus } from '@/src/icons'
 
 const UploadFile = ({
   setDoc,

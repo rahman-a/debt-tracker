@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import style from './style.module.scss'
 import { v4 } from 'uuid'
 import Scrollbar from 'simplebar-react'
-import { FaceSmile } from '../../../icons'
+import { FaceSmile } from '@/src/icons'
 import emojiData from './emojiData.json'
 
 const Emoji = ({ isEmoji, setIsEmoji, addEmojiHandler }) => {

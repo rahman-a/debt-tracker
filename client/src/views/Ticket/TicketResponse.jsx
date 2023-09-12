@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import style from './style.module.scss'
 import parser from 'html-react-parser'
 import { Badge } from 'react-bootstrap'
-import { Certificate } from '../../icons'
-import filePlaceholder from '../../config/filePlaceholder'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import { Certificate } from '@/src/icons'
+import filePlaceholder from '@/src/config/filePlaceholder'
 
 const TicketBody = ({ data }) => {
   const [isTicketBody, setIsTicketBody] = useState(false)

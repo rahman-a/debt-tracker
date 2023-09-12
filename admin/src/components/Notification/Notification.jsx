@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { OperationDecision } from '../../components'
-import actions from '../../actions'
-import { renderStateMessage } from '../../config/stateMessage'
+import { OperationDecision } from '@/src/components'
+import actions from '@/src/actions'
+import { renderStateMessage } from '@/src/config/stateMessage'
 
 const Notification = ({ data }) => {
   const [isStateOn, setIsStateOn] = useState(false)

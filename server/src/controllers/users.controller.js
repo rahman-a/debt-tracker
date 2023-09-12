@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from 'fs'
 import path from 'path'
 import randomstring from 'randomstring'
@@ -10,6 +11,7 @@ import { chatClient } from '../config/stream.chat.js'
 import User from '../models/users.model.js'
 import Notification from '../models/notifications.model.js'
 import Company from '../models/Company.model.js'
+import Session from '../models/sessions.model.js'
 import MutualClients from '../models/mutualClients.js'
 import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
@@ -438,6 +440,10 @@ export const logoutHandler = async (req, res, next) => {
     if (user) {
       await chatClient.revokeUserToken(user._id.toString(), new Date())
     }
+    const sessionId = req.sessionId
+    if (sessionId) {
+      await Session.findByIdAndRemove(sessionId)
+    }
     res.clearCookie('token')
     res.send({
       success: true,
@@ -610,35 +616,38 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
       await user.save()
     }
 
-    const { users } = await chatClient.queryUsers({ id: user._id.toString() })
-    const chat_token = users.length
-      ? chatClient.createToken(user._id.toString())
-      : null
-
-    const userData = {
-      _id: user._id,
-      username: user.username,
-      fullNameInEnglish: user.fullNameInEnglish,
-      fullNameInArabic: user.fullNameInArabic,
-      avatar: user.avatar,
-      color: user.colorCode.code,
-      company: user.company,
-      isProvider: user.isProvider,
-      chat_token,
+    // create session document
+    const session = new Session()
+    // create authToken
+    const data = {
+      payload: { sessionId: session._id.toString() },
+      secret: process.env.JWT_TOKEN,
     }
     const tokenExpiry = isRemembered ? `7 days` : '1d'
-    const token = user.generateToken(tokenExpiry)
-    console.log('token: ', token)
-    res.cookie('token', token, {
-      httpOnly: true,
-      domain: 'localhost',
-      path: '/',
-      maxAge: 1000 * 60 * 60 * 24 * (isRemembered ? 7 : 1),
-    })
+    const authToken = user.generateToken(data, tokenExpiry)
+    // create sessionToken
+    const sessionData = {
+      payload: { sessionId: session._id.toString() },
+      secret: process.env.SESSION_TOKEN_SECRET,
+    }
+    const sessionToken = user.generateToken(sessionData, 60)
+    // get expireAt
+    const expireDate = expireAt(isRemembered ? 7 : 1)
+    // assign value to new session
+    session.sessionToken = sessionToken
+    session.authToken = authToken
+    session.expireAt = expireDate
+    session.user = user._id
+    // save session
+    await session.save()
+
     res.json({
       success: true,
       code: 200,
-      user: userData,
+      payload: {
+        token: sessionToken,
+        expireAt: expireDate,
+      },
     })
   } catch (error) {
     next(error)

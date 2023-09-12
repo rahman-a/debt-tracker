@@ -3,10 +3,10 @@ import style from './style.module.scss'
 import { Form, Button } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../../actions'
-import constants from '../../constants'
-import { Loader, SideAlert } from '../../components'
 import { useTranslation } from 'react-i18next'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
+import { Loader, SideAlert } from '@/src/components'
 
 const FormText = () => {
   const [data, setData] = useState({})

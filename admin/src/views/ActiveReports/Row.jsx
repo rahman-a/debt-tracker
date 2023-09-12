@@ -5,9 +5,9 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import { Currency, Note } from '../../components'
-import { Check, Copy, Reader } from '../../icons'
 import ChangeDueDate from './ChangeDueDate'
+import { Currency, Note } from '@/src/components'
+import { Check, Copy, Reader } from '@/src/icons'
 
 const Row = ({ report, idx, due }) => {
   const [isDueChange, setIsDueChange] = useState(false)

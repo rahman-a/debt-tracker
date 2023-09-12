@@ -1,124 +1,122 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
-
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .notification {
-    position: relative;
-    background-color: var.$white-color;
-    padding:2rem;
-    display: flex;
-    align-items: center;
-    margin-top: 2rem;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    cursor: pointer;
-    &:hover {
-        box-shadow: 1px 1px 5px 1px rgb(0 0 0 / 30%);
-        border-radius: 1rem;
+  position: relative;
+  background-color: var.$white-color;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 1px 1px 5px 1px rgb(0 0 0 / 30%);
+    border-radius: 1rem;
+  }
+  &:active {
+    box-shadow: unset;
+    border-radius: unset;
+  }
+  span {
+    color: var.$full-light-color;
+    svg {
+      width: 6rem;
+      height: 6rem;
     }
-    &:active {
-        box-shadow: unset;
-        border-radius: unset;
+  }
+
+  img {
+    width: 8rem;
+    border-radius: 50%;
+    @include media.mq(xs) {
+      width: 6rem;
+    }
+  }
+
+  &__content {
+    margin-left: 2rem;
+    margin-right: auto;
+    width: 42rem;
+    h3 {
+      font-size: 1.4rem;
+      color: var.$main-color;
+      margin: 0;
+      @include media.mq(sm) {
+        width: 25rem;
+      }
     }
     span {
-        color:var.$full-light-color;
-        svg {
-            width:6rem;
-            height:6rem;
-        }
+      font-size: 1.2rem;
+      color: var.$full-light-color;
     }
-
-    img {
-        width: 8rem;
-        border-radius: 50%;
-        @include media.mq(xs){
-            width:6rem;
-        }
+    p {
+      color: var.$second-color;
+      font-size: 1.5rem;
+      @include media.mq(sm) {
+        font-size: 1.3rem;
+        width: 30rem;
+      }
+      @include media.mq(xs) {
+        width: 25rem;
+      }
+      @include media.mq(xxs) {
+        width: 15rem;
+      }
     }
+  }
 
-    &__content {
-        margin-left:2rem;
-        margin-right:auto;
-        width:42rem;
-        h3 {
-            font-size: 1.4rem;
-            color:var.$main-color;
-            margin:0;
-            @include media.mq(sm) {
-                width:25rem;
-            }
-        }
-        span {
-            font-size: 1.2rem;
-            color:var.$full-light-color;
-        }
-        p {
-            color:var.$second-color;
-            font-size: 1.5rem;
-            @include media.mq(sm){
-               font-size: 1.3rem;
-               width:30rem;
-            }
-            @include media.mq(xs){
-                width:25rem;
-            }
-            @include media.mq(xxs){
-                width:15rem;
-            }
-        }
-        
+  &__state {
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    padding: 2rem;
+    width: 12rem;
+    @include media.mq(md) {
+      width: 10rem;
     }
-
-    &__state {
-        display: -ms-grid;
-        display: grid;
-        place-items: center;
-        position: absolute;
-        right:0;
-        height: 100%;
-        padding:2rem;
-        width:12rem;
-        @include media.mq(md){
-            width:10rem;
-        }
-        @include media.mq(sm){
-            width:8rem;
-            padding:1rem;
-        }
-        p {
-            text-transform: uppercase;
-            @include media.mq(md){
-               font-size: 1.4rem;
-            }
-            @include media.mq(sm){
-                font-size: 1.2rem;
-            }
-        }
+    @include media.mq(sm) {
+      width: 8rem;
+      padding: 1rem;
     }
-
-    &__report {
-        background-color: #1f1e1e;
-        padding: 0.1rem 0.5rem;
-        border-radius: 0.5rem;
-        font-size: 1.1rem !important;
-    }
-
-    &__dueDate {
-        background-color: #ddd;
-        padding: 0.2rem;
-        border-radius: 0.5rem;
+    p {
+      text-transform: uppercase;
+      @include media.mq(md) {
         font-size: 1.4rem;
-        font-style: italic
+      }
+      @include media.mq(sm) {
+        font-size: 1.2rem;
+      }
     }
+  }
 
-    &_ar {
-        div:first-of-type {
-            margin-right: 2rem;
-            margin-left: unset;
-        }
-        div:last-of-type {
-            left:0;
-            right:unset;
-        }
+  &__report {
+    background-color: #1f1e1e;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem !important;
+  }
+
+  &__dueDate {
+    background-color: #ddd;
+    padding: 0.2rem;
+    border-radius: 0.5rem;
+    font-size: 1.4rem;
+    font-style: italic;
+  }
+
+  &_ar {
+    div:first-of-type {
+      margin-right: 2rem;
+      margin-left: unset;
     }
+    div:last-of-type {
+      left: 0;
+      right: unset;
+    }
+  }
 }

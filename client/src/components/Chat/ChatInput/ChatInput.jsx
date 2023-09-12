@@ -3,11 +3,10 @@ import { useChatContext } from 'stream-chat-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useReactMediaRecorder } from 'react-media-recorder'
 import { useTranslation } from 'react-i18next'
-import classnames from 'classnames'
 import style from './style.module.scss'
 import Upload from './Upload'
 import Emoji from './Emoji'
-import { Microphone, PaperPlane } from '../../../icons'
+import { Microphone, PaperPlane } from '@/src/icons'
 
 const ChatInput = () => {
   const { channel } = useChatContext()

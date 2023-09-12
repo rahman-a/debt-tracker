@@ -92,7 +92,7 @@ router.get('/is-logged-in', isAuth, checkIsUserLoggedIn)
 
 // DASHBOARD ROUTERS
 router.post('/staff/login', staffLogin)
-router.post('/staff/logout', staffLogout)
+router.post('/staff/logout', isAuth, staffLogout)
 router.get('/all', isAuth, checkRoles('manager', 'hr'), listAllUsers)
 router.delete('/:id', isAuth, checkRoles('manager', 'hr'), deleteUser)
 router.patch(

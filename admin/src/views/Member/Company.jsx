@@ -4,9 +4,8 @@ import i18next from 'i18next'
 import { Badge } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-
-import { ProfileContainer, EditMember } from '../../components'
-import { Plus } from '../../icons'
+import { ProfileContainer, EditMember } from '@/src/components'
+import { Plus } from '@/src/icons'
 
 const Company = ({ company }) => {
   const [isEdit, setIsEdit] = useState(false)

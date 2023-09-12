@@ -3,21 +3,21 @@ import style from './style.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, Chat } from '../../icons'
-import {
-  Loader,
-  SideNavbar,
-  NotificationContainer,
-  ActivityTrack,
-} from '../../components'
-import actions from '../../actions'
-import constants from '../../constants'
 import {
   headerClasses,
   headerIconClasses,
   headerFlagClasses,
   headerMenuClasses,
 } from './classes'
+import { MenuBars, Bell, Chat } from '@/src/icons'
+import {
+  Loader,
+  SideNavbar,
+  NotificationContainer,
+  ActivityTrack,
+} from '@/src/components'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)
@@ -145,18 +145,13 @@ const Header = () => {
         style={{ display: showSideMenu ? 'block' : 'none' }}
       ></div>
 
-      <div
-        className={headerClasses}
-        style={{
-          backgroundColor: '#1A374D',
-        }}
-      >
+      <div className={headerClasses}>
         <div className='container'>
           <div className={style.header__wrapper}>
             {/* display the main icon */}
             <div className={headerIconClasses}>
               <span onClick={() => navigate('/')}>
-                <img src='/images/swtle.png' alt='logo' />
+                <img src='/images/logo.svg' alt='logo' />
               </span>
               <span
                 className={style.header__bars}

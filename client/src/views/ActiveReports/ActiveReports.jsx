@@ -11,10 +11,10 @@ import {
   Loader,
   HeaderAlert,
   ReportPrinting,
-} from '../../components'
-import { FilterSearch, Times, Printer } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
+} from '@/src/components'
+import { FilterSearch, Times, Printer } from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const Reports = () => {
   const [isFilter, setIsFilter] = useState(false)

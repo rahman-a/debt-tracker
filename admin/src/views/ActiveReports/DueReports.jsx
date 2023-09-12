@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import Row from './Row'
 import {
   Table,
   Pagination,
@@ -10,10 +12,8 @@ import {
   FilterModal,
   FilterButton,
   Panel,
-} from '../../components'
-import actions from '../../actions'
-import Row from './Row'
-import { useTranslation } from 'react-i18next'
+} from '@/src/components'
+import actions from '@/src/actions'
 
 const Operations = () => {
   const [isFilterModal, setIsFilterModal] = useState(false)

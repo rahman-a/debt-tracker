@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useChatContext } from '../../../context/ChatContext'
 import classnames from 'classnames'
+import { useChatContext } from '@/src/context/ChatContext'
 const ChannelListWrapper = ({ children }) => {
   const { isChatOpen } = useChatContext()
   const streamChatChannelWrapperClasses = classnames(

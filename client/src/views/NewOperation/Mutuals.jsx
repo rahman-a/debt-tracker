@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Button, Alert } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { Loader, HeaderAlert } from '../../components'
+import { useTranslation } from 'react-i18next'
 import Pagination from './Pagination'
 import MutualsList from './MutualsList'
-import { useTranslation } from 'react-i18next'
+import { Loader, HeaderAlert } from '@/src/components'
 
 const Mutuals = ({ mutuals, showMutuals, setShowMutuals, setPeerInfo }) => {
   const [mutualsClients, setMutualClients] = useState([])

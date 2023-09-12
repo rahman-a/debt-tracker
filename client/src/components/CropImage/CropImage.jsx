@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
 import Cropper from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
+import i18next from 'i18next'
 import {
   AngleLeft,
   Crop,
@@ -16,8 +17,7 @@ import {
   ArrowUp,
   ZoomIn,
   ZoomOut,
-} from '../../icons'
-import i18next from 'i18next'
+} from '@/src/icons'
 
 const CropImage = ({
   defaultSrc,

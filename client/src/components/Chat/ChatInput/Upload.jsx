@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useChatContext } from 'stream-chat-react'
 import style from './style.module.scss'
-import { Paperclip, ImagePlaceholder, FilePlaceholder } from '../../../icons'
-import CropModal from '../../CropImage/CropModal'
+import { Paperclip, ImagePlaceholder, FilePlaceholder } from '@/src/icons'
+import CropModal from '@/src/components/CropImage/CropModal'
 
 // eslint-disable-next-line react/prop-types
 const Upload = ({ isFile, setIsFile }) => {

@@ -5,8 +5,8 @@ import { Spinner } from 'react-bootstrap'
 import classnames from 'classnames'
 import i18next from 'i18next'
 import getBlobDuration from 'get-blob-duration'
-import { useChatContext } from '../../../context/ChatContext'
-import { Play, Pause } from '../../../icons'
+import { useChatContext } from '@/src/context/ChatContext'
+import { Play, Pause } from '@/src/icons'
 
 const AudioFile = ({ url }) => {
   const [audioFile, setAudioFile] = useState(null)

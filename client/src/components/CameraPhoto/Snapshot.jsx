@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import { Portrait, Crop, User } from '../../icons'
+import { Portrait, Crop, User } from '@/src/icons'
 
 const Snapshot = ({
   uploadFileHandler,

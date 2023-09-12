@@ -1,18 +1,15 @@
 import React, { useEffect } from 'react'
 import style from './style.module.scss'
-
+import i18next from 'i18next'
+import { useSelector, useDispatch } from 'react-redux'
 import Personal from './Personal'
 import Address from './Address'
 import Phone from './Phone'
 import Documents from './Documents'
 import Company from './Company'
 import Social from './social'
-
-import { Loader, HeaderAlert } from '../../components'
-
-import { useSelector, useDispatch } from 'react-redux'
-import actions from '../../actions'
-import i18next from 'i18next'
+import { Loader, HeaderAlert } from '@/src/components'
+import actions from '@/src/actions'
 
 const Profile = () => {
   const { loading, error, user } = useSelector((state) => state.userProfile)

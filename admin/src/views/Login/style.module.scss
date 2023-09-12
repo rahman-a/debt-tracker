@@ -1,57 +1,56 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .login {
-    position: relative;
-    height: 100vh;
-    background-color: var.$main-color;
+  position: relative;
+  height: 100vh;
+  background-color: var.$main-color;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  &__wrapper {
+    width: 50%;
+    min-height: 30vh;
     display: -ms-grid;
     display: grid;
     place-items: center;
-    &__wrapper {
-        width:50%;
-        min-height: 30vh;
-        display: -ms-grid;
-        display: grid;
-        place-items: center;
-        
-        @include media.mq(sm) {
-            width:65%;
-        }
 
-        @include media.mq(xs){
-            width:85%;
-        }
-        @include media.mq(xxs) {
-            width: 95%;
-        }
-    }
-    &__back {
-        all: unset;
-        position: absolute;
-        left: 2rem;
-        top: 2rem;
-        color: var.$white-color;
-        cursor: pointer;
-        border-bottom: 1px solid transparent;
-        &:hover {
-            border-bottom: 1px solid var.$white-color;
-        }
-        span {
-            margin-right: 1rem;
-            svg {
-                transform:rotate(180deg)
-            }
-        }
-
+    @include media.mq(sm) {
+      width: 65%;
     }
 
-    figure {
-        width:30rem;
-        margin-bottom: 5rem;
-        img {
-            width: 100%;
-            object-fit: cover;
-        }
+    @include media.mq(xs) {
+      width: 85%;
     }
+    @include media.mq(xxs) {
+      width: 95%;
+    }
+  }
+  &__back {
+    all: unset;
+    position: absolute;
+    left: 2rem;
+    top: 2rem;
+    color: var.$white-color;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    &:hover {
+      border-bottom: 1px solid var.$white-color;
+    }
+    span {
+      margin-right: 1rem;
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  figure {
+    width: 30rem;
+    margin-bottom: 5rem;
+    img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 }

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import style from './style.module.scss'
 import { useTranslation } from 'react-i18next'
-import { Row, Panel } from '../../components'
+import { Row, Panel } from '@/src/components'
 
 const Table = ({ records, due, op, closed, reports }) => {
   const { t } = useTranslation()

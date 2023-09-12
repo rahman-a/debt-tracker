@@ -1,54 +1,52 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
-
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .message {
-    background-color: var.$white-color;
-    padding:2rem;
-    display: flex;
-    align-items: center;
-    margin-top: 2rem;
-    cursor: pointer;
-    transition: all 0.3s ease-in;
-    &:hover {
-        box-shadow: 1px 1px 5px 1px rgb(0 0 0 / 30%);
-        border-radius: 1rem;
+  background-color: var.$white-color;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  &:hover {
+    box-shadow: 1px 1px 5px 1px rgb(0 0 0 / 30%);
+    border-radius: 1rem;
+  }
+  &:active {
+    box-shadow: unset;
+    border-radius: unset;
+  }
+  span {
+    color: var.$full-light-color;
+    svg {
+      width: 6rem;
+      height: 6rem;
     }
-    &:active {
-        box-shadow: unset;
-        border-radius: unset;
+  }
+
+  img {
+    width: 8rem;
+    border-radius: 50%;
+  }
+
+  &__content {
+    margin-left: 2rem;
+    h3 {
+      font-size: 1.4rem;
+      color: var.$main-color;
+      margin: 0;
     }
     span {
-        color:var.$full-light-color;
-        svg {
-            width:6rem;
-            height:6rem;
-        }
+      font-size: 1.2rem;
+      color: var.$full-light-color;
     }
-
-    img {
-        width: 8rem;
-        border-radius: 50%;
+    p {
+      color: var.$second-color;
+      font-size: 1.5rem;
+      @include media.mq(xxs) {
+        font-size: 1.4rem;
+      }
     }
-
-    &__content {
-        margin-left:2rem;
-        h3 {
-            font-size: 1.4rem;
-            color:var.$main-color;
-            margin:0;
-        }
-        span {
-            font-size: 1.2rem;
-            color:var.$full-light-color;
-        }
-        p {
-            color:var.$second-color;
-            font-size: 1.5rem;
-            @include media.mq(xxs){
-               font-size: 1.4rem;
-            }
-        }
-        
-    }
+  }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import style from './style.module.scss'
-import { ProfileContainer, DocumentSegment } from '../../components'
+import { ProfileContainer, DocumentSegment } from '@/src/components'
 
 const Documents = ({ data }) => {
   return (

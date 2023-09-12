@@ -1,39 +1,39 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .pushNotification {
-    position: fixed;
-    bottom:5rem;
-    right:-50rem;
-    display: flex;
-    align-items: center;
-    padding:1.6rem;
-    z-index:99999999;
-    background-color:rgba(var.$main-color, 0.9);
-    color:var.$white-color;
-    border-radius: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease-in;
-    @include media.mq(xs) {
-        right:1rem;
+  position: fixed;
+  bottom: 5rem;
+  right: -50rem;
+  display: flex;
+  align-items: center;
+  padding: 1.6rem;
+  z-index: 99999999;
+  background-color: rgba(var.$main-color, 0.9);
+  color: var.$white-color;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  @include media.mq(xs) {
+    right: 1rem;
+  }
+  @include media.mq(xxs) {
+    right: 0;
+  }
+  figure {
+    width: 5rem;
+    margin-right: 1rem;
+    clip-path: circle();
+    overflow: hidden;
+    img {
+      width: 100%;
     }
-    @include media.mq(xxs) {
-        right:0;
+  }
+  &__content {
+    max-width: 35rem;
+    p {
+      font-size: 1.5rem;
+      color: lighten(var.$main-color, 70%);
     }
-    figure {
-        width:5rem;
-        margin-right:1rem;
-        clip-path: circle();
-        overflow:hidden;
-        img {
-            width:100%;
-        }
-    }
-    &__content {
-        max-width:35rem;
-        p {
-            font-size: 1.5rem;
-            color:lighten(var.$main-color, 70%)
-        }
-    }
+  }
 }

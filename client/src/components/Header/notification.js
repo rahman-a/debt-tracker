@@ -1,7 +1,8 @@
-import user1 from '../../asset/images/user-1.png'
-import user2 from '../../asset/images/user-2.png'
-import user3 from '../../asset/images/user-3.jpeg'
-import user4 from '../../asset/images/user-4.png'
+// @ts-nocheck
+import user1 from '@/src/asset/images/user-1.png'
+import user2 from '@/src/asset/images/user-2.png'
+import user3 from '@/src/asset/images/user-3.jpeg'
+import user4 from '@/src/asset/images/user-4.png'
 
 export const randoms = [
   {

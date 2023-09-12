@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import style from './style.module.scss'
 import { Badge } from 'react-bootstrap'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import { Currency, Note } from '../../components'
-import { Check, Copy, Reader } from '../../icons'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { Currency, Note } from '@/src/components'
+import { Check, Copy, Reader } from '@/src/icons'
 
 const Row = ({ operation, idx }) => {
   const [isCopied, setIsCopied] = useState(false)

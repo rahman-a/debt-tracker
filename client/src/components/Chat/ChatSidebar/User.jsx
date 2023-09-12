@@ -2,8 +2,8 @@
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import chatImage from '../../../asset/images/chat.png'
-import constants from '../../../constants'
+import chatImage from '@/src/asset/images/chat.png'
+import constants from '@/src/constants'
 const User = ({ user, onClick }) => {
   const dispatch = useDispatch()
   const lang = i18next.language

@@ -2,10 +2,10 @@ import { useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import actions from '../../../actions'
-import constants from '../../../constants'
-import { Close, ArrowLeft, Magnify } from '../../../icons'
 import classnames from 'classnames'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
+import { Close, ArrowLeft, Magnify } from '@/src/icons'
 
 const SearchInput = ({ placeholder, newChat, onClick, reset }) => {
   const [isFocus, setIsFocus] = useState(false)

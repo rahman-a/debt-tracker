@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import CheckoutForm from './CheckoutForm'
 import Loader from '../Loader/Loader'
-import actions from '../../actions'
-import { FineSolidIcon, PoweredByStripe } from '../../icons'
 import FinalizeFinePayment from './FinalizeFinePayment'
+import actions from '@/src/actions'
+import { FineSolidIcon, PoweredByStripe } from '@/src/icons'
 
 const PayFine = ({ isFine, setIsFine, fine }) => {
   const [isLoading, setIsLoading] = useState(false)

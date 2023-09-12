@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import actions from '../../actions'
-import constants from '../../constants'
-import { Chat as ChatIcon } from '../../icons'
+import { Chat as ChatIcon } from '@/src/icons'
 
 const Chat = ({ id }) => {
   const dispatch = useDispatch()

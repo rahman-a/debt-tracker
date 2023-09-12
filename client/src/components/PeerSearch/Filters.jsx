@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
-import constants from '../../constants'
 import { t } from 'i18next'
+import constants from '@/src/constants'
 
 const Filters = ({ filter, setFilter, setSearchValue, lang }) => {
   const dispatch = useDispatch()

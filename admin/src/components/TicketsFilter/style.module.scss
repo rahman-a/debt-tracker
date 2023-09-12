@@ -1,86 +1,86 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .filter {
-    background-color: var.$white-color;
-    padding: 1rem 2rem;
+  background-color: var.$white-color;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 1.5rem 0;
+  @include media.mq(lg) {
+    font-size: 1.2rem;
+    padding: 1rem 0.5rem;
+  }
+
+  @include media.mq(md) {
+    flex-direction: column;
+    margin-top: 5rem;
+  }
+
+  &__hidden {
+    @include media.mq(md) {
+      display: none !important;
+    }
+  }
+  &__input {
+    margin-right: 2rem;
     display: flex;
-    align-items:center;
-    width:100%;
-    margin:1.5rem 0;
-    @include media.mq(lg) {
-        font-size: 1.2rem;
-        padding:1rem 0.5rem;
+    align-items: center;
+    width: 15%;
+    @include media.mq(md) {
+      width: 50%;
+      margin-bottom: 2rem;
+      justify-content: space-around;
+    }
+    @include media.mq(xs) {
+      width: 70%;
+      margin-bottom: 2rem;
+    }
+    @include media.mq(xxs) {
+      width: 90%;
+    }
+    &:first-of-type {
+      @include media.mq(lg) {
+        margin-left: 5rem;
+      }
+      @include media.mq(md) {
+        margin-left: 0;
+      }
+    }
+    &_value {
+      input {
+        padding: 0.2rem !important;
+        border-radius: 0.5rem !important;
+        @include media.mq(sm) {
+          padding: 1rem !important;
+          border-radius: 0 !important;
+        }
+      }
     }
 
-    @include media.mq(md){
-        flex-direction: column;
-        margin-top:5rem;
+    &_dropdown {
+      & > div {
+        @include media.mq(sm) {
+          padding: 1rem !important;
+        }
+      }
     }
-
-    &__hidden {
-        @include media.mq(md){
-            display: none !important;
-        }
+  }
+  &__btn {
+    all: unset;
+    padding: 0.5rem 1rem;
+    background-color: var.$white-color;
+    text-transform: uppercase;
+    text-align: center;
+    margin-left: 1.6rem;
+    color: var.$full-light-color;
+    box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
+    border-radius: 1rem;
+    width: 10rem;
+    cursor: pointer;
+    @include media.mq(sm) {
+      margin-left: 0;
     }
-    &__input {
-        margin-right:2rem;
-        display: flex;
-        align-items:center;
-        width:15%;
-        @include media.mq(md){
-            width:50%;
-            margin-bottom: 2rem;
-            justify-content: space-around;
-        }
-        @include media.mq(xs){
-            width:70%;
-            margin-bottom: 2rem;
-        }
-        @include media.mq(xxs){
-            width:90%;
-        }
-        &:first-of-type {
-            @include media.mq(lg){
-                margin-left:5rem;
-            }
-            @include media.mq(md){
-               margin-left: 0;
-            }
-        }
-        &_value {
-            input {
-                padding:0.2rem !important;
-                border-radius: 0.5rem !important;
-                @include media.mq(sm){
-                    padding: 1rem !important;
-                    border-radius: 0 !important;
-                }
-            }
-        }
-
-        &_dropdown {
-            & > div {
-                @include media.mq(sm){
-                    padding:1rem !important;
-                }
-            }
-        }
-    }
-    &__btn {
-        all:unset;
-        padding:0.5rem 1rem;
-        background-color: var.$white-color;
-        text-transform: uppercase;
-        text-align: center;
-        margin-left:1.6rem;
-        color:var.$full-light-color;
-        box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
-        border-radius: 1rem;
-        width:10rem;
-        cursor: pointer;
-        @include media.mq(sm){
-            margin-left: 0;
-         }
-    }
+  }
 }

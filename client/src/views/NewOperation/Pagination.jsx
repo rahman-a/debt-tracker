@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import style from './style.module.scss'
 import { Pagination } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../../actions'
+import actions from '@/src/actions'
 
 const PaginationItems = () => {
   const [active, setActive] = useState(1)

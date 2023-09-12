@@ -5,12 +5,12 @@ import { useDispatch } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
-import { useChatContext as useBlockChatContext } from '../../../context/ChatContext'
-import constants from '../../../constants'
 import style from './style.module.scss'
-import chatImage from '../../../asset/images/chat.png'
-import { useMediaQuery } from '../../../hooks'
-import { getUnreadMessages } from '../../../utils/chat'
+import { useChatContext as useBlockChatContext } from '@/src/context/ChatContext'
+import constants from '@/src/constants'
+import chatImage from '@/src/asset/images/chat.png'
+import { useMediaQuery } from '@/src/hooks'
+import { getUnreadMessages } from '@/src/utils/chat'
 
 const Channel = ({ isActive, channel }) => {
   const { client, setActiveChannel } = useChatContext()

@@ -3,14 +3,6 @@ import style from './style.module.scss'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
-import { MenuBars, Bell, ChatHelp } from '../../icons'
-import {
-  Loader,
-  SideNavbar,
-  NotificationContainer,
-  ActivityTrack,
-} from '../../components'
-import actions from '../../actions'
 import {
   headerClasses,
   headerLanguageClasses,
@@ -18,6 +10,14 @@ import {
   headerMenuClasses,
   headerCredentialClasses,
 } from './classes'
+import { MenuBars, Bell, ChatHelp } from '@/src/icons'
+import {
+  Loader,
+  SideNavbar,
+  NotificationContainer,
+  ActivityTrack,
+} from '@/src/components'
+import actions from '@/src/actions'
 
 const Header = () => {
   const [langDropDown, setLangDropDown] = useState(false)

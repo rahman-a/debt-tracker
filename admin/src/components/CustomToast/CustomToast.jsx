@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import style from './style.module.scss'
-import notificationSound from '../../audio/notification.mp3'
+import notificationSound from '@/src/audio/notification.mp3'
 
 const CustomToast = ({ data }) => {
   const playNotificationSound = (_) => {

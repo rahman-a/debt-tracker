@@ -2,11 +2,10 @@ import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Modal } from 'react-bootstrap'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Logout } from '../../icons'
 import style from './style.module.scss'
-import actions from '../../actions'
+import { Logout } from '@/src/icons'
+import actions from '@/src/actions'
 
 const ActivityTrack = ({ setSideMenu }) => {
   const timeout = useRef(null)

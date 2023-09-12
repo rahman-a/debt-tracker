@@ -10,10 +10,10 @@ import {
   Loader,
   HeaderAlert,
   ReportPrinting,
-} from '../../components'
-import { FilterSearch, Printer, Times } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
+} from '@/src/components'
+import { FilterSearch, Printer, Times } from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 /**
  * NOTE ==> show only closed operation and sort them according to date of payment

@@ -19,9 +19,9 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../../actions'
-import constants from '../../constants'
 import { t } from 'i18next'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 let isMounted = true
 export default function PhoneConfirmModal({ isOpen, onClose, email }) {

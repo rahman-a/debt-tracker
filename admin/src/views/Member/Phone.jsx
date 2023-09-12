@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
-import { ProfileContainer, ProfileSegment } from '../../components'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import { ProfileContainer, ProfileSegment } from '@/src/components'
 
 const Phone = ({ data }) => {
   const lang = i18next.language

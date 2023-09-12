@@ -10,7 +10,7 @@ import {
   Currency,
   Loader,
   DateInput,
-} from '../../components'
+} from '@/src/components'
 import {
   Info,
   Coins,
@@ -18,9 +18,9 @@ import {
   HandDollar,
   HandPlus,
   Note,
-} from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
+} from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const Details = ({ peerInfo }) => {
   const [peerType, setPeerType] = useState('')

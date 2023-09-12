@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import style from './style.module.scss'
+import i18next from 'i18next'
 import {
   Facebook,
   Linkedin,
@@ -9,9 +10,8 @@ import {
   Instagram,
   Youtube,
   Messenger,
-} from '../../icons'
-import actions from '../../actions'
-import i18next from 'i18next'
+} from '@/src/icons'
+import actions from '@/src/actions'
 
 const Social = () => {
   const dispatch = useDispatch()

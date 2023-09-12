@@ -4,9 +4,9 @@ import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import i18next from 'i18next'
-import { Loader, SideAlert } from '../../components'
-import constants from '../../constants'
-import actions from '../../actions'
+import { Loader, SideAlert } from '@/src/components'
+import constants from '@/src/constants'
+import actions from '@/src/actions'
 
 const CloseReport = ({ isReportClose, setIsReportClose, report }) => {
   const { t } = useTranslation()

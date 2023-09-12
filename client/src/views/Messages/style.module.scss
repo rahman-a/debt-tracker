@@ -1,29 +1,28 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .messages {
-    background-color: #f1f1f1;
-    min-height: 100vh;
-    
-    @include media.mq(xxs){
-        padding-top:8rem;
-    }
-    
-    &__wrapper {
-        padding:8rem 4rem;
-        width:75%;
-        @include media.mq(md) {
-            width:85%;
-        }
-        @include media.mq(md) {
-            width:100%;
-        }
-        @include media.mq(xs) {
-            padding:8rem 2rem;
-        }
-        @include media.mq(xxs) {
-            padding:0;
-        }
-    }
-}
+  background-color: #f1f1f1;
+  min-height: 100vh;
 
+  @include media.mq(xxs) {
+    padding-top: 8rem;
+  }
+
+  &__wrapper {
+    padding: 8rem 4rem;
+    width: 75%;
+    @include media.mq(md) {
+      width: 85%;
+    }
+    @include media.mq(md) {
+      width: 100%;
+    }
+    @include media.mq(xs) {
+      padding: 8rem 2rem;
+    }
+    @include media.mq(xxs) {
+      padding: 0;
+    }
+  }
+}

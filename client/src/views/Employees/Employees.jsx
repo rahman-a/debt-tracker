@@ -4,8 +4,8 @@ import { Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import style from './style.module.scss'
-import actions from '../../actions'
-import { HeaderAlert, Loader, MemberCard, AltTable } from '../../components'
+import actions from '@/src/actions'
+import { HeaderAlert, Loader, MemberCard, AltTable } from '@/src/components'
 import Row from './Row'
 
 const Employees = () => {

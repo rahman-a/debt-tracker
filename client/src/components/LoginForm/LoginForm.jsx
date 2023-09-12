@@ -20,8 +20,8 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { useNavigate } from 'react-router-dom'
-import { EyeIcon, EyeSlashIcon } from '../../icons'
 import ResetPassword from '../SendResetPasswordLink/SendResetPasswordLink'
+import { EyeIcon, EyeSlashIcon } from '@/src/icons'
 
 export default function LoginForm({
   submitHandler,

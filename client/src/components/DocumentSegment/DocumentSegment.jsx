@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import constants from '../../constants'
-import { Plus } from '../../icons'
-import { UpdateDocument, Loader } from '../../components'
+import constants from '@/src/constants'
+import { Plus } from '@/src/icons'
+import { UpdateDocument, Loader } from '@/src/components'
 
 const DocumentSegment = ({ img, document, isExpired }) => {
   const [isEdit, setIsEdit] = useState(false)

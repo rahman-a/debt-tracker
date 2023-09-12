@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useChatContext } from '../../../context/ChatContext'
+import { useChatContext } from '@/src/context/ChatContext'
 import classnames from 'classnames'
 
 const ChannelWrapper = ({ children }) => {

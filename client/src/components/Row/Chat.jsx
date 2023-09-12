@@ -3,9 +3,9 @@ import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { Loader } from '../../components'
-import constants from '../../constants'
-import { Chat as ChatIcon } from '../../icons'
+import { Loader } from '@/src/components'
+import constants from '@/src/constants'
+import { Chat as ChatIcon } from '@/src/icons'
 
 const Chat = ({ id }) => {
   const [isChatLoading, setIsChatLoading] = useState(false)

@@ -1,49 +1,49 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .button {
-    &__side {
-        all: unset;
-        position: relative;
-        background-color: var.$white-color;
-        width: 100%;
-        border: 2px solid transparent;
-        border-radius: 1.6rem;
-        box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
-        width: 10rem;
-        margin-left: 1rem;
-        text-align: center;
-        color:var.$full-light-color;
-        svg {
-            width:1.5rem;
-            height: 1.5rem;
-        }
-        p {
-            font-size: 1rem;
-            font-style: italic;
-            color: #B1D0E0;
-            margin-top: -0.4rem;
-            padding: 0.5rem;
-            @include media.mq(sm){
-                font-size: 0.7rem;
-            }
-        }
-
-        &_noIcon {
-            padding: 1.1rem;
-            svg {
-                width:3.5rem;
-                height: 3.5rem;
-            }
-        }
-
-        @include media.mq(sm){
-            width:8rem;
-        }
-
-        &_ar {
-            margin-left:unset;
-            margin-right: 1rem;
-        }
+  &__side {
+    all: unset;
+    position: relative;
+    background-color: var.$white-color;
+    width: 100%;
+    border: 2px solid transparent;
+    border-radius: 1.6rem;
+    box-shadow: 2px 0px 11px 0px rgb(0 0 0 / 30%);
+    width: 10rem;
+    margin-left: 1rem;
+    text-align: center;
+    color: var.$full-light-color;
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
     }
+    p {
+      font-size: 1rem;
+      font-style: italic;
+      color: #b1d0e0;
+      margin-top: -0.4rem;
+      padding: 0.5rem;
+      @include media.mq(sm) {
+        font-size: 0.7rem;
+      }
+    }
+
+    &_noIcon {
+      padding: 1.1rem;
+      svg {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+    }
+
+    @include media.mq(sm) {
+      width: 8rem;
+    }
+
+    &_ar {
+      margin-left: unset;
+      margin-right: 1rem;
+    }
+  }
 }

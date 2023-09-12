@@ -21,8 +21,8 @@ import { AtSignIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import actions from '../../actions'
-import constants from '../../constants'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 export default function ForgetPassword({ isOpen, onClose }) {
   const {

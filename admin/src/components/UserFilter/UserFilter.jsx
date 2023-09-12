@@ -1,9 +1,9 @@
 import React from 'react'
 import style from './style.module.scss'
-import { Input, DropdownMenu } from '../../components'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import { Input, DropdownMenu } from '@/src/components'
 
 const Filter = ({
   hidden,

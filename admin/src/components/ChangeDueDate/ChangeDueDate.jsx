@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Modal, Button, Alert } from 'react-bootstrap'
-import { Calendar } from '../../icons'
-import { DateInput, Loader } from '..'
-import { useTranslation } from 'react-i18next'
-import actions from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
-import constants from '../../constants'
+import { useTranslation } from 'react-i18next'
+import { DateInput, Loader } from '..'
+import { Calendar } from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const ChangeDueDate = ({ isDueChange, setIsDueChange, id }) => {
   const [dueDateChange, setDueDateChange] = useState(null)

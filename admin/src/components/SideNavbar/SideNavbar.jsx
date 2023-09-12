@@ -3,9 +3,10 @@ import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames'
-import actions from '../../actions'
-import { Loader } from '../../components'
-
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
+import actions from '@/src/actions'
+import { Loader } from '@/src/components'
 import {
   Dashboard,
   Cogs,
@@ -16,12 +17,8 @@ import {
   CashRegister,
   HandshakeSlash,
   Help,
-  Website,
-  Article,
   Wrench,
-} from '../../icons'
-import i18next from 'i18next'
-import { useTranslation } from 'react-i18next'
+} from '@/src/icons'
 
 const SideNavbar = ({
   showSideMenu,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import { ProfileContainer, DocumentSegment } from '../../components'
+import { ProfileContainer, DocumentSegment } from '@/src/components'
 
 const Documents = ({ data }) => {
   const [documents, setDocuments] = useState([])

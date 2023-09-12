@@ -2,8 +2,8 @@ import React from 'react'
 import i18next from 'i18next'
 import classnames from 'classnames'
 import style from './style.module.scss'
-import { Plus, Minus } from '../../icons'
-import { Loader } from '../../components'
+import { Plus, Minus } from '@/src/icons'
+import { Loader } from '@/src/components'
 
 const SideButton = ({ handler, text, minus, noIcon, loading, custom }) => {
   const lang = i18next.language

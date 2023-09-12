@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Form, Button } from 'react-bootstrap'
 import RichTextEditor from 'react-rte'
 import { useTranslation } from 'react-i18next'
-import { PaperPlane } from '../../icons'
-import { Loader, SideAlert } from '../../components'
-import actions from '../../actions'
-import constants from '../../constants'
+import { PaperPlane } from '@/src/icons'
+import { Loader, SideAlert } from '@/src/components'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const Replay = ({ setIsEditor, id, type }) => {
   const [title, setTitle] = useState('')

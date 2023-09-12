@@ -1,27 +1,27 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .edit {
-        border:1px solid var.$main-color;
-        position: fixed;
-        bottom: 1.5rem;
-        right:5rem;
-        background-color: var.$white-color;
-        z-index:999;
-        @include media.mq(sm) {
-            margin:0 1rem;
-            right:0;
-        }
-        @include media.mq(xs) {
-            margin:0 1rem;
-            right:0;
-        }
-        &__footer {
-            height: 5rem;
-            background-color: #f3f3f3;
-            display: flex;
-            align-items: center;
-            justify-content: space-evenly;
-            padding: 1rem 2rem;
-        }
+  border: 1px solid var.$main-color;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 5rem;
+  background-color: var.$white-color;
+  z-index: 999;
+  @include media.mq(sm) {
+    margin: 0 1rem;
+    right: 0;
+  }
+  @include media.mq(xs) {
+    margin: 0 1rem;
+    right: 0;
+  }
+  &__footer {
+    height: 5rem;
+    background-color: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1rem 2rem;
+  }
 }

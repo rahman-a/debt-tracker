@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { useDispatch } from 'react-redux'
-import { OperationDecision } from '../../components'
-import actions from '../../actions'
-import { renderStateMessage } from '../../config/stateMessage'
 import DueDateChange from './DueDateChange'
 import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
 import i18next from 'i18next'
+import { OperationDecision } from '@/src/components'
+import actions from '@/src/actions'
+import { renderStateMessage } from '@/src/config/stateMessage'
 
 const Notification = ({ data }) => {
   const [isStateOn, setIsStateOn] = useState(false)

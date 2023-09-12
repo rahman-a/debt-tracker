@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './style.module.scss'
 import { Form } from 'react-bootstrap'
-import { DateInput } from '../../components'
 import { useTranslation } from 'react-i18next'
+import { DateInput } from '@/src/components'
 
 const Documents = ({
   getInfoValues,

@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import actions from '../../actions'
-import { Loader } from '../../components'
+import actions from '@/src/actions'
+import { Loader } from '@/src/components'
 import {
   Cogs,
   File,
@@ -16,7 +16,7 @@ import {
   CashRegister,
   HandshakeSlash,
   Employees,
-} from '../../icons'
+} from '@/src/icons'
 
 const SideNavbar = ({
   showSideMenu,

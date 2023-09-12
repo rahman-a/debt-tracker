@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import style from './style.module.scss'
 import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import actions from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
-import constants from '../../constants'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const CloseTicket = ({ toggleClose, setToggleClose, setIsClosing, id }) => {
   const { t } = useTranslation()

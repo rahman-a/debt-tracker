@@ -5,10 +5,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { Loader } from '../../components'
-import { Lock, AtSymbol } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
+import { Loader } from '@/src/components'
+import { Lock, AtSymbol } from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const LoginForm = () => {
   const [isForget, setIsForget] = useState(false)

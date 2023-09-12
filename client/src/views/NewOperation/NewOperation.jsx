@@ -3,9 +3,9 @@ import style from './style.module.scss'
 import { Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { PeerSearch, OperationCreation } from '../../components'
-import actions from '../../actions'
 import Mutuals from './Mutuals'
+import { PeerSearch, OperationCreation } from '@/src/components'
+import actions from '@/src/actions'
 
 const OperationInit = () => {
   const [peerInfo, setPeerInfo] = useState(null)

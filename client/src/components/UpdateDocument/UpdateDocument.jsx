@@ -3,11 +3,11 @@ import style from './style.module.scss'
 import { Modal, Alert, Button } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import actions from '../../actions'
-import { Times, Plus } from '../../icons'
-import { DateInput } from '../../components'
-import constants from '../../constants'
 import UploadFile from './UploadFile'
+import actions from '@/src/actions'
+import { Times } from '@/src/icons'
+import { DateInput } from '@/src/components'
+import constants from '@/src/constants'
 
 const UpdateDocument = ({ isEdit, setIsEdit, setLoadingState, document }) => {
   const [errors, setErrors] = useState(null)

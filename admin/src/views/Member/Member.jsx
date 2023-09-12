@@ -4,14 +4,14 @@ import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Loader, HeaderAlert, BackButton } from '../../components'
-import actions from '../../actions'
 import Personal from './Personal'
 import Address from './Address'
 import Phone from './Phone'
 import Documents from './Documents'
 import Company from './Company'
 import Actions from './Actions'
+import actions from '@/src/actions'
+import { Loader, HeaderAlert, BackButton } from '@/src/components'
 
 const Profile = () => {
   const { loading, error, member } = useSelector((state) => state.member)

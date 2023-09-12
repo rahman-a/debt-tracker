@@ -4,12 +4,12 @@ import { Button, Form, Modal, Tab, Tabs, Alert } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
-import actions from '../../actions'
 import Loader from '../Loader/Loader'
-import { ArrowLeft, ArrowRight } from '../../icons'
 import SingleTransaction from './SingleTransaction'
 import FilteredTransactions from './FilteredTransactions'
 import ReportTable from './ReportTable'
+import actions from '@/src/actions'
+import { ArrowLeft, ArrowRight } from '@/src/icons'
 
 /** required data */
 // user_code[admin], isAdmin[admin]

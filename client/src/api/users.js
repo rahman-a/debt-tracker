@@ -28,8 +28,11 @@ const userAPI = {
   verifyLoginCode(id, data) {
     return service().patch(`users/login/code/verify/${id}`, data)
   },
-  isLoggedIn() {
-    return service().get('users/is-logged-in')
+  isLoggedIn(token) {
+    const url = token
+      ? `users/is-logged-in?token=${token}`
+      : 'users/is-logged-in'
+    return service().get(url)
   },
   logout() {
     return service().post('users/logout')

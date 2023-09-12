@@ -10,10 +10,10 @@ import {
   Filter,
   Loader,
   HeaderAlert,
-} from '../../components'
-import { FilterSearch, Times } from '../../icons'
-import actions from '../../actions'
-import constants from '../../constants'
+} from '@/src/components'
+import { FilterSearch, Times } from '@/src/icons'
+import actions from '@/src/actions'
+import constants from '@/src/constants'
 
 const Operation = () => {
   const [isFilter, setIsFilter] = useState(false)

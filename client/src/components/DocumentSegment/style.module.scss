@@ -1,59 +1,58 @@
-@use '../../sass/variables' as var;
-@use '../../sass/media' as media;
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
 
 .segment {
-
-    & > div {
-        display: -ms-grid;
-        display: grid;
-        place-items: center;
+  & > div {
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+  }
+  &__doc {
+    border-radius: 1rem;
+    overflow: hidden;
+    img {
+      width: 13rem;
+      height: 10rem;
+      @include media.mq(sm) {
+        width: 10rem;
+        height: 7rem;
+      }
     }
-    &__doc {
-        border-radius: 1rem;
-        overflow: hidden;
-        img {
-            width:13rem;
-            height: 10rem;
-            @include media.mq(sm){
-                width:10rem;
-                height: 7rem;
-            }
-        }
-    }
+  }
 
-    p {
-        color:var.$main-color;
-        margin-top:0.5rem;
-        font-size: 1.5rem;
+  p {
+    color: var.$main-color;
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  &__block {
+    &_action {
+      position: relative;
+      width: 13rem;
+      height: 10rem;
+      border-radius: 1rem;
+      border: 1px dashed var.$main-color;
+      display: -ms-grid;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var.$main-color;
+      cursor: pointer;
+      overflow: hidden;
+      span {
         text-align: center;
+      }
+      span:last-child {
+        margin-top: -2rem;
+      }
+      @include media.mq(sm) {
+        font-size: 1.1rem;
+        width: 10rem;
+        height: 7rem;
+      }
     }
-
-    &__block {
-        &_action{
-            position: relative;
-            width:13rem;
-            height: 10rem;
-            border-radius: 1rem;
-            border:1px dashed var.$main-color;
-            display: -ms-grid;
-            display: grid;
-            place-items: center;
-            font-size: 1.4rem;
-            font-weight: 300;
-            color:var.$main-color;
-            cursor: pointer;
-            overflow: hidden;
-            span {
-                text-align: center;
-            }
-            span:last-child {
-                margin-top: -2rem;
-            }
-            @include media.mq(sm){
-                font-size: 1.1rem;
-                width:10rem;
-                height: 7rem;
-            }
-        }
-    }
+  }
 }

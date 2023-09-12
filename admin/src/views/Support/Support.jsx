@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import Row from './Row'
 import {
   Table,
   Loader,
@@ -10,10 +12,8 @@ import {
   FilterModal,
   TicketsFilter,
   TicketCard,
-} from '../../components'
-import actions from '../../actions'
-import Row from './Row'
-import { useTranslation } from 'react-i18next'
+} from '@/src/components'
+import actions from '@/src/actions'
 
 const Support = () => {
   const [isFilterModal, setIsFilterModal] = useState(false)

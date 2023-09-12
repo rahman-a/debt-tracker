@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import style from './style.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-bootstrap'
-import { Plus, Minus } from '../../icons'
 import { useTranslation } from 'react-i18next'
+import { Plus, Minus } from '@/src/icons'
 
 const OutsidePhones = ({ setInfo, info }) => {
   const { t } = useTranslation()

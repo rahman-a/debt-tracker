@@ -2,7 +2,7 @@ import React from 'react'
 import style from './style.module.scss'
 import i18next from 'i18next'
 import classnames from 'classnames'
-import { ProfileContainer, ProfileSegment } from '../../components'
+import { ProfileContainer, ProfileSegment } from '@/src/components'
 
 const Address = ({ data }) => {
   const lang = i18next.language

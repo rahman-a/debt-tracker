@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import actions from '../../actions'
+import actions from '@/src/actions'
 
 const CheckoutForm = ({ reportId }) => {
   const stripe = useStripe()
