@@ -86,7 +86,6 @@ async function handleToken({ token, secret, isAuth }, req, res) {
       Session.findOne(filter).then((data) => {
         data && data.remove()
       })
-      console.log('Session Error: ', error)
       res.status(401)
       throw new Error(req.t('please_login_first'))
     }

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { useSelector } from 'react-redux'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
@@ -22,7 +21,6 @@ import {
 
 function App() {
   const { isAuth } = useSelector((state) => state.login)
-
   return (
     <div className='App'>
       <ToastContainer

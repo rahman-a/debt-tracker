@@ -7,6 +7,8 @@ import bcrypt from 'bcrypt'
 import { DateTime } from 'luxon'
 import cron from 'node-cron'
 import { fileURLToPath } from 'url'
+import { v4 as uuidv4 } from 'uuid'
+import { generateFromEmail } from 'unique-username-generator'
 import { chatClient } from '../config/stream.chat.js'
 import User from '../models/users.model.js'
 import Notification from '../models/notifications.model.js'
@@ -17,7 +19,7 @@ import sendSMS from '../sms/send.js'
 import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
 import { labels } from '../config/labels.js'
-import { v4 as uuidv4 } from 'uuid'
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const documentsInArabic = {
@@ -88,22 +90,18 @@ export const checkIfExist = async (req, res, next) => {
 }
 
 export const registerNewUser = async (req, res, next) => {
-  const { country, emails, insidePhones, outsidePhones, accountType } = req.body
+  const { country, emails, insidePhones, accountType } = req.body
   const user = req.body
   try {
     user.country && (user.country = JSON.parse(country))
     user.emails = JSON.parse(emails)
     user.insidePhones = JSON.parse(insidePhones)
-    outsidePhones &&
-      (user.outsidePhones = JSON.parse(outsidePhones).map(
-        (value) => value.phone
-      ))
-    if (user.company) {
-      user.companyName = user.company
-      delete user.company
-    }
     const code = createUserCode()
     user.code = code
+
+    // Generate random username from email
+    const email = user.emails.find((email) => email.isPrimary === true).email
+    user.username = generateFromEmail(email, 3)
 
     const expireAt = user.expireAt ? JSON.parse(user.expireAt) : null
     user['avatar'] = req.files['avatar'][0].filename

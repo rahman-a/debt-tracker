@@ -1,4 +1,3 @@
-import { createServer } from 'http'
 import cluster from 'cluster'
 import os from 'os'
 import express from 'express'
@@ -9,7 +8,6 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { Server } from 'socket.io'
 import compression from 'compression'
 import { Database } from './server/database.connection.js'
 import {

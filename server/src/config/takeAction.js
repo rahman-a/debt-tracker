@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ObjectID from 'bson-objectid'
 import User from '../models/users.model.js'
 import Report from '../models/reports.model.js'

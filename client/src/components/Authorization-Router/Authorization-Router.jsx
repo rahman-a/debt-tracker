@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import styles from './style.module.scss'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { ChakraProvider } from '@chakra-ui/react'
+// import { ChakraProvider } from '@chakra-ui/react'
 import useChakraTheme from '@/src/hooks/useChakraTheme'
 import { Login } from '@/src/views'
 import actions from '@/src/actions'
@@ -44,7 +44,11 @@ function AuthorizationRouter() {
     token && navigate(location.pathname)
     return <Outlet />
   } else if (error) {
-    return window.location.replace('http://localhost:3000/login')
+    const url =
+      import.meta.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : import.meta.env.VITE_LANDING_PAGE_URL
+    return window.location.replace(`${url}/login`)
   }
 
   // return (
