@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { Form, Button } from 'react-bootstrap'
-import RichTextEditor from 'react-rte'
+import RichTextEditor from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { PaperPlane } from '@/src/icons'
 import { Loader, SideAlert } from '@/src/components'
@@ -10,8 +12,8 @@ import actions from '@/src/actions'
 import constants from '@/src/constants'
 
 const Replay = ({ setIsEditor, id }) => {
+  const editorRef = useRef()
   const [title, setTitle] = useState('')
-  const [response, setResponse] = useState(RichTextEditor.createEmptyValue())
   const [file, setFile] = useState(null)
   const [errors, setErrors] = useState(null)
   const attachRef = useRef()
@@ -20,34 +22,23 @@ const Replay = ({ setIsEditor, id }) => {
     (state) => state.addTicketReplay
   )
   const { t } = useTranslation()
+  const lang = i18next.language
 
-  const toolbarConfig = {
-    display: [
-      'INLINE_STYLE_BUTTONS',
-      'BLOCK_TYPE_BUTTONS',
-      'BLOCK_TYPE_DROPDOWN',
-      'HISTORY_BUTTONS',
-    ],
-    INLINE_STYLE_BUTTONS: [
-      { label: t('bold'), style: 'BOLD', className: 'custom-css-class' },
-      { label: t('italic'), style: 'ITALIC' },
-      { label: t('underline'), style: 'UNDERLINE' },
-    ],
-    BLOCK_TYPE_DROPDOWN: [
-      { label: t('normal'), style: 'unstyled' },
-      { label: t('large'), style: 'header-one' },
-      { label: t('medium'), style: 'header-two' },
-      { label: t('small'), style: 'header-three' },
-    ],
-    BLOCK_TYPE_BUTTONS: [
-      { label: t('ul'), style: 'unordered-list-item' },
-      { label: t('ol'), style: 'ordered-list-item' },
+  const editor = editorRef.current?.getEditor()
+  const moduleConfig = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }],
+      ['link'],
+      [{ color: [] }],
+      [{ direction: 'rtl' }],
     ],
   }
 
   const discardEditorHandler = (_) => {
     setIsEditor(false)
-    setResponse(RichTextEditor.createEmptyValue())
+    editor.setContents('')
     attachRef.current.value = null
     setTitle('')
   }
@@ -57,13 +48,14 @@ const Replay = ({ setIsEditor, id }) => {
       setErrors(t('title-required'))
       return
     }
-    if (response.toString('html').length < 50) {
+    const value = editor.container.firstChild.innerHTML
+    if (value.toString('html').length < 50) {
       setErrors(t('minimum-length'))
       return
     }
     const data = new FormData()
     data.append('title', title)
-    data.append('body', response.toString('html'))
+    data.append('body', value.toString('html'))
     data.append('sender', 'cs')
     if (file) {
       data.append('file', file)
@@ -71,11 +63,20 @@ const Replay = ({ setIsEditor, id }) => {
 
     dispatch(actions.tickets.addResponseToTickets(id, data))
   }
-
+  useEffect(() => {
+    if (message) {
+      setTitle('')
+      editor.setContents('')
+    }
+  }, [message])
   useEffect(() => {
     error && setErrors(error)
   }, [error])
-
+  useEffect(() => {
+    editorRef.current
+      ?.getEditor()
+      .format('direction', lang === 'ar' ? 'rtl' : 'ltr')
+  }, [lang])
   return (
     <>
       <SideAlert
@@ -110,9 +111,8 @@ const Replay = ({ setIsEditor, id }) => {
         <div className={style.ticket__edit_area}>
           <RichTextEditor
             placeholder={t('enter-ticket-body')}
-            toolbarConfig={toolbarConfig}
-            value={response}
-            onChange={(value) => setResponse(value)}
+            modules={moduleConfig}
+            ref={editorRef}
           />
         </div>
 

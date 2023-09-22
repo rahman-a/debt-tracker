@@ -8,6 +8,7 @@
   right: 5rem;
   background-color: var.$white-color;
   z-index: 999;
+  direction: ltr;
   @include media.mq(sm) {
     margin: 0 1rem;
     right: 0;

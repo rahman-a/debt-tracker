@@ -66,7 +66,7 @@ const TicketBody = ({ data }) => {
                 <span></span>
                 <figure>
                   <img
-                    src={`images/placeholder/${filePlaceholder(data.file)}`}
+                    src={`/images/placeholder/${filePlaceholder(data.file)}`}
                     alt='attachment'
                   />
                 </figure>

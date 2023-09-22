@@ -125,16 +125,22 @@ body {
   }
 }
 
-.public-DraftEditor-content {
+// react quill editor
+.ql-editor {
   width: 50rem !important;
   min-height: 25rem !important;
   height: unset !important;
+  text-align: initial !important;
   @include mq(sm) {
     width: 45rem !important;
   }
   @include mq(xs) {
     width: 40rem !important;
   }
+}
+
+.arabic-language .ql-editor::before {
+  text-align: right !important;
 }
 
 .simplebar-content {

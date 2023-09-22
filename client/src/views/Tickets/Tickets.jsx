@@ -11,8 +11,8 @@ import {
   FilterButton,
   FilterModal,
   TicketsFilter,
-  Replay,
   TicketCard,
+  QuillEditor,
 } from '@/src/components'
 import actions from '@/src/actions'
 
@@ -72,7 +72,7 @@ const Tickets = () => {
           </div>
         </div>
 
-        {isEditor && <Replay setIsEditor={setIsEditor} type='create' />}
+        {isEditor && <QuillEditor setIsEditor={setIsEditor} type='create' />}
 
         <FilterModal
           isFilter={isFilterModal}

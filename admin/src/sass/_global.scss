@@ -112,18 +112,22 @@ body {
   }
 }
 
-.public-DraftEditor-content {
+.ql-editor {
   width: 50rem !important;
-  height: 50rem !important;
+  min-height: 25rem !important;
+  height: unset !important;
+  text-align: initial !important;
   @include mq(sm) {
     width: 45rem !important;
   }
   @include mq(xs) {
-    height: 45rem !important;
     width: 40rem !important;
   }
 }
 
+.arabic-language .ql-editor::before {
+  text-align: right !important;
+}
 .simplebar-content {
   display: flex;
   flex-wrap: wrap;

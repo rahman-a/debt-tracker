@@ -6,7 +6,11 @@ import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
 import TicketResponse from './TicketResponse'
-import { HeaderAlert, Loader, Replay as ReplayResponse } from '@/src/components'
+import {
+  HeaderAlert,
+  Loader,
+  QuillEditor as ReplayResponse,
+} from '@/src/components'
 import msToTime from '@/src/config/msToTime'
 import actions from '@/src/actions'
 import { Replay } from '@/src/icons'
@@ -60,8 +64,7 @@ const Ticket = () => {
                     disabled={!ticket.isOpen}
                   >
                     <span>
-                      {' '}
-                      <Replay />{' '}
+                      <Replay />
                     </span>
                     <span> {t('ticket-replay')} </span>
                   </button>
