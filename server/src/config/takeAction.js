@@ -23,7 +23,7 @@ const renderStateMessage = (text) => {
       console.log('is Object Id:', ObjectID.isValid(value))
       if (ObjectID.isValid(value)) {
         fullText.push(
-          `<a-href=https://swtle.com/#/reports/active/${value}>${value}</a>`
+          `<a-href=https://swtle.com/#/reports/active?code=${value}>${value}</a>`
         )
       } else
         fullText.push(

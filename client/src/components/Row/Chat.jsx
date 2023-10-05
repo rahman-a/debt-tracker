@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
@@ -21,7 +22,6 @@ const Chat = ({ id }) => {
     const sort = { last_message_at: -1 }
     const options = { watch: true, state: true, limit: 1 }
     const channels = await chatClient.queryChannels(filter, sort, options)
-    console.log('channel exist: ', channels)
     if (channels.length > 0) {
       dispatch({
         type: constants.chat.SET_QUERIED_CHANNEL,

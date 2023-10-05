@@ -7,8 +7,11 @@ const employeeAPI = {
   listEmployees(data) {
     return service().get(`employees/list/${data.manager}`)
   },
+  toggleBlockEmployee(id) {
+    return service().patch(`employees/${id}/block`)
+  },
   deleteEmployee(id) {
-    return service().delete(`employees/delete/${id}`)
+    return service().delete(`employees/${id}/delete`)
   },
 }
 

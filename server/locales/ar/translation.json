@@ -86,6 +86,7 @@
   "operation_decision_made": "تم أخد القرار بالفعل فى هذة إلإدخال, لاداعى لإتخاذ قرارات أخرى",
   "not_allowed_create_operation": "غير مصرح لك بإنشاء إدخال جديدة",
   "not_allowed_create_operation_with_red_member": "غير مصرح لك بإنشاء إدخال جديد مع عميل بكود أحمر",
+  "not_allowed_create_operation_with_blocked_member": "غير مصرح لك بإنشاء إدخال جديد مع عميل محظور",
   "/6": "///////// REPORTS ///////////",
   "report_already_exist": "المعاملة المالية المرتبط بهذة الإدخال موجود بالفعل",
   "report_already_closed": "المعاملة المالية مغلقة بالفعل",

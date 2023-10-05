@@ -417,7 +417,6 @@ export const sendEmailVerificationLink = async (req, res, next) => {
 // User Authentication using email and password
 export const login = async (req, res, next) => {
   const { email, password } = req.body
-
   try {
     const user = await User.AuthUser(email, password, res, req.t)
     res.send({
@@ -435,9 +434,9 @@ export const login = async (req, res, next) => {
 export const logoutHandler = async (req, res, next) => {
   try {
     const user = req.user
-    if (user) {
-      await chatClient.revokeUserToken(user._id.toString(), new Date())
-    }
+    // if (user) {
+    //   await chatClient.revokeUserToken(user._id.toString(), new Date())
+    // }
     const sessionId = req.sessionId
     if (sessionId) {
       await Session.findByIdAndRemove(sessionId)
@@ -502,6 +501,7 @@ export const findUserHandler = async (req, res, next) => {
         'insidePhones.phone': mobile,
         _id: { $ne: req.user._id },
         isProvider: false,
+        isBlocked: false,
       }).populate('company.data', 'name')
       if (users.length === 0) {
         res.status(404)
@@ -521,6 +521,7 @@ export const findUserHandler = async (req, res, next) => {
         ...searchFilter,
         _id: { $ne: req.user._id },
         isProvider: false,
+        isBlocked: false,
       }).populate('company.data', 'name')
       if (users.length === 0) {
         res.status(404)
@@ -653,10 +654,10 @@ export const verifyLoginCodeHandler = async (req, res, next) => {
 }
 
 export const checkIsUserLoggedIn = async (req, res, next) => {
-  const { users } = await chatClient.queryUsers({ id: req.user._id.toString() })
-  const chat_token = users.length
-    ? chatClient.createToken(req.user._id.toString())
-    : null
+  // const { users } = await chatClient.queryUsers({ id: req.user._id.toString() })
+  // const chat_token = users.length
+  //   ? chatClient.createToken(req.user._id.toString())
+  //   : null
   try {
     const userData = {
       _id: req.user._id,
@@ -667,7 +668,8 @@ export const checkIsUserLoggedIn = async (req, res, next) => {
       color: req.user.colorCode.code,
       company: req.user.company,
       isProvider: req.user.isProvider,
-      chat_token,
+      isBlocked: req.user.isBlocked,
+      // chat_token,
     }
     res.json({
       success: true,

@@ -22,8 +22,6 @@ const NotifyContainer = ({
   const { t } = useTranslation()
   const lang = i18next.language
 
-  console.log('NotifyContainer -> data', data)
-
   const navigateToPage = (data) => {
     if (title === 'Notification') {
       setToggleNotification(false)

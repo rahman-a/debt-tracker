@@ -1,0 +1,23 @@
+@use '@/src/sass/variables' as var;
+@use '@/src/sass/media' as media;
+.actions {
+  svg {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+  button:disabled span {
+    opacity: 0.5;
+    color: #ccc;
+  }
+  &__delete {
+    text-align: center;
+    h2 {
+      font-weight: 400;
+      color: var.$code-red-color;
+    }
+    p {
+      font-weight: 300;
+      padding: 0.5rem 0;
+    }
+  }
+}

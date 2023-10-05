@@ -75,9 +75,35 @@ const deleteEmployee = (state, action) => {
   return cases[action.type] || { ...state }
 }
 
+const toggleBlockEmployee = (state, action) => {
+  const cases = {
+    [constants.employees.TOGGLE_BLOCK_EMPLOYEE_REQUEST]: {
+      loading: true,
+      error: null,
+    },
+    [constants.employees.TOGGLE_BLOCK_EMPLOYEE_SUCCESS]: {
+      loading: false,
+      error: null,
+      message: action.payload,
+    },
+    [constants.employees.TOGGLE_BLOCK_EMPLOYEE_FAIL]: {
+      loading: false,
+      error: action.payload,
+    },
+    [constants.employees.TOGGLE_BLOCK_EMPLOYEE_RESET]: {
+      loading: false,
+      error: null,
+      message: null,
+    },
+  }
+
+  return cases[action.type] || { ...state }
+}
+
 const reducers = {
   createEmployee,
   listEmployees,
+  toggleBlockEmployee,
   deleteEmployee,
 }
 

@@ -4,8 +4,9 @@ const userAPI = {
   checkInfo(data) {
     return service().post(`users/check-if-exist`, data)
   },
-  getUserProfile() {
-    return service().get('users/me')
+  getUserProfile(id) {
+    const url = id ? `employees/${id}` : 'users/me'
+    return service().get(url)
   },
   updatePassword(data) {
     return service().patch('users/password/update', data)

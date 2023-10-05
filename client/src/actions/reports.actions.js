@@ -1,11 +1,12 @@
+// @ts-nocheck
 import download from 'js-file-download'
 import constants from '../constants'
 import api from '../api'
 
-const listAllReports = (query) => async (dispatch) => {
+const listAllReports = (id, query) => async (dispatch) => {
   dispatch({ type: constants.reports.REPORTS_ALL_REQUEST })
   try {
-    const { data } = await api.reports.index(query)
+    const { data } = await api.reports.index(id, query)
     dispatch({
       type: constants.reports.REPORTS_ALL_SUCCESS,
       reports: data.reports,

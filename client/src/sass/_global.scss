@@ -169,3 +169,11 @@ body {
 .crop__slider {
   width: 100%;
 }
+
+// react-bootstrap dropdown
+.dropdown-item:active {
+  background-color: var(--second-color) !important;
+}
+.dropdown-item:active span {
+  color: #fff !important;
+}

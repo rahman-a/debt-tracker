@@ -938,7 +938,7 @@ style="font-family: 'Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif' !impor
                             This a friendly E-mail to remind you that your due date &nbsp; <span
                                 style="color:#1a374d; font-weight: 500; font-family: monospace;font-size: 15px; border:1px solid; padding: 0 2px;">${info.date}</span>
                             &nbsp; of report
-                            <a href="https://swtle.com/#/reports/active/${info.report}">${info.report}</a> is approaching.
+                            <a href="https://swtle.com/#/reports/active?code=${info.report}">${info.report}</a> is approaching.
                         </td>
                     </tr>
                 </table>

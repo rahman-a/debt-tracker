@@ -8,8 +8,7 @@ const FilterButton = ({ onClick }) => {
   return (
     <button className={style.filter} onClick={onClick}>
       <span>
-        {' '}
-        <FilterSearch />{' '}
+        <FilterSearch />
       </span>
       <span> {t('filter')} </span>
     </button>

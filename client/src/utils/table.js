@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function getUserData(record, type) {
   let user
   if (type === 'credit') {
@@ -18,13 +19,14 @@ export function getUserData(record, type) {
   return user
 }
 
-export const peerType = (record, user) => {
+export const peerType = (record, userId) => {
+  if (!userId) return
   const type =
-    record.initiator?.user?._id === user._id ||
-    record.operation?.initiator?._id === user._id
+    record.initiator?.user?._id === userId ||
+    record.operation?.initiator?._id === userId
       ? record.peer?.type || record.operation.peer.type
-      : record.peer?.user?._id === user._id ||
-        record.operation.peer._id === user._id
+      : record.peer?.user?._id === userId ||
+        record.operation.peer._id === userId
       ? record.initiator?.type || record.operation.initiator.type
       : 'N/A'
 
@@ -63,15 +65,16 @@ export const defineValue = (record, type, field) => {
   return value
 }
 
-export const getMemberName = (record, user, lang) => {
+export const getMemberName = (record, userId, lang) => {
+  if (!userId) return
   if (lang === 'ar') {
-    return isCurrentUserPeer(record, user)
+    return isCurrentUserPeer(record, userId)
       ? record.initiator?.user?.fullNameInArabic ||
           record.operation.initiator.fullNameInArabic
       : record.peer?.user?.fullNameInArabic ||
           record.operation.peer.fullNameInArabic
   } else {
-    return isCurrentUserPeer(record, user)
+    return isCurrentUserPeer(record, userId)
       ? record.initiator?.user?.fullNameInEnglish ||
           record.operation.initiator.fullNameInEnglish
       : record.peer?.user?.fullNameInEnglish ||
@@ -79,8 +82,9 @@ export const getMemberName = (record, user, lang) => {
   }
 }
 
-export const getPeerId = (record, user) => {
-  const id = isCurrentUserPeer(record, user)
+export const getPeerId = (record, userId) => {
+  if (!userId) return
+  const id = isCurrentUserPeer(record, userId)
     ? record.initiator?.user?._id || record.operation.initiator._id
     : record.peer?.user?._id || record.operation.peer._id
 
@@ -103,28 +107,30 @@ export const getStateColor = (state) => {
   return states[state]
 }
 
-export function isCurrentUserPeer(record, user) {
+export function isCurrentUserPeer(record, userId) {
+  if (!userId) return
   return (
-    record.peer?.user?._id === user._id ||
-    record.operation?.peer?._id === user._id
+    record.peer?.user?._id === userId || record.operation?.peer?._id === userId
   )
 }
 
-export const isCurrentUserCredit = (record, op, user) => {
+export const isCurrentUserCredit = (record, op, userId) => {
+  if (!userId) return
   if (!op) {
     const creditor =
       record.operation.initiator.type === 'credit'
         ? record.operation.initiator._id
         : record.operation.peer._id
-    if (creditor === user._id) return true
+    if (creditor === userId) return true
   }
 
   return false
 }
 
-export function isPeerUserEmployee(record, user) {
+export function isPeerUserEmployee(record, userId) {
+  if (!userId) return {}
   const peerUser =
-    (record.peer?.user?._id || record.operation?.peer?._id) !== user._id
+    (record.peer?.user?._id || record.operation?.peer?._id) !== userId
       ? record.peer?.user || record.operation?.peer
       : record.initiator?.user || record.operation?.initiator
   return {

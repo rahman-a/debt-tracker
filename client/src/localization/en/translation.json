@@ -45,6 +45,7 @@
   "decision-decline": "Decline",
   "warning": "Warning",
   "qualified": "Qualified",
+  "danger": "Danger",
   "/4": "////////// REPORTS ///////",
   "active-reports-records": "Active Transactions Records",
   "closed-reports-records": "Paid Transactions Records",

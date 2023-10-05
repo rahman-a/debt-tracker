@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+// @ts-nocheck
+import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { Badge } from 'react-bootstrap'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -6,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import classnames from 'classnames'
+import { useParams } from 'react-router-dom'
 import Decision from './Decision'
 import Chat from './Chat'
 import {
@@ -45,13 +47,15 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
   const [isReportClose, setIsReportClose] = useState(false)
   const [isFine, setIsFine] = useState(false)
   const { user } = useSelector((state) => state.isAuth)
+  const [userId, setUserId] = useState(null)
   const lang = i18next.language
   const { t } = useTranslation()
-  const isCredit = isCurrentUserCredit(record, op, user)
-  const isPeer = isCurrentUserPeer(record, user)
-  const memberName = getMemberName(record, user, lang)
-  const peer_Type = peerType(record, user)
-  const peer_Id = getPeerId(record, user)
+  const { id } = useParams() // Employee Id
+  const isCredit = isCurrentUserCredit(record, op, userId)
+  const isPeer = isCurrentUserPeer(record, userId)
+  const memberName = getMemberName(record, userId, lang)
+  const peer_Type = peerType(record, userId)
+  const peer_Id = getPeerId(record, userId)
   const creditorData = getUserData(record, 'credit')
   const debtorData = getUserData(record, 'debt')
   const creditValue = defineValue(record, peer_Type, 'credit')
@@ -59,7 +63,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
   const fineAmount = formatFineAmount(debtorData.delayedFine)
   const finePaymentDate = formatPaymentDate(debtorData.delayedFine?.paidAt)
   const recordPaymentDate = formatPaymentDate(record.paymentDate)
-  const { isEmployee, company } = isPeerUserEmployee(record, user)
+  const { isEmployee, company } = isPeerUserEmployee(record, userId)
 
   const copyIdHandler = (_) => {
     setIsCopied(true)
@@ -68,8 +72,16 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
     }, 500)
   }
   const rowCloseClasses = classnames(style.row__close, {
-    [style.row__close_disabled]: !isCredit,
+    [style.row__close_disabled]: !isCredit || id,
   })
+
+  const fineClasses = classnames({
+    [style.row__fine]: fineAmount && !id,
+    [style.row__fine_employee]: id,
+  })
+  useEffect(() => {
+    id ? setUserId(id) : setUserId(user._id)
+  }, [id])
   return (
     <>
       <PayFine
@@ -123,10 +135,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
               ? t(record.initiator?.type) || t(record.operation.initiator.type)
               : t(record.peer?.type) || t(record.operation.peer.type)}
           </span>
-          <span className={style.row__chatIcon}>
-            <ChatIcon />
-          </span>
-          <Chat id={peer_Id} />
+          {!id && <Chat id={peer_Id} />}
           {memberName}
         </td>
 
@@ -211,7 +220,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
               textTransform: 'uppercase',
             }}
           >
-            {record.state === 'pending' && isPeer && (
+            {record.state === 'pending' && isPeer && !id && (
               <>
                 <span className={style.row__state_decision}>
                   <Check />
@@ -235,11 +244,8 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
             {finePaymentDate && !isCredit ? (
               <Badge bg='success'>{finePaymentDate}</Badge>
             ) : fineAmount && !isCredit ? (
-              <p
-                onClick={() => setIsFine(true)}
-                className={fineAmount ? style.row__fine : ''}
-              >
-                <span title='click to pay'>
+              <p onClick={() => !id && setIsFine(true)} className={fineClasses}>
+                <span title={id ? fineAmount : 'click to pay'}>
                   <CashRegister />
                 </span>
                 <i>{fineAmount}</i>
@@ -252,14 +258,14 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
         {/* Operation Due Date */}
         {(due || closed) && (
           <td
-            style={{ backgroundColor: record.paymentDate ? '#FCD4DB' : '#ff' }}
+            style={{ backgroundColor: record.paymentDate ? '#FCD4DB' : '#fff' }}
           >
             {record.paymentDate ? (
               new Date(record.paymentDate).toLocaleDateString()
             ) : record.dueDate ? (
               <span
-                className={isCredit ? style.row__due : ''}
-                onClick={() => isCredit && setIsDueChange(true)}
+                className={isCredit && !id ? style.row__due : ''}
+                onClick={() => isCredit && !id && setIsDueChange(true)}
               >
                 {new Date(record.dueDate).toLocaleDateString()}
               </span>
@@ -276,7 +282,7 @@ const Row = ({ record, idx, reports, due, op, closed }) => {
             ) : (
               <span
                 className={rowCloseClasses}
-                onClick={() => isCredit && setIsReportClose(true)}
+                onClick={() => isCredit && !id && setIsReportClose(true)}
               >
                 <HandshakeSlash />
               </span>

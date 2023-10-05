@@ -39,3 +39,8 @@ test.jsx
 guest.json
 *.txt
 tmp
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

@@ -4,7 +4,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 // import { ChakraProvider } from '@chakra-ui/react'
 import useChakraTheme from '@/src/hooks/useChakraTheme'
-import { Login } from '@/src/views'
+// import { Login } from '@/src/views'
 import actions from '@/src/actions'
 
 let isMounted = true
@@ -12,7 +12,7 @@ function AuthorizationRouter() {
   const { isAuth, error, loading } = useSelector((state) => state.isAuth)
   const location = useLocation()
   const navigate = useNavigate()
-  const chakraTheme = useChakraTheme()
+  // const chakraTheme = useChakraTheme()
   const dispatch = useDispatch()
   const token = location.hash.split('=')[1]
 
@@ -45,7 +45,7 @@ function AuthorizationRouter() {
     return <Outlet />
   } else if (error) {
     const url =
-      import.meta.env.NODE_ENV === 'development'
+      process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000'
         : import.meta.env.VITE_LANDING_PAGE_URL
     return window.location.replace(`${url}/login`)

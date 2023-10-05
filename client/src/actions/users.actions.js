@@ -1,3 +1,4 @@
+// @ts-nocheck
 import constants from '../constants'
 import api from '../api'
 
@@ -219,10 +220,10 @@ const updatePassword = (info) => async (dispatch) => {
   }
 }
 
-const getUserProfile = () => async (dispatch) => {
+const getUserProfile = (id) => async (dispatch) => {
   dispatch({ type: constants.users.USER_PROFILE_REQUEST })
   try {
-    const { data } = await api.users.getUserProfile()
+    const { data } = await api.users.getUserProfile(id)
     dispatch({ type: constants.users.USER_PROFILE_SUCCESS, payload: data.user })
   } catch (error) {
     dispatch({

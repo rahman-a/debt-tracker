@@ -46,6 +46,8 @@
     &_state {
       display: flex;
       align-items: center;
+      position: absolute;
+      right: 3.2rem;
       span {
         cursor: pointer;
         svg {

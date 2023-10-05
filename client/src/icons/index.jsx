@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Icon } from '@chakra-ui/react'
 import { BsFillEyeSlashFill, BsFillEyeFill } from 'react-icons/bs'
 export { default as AddressCard } from './AddressCard'
@@ -93,6 +94,10 @@ export { default as FineIcon } from './Fine'
 export { default as FineSolidIcon } from './FineSolid'
 export { default as PoweredByStripe } from './PoweredByStripe'
 export { default as Employees } from './Employees'
+export { default as UserBlock } from './UserBlock'
+export { default as UserChecked } from './UserChecked'
+export { default as MenuDots } from './MenuDots'
+export { default as SettingPanel } from './SettingPanel'
 export const EyeIcon = (props) => <Icon as={BsFillEyeFill} {...props} />
 export const EyeSlashIcon = (props) => (
   <Icon as={BsFillEyeSlashFill} {...props} />

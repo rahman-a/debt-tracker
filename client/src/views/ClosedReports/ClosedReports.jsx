@@ -1,8 +1,10 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { Button, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { useParams, useLocation } from 'react-router-dom'
 import {
   Pagination,
   Table,
@@ -10,6 +12,7 @@ import {
   Loader,
   HeaderAlert,
   ReportPrinting,
+  EmployeeHeaderData,
 } from '@/src/components'
 import { FilterSearch, Printer, Times } from '@/src/icons'
 import actions from '@/src/actions'
@@ -39,15 +42,18 @@ const Reports = () => {
   )
 
   const { t } = useTranslation()
-
+  const { id } = useParams() // Employee Id
+  const location = useLocation()
+  const query = new URLSearchParams(location.search)
+  const type = query.get('type')
   const filterOperationHandler = (skip) => {
     let query = { ...searchFilter }
     if (skip) query.skip = skip.skip
-    dispatch(actions.reports.listAllReports(query))
+    dispatch(actions.reports.listAllReports(id, query))
   }
 
   const resetFilterOperations = (_) => {
-    dispatch(actions.reports.listAllReports({ isActive: false }))
+    dispatch(actions.reports.listAllReports(id, { isActive: false }))
   }
 
   useEffect(() => {
@@ -55,9 +61,9 @@ const Reports = () => {
   }, [loading])
 
   useEffect(() => {
-    dispatch(actions.reports.listAllReports({ isActive: false }))
+    dispatch(actions.reports.listAllReports(id, { isActive: false }))
     return () => dispatch({ type: constants.reports.REPORTS_ALL_RESET })
-  }, [])
+  }, [id])
 
   return (
     <>
@@ -89,7 +95,12 @@ const Reports = () => {
           <Printer />
           <span>{t('print')}</span>
         </Button>
-        <h1>{t('closed-reports-records')}</h1>
+        <h1 style={{ marginBottom: id ? '2rem' : '10rem' }}>
+          {t('closed-reports-records')}
+        </h1>
+        {type === 'employee' && (
+          <EmployeeHeaderData style={{ marginBottom: '5rem' }} />
+        )}
         <div className={style.reports__wrapper}>
           <div className={style.reports__actions}>
             <button

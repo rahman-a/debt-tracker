@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'

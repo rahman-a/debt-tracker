@@ -1,3 +1,4 @@
+// @ts-nocheck
 import classnames from 'classnames'
 import style from './style.module.scss'
 import i18next from 'i18next'
@@ -20,9 +21,9 @@ export const panelBodyDateClasses = classnames(style.panel__body_date, {
   [style.panel__body_date_ar]: lang === 'ar',
 })
 
-export const panelCloseClasses = (isCredit) => {
+export const panelCloseClasses = (isCredit, id) => {
   return classnames(style.panel__close, {
-    [style.panel__disabled]: !isCredit,
+    [style.panel__disabled]: !isCredit || id,
   })
 }
 

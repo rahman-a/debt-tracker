@@ -1,10 +1,10 @@
 import constants from '../constants'
 import api from '../api'
 
-const listAllOperations = (query) => async (dispatch) => {
+const listAllOperations = (id, query) => async (dispatch) => {
   dispatch({ type: constants.operations.LIST_OPERATIONS_REQUEST })
   try {
-    const { data } = await api.operations.index(query)
+    const { data } = await api.operations.index(id, query)
     dispatch({
       type: constants.operations.LIST_OPERATIONS_SUCCESS,
       operations: data.operations,

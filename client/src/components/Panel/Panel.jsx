@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import CopyToClipboard from 'react-copy-to-clipboard'
@@ -5,6 +6,7 @@ import { Badge } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import Decision from './Decision'
 import ChatComponent from './Chat'
 import {
@@ -24,7 +26,7 @@ import {
   isCurrentUserCredit,
   formatFineAmount,
   peerType,
-  defineValue,
+  // defineValue,
   formatPaymentDate,
 } from '@/src/utils/table'
 import { Copy, Check, HandshakeSlash, FineIcon } from '@/src/icons'
@@ -38,18 +40,20 @@ const Panel = ({ record, reports, due, op, closed }) => {
   const [isShow, setIsShow] = useState(false)
   const [isFine, setIsFine] = useState(false)
   const [note, setNote] = useState('')
+  const [userId, setUserId] = useState(null)
+  const { id } = useParams()
   const { user } = useSelector((state) => state.isAuth)
   const lang = i18next.language
   const { t } = useTranslation()
-  const isCredit = isCurrentUserCredit(record, op, user)
-  const isPeer = isCurrentUserPeer(record, user)
-  const memberName = getMemberName(record, user, lang)
-  const peer_Type = peerType(record, user)
-  const peer_Id = getPeerId(record, user)
-  const creditorData = getUserData(record, 'credit')
+  const isCredit = isCurrentUserCredit(record, op, userId)
+  const isPeer = isCurrentUserPeer(record, userId)
+  const memberName = getMemberName(record, userId, lang)
+  const peer_Type = peerType(record, userId)
+  const peer_Id = getPeerId(record, userId)
+  // const creditorData = getUserData(record, 'credit')
   const debtorData = getUserData(record, 'debt')
-  const creditValue = defineValue(record, peer_Type, 'credit')
-  const debtValue = defineValue(record, peer_Type, 'debt')
+  // const creditValue = defineValue(record, peer_Type, 'credit')
+  // const debtValue = defineValue(record, peer_Type, 'debt')
   const fineAmount = formatFineAmount(debtorData.delayedFine)
   const finePaymentDate = formatPaymentDate(debtorData.delayedFine?.paidAt)
   const reportPaymentDate = formatPaymentDate(record.paymentDate)
@@ -64,6 +68,10 @@ const Panel = ({ record, reports, due, op, closed }) => {
   useEffect(() => {
     setNote(record?.note || record?.operation?.note)
   }, [record])
+
+  useEffect(() => {
+    id ? setUserId(id) : setUserId(user._id)
+  }, [id])
   return (
     <>
       <PayFine
@@ -101,12 +109,12 @@ const Panel = ({ record, reports, due, op, closed }) => {
             <span>{`#${record._id}`.substring(0, 15) + '...'}</span>
           </div>
           <div className={style.panel__header_state}>
-            <ChatComponent id={peer_Id} />
+            {!id && <ChatComponent id={peer_Id} />}
             {reports && !record.paymentDate ? (
               <span
                 style={{ backgroundColor: 'darkgreen', color: '#fff' }}
-                className={panelCloseClasses(isCredit)}
-                onClick={() => isCredit && setIsReportClose(true)}
+                className={panelCloseClasses(isCredit, id)}
+                onClick={() => isCredit && !id && setIsReportClose(true)}
               >
                 {t('complete-payment')}
                 <HandshakeSlash style={{ marginLeft: '0.5rem' }} />
@@ -122,10 +130,15 @@ const Panel = ({ record, reports, due, op, closed }) => {
                   textTransform: 'uppercase',
                 }}
                 className={
-                  record.state === 'pending' && !isPeer && style.panel__disabled
+                  (record.state === 'pending' && !isPeer) || id
+                    ? style.panel__disabled
+                    : ''
                 }
                 onClick={() =>
-                  record.state === 'pending' && isPeer && setIsDecision(true)
+                  record.state === 'pending' &&
+                  isPeer &&
+                  !id &&
+                  setIsDecision(true)
                 }
               >
                 {t(record.state)}
@@ -159,7 +172,7 @@ const Panel = ({ record, reports, due, op, closed }) => {
           </figure>
           <div className={style.panel__body_data}>
             <div className={panelBodyNameClasses}>
-              <p>{memberName.substring(0, 25) + '...'}</p>
+              <p>{memberName?.substring(0, 25) + '...'}</p>
               <span
                 className={style.panel__label}
                 style={{
@@ -182,14 +195,16 @@ const Panel = ({ record, reports, due, op, closed }) => {
               </div>
               {fineAmount && !isCredit && (
                 <div
-                  onClick={() => !finePaymentDate && setIsFine(true)}
+                  onClick={() => !finePaymentDate && !id && setIsFine(true)}
                   style={{
                     color: finePaymentDate ? 'green' : 'red',
-                    cursor: finePaymentDate ? 'default' : 'pointer',
+                    cursor: finePaymentDate || id ? 'default' : 'pointer',
                   }}
                   title={
                     finePaymentDate
                       ? `Fine has been paid at ${finePaymentDate}`
+                      : id
+                      ? fineAmount
                       : 'click to pay the delayed fine'
                   }
                   className={panelBodyValueClasses}
@@ -212,8 +227,8 @@ const Panel = ({ record, reports, due, op, closed }) => {
                   </span>
                 ) : record.dueDate ? (
                   <span
-                    className={isCredit ? style.panel__due : ''}
-                    onClick={() => isCredit && setIsDueChange(true)}
+                    className={isCredit && !id ? style.panel__due : ''}
+                    onClick={() => isCredit && !id && setIsDueChange(true)}
                   >
                     {new Date(record.dueDate).toLocaleDateString()}
                   </span>

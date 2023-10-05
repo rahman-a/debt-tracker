@@ -15,7 +15,7 @@ const Documents = ({ data }) => {
         ? allDocuments.push(
             <DocumentSegment
               key={data[d]._id}
-              img={`api/files/${data[d].image}`}
+              img={`/api/files/${data[d].image}`}
               isExpired={data[d].isExpired ? data[d].isExpired : ''}
               document={d}
             />

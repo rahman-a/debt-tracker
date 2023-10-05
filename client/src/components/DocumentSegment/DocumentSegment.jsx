@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
@@ -5,9 +6,11 @@ import { useTranslation } from 'react-i18next'
 import constants from '@/src/constants'
 import { Plus } from '@/src/icons'
 import { UpdateDocument, Loader } from '@/src/components'
+import ImageContainer from './ImageContainer'
 
-const DocumentSegment = ({ img, document, isExpired }) => {
+const DocumentSegment = ({ img, document, isExpired, isEmployee }) => {
   const [isEdit, setIsEdit] = useState(false)
+  const [isImage, setIsImage] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
   const { isDone } = useSelector((state) => state.updateDocuments)
   const dispatch = useDispatch()
@@ -31,9 +34,15 @@ const DocumentSegment = ({ img, document, isExpired }) => {
         document={document}
       />
 
+      <ImageContainer
+        img={img}
+        document={document}
+        isImage={isImage}
+        setIsImage={setIsImage}
+      />
       <div className={style.segment}>
         {img && !isExpired ? (
-          <div className={style.segment__doc}>
+          <div className={style.segment__doc} onClick={() => setIsImage(true)}>
             <img src={img} alt={document} />
             <p>{t(document)}</p>
           </div>

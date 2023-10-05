@@ -15,7 +15,7 @@ export const isAuth = async (req, res, next) => {
       const session = await handleSession(decode.sessionId, req, res)
       res.cookie('token', session.authToken, {
         httpOnly: true,
-        domain: 'localhost',
+        domain: '127.0.0.1' | 'localhost',
         path: '/',
         expires: session.expireAt,
       })

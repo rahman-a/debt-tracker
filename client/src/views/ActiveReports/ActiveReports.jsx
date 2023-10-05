@@ -1,7 +1,8 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { Button, Modal } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import {
@@ -11,6 +12,7 @@ import {
   Loader,
   HeaderAlert,
   ReportPrinting,
+  EmployeeHeaderData,
 } from '@/src/components'
 import { FilterSearch, Times, Printer } from '@/src/icons'
 import actions from '@/src/actions'
@@ -37,27 +39,31 @@ const Reports = () => {
   )
 
   const { t } = useTranslation()
+  const location = useLocation()
+  const query = new URLSearchParams(location.search)
+  const code = query.get('code')
+  const type = query.get('type')
 
-  const { id } = useParams()
+  const { id } = useParams() // Employee Id
 
   const listReportsWithDueDate = (_) => {
-    dispatch(actions.reports.listAllReports())
+    dispatch(actions.reports.listAllReports(id))
     setIsDueDate(true)
   }
 
   const listReportsWithoutDueDate = (_) => {
-    dispatch(actions.reports.listAllReports({ notDue: false }))
+    dispatch(actions.reports.listAllReports(id, { notDue: false }))
     setIsDueDate(false)
   }
 
   const filterOperationHandler = (skip) => {
     let query = { ...searchFilter }
     if (skip) query.skip = skip.skip
-    dispatch(actions.reports.listAllReports(query))
+    dispatch(actions.reports.listAllReports(id, query))
   }
 
   const resetFilterOperations = (_) => {
-    dispatch(actions.reports.listAllReports())
+    dispatch(actions.reports.listAllReports(id))
   }
 
   useEffect(() => {
@@ -65,13 +71,14 @@ const Reports = () => {
   }, [loading])
 
   useEffect(() => {
-    id && dispatch(actions.reports.listAllReports({ code: id }))
-  }, [id, dispatch])
+    code && dispatch(actions.reports.listAllReports(id, { code }))
+  }, [code, id, dispatch])
 
   useEffect(() => {
-    !id && dispatch(actions.reports.listAllReports())
+    console.log('Employee Id: ', id)
+    !code && dispatch(actions.reports.listAllReports(id))
     return () => dispatch({ type: constants.reports.REPORTS_ALL_RESET })
-  }, [])
+  }, [id])
 
   return (
     <>
@@ -106,7 +113,12 @@ const Reports = () => {
           <Printer />
           <span>{t('print')}</span>
         </Button>
-        <h1>{t('active-reports-records')}</h1>
+        <h1 style={{ marginBottom: id ? '2rem' : '10rem' }}>
+          {t('active-reports-records')}
+        </h1>
+        {type === 'employee' && (
+          <EmployeeHeaderData style={{ marginBottom: '5rem' }} />
+        )}
         <div
           className={style.reports__wrapper}
           style={{ textAlign: !isDueDate ? '-webkit-center' : 'unset' }}

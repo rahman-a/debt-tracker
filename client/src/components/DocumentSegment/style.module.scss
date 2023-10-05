@@ -10,6 +10,7 @@
   &__doc {
     border-radius: 1rem;
     overflow: hidden;
+    cursor: pointer;
     img {
       width: 13rem;
       height: 10rem;
@@ -53,6 +54,12 @@
         width: 10rem;
         height: 7rem;
       }
+    }
+  }
+  &__image {
+    text-align: center;
+    img {
+      max-width: 50rem;
     }
   }
 }

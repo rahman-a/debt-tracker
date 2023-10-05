@@ -1,7 +1,7 @@
 import service from './service'
 
 const reportsAPI = {
-  index(query) {
+  index(id, query) {
     let queryString = ''
     if (query) {
       let queryObj = {}
@@ -14,10 +14,10 @@ const reportsAPI = {
           }
         }
       }
-      queryString = '?' + new URLSearchParams(queryObj).toString()
+      queryString = new URLSearchParams(queryObj).toString()
     }
-
-    return service().get(`reports${queryString}`)
+    const url = id ? `reports/${id}?${queryString}` : `reports?${queryString}`
+    return service().get(url)
   },
 
   update(id, query) {

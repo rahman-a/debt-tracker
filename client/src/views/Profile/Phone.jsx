@@ -1,8 +1,9 @@
+// @ts-nocheck
 import React from 'react'
 import style from './style.module.scss'
 import { ProfileContainer, ProfileSegment } from '@/src/components'
 
-const Phone = ({ data }) => {
+const Phone = ({ data, isEmployee }) => {
   return (
     <div className={style.profile__phones}>
       <ProfileContainer title='phones'>
@@ -17,12 +18,14 @@ const Phone = ({ data }) => {
             type='outPhones'
             placeholder='enter-outside-phone'
             text={data.outsidePhones}
+            isEmployee={isEmployee}
           />
         ) : (
           <ProfileSegment
             title='outside-uae-phones'
             type='outPhones'
             placeholder='enter-outside-phone'
+            isEmployee={isEmployee}
           />
         )}
       </ProfileContainer>

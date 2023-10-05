@@ -1,10 +1,9 @@
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+// @ts-nocheck
+import { DateTime } from 'luxon'
+import { v4 as uuidv4 } from 'uuid'
 import Company from '../models/Company.model.js'
 import User from '../models/users.model.js'
 import { chatClient } from '../config/stream.chat.js'
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const createEmployee = async (req, res, next) => {
   const { username, country, emails, insidePhones, company, expiryAt } =
@@ -128,12 +127,79 @@ export const listAllEmployees = async (req, res, next) => {
         code: employee.code,
         status: employee.colorCode.code,
         avatar: employee.avatar,
+        isBlocked: employee.isBlocked,
         createdAt: employee.createdAt,
       }
     })
     res.send({
       success: true,
       employees: employeesData,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getEmployeeData = async (req, res, next) => {
+  const { employeeId } = req.params
+  const manager = req.user
+  try {
+    if (!manager.company.isManager) {
+      res.status(404)
+      throw new Error(req.t('not_authorized_to_handle_request'))
+    }
+    const employeeData = await User.findById(employeeId)
+    const employee = { ...employeeData._doc }
+    if (!employee) {
+      res.status(404)
+      throw new Error(req.t('employee_not_found'))
+    }
+
+    const company = await Company.findOne({
+      manager: manager._id,
+      'employees.employee': employeeId,
+    })
+    if (!company) {
+      res.status(404)
+      throw new Error(req.t('employee_not_found'))
+    }
+
+    if (employee.identity) {
+      const now = DateTime.now().ts
+      const date = new Date(employee.identity.expireAt)
+      const expiry = DateTime.fromJSDate(date).ts
+
+      employee['identity-front'] = {
+        _id: uuidv4(),
+        image: employee.identity.image,
+        isExpired: now > expiry,
+      }
+
+      employee['identity-back'] = {
+        _id: uuidv4(),
+        image: employee.identity.back,
+        isExpired: now > expiry,
+      }
+
+      delete employee.identity
+    }
+
+    if (employee.passport) {
+      const now = DateTime.now().ts
+      const date = new Date(employee.passport.expireAt)
+      const expiry = DateTime.fromJSDate(date).ts
+      const passport = {
+        _id: uuidv4(),
+        image: employee.passport.image,
+        isExpired: now > expiry,
+      }
+      employee.passport = passport
+    }
+
+    res.send({
+      success: true,
+      code: 200,
+      user: employee,
     })
   } catch (error) {
     next(error)
@@ -168,6 +234,39 @@ export const deleteEmployee = async (req, res, next) => {
     res.send({
       success: true,
       message: req.t('employee_deleted'),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const toggleBlockEmployee = async (req, res, next) => {
+  const { employeeId } = req.params
+  const manager = req.user
+  try {
+    if (!manager.company.isManager) {
+      res.status(404)
+      throw new Error(req.t('not_authorized_to_handle_request'))
+    }
+    const employee = await User.findById(employeeId)
+    if (!employee) {
+      res.status(404)
+      throw new Error(req.t('employee_not_found'))
+    }
+
+    const company = await Company.findOne({
+      manager: manager._id,
+      'employees.employee': employeeId,
+    })
+    if (!company) {
+      res.status(404)
+      throw new Error(req.t('employee_not_found'))
+    }
+    employee.isBlocked = !employee.isBlocked
+    await employee.save()
+    res.send({
+      success: true,
+      isBlocked: employee.isBlocked,
     })
   } catch (error) {
     next(error)

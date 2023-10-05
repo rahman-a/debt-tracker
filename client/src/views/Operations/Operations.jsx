@@ -1,6 +1,7 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +11,7 @@ import {
   Filter,
   Loader,
   HeaderAlert,
+  EmployeeHeaderData,
 } from '@/src/components'
 import { FilterSearch, Times } from '@/src/icons'
 import actions from '@/src/actions'
@@ -28,7 +30,9 @@ const Operation = () => {
   })
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useDispatch()
+  const { id } = useParams() // Employee Id
   const { loading, error, count, operations } = useSelector(
     (state) => state.listOperations
   )
@@ -36,21 +40,22 @@ const Operation = () => {
   const filterOperationHandler = (skip) => {
     let query = { ...searchFilter }
     if (skip) query.skip = skip.skip
-    dispatch(actions.operations.listAllOperations(query))
+    dispatch(actions.operations.listAllOperations(id, query))
   }
 
   const resetFilterOperations = (_) => {
-    dispatch(actions.operations.listAllOperations())
+    dispatch(actions.operations.listAllOperations(id))
   }
+  const type = new URLSearchParams(location.search).get('type')
 
   useEffect(() => {
     loading && setIsFilter(false)
   }, [loading])
 
   useEffect(() => {
-    dispatch(actions.operations.listAllOperations())
+    dispatch(actions.operations.listAllOperations(id))
     return () => dispatch({ type: constants.operations.LIST_OPERATIONS_RESET })
-  }, [])
+  }, [id])
 
   return (
     <>
@@ -71,9 +76,10 @@ const Operation = () => {
       </Modal>
       <div className={style.operation}>
         <h1>{t('operations-records')}</h1>
+        {type === 'employee' && <EmployeeHeaderData />}
         <div className={style.operation__wrapper}>
           <div className={style.operation__actions}>
-            {user?.color !== '#ec4a0d' && (
+            {user?.color !== '#ec4a0d' && !id && !user.isBlocked && (
               <button onClick={() => navigate('/operation/new')}>
                 {t('new-operation')}
               </button>

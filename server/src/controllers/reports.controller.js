@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from 'fs'
 import path from 'path'
 import { DateTime } from 'luxon'
@@ -9,6 +10,7 @@ import stripe from '../config/stripe.js'
 import Report from '../models/reports.model.js'
 import Operation from '../models/operations.model.js'
 import User from '../models/users.model.js'
+import Company from '../models/Company.model.js'
 import Notification from '../models/notifications.model.js'
 import { takeAction } from '../config/takeAction.js'
 import { code } from '../config/code.js'
@@ -72,12 +74,31 @@ export const listAllMemberReports = async (req, res, next) => {
     page,
     skip,
   } = req.query
-
+  console.log('List all member reports')
+  const { employeeId } = req.params
+  const manager = req.user
   try {
+    const userId = employeeId
+      ? mongoose.Types.ObjectId(employeeId)
+      : manager._id
+    if (employeeId) {
+      if (!manager.company.isManager) {
+        res.status(404)
+        throw new Error(req.t('not_authorized_to_handle_request'))
+      }
+      const company = await Company.findOne({
+        manager: manager._id,
+        'employees.employee': employeeId,
+      })
+      if (!company) {
+        res.status(404)
+        throw new Error(req.t('employee_not_found'))
+      }
+    }
     let searchFilter = {
       $or: [
-        { 'operation.initiator._id': req.user._id },
-        { 'operation.peer._id': req.user._id },
+        { 'operation.initiator._id': userId },
+        { 'operation.peer._id': userId },
       ],
 
       dueDate: { $ne: null },
@@ -99,13 +120,13 @@ export const listAllMemberReports = async (req, res, next) => {
         $or: [
           {
             'operation.peer.type': type,
-            'operation.peer._id': { $ne: req.user._id },
-            'operation.initiator._id': req.user._id,
+            'operation.peer._id': { $ne: userId },
+            'operation.initiator._id': userId,
           },
           {
             'operation.initiator.type': type,
-            'operation.initiator._id': { $ne: req.user._id },
-            'operation.peer._id': req.user._id,
+            'operation.initiator._id': { $ne: userId },
+            'operation.peer._id': userId,
           },
         ],
       }
@@ -140,25 +161,25 @@ export const listAllMemberReports = async (req, res, next) => {
         $or: [
           {
             'operation.peer.fullNameInEnglish': { $regex: name, $options: 'i' },
-            'operation.initiator._id': req.user._id,
+            'operation.initiator._id': userId,
           },
           {
             'operation.initiator.fullNameInEnglish': {
               $regex: name,
               $options: 'i',
             },
-            'operation.peer._id': req.user._id,
+            'operation.peer._id': userId,
           },
           {
             'operation.peer.fullNameInArabic': { $regex: name, $options: 'i' },
-            'operation.initiator._id': req.user._id,
+            'operation.initiator._id': userId,
           },
           {
             'operation.initiator.fullNameInArabic': {
               $regex: name,
               $options: 'i',
             },
-            'operation.peer._id': req.user._id,
+            'operation.peer._id': userId,
           },
         ],
       }
@@ -487,6 +508,7 @@ export const updateReportValues = async (req, res, next) => {
 }
 
 export const sentStripePublishableKey = async (req, res, next) => {
+  console.log('key: ', process.env.STRIPE_PUBLISHABLE_KEY)
   try {
     if (!process.env.STRIPE_PUBLISHABLE_KEY) {
       res.status(404)
@@ -522,7 +544,7 @@ export const createFineIntent = async (req, res, next) => {
     }
     const fineIntent = await stripe.paymentIntents.create({
       currency: report.currency.abbr.toLocaleLowerCase(),
-      amount: fine.amount * 100,
+      amount: Math.round(fine.amount * 100),
       automatic_payment_methods: {
         enabled: true,
       },
@@ -1285,7 +1307,9 @@ export const generatePDFBuffer = async (req, res, next) => {
       transactions: reportData,
       user,
     })
-    const browser = await puppeteer.launch({ headless: true })
+    const browser = await puppeteer.launch({
+      headless: true,
+    })
     const page = await browser.newPage()
     const headerTemplate = `
     <style>
@@ -1703,8 +1727,8 @@ const scanReportsDueDate = async () => {
   }
 }
 
-cron.schedule('0 0 6 * * *', scanReportsDueDate, {
-  timezone: 'Asia/Dubai',
+cron.schedule('0 23 20 * * *', scanReportsDueDate, {
+  timezone: 'Africa/Cairo',
 })
 
 const calculateDelayedFine = (amount, reportId) => {

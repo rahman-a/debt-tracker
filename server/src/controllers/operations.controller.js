@@ -1,10 +1,11 @@
+// @ts-nocheck
 import mongoose from 'mongoose'
 import Operation from '../models/operations.model.js'
 import Report from '../models/reports.model.js'
 import Notification from '../models/notifications.model.js'
 import User from '../models/users.model.js'
+import Company from '../models/Company.model.js'
 import MutualClients from '../models/mutualClients.js'
-import { takeAction } from '../config/takeAction.js'
 
 const peerTypeInArabic = {
   debt: 'مدين',
@@ -32,11 +33,19 @@ export const findMutualOperations = async (req, res, next) => {
 export const createOperation = async (req, res, next) => {
   const newOperation = new Operation(req.body)
 
-  const lang = req.headers['accept-language']
-
   try {
     const initiator = await User.findById(req.body.initiator.user)
     const peer = await User.findById(req.body.peer.user)
+
+    if (initiator.isBlocked) {
+      res.status(400)
+      throw new Error(req.t('not_allowed_create_operation'))
+    }
+
+    if (peer.isBlocked) {
+      res.status(400)
+      throw new Error(req.t('not_allowed_create_operation_with_blocked_member'))
+    }
 
     if (initiator.colorCode.code === '#ec4a0d') {
       res.status(400)
@@ -149,13 +158,28 @@ export const createOperation = async (req, res, next) => {
 export const listAllMemberOperations = async (req, res, next) => {
   const { code, name, type, value, currency, state, dueDate, page, skip } =
     req.query
-
+  const { employeeId } = req.params
+  const manager = req.user
   try {
+    const userId = employeeId
+      ? mongoose.Types.ObjectId(employeeId)
+      : manager._id
+    if (employeeId) {
+      if (!manager.company.isManager) {
+        res.status(404)
+        throw new Error(req.t('not_authorized_to_handle_request'))
+      }
+      const company = await Company.findOne({
+        manager: manager._id,
+        'employees.employee': employeeId,
+      })
+      if (!company) {
+        res.status(404)
+        throw new Error(req.t('employee_not_found'))
+      }
+    }
     let searchFilter = {
-      $or: [
-        { 'initiator.user._id': req.user._id },
-        { 'peer.user._id': req.user._id },
-      ],
+      $or: [{ 'initiator.user._id': userId }, { 'peer.user._id': userId }],
       state: { $ne: 'active' },
     }
 
@@ -174,13 +198,13 @@ export const listAllMemberOperations = async (req, res, next) => {
         $or: [
           {
             'peer.type': type,
-            'peer.user._id': { $ne: req.user._id },
-            'initiator.user._id': req.user._id,
+            'peer.user._id': { $ne: userId },
+            'initiator.user._id': userId,
           },
           {
             'initiator.type': type,
-            'initiator.user._id': { $ne: req.user._id },
-            'peer.user._id': req.user._id,
+            'initiator.user._id': { $ne: userId },
+            'peer.user._id': userId,
           },
         ],
       }
@@ -203,19 +227,19 @@ export const listAllMemberOperations = async (req, res, next) => {
         $or: [
           {
             'peer.user.fullNameInEnglish': { $regex: name, $options: 'i' },
-            'initiator.user._id': req.user._id,
+            'initiator.user._id': userId,
           },
           {
             'initiator.user.fullNameInEnglish': { $regex: name, $options: 'i' },
-            'peer.user._id': req.user._id,
+            'peer.user._id': userId,
           },
           {
             'peer.user.fullNameInArabic': { $regex: name, $options: 'i' },
-            'initiator.user._id': req.user._id,
+            'initiator.user._id': userId,
           },
           {
             'initiator.user.fullNameInArabic': { $regex: name, $options: 'i' },
-            'peer.user._id': req.user._id,
+            'peer.user._id': userId,
           },
         ],
       }
@@ -244,7 +268,6 @@ export const listAllMemberOperations = async (req, res, next) => {
         }
       }
     }
-
     const aggregateOptions = [
       // JOIN CURRENCY COLLECTION
       {
@@ -367,7 +390,7 @@ export const listAllMemberOperations = async (req, res, next) => {
       { $skip: parseInt(skip) || 0 },
       { $limit: parseInt(page) || 5 },
     ])
-
+    // console.log('Operations', operations)
     const documentCount = await Operation.aggregate([
       ...aggregateOptions,
       { $count: 'document_count' },

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -103,6 +104,10 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     isAccountConfirmed: {
+      type: Boolean,
+      default: false,
+    },
+    isBlocked: {
       type: Boolean,
       default: false,
     },

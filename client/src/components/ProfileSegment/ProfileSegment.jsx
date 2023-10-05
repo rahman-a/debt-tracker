@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { v4 as uuidv4 } from 'uuid'
@@ -33,7 +34,7 @@ const Country = ({ country }) => {
   )
 }
 
-const ProfileSegment = ({ title, text, type, placeholder }) => {
+const ProfileSegment = ({ title, text, type, placeholder, isEmployee }) => {
   const [info, setInfo] = useState(null)
   const [updatedAsset, setUpdatedAsset] = useState(null)
   const [isEdit, setIsEdit] = useState(false)
@@ -135,14 +136,15 @@ const ProfileSegment = ({ title, text, type, placeholder }) => {
     <div className={segmentClasses}>
       <h3>
         {t(title)}
-        {type === 'password' && (
+        {type === 'password' && !isEmployee && (
           <span onClick={() => setIsEdit((prev) => !prev)}>
             <Edit />
           </span>
         )}
         {type &&
           (type === 'outPhones' || type !== 'password') &&
-          placeholder && (
+          placeholder &&
+          !isEmployee && (
             <span onClick={() => setIsEdit((prev) => !prev)}>
               <Plus />
             </span>
@@ -165,7 +167,7 @@ const ProfileSegment = ({ title, text, type, placeholder }) => {
         )}
       </p>
 
-      {isEdit && (
+      {isEdit && !isEmployee && (
         <div
           className={`${style.segment__edit} ${
             lang === 'ar' ? style.segment__edit_ar : ''
