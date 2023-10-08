@@ -179,7 +179,11 @@ const logout = (id) => async (dispatch) => {
     dispatch({ type: constants.users.VERIFY_LOGIN_CODE_RESET, payload: id })
     dispatch({ type: constants.users.USER_IS_AUTH_RESET })
     dispatch({ type: 'RESET_STORE' })
-    window.location.replace('http://localhost:3000/login')
+    const url =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : import.meta.env.VITE_LANDING_PAGE_URL
+    window.location.replace(`${url}/login`)
   } catch (error) {
     dispatch({
       type: constants.users.USER_LOGOUT_FAIL,

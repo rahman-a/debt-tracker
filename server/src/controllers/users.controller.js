@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { DateTime } from 'luxon'
 import cron from 'node-cron'
-import { fileURLToPath } from 'url'
 import { v4 as uuidv4 } from 'uuid'
 import { generateFromEmail } from 'unique-username-generator'
 import { chatClient } from '../config/stream.chat.js'
@@ -20,7 +19,7 @@ import sendEmail from '../emails/email.js'
 import { takeAction } from '../config/takeAction.js'
 import { labels } from '../config/labels.js'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.join(process.cwd(), 'server/src/controllers')
 
 const documentsInArabic = {
   identity: 'بطاقة الهوية',

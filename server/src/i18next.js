@@ -1,6 +1,5 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.join(process.cwd(), 'server/src')
 import i18next from 'i18next'
 import i18nextMiddleware from 'i18next-http-middleware'
 import backend from 'i18next-fs-backend'

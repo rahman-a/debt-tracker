@@ -2,16 +2,21 @@
   "name": "swtle",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "client.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "server": "nodemon index.js",
+    "start": "npm run server:build && node server/build",
+    "server:client": "nodemon client.js",
+    "server:admin": "nodemon admin.js",
     "client": "npm run dev --prefix client",
-    "admin": "npm start --prefix admin",
-    "admin-dev": "concurrently \"npm run admin\"  \"npm run server\"",
-    "dev": "concurrently \"npm run client\"  \"npm run server\"",
-    "server-build": "esbuild index.js --platform=node --packages=external --minify --outfile=server/build/index.js"
+    "client:admin": "npm start --prefix admin",
+    "admin:dev": "concurrently \"npm run client:admin\"  \"npm run server:admin\"",
+    "client:dev": "concurrently \"npm run client\"  \"npm run server:client\"",
+    "client:build": "npm run build --prefix client",
+    "admin:build": "npm run build --prefix admin",
+    "server:build": "npm run server:client:build && npm run server:admin:build",
+    "server:client:build": "esbuild client.js --packages=external --bundle --minify --platform=node --target=node18 --outfile=dist/client.js",
+    "server:admin:build": "esbuild admin.js --packages=external --bundle --minify --platform=node --target=node18 --outfile=dist/admin.js"
   },
   "repository": {
     "type": "git",
@@ -24,15 +29,12 @@
     "url": "https://github.com/rahman-a/swtle/issues"
   },
   "homepage": "https://github.com/rahman-a/swtle#readme",
-  "bin": {
-    "login": "tmp/login-cli.js"
-  },
   "dependencies": {
     "@types/mongoose": "^5.11.97",
     "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.3",
-    "chalk": "^5.0.0",
+    "chalk": "^2.4.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -63,19 +65,13 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "aws-sdk": "^2.1471.0",
     "browserify": "^17.0.0",
     "concurrently": "^7.0.0",
-    "esbuild": "^0.19.2",
-    "eslint": "^8.50.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-n": "^16.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.33.2",
+    "esbuild": "^0.19.4",
     "inquirer": "^9.2.11",
-    "nexe": "^4.0.0-rc.1",
-    "nodemon": "^2.0.15",
-    "terser": "^5.19.4",
-    "uglify-js": "^3.15.4"
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.3.3",
+    "nodemon": "^2.0.15"
   }
 }

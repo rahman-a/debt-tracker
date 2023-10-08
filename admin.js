@@ -1,3 +1,4 @@
+// @ts-nocheck
 import cluster from 'cluster'
 import os from 'os'
 import express from 'express'
@@ -7,7 +8,6 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import compression from 'compression'
 import { Database } from './server/database.connection.js'
 import {
@@ -25,7 +25,10 @@ import notificationsRouter from './server/src/routers/notifications.router.js'
 import ticketsRouter from './server/src/routers/tickets.router.js'
 import chatRouter from './server/src/routers/chat.router.js'
 import employeesRouter from './server/src/routers/employees.router.js'
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = process.cwd()
+
+// origins
+const requestOrigins = ['https://admin.swtle.com', 'https://*.swtle.com']
 
 // Environment Variables
 dotenv.config()
@@ -43,7 +46,25 @@ const app = express()
 /***************************************************/
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb' }))
-app.use(cors())
+app.use(
+  cors({
+    origin(requestOrigin, callback) {
+      if (requestOrigin === undefined) {
+        callback(null, true)
+      } else {
+        if (process.env.NODE_ENV === 'production') {
+          if (requestOrigins.indexOf(requestOrigin) !== -1) {
+            callback(null, true)
+          } else {
+            callback(new Error('Not allowed by CORS'))
+          }
+        } else {
+          callback(null, true)
+        }
+      }
+    },
+  })
+)
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(compression())
@@ -53,13 +74,7 @@ app.use(i18nextMiddleware.handle(i18next))
 /***************** SERVING PRODUCTION BUILD FRONTEND
 /***************************************************/
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.resolve(__dirname, 'client/dist')))
-
   app.use(express.static(path.resolve(__dirname, 'admin/build')))
-
-  app.get('', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build/index.html'))
-  })
 
   app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin/build/index.html'))
@@ -93,7 +108,7 @@ app.use(errorHandler)
 /***************************************************/
 /***************** SERVING THE APP
 /***************************************************/
-const port = process.env.PORT || 5000
+const port = process.env.ADMIN_PORT || 5001
 
 // if (cluster.isPrimary) {
 //   const cpuNum = os.cpus().length

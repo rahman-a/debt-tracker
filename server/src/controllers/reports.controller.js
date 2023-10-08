@@ -1579,8 +1579,7 @@ const scanReportsDueDate = async () => {
   try {
     const reports = await Report.find({
       isActive: true,
-      dueDate: { $exists: true },
-      dueDate: { $lte: new Date() },
+      dueDate: { $exists: true, $lte: new Date() },
     })
 
     if (reports.length) {
@@ -1679,8 +1678,7 @@ const scanReportsDueDate = async () => {
       }
     }
     const waitingReports = await Report.find({
-      waitingForClear: { $exists: true },
-      waitingForClear: { $lte: new Date() },
+      waitingForClear: { $exists: true, $lte: new Date() },
     })
     if (waitingReports.length) {
       const now = DateTime.now().setZone('Asia/Dubai').ts

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef } from 'react'
 import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'

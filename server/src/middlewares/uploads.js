@@ -1,8 +1,8 @@
 import multer from 'multer'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.join(process.cwd(), 'server/src/middlewares')
+
 const uploadDirectory = path.resolve(__dirname, '../../uploads')
 
 const storage = multer.diskStorage({
